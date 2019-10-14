@@ -8,21 +8,52 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Button
+  Button,
+  AsyncStorage
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
-
+import VehicleBasicReport from '../components/VehicleBasicReport'
+import AppContants from '../constants/AppConstants'
 class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      vehicleList:[],
+      fillGasList:[],
+      fillOilList:[],
+    };
+
+    this.navigateToInputInfo = this.navigateToInputInfo.bind(this)
+  }
+  componentDidMount() {
+    this.loadFromStorage()
+  }
+  loadFromStorage = async () => {
+    const vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
+    const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
+    const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
+    this.setState({
+      vehicleList: JSON.parse(vehicleList),
+      fillGasList: JSON.parse(fillGasList),
+      fillOilList: JSON.parse(fillOilList)
+    })
+  }
+
+  navigateToInputInfo(id) {
+    this.props.navigation.navigate('InputInfo', {vehicleId:id});
+  }
   render() {
+    console.log("Home Render")
+    console.log(this.state.vehicleList)
     return (
       <View style={styles.container}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Text>Car Report here</Text>
-          </View>
+          {this.state.vehicleList.map(item => (
+            <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}/>
+          ))}
 
         </ScrollView>
 
@@ -31,16 +62,6 @@ class HomeScreen extends React.Component {
             title="New Vehicle"
             onPress={() => this.props.navigation.navigate('NewVehicle')}
           />
-          <Text style={styles.tabBarInfoText}>
-            This is a tab bar. You can edit it in:
-          </Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>
-              navigation/MainTabNavigator.js
-            </MonoText>
-          </View>
         </View>
       </View>
     );

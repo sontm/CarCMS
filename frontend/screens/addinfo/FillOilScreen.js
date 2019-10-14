@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, TextInput, Picker, Button, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../constants/AppConstants'
+import AppContants from '../../constants/AppConstants'
 
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
@@ -12,17 +12,19 @@ const DATA_BRAND_MODEL = [
     { id: 6,name: "Huyndai", models: [{id:18, name: "i10"},{id:19, name: "New i10"},{id:20, name: "Accent"},{id:21, name: "Elanta"}]},
 ];
 
-class RegisterVehicleScreen extends React.Component {
+class FillOilScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            vehicleList: [],
             //id: 1, // increment
-            brand: '',
-            model: '',
-            licensePlate: '',
-            checkedDate: new Date().toLocaleDateString()
+            vehicleId: 0,
+            fillDate: new Date().toLocaleString(),
+            price: "",
+            currentKm: ""
         };
 
+        this.load = this.load.bind(this)
         this.save = this.save.bind(this)
     }
 
@@ -31,9 +33,20 @@ class RegisterVehicleScreen extends React.Component {
     }
     load = async () => {
         try {
-            const vehicle = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            console.log("VehicleList:")
-            console.log(JSON.parse(vehicle))
+            let vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
+            vehicleList = JSON.parse(vehicleList)
+            // Add Default value
+            vehicleList.unshift({id: 0, brand:"-", model:"Please Select", licensePlate: "-"})
+
+            // If User choose for a Car
+            let selectedVehicle = 0;
+            if (this.props.navigation.state.params.vehicleId) {
+                selectedVehicle = this.props.navigation.state.params.vehicleId
+            }
+            this.setState({
+                vehicleList: vehicleList,
+                vehicleId: selectedVehicle
+            })
         } catch (e) {
             console.error('Failed to load vehicleList from AsyncStorage.')
             console.log(e)
@@ -42,104 +55,94 @@ class RegisterVehicleScreen extends React.Component {
     save = async (newVehicle) => {
         try {
             console.log("WIll Save:")
-            console.log(JSON.stringify(newVehicle))
-
-            const prevVehiclesStorage = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            let prevVehicles = JSON.parse(prevVehiclesStorage)
-            if (!prevVehicles) {
-                prevVehicles = [];
+            let newData = {
+                vehicleId: Number(this.state.vehicleId),
+                fillDate: this.state.fillDate,
+                price: Number(this.state.price),
+                currentKm: Number(this.state.currentKm)
             }
-            newVehicle.id = prevVehicles.length + 1;
-            prevVehicles.push(newVehicle)
-            await AsyncStorage.setItem(AppContants.STORAGE_VEHICLE_LIST, JSON.stringify(prevVehicles))
+            console.log(newData)
 
-            this.props.navigation.navigate("Home")
+            const previousData = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
+            let newDataList = JSON.parse(previousData)
+            if (!newDataList) {
+                newDataList = [];
+            }
+            newData.id = newDataList.length + 1;
+            newDataList.push(newData)
+            await AsyncStorage.setItem(AppContants.STORAGE_FILL_OIL_LIST, JSON.stringify(newDataList))
+
+            this.props.navigation.navigate('Home')
         } catch (e) {
             console.error('Failed to save vehicleList.')
             console.log(e)
         }
     }
 
-    getBrandsList(data) {
-        let result = [{ id: 0,name: "-Select Brand-"}];
-        for (let i = 0; i < data.length; i++) {
-            result.push({id: data[i].id, name: data[i].name})
-        }
-        return result;
-    }
-    getModelsOfBrand(brandNameOrId, data) {
-        for (let i = 0; i < data.length; i++) {
-            if (data[i].id == brandNameOrId || data[i].name == brandNameOrId) {
-                let result = [...data[i].models];
-                result.unshift({ id: 0,name: "-Select Model-"});
-                return result;
-            }
-        }
-        return [{ id: 0,name: "N/A"}];
-    }
     render() {
         return (
             <View>
             <View style={styles.formContainer}>
                 <View style={styles.rowContainer}>
                     <Text style={styles.rowLabel}>
-                        Brand:
+                        Vehicle:
                     </Text>
                     <Picker
                         style={styles.rowForm}
-                        selectedValue={this.state.brand}
-                        style={{height: 50, width: "60%"}}
+                        selectedValue={this.state.vehicleId}
+                        style={{height: 50, width: "66%"}}
                         onValueChange={(itemValue, itemIndex) =>
-                            this.setState({brand: itemValue})
+                            this.setState({vehicleId: itemValue})
                         }>
-                        {this.getBrandsList(DATA_BRAND_MODEL).map(item => (
-                            <Picker.Item label={item.name} value={item.name} key={item.id}/>
+                        {this.state.vehicleList.map(item => (
+                            <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
+                                value={item.id} key={item.id}/>
                         ))}
                     </Picker>
                 </View>
+
                 <View style={styles.rowContainer}>
                     <Text style={styles.rowLabel}>
-                        Model:
-                    </Text>
-                    <Picker
-                        style={styles.rowForm}
-                        selectedValue={this.state.model}
-                        style={{height: 50, width: "60%"}}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({model: itemValue})
-                        }>
-                        {this.getModelsOfBrand(this.state.brand, DATA_BRAND_MODEL).map(item => (
-                            <Picker.Item label={item.name} value={item.name} key={item.name}/>
-                        ))}
-                    </Picker>
-                </View>
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        License Plate:
+                        Fill Date:
                     </Text>
                     <TextInput
                         style={styles.rowForm}
-                        placeholder="Number Plate"
-                        onChangeText={(licensePlate) => this.setState({licensePlate})}
-                        value={this.state.licensePlate}
+                        placeholder="Fill Date"
+                        onChangeText={(fillDate) => this.setState({fillDate})}
+                        value={this.state.fillDate}
                     />
                 </View>
+                
                 <View style={styles.rowContainer}>
                     <Text style={styles.rowLabel}>
-                        Last Checked Date:
+                        Price(VND):
                     </Text>
                     <TextInput
                         style={styles.rowForm}
-                        placeholder="TODO for DatePicker"
-                        onChangeText={(checkedDate) => this.setState({checkedDate})}
-                        value={this.state.checkedDate}
+                        placeholder="VND"
+                        keyboardType="numeric"
+                        onChangeText={(price) => this.setState({price})}
+                        value={this.state.price}
+                    />
+                </View>
+
+                <View style={styles.rowContainer}>
+                    <Text style={styles.rowLabel}>
+                        Current Km:
+                    </Text>
+                    <TextInput
+                        style={styles.rowForm}
+                        placeholder="Km"
+                        keyboardType="numeric"
+                        onChangeText={(currentKm) => this.setState({currentKm})}
+                        value={this.state.currentKm}
                     />
                 </View>
                 
                 <View style={styles.rowButton}>
                 <Button
                     style={styles.btnSubmit}
-                    title="Create New Vehicle"
+                    title="Add Data"
                     onPress={() => this.save(this.state)}
                 />
                 </View>
@@ -150,8 +153,8 @@ class RegisterVehicleScreen extends React.Component {
     }
 }
 
-RegisterVehicleScreen.navigationOptions = {
-    title: 'New Vehicle',
+FillOilScreen.navigationOptions = {
+    title: 'Fill Oil',
 };
 
 const styles = StyleSheet.create({
@@ -170,12 +173,12 @@ const styles = StyleSheet.create({
     borderColor:"grey"
   },
   rowLabel: {
-    flex: 2,
+    flex: 1,
     textAlign: "right",
     paddingRight: 5
   },
   rowForm: {
-    flex: 3
+    flex: 2
   },
   rowButton: {
     marginTop: 20,
@@ -186,4 +189,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RegisterVehicleScreen;
+export default FillOilScreen;
