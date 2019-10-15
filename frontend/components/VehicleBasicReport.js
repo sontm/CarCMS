@@ -1,17 +1,27 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Text, Image, TextInput, Picker, Button, AsyncStorage } from 'react-native';
 
+import AppUtils from '../constants/AppUtils'
+import AppConstants from '../constants/AppConstants';
 
 // props.vehicle
-// brand: '',
-// model: '',
-// licensePlate: '',
-// checkedDate:
+    // brand: '',
+    // model: '',
+    // licensePlate: '',
+    // checkedDate:
+
+// props.vehicleList:[],
+    //   fillGasList:[],
+    //   fillOilList:[],
 class VehicleBasicReport extends Component {
     constructor(props) {
         super(props);
     }
     render() {
+        let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm}
+            = AppUtils.getStatForGasUsage(this.props.fillGasList, this.props.vehicle.id);
+        let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+            = AppUtils.getInfoForOilUsage( this.props.fillOilList, this.props.vehicle.id, lastDate, lastKm, averageKmPerDay);
         return (
             <View style={styles.container}>
                 <View style={styles.vehicleInfoRow}>
@@ -34,19 +44,56 @@ class VehicleBasicReport extends Component {
 
                 <View style={styles.statRow}>
                     <Text style={styles.statRowLabel}>
-                        Average Km Per Lit:
+                        Km Per Litre:
                     </Text>
                     <Text style={styles.statRowValue}>
-                        200Km/Lit
+                        {averageKmPerLiter + " "}Km/Litre
                     </Text>
                 </View>
 
                 <View style={styles.statRow}>
                     <Text style={styles.statRowLabel}>
-                        Fill Oil Estimation:
+                        Money Per Litre:
                     </Text>
                     <Text style={styles.statRowValue}>
-                        200/15000 Km
+                        {averageMoneyPerLiter} VND/Litre
+                    </Text>
+                </View>
+
+                <View style={styles.statRow}>
+                    <Text style={styles.statRowLabel}>
+                        Money Per Day:
+                    </Text>
+                    <Text style={styles.statRowValue}>
+                        {averageMoneyPerDay} VND/Day
+                    </Text>
+                </View>
+
+                <View style={styles.statRow}>
+                    <Text style={styles.statRowLabel}>
+                        Km Per Day:
+                    </Text>
+                    <Text style={styles.statRowValue}>
+                        {averageKmPerDay} Km/Day
+                    </Text>
+                </View>
+
+
+
+                <View style={styles.statRow}>
+                    <Text style={styles.statRowLabel}>
+                        Km For Oil:
+                    </Text>
+                    <Text style={styles.statRowValue}>
+                        {passedKmFromPreviousOil}Km / {AppConstants.SETTING_KM_NEXT_OILFILL}Km
+                    </Text>
+                </View>
+                <View style={styles.statRow}>
+                    <Text style={styles.statRowLabel}>
+                        Estimate Next Oil Date:
+                    </Text>
+                    <Text style={styles.statRowValue}>
+                        {nextEstimateDateForOil ? nextEstimateDateForOil.toLocaleDateString(): "NA"}
                     </Text>
                 </View>
 

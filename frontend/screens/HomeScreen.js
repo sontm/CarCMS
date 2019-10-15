@@ -15,6 +15,10 @@ import {
 import { MonoText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
+
+// vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
+// fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
+// fillOilList: {vehicleId: 1, fillDate: "10/14/2019, 11:56:44 PM", price: 500000, currentKm: 3000, id: 1}
 class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +56,9 @@ class HomeScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
           {this.state.vehicleList.map(item => (
-            <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}/>
+            <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}
+              {...this.state}
+            />
           ))}
 
         </ScrollView>
