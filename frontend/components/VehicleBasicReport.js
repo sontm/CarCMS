@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, Image, TextInput, Picker, Button, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage } from 'react-native';
+import {Button, Text, Icon } from 'native-base';
 
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
+import {VictoryPie, VictoryAnimation, VictoryLabel} from 'victory-native';
 
 // props.vehicle
     // brand: '',
@@ -18,6 +20,9 @@ class VehicleBasicReport extends Component {
         super(props);
     }
     render() {
+        let newProps = {
+            percent: 50
+        }
         let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm}
             = AppUtils.getStatForGasUsage(this.props.fillGasList, this.props.vehicle.id);
         let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
@@ -39,6 +44,17 @@ class VehicleBasicReport extends Component {
                     <Text style={styles.vehicleInfoTextPlate}>
                         {this.props.vehicle.licensePlate}
                     </Text>
+                    </View>
+
+                    <View style={styles.viewBtnAddData}>
+                        <Button
+                            style={styles.btnAddData}
+                            iconLeft transparent
+                            onPress={() => this.props.navigateToInputInfo(this.props.vehicle.id)}
+                        >
+                            <Icon type="AntDesign" name='pluscircle' style={{fontSize: 35}}/>
+                        </Button>
+                        <Text style={styles.textAddData}>Add Data</Text>
                     </View>
                 </View>
 
@@ -77,24 +93,26 @@ class VehicleBasicReport extends Component {
                         {averageKmPerDay} Km/Day
                     </Text>
                 </View>
-
-
-
-                <View style={styles.statRow}>
-                    <Text style={styles.statRowLabel}>
-                        Km For Oil:
+                
+                <View style={styles.progressContainer}>
+                <VictoryPie
+                    colorScale={["tomato", "silver"]}
+                    data={[
+                        { x: "", y: passedKmFromPreviousOil },
+                        { x: "", y: AppConstants.SETTING_KM_NEXT_OILFILL },
+                    ]}
+                    height={180}
+                    innerRadius={70}
+                    radius={80}
+                    labels={() => null}
+                    />
+                <View style={styles.labelProgress}>
+                    <Text style={styles.labelProgressText}>
+                        {passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
                     </Text>
-                    <Text style={styles.statRowValue}>
-                        {passedKmFromPreviousOil}Km / {AppConstants.SETTING_KM_NEXT_OILFILL}Km
-                    </Text>
+                    <Text>Km For Next Oil</Text>
                 </View>
-                <View style={styles.statRow}>
-                    <Text style={styles.statRowLabel}>
-                        Estimate Next Oil Date:
-                    </Text>
-                    <Text style={styles.statRowValue}>
-                        {nextEstimateDateForOil ? nextEstimateDateForOil.toLocaleDateString(): "NA"}
-                    </Text>
+                <Text>Estimate Next:{nextEstimateDateForOil ? nextEstimateDateForOil.toLocaleDateString(): "NA"}</Text>
                 </View>
 
                 <View style={styles.buttonRow}>
@@ -109,7 +127,7 @@ class VehicleBasicReport extends Component {
 
 const styles = StyleSheet.create({
     container: {
-      height: 300,
+      height: 400,
       backgroundColor: "white",
       marginTop: 20,
       flexDirection: "column",
@@ -121,7 +139,8 @@ const styles = StyleSheet.create({
 
     vehicleInfoRow: {
         height: 80,
-        flexDirection: "row"
+        flexDirection: "row",
+        justifyContent: "space-around"
     },
     vehicleLogo: {
         width: 78,
@@ -143,6 +162,25 @@ const styles = StyleSheet.create({
         color: "blue"
     },
 
+    viewBtnAddData: {
+        alignSelf: "flex-start",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 0,
+    },
+    btnAddData: {
+        alignSelf: "flex-start",
+        width: 60,
+        height: 50,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center"
+    },
+    textAddData: {
+        color: "blue"
+    },
+
     statRow: {
         flexDirection: "row"
     },
@@ -158,6 +196,22 @@ const styles = StyleSheet.create({
     buttonRow: {
         alignSelf: "center",
         marginBottom: 5
+    },
+
+    progressContainer: {
+        width: 200,
+        height: 200,
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+    },
+    labelProgress: {
+        position: "absolute",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    labelProgressText: {
+        fontSize: 30
     }
 })
 export default VehicleBasicReport;

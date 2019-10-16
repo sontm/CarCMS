@@ -5,12 +5,11 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
-  Button,
   AsyncStorage
 } from 'react-native';
+import {Button, Text } from 'native-base';
 
 import { MonoText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
@@ -42,8 +41,12 @@ class HomeScreen extends React.Component {
       fillGasList: JSON.parse(fillGasList),
       fillOilList: JSON.parse(fillOilList)
     })
-  }
 
+    //this.clearAsyncStorage()
+  }
+  clearAsyncStorage = async() => {
+    AsyncStorage.clear();
+  }
   navigateToInputInfo(id) {
     this.props.navigation.navigate('InputInfo', {vehicleId:id});
   }
@@ -55,7 +58,7 @@ class HomeScreen extends React.Component {
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          {this.state.vehicleList.map(item => (
+          {this.state.vehicleList && this.state.vehicleList.map(item => (
             <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}
               {...this.state}
             />
@@ -65,9 +68,11 @@ class HomeScreen extends React.Component {
 
         <View style={styles.tabBarInfoContainer}>
           <Button
-            title="New Vehicle"
+            rounded
             onPress={() => this.props.navigation.navigate('NewVehicle')}
-          />
+          >
+            <Text>New Vehicle</Text>
+          </Button>
         </View>
       </View>
     );
@@ -131,20 +136,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
+    alignItems: 'flex-end',
   },
   tabBarInfoText: {
     fontSize: 17,

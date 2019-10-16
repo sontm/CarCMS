@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text, TextInput, Picker, Button, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Text, TextInput, Button, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../constants/AppConstants'
+import { Container, Header, Content, Form, Item, Picker } from 'native-base';
 
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
@@ -85,33 +86,46 @@ class RegisterVehicleScreen extends React.Component {
                     <Text style={styles.rowLabel}>
                         Brand:
                     </Text>
+                    <Item regular>
                     <Picker
-                        style={styles.rowForm}
-                        selectedValue={this.state.brand}
+                        mode="dropdown"
                         style={{height: 50, width: "60%"}}
+                        placeholder="Select your SIM"
+                        placeholderStyle={{ color: "#bfc6ea" }}
+                        placeholderIconColor="#007aff"
+                        selectedValue={this.state.brand}
                         onValueChange={(itemValue, itemIndex) =>
                             this.setState({brand: itemValue})
-                        }>
+                        }
+                    >
                         {this.getBrandsList(DATA_BRAND_MODEL).map(item => (
                             <Picker.Item label={item.name} value={item.name} key={item.id}/>
                         ))}
                     </Picker>
+                    </Item>
+
                 </View>
                 <View style={styles.rowContainer}>
                     <Text style={styles.rowLabel}>
                         Model:
                     </Text>
+                    <Item regular>
                     <Picker
-                        style={styles.rowForm}
-                        selectedValue={this.state.model}
+                        mode="dropdown"
                         style={{height: 50, width: "60%"}}
+                        placeholder="Select Model"
+                        placeholderStyle={{ color: "#bfc6ea" }}
+                        placeholderIconColor="#007aff"
+                        selectedValue={this.state.model}
                         onValueChange={(itemValue, itemIndex) =>
                             this.setState({model: itemValue})
-                        }>
+                        }
+                    >
                         {this.getModelsOfBrand(this.state.brand, DATA_BRAND_MODEL).map(item => (
                             <Picker.Item label={item.name} value={item.name} key={item.name}/>
                         ))}
                     </Picker>
+                    </Item>
                 </View>
                 <View style={styles.rowContainer}>
                     <Text style={styles.rowLabel}>
@@ -136,6 +150,8 @@ class RegisterVehicleScreen extends React.Component {
                     />
                 </View>
                 
+                
+
                 <View style={styles.rowButton}>
                 <Button
                     style={styles.btnSubmit}
