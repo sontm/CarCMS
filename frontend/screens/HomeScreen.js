@@ -60,7 +60,7 @@ class HomeScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}>
           {this.state.vehicleList && this.state.vehicleList.map(item => (
             <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}
-              {...this.state}
+              navigation={this.props.navigation} {...this.state}
             />
           ))}
 

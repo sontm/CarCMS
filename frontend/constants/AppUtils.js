@@ -2,6 +2,9 @@ import AppConstants from './AppConstants'
 
 class AppUtils {
     // input: [{vehicleId: 1, fillDate: "", amount: 5, price: 3423434, currentKm: 1123, id: 2}]
+
+    // Output of Average KM Weekly/Monthly
+    // [{x:dateFillGas, y:average}]
     getStatForGasUsage(fillGasListAll, ofVehicleId) {
         // Sort by fill Date
         // TODO
@@ -19,6 +22,10 @@ class AppUtils {
 
         let beginKm = 0;
         let beginDate = 0;
+
+        let arrMoneyPerWeek = [];
+        let arrKmPerWeek = [];
+
         if (fillGasList && fillGasList.length > 0) {
             fillGasList.forEach((item, index) => {
                 if (index == 0) {
@@ -34,6 +41,20 @@ class AppUtils {
                     totalMoney += item.price;
                     todayLiter += item.amount;
                 }
+
+                // Calculate Average KM from Previous Fill Gas
+                if (index > 0) {
+                    const diffTime = Math.abs(new Date(item.fillDate) - 
+                        new Date(fillGasList[index-1].fillDate)); // in ms
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+                    let averageKMPerDay = (item.currentKm - fillGasList[index-1].currentKm)/diffDays;
+                    // Money is from Previous Fill time
+                    let averageMoneyPerDay = fillGasList[index-1].price/diffDays;
+
+                    arrMoneyPerWeek.push({x: new Date(item.fillDate), y: averageMoneyPerDay*7})
+                    arrKmPerWeek.push({x: new Date(item.fillDate), y: averageKMPerDay*7})
+                } 
             })
         }
         if (todayLiter) {
@@ -52,7 +73,8 @@ class AppUtils {
             // 5. Mothly Report perMonth: KM, 
             // TODO
 
-            return {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm};
+            return {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
+                arrMoneyPerWeek, arrKmPerWeek};
         } else {
             return {};
         }

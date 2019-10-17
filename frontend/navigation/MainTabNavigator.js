@@ -6,7 +6,6 @@ import TabBarIcon from '../components/TabBarIcon';
 
 import HomeScreen from '../screens/HomeScreen';
 import RegisterVehicleScreen from '../screens/RegisterVehicleScreen';
-import InputInfoScreen from '../screens/InputInfoScreen';
 import FillGasScreen from '../screens/addinfo/FillGasScreen';
 import FillOilScreen from '../screens/addinfo/FillOilScreen';
 
@@ -22,7 +21,6 @@ const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
     NewVehicle: RegisterVehicleScreen,
-    InputInfo: InputInfoScreen,
     FillGas: FillGasScreen,
     FillOil: FillOilScreen
   },
