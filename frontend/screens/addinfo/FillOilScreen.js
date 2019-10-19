@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Item, Picker, Button, Text, Input } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
@@ -74,7 +74,7 @@ class FillOilScreen extends React.Component {
             newDataList.push(newData)
             await AsyncStorage.setItem(AppContants.STORAGE_FILL_OIL_LIST, JSON.stringify(newDataList))
 
-            this.props.navigation.navigate('Home')
+            this.props.navigation.push('VehicleDetail')
         } catch (e) {
             console.error('Failed to save vehicleList.')
             console.log(e)
@@ -83,89 +83,102 @@ class FillOilScreen extends React.Component {
 
     render() {
         return (
-            <View>
-            <View style={styles.formContainer}>
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Vehicle:
-                    </Text>
-                    <Item regular>
-                    <Picker
-                        mode="dropdown"
-                        placeholder="Select Car"
-                        placeholderStyle={{ color: "#bfc6ea" }}
-                        placeholderIconColor="#007aff"
-                        selectedValue={this.state.vehicleId}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({vehicleId: itemValue})
-                        }
-                        >
-                        {this.state.vehicleList.map(item => (
-                            <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
-                                value={item.id} key={item.id}/>
-                        ))}
-                    </Picker>
-                    </Item>
-                </View>
+            <Container>
+            <Content>
+                <View style={styles.formContainer}>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Vehicle:
+                        </Text>
+                        <Item regular>
+                        <Picker
+                            mode="dropdown"
+                            placeholder="Select Car"
+                            placeholderStyle={{ color: "#bfc6ea" }}
+                            placeholderIconColor="#007aff"
+                            selectedValue={this.state.vehicleId}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({vehicleId: itemValue})
+                            }
+                            >
+                            {this.state.vehicleList.map(item => (
+                                <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
+                                    value={item.id} key={item.id}/>
+                            ))}
+                        </Picker>
+                        </Item>
+                    </View>
 
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Fill Date:
-                    </Text>
-                    <Item regular style={styles.rowForm}>
-                    <Input
-                        placeholder="Fill Date"
-                        onChangeText={(fillDate) => this.setState({fillDate})}
-                        value={this.state.fillDate}
-                    />
-                    </Item>
-                </View>
-                
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Price(VND):
-                    </Text>
-                    <Item regular style={styles.rowForm}>
-                    <Input
-                        placeholder="VND"
-                        keyboardType="numeric"
-                        onChangeText={(price) => this.setState({price})}
-                        value={this.state.price}
-                    />
-                    </Item>
-                </View>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Fill Date:
+                        </Text>
+                        <Item regular style={styles.rowForm}>
+                        <Input
+                            placeholder="Fill Date"
+                            onChangeText={(fillDate) => this.setState({fillDate})}
+                            value={this.state.fillDate}
+                        />
+                        </Item>
+                    </View>
+                    
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Price(VND):
+                        </Text>
+                        <Item regular style={styles.rowForm}>
+                        <Input
+                            placeholder="VND"
+                            keyboardType="numeric"
+                            onChangeText={(price) => this.setState({price})}
+                            value={this.state.price}
+                        />
+                        </Item>
+                    </View>
 
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Current Km:
-                    </Text>
-                    <Item regular style={styles.rowForm}>
-                    <Input
-                        placeholder="Km"
-                        keyboardType="numeric"
-                        onChangeText={(currentKm) => this.setState({currentKm})}
-                        value={this.state.currentKm}
-                    />
-                    </Item>
-                </View>
-                
-                <View style={styles.rowButton}>
-                <Button
-                    block primary
-                    onPress={() => this.save(this.state)}
-                ><Text>Add Data</Text></Button>
-                </View>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Current Km:
+                        </Text>
+                        <Item regular style={styles.rowForm}>
+                        <Input
+                            placeholder="Km"
+                            keyboardType="numeric"
+                            onChangeText={(currentKm) => this.setState({currentKm})}
+                            value={this.state.currentKm}
+                        />
+                        </Item>
+                    </View>
+                    
+                    <View style={styles.rowButton}>
+                    <Button
+                        block primary
+                        onPress={() => this.save(this.state)}
+                    ><Text>Add Data</Text></Button>
+                    </View>
 
-            </View>
-            
-            </View>
+                </View>
+            </Content>
+            </Container>
         );
     }
 }
 
-FillOilScreen.navigationOptions = {
-    title: 'Fill Oil',
-};
+FillOilScreen.navigationOptions = ({navigation}) => ({
+    header: (
+        <Header>
+          <Left>
+            <Button transparent onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Fill Oil</Title>
+          </Body>
+          <Right />
+        </Header>
+    )
+});
 
 const styles = StyleSheet.create({
   formContainer: {

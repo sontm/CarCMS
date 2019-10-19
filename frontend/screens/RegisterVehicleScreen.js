@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Text, TextInput, Button, AsyncStorage } from 'react-native';
+import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../constants/AppConstants'
-import { Container, Header, Content, Form, Item, Picker } from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Form, Item } from 'native-base';
 
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
@@ -54,7 +54,7 @@ class RegisterVehicleScreen extends React.Component {
             prevVehicles.push(newVehicle)
             await AsyncStorage.setItem(AppContants.STORAGE_VEHICLE_LIST, JSON.stringify(prevVehicles))
 
-            this.props.navigation.navigate("Home")
+            this.props.navigation.push("Home")
         } catch (e) {
             console.error('Failed to save vehicleList.')
             console.log(e)
@@ -80,95 +80,107 @@ class RegisterVehicleScreen extends React.Component {
     }
     render() {
         return (
-            <View>
-            <View style={styles.formContainer}>
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Brand:
-                    </Text>
-                    <Item regular>
-                    <Picker
-                        mode="dropdown"
-                        style={{height: 50, width: "60%"}}
-                        placeholder="Select your SIM"
-                        placeholderStyle={{ color: "#bfc6ea" }}
-                        placeholderIconColor="#007aff"
-                        selectedValue={this.state.brand}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({brand: itemValue})
-                        }
-                    >
-                        {this.getBrandsList(DATA_BRAND_MODEL).map(item => (
-                            <Picker.Item label={item.name} value={item.name} key={item.id}/>
-                        ))}
-                    </Picker>
-                    </Item>
+            <Container>
+            <Content>
+                <View style={styles.formContainer}>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Brand:
+                        </Text>
+                        <Item regular>
+                        <Picker
+                            mode="dropdown"
+                            style={{height: 50, width: "60%"}}
+                            placeholder="Select your SIM"
+                            placeholderStyle={{ color: "#bfc6ea" }}
+                            placeholderIconColor="#007aff"
+                            selectedValue={this.state.brand}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({brand: itemValue})
+                            }
+                        >
+                            {this.getBrandsList(DATA_BRAND_MODEL).map(item => (
+                                <Picker.Item label={item.name} value={item.name} key={item.id}/>
+                            ))}
+                        </Picker>
+                        </Item>
 
-                </View>
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Model:
-                    </Text>
-                    <Item regular>
-                    <Picker
-                        mode="dropdown"
-                        style={{height: 50, width: "60%"}}
-                        placeholder="Select Model"
-                        placeholderStyle={{ color: "#bfc6ea" }}
-                        placeholderIconColor="#007aff"
-                        selectedValue={this.state.model}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({model: itemValue})
-                        }
-                    >
-                        {this.getModelsOfBrand(this.state.brand, DATA_BRAND_MODEL).map(item => (
-                            <Picker.Item label={item.name} value={item.name} key={item.name}/>
-                        ))}
-                    </Picker>
-                    </Item>
-                </View>
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        License Plate:
-                    </Text>
-                    <TextInput
-                        style={styles.rowForm}
-                        placeholder="Number Plate"
-                        onChangeText={(licensePlate) => this.setState({licensePlate})}
-                        value={this.state.licensePlate}
-                    />
-                </View>
-                <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Last Checked Date:
-                    </Text>
-                    <TextInput
-                        style={styles.rowForm}
-                        placeholder="TODO for DatePicker"
-                        onChangeText={(checkedDate) => this.setState({checkedDate})}
-                        value={this.state.checkedDate}
-                    />
-                </View>
-                
-                
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Model:
+                        </Text>
+                        <Item regular>
+                        <Picker
+                            mode="dropdown"
+                            style={{height: 50, width: "60%"}}
+                            placeholder="Select Model"
+                            placeholderStyle={{ color: "#bfc6ea" }}
+                            placeholderIconColor="#007aff"
+                            selectedValue={this.state.model}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({model: itemValue})
+                            }
+                        >
+                            {this.getModelsOfBrand(this.state.brand, DATA_BRAND_MODEL).map(item => (
+                                <Picker.Item label={item.name} value={item.name} key={item.name}/>
+                            ))}
+                        </Picker>
+                        </Item>
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            License Plate:
+                        </Text>
+                        <TextInput
+                            style={styles.rowForm}
+                            placeholder="Number Plate"
+                            onChangeText={(licensePlate) => this.setState({licensePlate})}
+                            value={this.state.licensePlate}
+                        />
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Last Checked Date:
+                        </Text>
+                        <TextInput
+                            style={styles.rowForm}
+                            placeholder="TODO for DatePicker"
+                            onChangeText={(checkedDate) => this.setState({checkedDate})}
+                            value={this.state.checkedDate}
+                        />
+                    </View>
+                    
+                    
 
-                <View style={styles.rowButton}>
-                <Button
-                    style={styles.btnSubmit}
-                    title="Create New Vehicle"
-                    onPress={() => this.save(this.state)}
-                />
+                    <View style={styles.rowButton}>
+                    <Button
+                        style={styles.btnSubmit}
+                        onPress={() => this.save(this.state)}
+                    ><Text>Create New Vehicle</Text></Button>
+                    </View>
                 </View>
-            </View>
-            
-            </View>
+                </Content>
+            </Container>
         );
     }
 }
 
-RegisterVehicleScreen.navigationOptions = {
-    title: 'New Vehicle',
-};
+RegisterVehicleScreen.navigationOptions = ({ navigation }) => ({
+    header: (
+        <Header>
+          <Left>
+            <Button transparent onPress={() => navigation.navigate("Home")}>
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title>New Vehicle</Title>
+          </Body>
+          <Right />
+        </Header>
+    )
+});
 
 const styles = StyleSheet.create({
   formContainer: {

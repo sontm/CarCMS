@@ -9,7 +9,8 @@ import {
   View,
   AsyncStorage
 } from 'react-native';
-import {Button, Text } from 'native-base';
+
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem } from 'native-base';
 
 import { MonoText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
@@ -57,31 +58,40 @@ class HomeScreen extends React.Component {
   componentDidUpdate() {
     console.log("HOMESCreen DIDUpdate")
   }
+  componentWillReceiveProps(nextProps) {
+    console.log("HOMESCreen WillReceiveProps")
+  }
+  componentWillUnmount() {
+    console.log("HOMESCreen Will UnMount")
+  }
   render() {
     console.log("HOMESCreen Render")
-    console.log(this.state.vehicleList)
     return (
-      <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-          {this.state.vehicleList && this.state.vehicleList.map(item => (
-            <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}
-              navigation={this.props.navigation} {...this.state}
-            />
-          ))}
+      <Container>
+        <Header>
+          <Left>
+          </Left>
+          <Body>
+            <Title>HomeScreen</Title>
+          </Body>
+          <Right />
+        </Header>
+        
+        <Content>
+          <View style={styles.container}>
+            <ScrollView
+              style={styles.container}
+              contentContainerStyle={styles.contentContainer}>
+              {this.state.vehicleList && this.state.vehicleList.map(item => (
+                <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}
+                  navigation={this.props.navigation} {...this.state}
+                />
+              ))}
 
-        </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Button
-            rounded
-            onPress={() => this.props.navigation.navigate('NewVehicle')}
-          >
-            <Text>New Vehicle</Text>
-          </Button>
-        </View>
-      </View>
+            </ScrollView>
+          </View>
+        </Content>
+      </Container>
     );
   }
 }
@@ -103,7 +113,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   contentContainer: {
-    paddingTop: 30,
+
   },
   welcomeContainer: {
     alignItems: 'center',

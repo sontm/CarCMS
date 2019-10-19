@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
-import { Container, Header, Left, Body, Right, Title, Content, Form, Item, Picker, Button, Text, Input } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
 
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
@@ -75,7 +75,7 @@ class FillGasScreen extends React.Component {
             newDataList.push(newData)
             await AsyncStorage.setItem(AppContants.STORAGE_FILL_GAS_LIST, JSON.stringify(newDataList))
 
-            this.props.navigation.navigate('Home')
+            this.props.navigation.push('VehicleDetail')
         } catch (e) {
             console.error('Failed to save vehicleList.')
             console.log(e)
@@ -86,7 +86,8 @@ class FillGasScreen extends React.Component {
         console.log("FIll Gas State of ID:" + this.props.navigation.state.params.vehicleId)
         console.log(this.state)
         return (
-            <View>
+            <Container>
+            <Content>
             <View style={styles.formContainer}>
                 <View style={styles.rowContainer}>
                     <Text style={styles.rowLabel}>
@@ -175,15 +176,27 @@ class FillGasScreen extends React.Component {
                 ><Text>Add Data</Text></Button>
                 </View>
             </View>
-            
-            </View>
+            </Content>
+            </Container>
         );
     }
 }
 
-FillGasScreen.navigationOptions = {
-    title: 'Fill Gas',
-};
+FillGasScreen.navigationOptions = ({navigation}) => ({
+    header: (
+        <Header>
+          <Left>
+            <Button transparent onPress={() => navigation.goBack()}>
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Fill Gas</Title>
+          </Body>
+          <Right />
+        </Header>
+    )
+});
 
 const styles = StyleSheet.create({
   formContainer: {
