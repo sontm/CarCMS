@@ -4,6 +4,9 @@ import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
 
+import { connect } from 'react-redux';
+import {actVehicleAddFillGas} from '../../redux/VehicleReducer'
+
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
     { id: 2,name: "Madza", models: [{id:5, name: "X3"},{id:6, name: "X4"},{id:7, name: "X5"},{id:8, name: "CX5"}]},
@@ -17,7 +20,6 @@ class FillGasScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            vehicleList: [],
             //id: 1, // increment
             vehicleId: 0,
             fillDate: new Date().toLocaleString(),
@@ -26,37 +28,17 @@ class FillGasScreen extends React.Component {
             currentKm: ""
         };
 
-        this.load = this.load.bind(this)
         this.save = this.save.bind(this)
     }
-
     componentWillMount() {
-        this.load()
+        this.setState({
+            vehicleId: AppContants.CURRENT_VEHICLE_ID
+        })
     }
-    load = async () => {
-        try {
-            let vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            vehicleList = JSON.parse(vehicleList)
-            // Add Default value
-            vehicleList.unshift({id: 0, brand:"-", model:"Please Select", licensePlate: "-"})
 
-            // If User choose for a Car
-            let selectedVehicle = 0;
-            if (this.props.navigation.state.params.vehicleId) {
-                selectedVehicle = this.props.navigation.state.params.vehicleId
-            }
-            this.setState({
-                vehicleList: vehicleList,
-                vehicleId: selectedVehicle
-            })
-        } catch (e) {
-            console.error('Failed to load vehicleList from AsyncStorage.')
-            console.log(e)
-        }
-    }
     save = async (newVehicle) => {
         try {
-            console.log("WIll Save:")
+            console.log("WIll Save Fill Gas:")
             let newData = {
                 vehicleId: Number(this.state.vehicleId),
                 fillDate: this.state.fillDate,
@@ -64,18 +46,28 @@ class FillGasScreen extends React.Component {
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
-            console.log(newData)
+            //console.log(newData)
 
-            const previousData = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
-            let newDataList = JSON.parse(previousData)
-            if (!newDataList) {
-                newDataList = [];
-            }
-            newData.id = newDataList.length + 1;
-            newDataList.push(newData)
-            await AsyncStorage.setItem(AppContants.STORAGE_FILL_GAS_LIST, JSON.stringify(newDataList))
+            // const previousData = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
+            // let newDataList = JSON.parse(previousData)
+            // if (!newDataList) {
+            //     newDataList = [];
+            // }
+            // newData.id = newDataList.length + 1;
+            // newDataList.push(newData)
+            // await AsyncStorage.setItem(AppContants.STORAGE_FILL_GAS_LIST, JSON.stringify(newDataList))
 
-            this.props.navigation.push('VehicleDetail')
+            let maxId = 0;
+            this.props.vehicleData.fillGasList.forEach(item => {
+                if (maxId < item.id) {
+                    maxId = item.id
+                }
+            })
+            newData.id = maxId + 1;
+            console.log(JSON.stringify(newData))
+            this.props.actVehicleAddFillGas(newData)
+
+            this.props.navigation.navigate('VehicleDetail')
         } catch (e) {
             console.error('Failed to save vehicleList.')
             console.log(e)
@@ -83,7 +75,7 @@ class FillGasScreen extends React.Component {
     }
 
     render() {
-        console.log("FIll Gas State of ID:" + this.props.navigation.state.params.vehicleId)
+        console.log("FIll Gas State of ID:" + AppContants.CURRENT_VEHICLE_ID)
         console.log(this.state)
         return (
             <Container>
@@ -105,7 +97,7 @@ class FillGasScreen extends React.Component {
                             this.setState({vehicleId: itemValue})
                         }
                     >
-                        {this.state.vehicleList.map(item => (
+                        {this.props.vehicleData.vehicleList.map(item => (
                             <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
                                 value={item.id} key={item.id}/>
                         ))}
@@ -230,4 +222,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default FillGasScreen;
+const mapStateToProps = (state) => ({
+    vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+    actVehicleAddFillGas
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(FillGasScreen);

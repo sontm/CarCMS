@@ -1,14 +1,200 @@
+import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { ExpoConfigView } from '@expo/samples';
+import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity } from 'react-native';
+import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
+    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs } from 'native-base';
+import Layout from '../constants/Layout'
 
-export default function SettingsScreen() {
-  /**
-   * Go ahead and delete ExpoConfigView and replace it with your content;
-   * we just wanted to give you a quick view of your config.
-   */
-  return <ExpoConfigView />;
+import AppUtils from '../constants/AppUtils'
+import AppConstants from '../constants/AppConstants';
+
+import { connect } from 'react-redux';
+import {actVehicleOpenDetailVehicle} from '../redux/VehicleReducer'
+
+class SettingsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+
+  }
+
+
+  render() {
+    return (
+        <Container>
+        <Content>
+        <View style={styles.container}>
+            <View style={styles.textRow}>
+                <Text style={styles.textSection}>
+                    Pro Version Features
+                </Text>
+            </View>
+            <TouchableOpacity 
+                onPress={() => {}}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="MaterialCommunityIcons" name="crown" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Pro Version</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+                onPress={() => {}}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Synchronize Data</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+
+
+            <View style={styles.textRow}>
+                <Text style={styles.textSection}>
+                    Setting
+                </Text>
+            </View>
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("VehicleSetting")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="MaterialIcons" name="settings" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Vehicle Setting</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                onPress={() => {}}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="MaterialIcons" name="access-alarm" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Remind Setting</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+
+
+            <View style={styles.textRow}>
+                <Text style={styles.textSection}>
+                    Tai Khoan
+                </Text>
+            </View>
+            <TouchableOpacity 
+                onPress={() => {}}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="FontAwesome" name="user-circle" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Profile</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+                onPress={() => {}}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="Foundation" name="mail" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Contact</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+        </View>
+        </Content>
+        </Container>
+    )
+    }
 }
 
-SettingsScreen.navigationOptions = {
-  title: 'app.json',
+SettingsScreen.navigationOptions = ({navigation}) => ({
+    header: (
+        <Header>
+          <Left>
+          </Left>
+          <Body>
+            <Title>More Settings</Title>
+          </Body>
+          <Right>
+             <Button transparent onPress={() => {}}>
+              <Icon name="search" />
+            </Button>
+          </Right>
+        </Header>
+    )
+});
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    marginTop: 10,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    marginLeft: 3,
+    marginRight: 3
+  },
+
+  textRow: {
+    flexDirection: "row",
+    paddingTop: 10,
+    paddingLeft: 5,
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
+    flexGrow: 100,
+    marginTop: 5
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center", // vertial align
+    margin: 5,
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderBottomColor: "rgb(230, 230, 230)",
+    borderBottomWidth: 0.5
+  },
+  rowIcon: {
+    flex: 1,
+    textAlign: "left",
+  },
+  iconLeft: {
+    fontSize: 24,
+    color: "rgb(80,80,80)"
+  },
+  rowText: {
+    marginLeft: 5,
+    flex: 9,
+  },
+  rowRightIcon: {
+    flex: 1,
+    flexDirection:"row",
+    justifyContent: "flex-end",
+  },
+  iconRight: {
+    fontSize: 20,
+    color: "grey"
+  },
+
+  textNormal: {
+    color: "rgb(80, 80, 80)"
+  },
+  textSection: {
+    fontSize: 24,
+    color: "rgb(100, 100, 100)"
+  }
+})
+
+const mapStateToProps = (state) => ({
+    vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+    actVehicleOpenDetailVehicle
 };
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(SettingsScreen);

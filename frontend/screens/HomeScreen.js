@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
+import { connect } from 'react-redux';
 import {
   Image,
   Platform,
@@ -15,6 +16,8 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text,
 import { MonoText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
+import {actVehicleDeleteVehicle, actVehicleAddFillGas, actVehicleAddVehicle, 
+  actVehicleAddFillOil, actVehicleAddCarAuthorize} from '../redux/VehicleReducer'
 
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
@@ -29,7 +32,7 @@ class HomeScreen extends React.Component {
       authorizeCarList:[],
     };
 
-    this.navigateToInputInfo = this.navigateToInputInfo.bind(this)
+    this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this)
   }
   componentDidMount() {
     console.log("HOMESCreen DidMount")
@@ -40,21 +43,34 @@ class HomeScreen extends React.Component {
     const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
     const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
     const authorizeCarList = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
-    this.setState({
-      vehicleList: JSON.parse(vehicleList),
-      fillGasList: JSON.parse(fillGasList),
-      fillOilList: JSON.parse(fillOilList),
-      authorizeCarList: JSON.parse(authorizeCarList),
-    })
+    // JSON.parse(vehicleList).forEach(item => {
+    //   this.props.actVehicleAddVehicle(item)
+    // })
+    // JSON.parse(fillGasList).forEach(item => {
+    //   this.props.actVehicleAddFillGas(item)
+    // })
+    // JSON.parse(fillOilList).forEach(item => {
+    //   this.props.actVehicleAddFillOil(item)
+    // })
+    // JSON.parse(authorizeCarList).forEach(item => {
+    //   this.props.actVehicleAddCarAuthorize(item)
+    // })
+    // this.setState({
+    //   vehicleList: JSON.parse(vehicleList),
+    //   fillGasList: JSON.parse(fillGasList),
+    //   fillOilList: JSON.parse(fillOilList),
+    //   authorizeCarList: JSON.parse(authorizeCarList),
+    // })
 
     //this.clearAsyncStorage()
   }
   clearAsyncStorage = async() => {
     AsyncStorage.clear();
   }
-  navigateToInputInfo(id) {
-    this.props.navigation.navigate('InputInfo', {vehicleId:id});
+  handleDeleteVehicle(vehicleId, licensePlate) {
+    this.props.actVehicleDeleteVehicle(vehicleId, licensePlate)
   }
+
   componentDidUpdate() {
     console.log("HOMESCreen DIDUpdate")
   }
@@ -82,8 +98,8 @@ class HomeScreen extends React.Component {
             <ScrollView
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
-              {this.state.vehicleList && this.state.vehicleList.map(item => (
-                <VehicleBasicReport vehicle={item} key={item.id} navigateToInputInfo={this.navigateToInputInfo}
+              {this.props.vehicleData.vehicleList && this.props.vehicleData.vehicleList.map(item => (
+                <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
                   navigation={this.props.navigation} {...this.state}
                 />
               ))}
@@ -176,4 +192,15 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+const mapStateToProps = (state) => ({
+  vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+  actVehicleDeleteVehicle, actVehicleAddFillGas, actVehicleAddVehicle, 
+  actVehicleAddFillOil, actVehicleAddCarAuthorize
+};
+
+export default connect(
+  mapStateToProps,mapActionsToProps
+)(HomeScreen);
+

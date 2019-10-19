@@ -9,6 +9,8 @@ import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 
+import { connect } from 'react-redux';
+import {actVehicleOpenDetailVehicle} from '../redux/VehicleReducer'
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
 // fillOilList: {vehicleId: 1, fillDate: "10/14/2019, 11:56:44 PM", price: 500000, currentKm: 3000, id: 1}
@@ -16,89 +18,55 @@ class VehicleDetailReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        currentVehicleId: 0,
         vehicle: {},
-        vehicleList:[],
-        fillGasList:[],
-        fillOilList:[],
-        authorizeCarList:[],
     };
 
-    this.navigateToInputInfo = this.navigateToInputInfo.bind(this)
   }
   componentDidMount() {
-    console.log("DetailReport DidMount")
-    this.loadFromStorage()
-  }
-  loadFromStorage = async () => {
-    let vehicleList = await AsyncStorage.getItem(AppConstants.STORAGE_VEHICLE_LIST)
-    const fillGasList = await AsyncStorage.getItem(AppConstants.STORAGE_FILL_GAS_LIST)
-    const fillOilList = await AsyncStorage.getItem(AppConstants.STORAGE_FILL_OIL_LIST)
-    const authorizeCarList = await AsyncStorage.getItem(AppConstants.STORAGE_AUTHORIZE_CAR_LIST)
-    vehicleList = JSON.parse(vehicleList);
-    let currentCarId = 1;
-    if (this.props.navigation.state && this.props.navigation.state.params && 
-            this.props.navigation.state.params.vehicleId) {
-        currentCarId = this.props.navigation.state.params.vehicleId;
-    }
-    let vehicle = {};
-    for(let i = 0; i < vehicleList.length; i++) {
-        if (vehicleList[i].id == currentCarId) {
-            vehicle = vehicleList[i];
-            break;
-        }
-    }
-    this.setState({
-        currentVehicleId: currentCarId,
-        vehicle: vehicle,
-        vehicleList: vehicleList,
-        fillGasList: JSON.parse(fillGasList),
-        fillOilList: JSON.parse(fillOilList),
-        authorizeCarList: JSON.parse(authorizeCarList),
-    })
+    //console.log("DetailReport DidMount:" + this.props.navigation.state.params.vehicleId)
 
-    //this.clearAsyncStorage()
+    //this.props.actVehicleOpenDetailVehicle(this.props.navigation.state.params.vehicleId)
+    //AppConstants.CURRENT_VEHICLE_ID = this.props.navigation.state.params.vehicleId;
   }
-  clearAsyncStorage = async() => {
-    AsyncStorage.clear();
-  }
-  navigateToInputInfo(id) {
-    this.props.navigation.navigate('InputInfo', {vehicleId:id});
-  }
-  componentDidUpdate() {
-    console.log("DetailReport DIDUpdate")
-    if (this.props.navigation.state && this.props.navigation.state.params && 
-            this.props.navigation.state.params.vehicleId && 
-            this.state.currentVehicleId != this.props.navigation.state.params.vehicleId) {
-        let vehicle;
-        for(let i = 0; i < this.state.vehicleList.length; i++) {
-            if (this.state.vehicleList[i].id == this.props.navigation.state.params.vehicleId) {
-                vehicle = this.state.vehicleList[i];
-                break;
-            }
-        }
-        this.setState({
-            currentVehicleId: this.props.navigation.state.params.vehicleId,
-            vehicle: vehicle,
-        })
-    }
-  }
+
   componentWillReceiveProps(nextProps) {
     console.log("DetailReport WillReceiveProps")
   }
-  componentWillUnmount() {
-    console.log("DetailReport Will UnMount")
-  }
-  render() {
-    console.log("VehicleReport Render")
+//   componentDidUpdate() {
+//     console.log("DetailReport DIDUpdate")
+//     if (this.props.navigation.state && this.props.navigation.state.params && 
+//             this.props.navigation.state.params.vehicleId && 
+//             AppConstants.CURRENT_VEHICLE_ID != this.props.navigation.state.params.vehicleId) {
+//         let vehicle;
+//         for(let i = 0; i < this.state.vehicleList.length; i++) {
+//             if (this.state.vehicleList[i].id == this.props.navigation.state.params.vehicleId) {
+//                 vehicle = this.state.vehicleList[i];
+//                 break;
+//             }
+//         }
+//         this.setState({
+//             currentVehicleId: this.props.navigation.state.params.vehicleId,
+//             vehicle: vehicle,
+//         })
+//     }
 
+  render() {
+    console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
+    let currentVehicle = {};
+    const arrVehicles = this.props.vehicleData.vehicleList.filter(
+        item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+    if (arrVehicles && arrVehicles.length > 0) {
+        currentVehicle = arrVehicles[0];
+    }
     let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
         arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
-        = AppUtils.getStatForGasUsage(this.state.fillGasList, this.state.vehicle.id);
+        = AppUtils.getStatForGasUsage(this.props.vehicleData.fillGasList, AppConstants.CURRENT_VEHICLE_ID);
     let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-        = AppUtils.getInfoForOilUsage( this.state.fillOilList, this.state.vehicle.id, lastDate, lastKm, averageKmPerDay);
+        = AppUtils.getInfoForOilUsage( this.props.vehicleData.fillOilList, AppConstants.CURRENT_VEHICLE_ID, 
+            lastDate, lastKm, averageKmPerDay);
     let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-        = AppUtils.getInfoCarAuthorizeDate(this.state.authorizeCarList, this.state.vehicle.id)
+        = AppUtils.getInfoCarAuthorizeDate(this.props.vehicleData.authorizeCarList, 
+            AppConstants.CURRENT_VEHICLE_ID)
 
     return (
         <Container>
@@ -114,10 +82,10 @@ class VehicleDetailReport extends React.Component {
 
                 <View style={styles.vehicleInfoText}>
                 <Text style={styles.vehicleInfoTextBrand}>
-                    {this.state.vehicle.brand + " " + this.state.vehicle.model}
+                    {currentVehicle.brand + " " + currentVehicle.model}
                 </Text>
                 <Text style={styles.vehicleInfoTextPlate}>
-                    {this.state.vehicle.licensePlate}
+                    {currentVehicle.licensePlate}
                 </Text>
                 </View>
 
@@ -125,7 +93,6 @@ class VehicleDetailReport extends React.Component {
                     <Button
                         style={styles.btnAddData}
                         iconLeft transparent
-                        // onPress={() => this.props.navigateToInputInfo(this.props.vehicle.id)}
                         onPress={() =>
                             ActionSheet.show(
                             {
@@ -300,7 +267,7 @@ class VehicleDetailReport extends React.Component {
                         standalone={false}
                         tickFormat={(t) => `${AppUtils.formatDateMonthDayVN(new Date(t))}`}
                         tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
-                        tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                        // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                     />
                     </VictoryChart>
                     
@@ -352,13 +319,6 @@ class VehicleDetailReport extends React.Component {
                 </View>
             </View>
 
-            <View style={styles.buttonRow}>
-                <Button
-                    onPress={this.handleOpenFullView}
-                >
-                    <Text>More > </Text>
-                </Button>
-            </View>
         </View>
         </Content>
         </Container>
@@ -509,4 +469,13 @@ const styles = StyleSheet.create({
     },
 })
 
-export default VehicleDetailReport;
+const mapStateToProps = (state) => ({
+    vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+    actVehicleOpenDetailVehicle
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(VehicleDetailReport);

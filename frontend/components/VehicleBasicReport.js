@@ -8,6 +8,8 @@ import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 
+import { connect } from 'react-redux';
+
 const data = [
     { x: new Date("2018-01-15"), y: 13000 },
     { x: new Date("2018-02-15"), y: 16500 },
@@ -41,7 +43,8 @@ class VehicleBasicReport extends Component {
                   onPress: () => console.log('Cancel Pressed'),
                   style: 'cancel',
                 },
-                {text: 'Delete', style: 'destructive' , onPress: () => console.log('OK Pressed')},
+                {text: 'Delete', style: 'destructive' , 
+                    onPress: () => this.props.handleDeleteVehicle(this.props.vehicle.id, this.props.vehicle.licensePlate)},
             ],
             {cancelable: true}
         )
@@ -54,17 +57,20 @@ class VehicleBasicReport extends Component {
         console.log("VehicleReport Render")
         let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
             arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
-            = AppUtils.getStatForGasUsage(this.props.fillGasList, this.props.vehicle.id);
+            = AppUtils.getStatForGasUsage(this.props.vehicleData.fillGasList, this.props.vehicle.id);
         let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-            = AppUtils.getInfoForOilUsage( this.props.fillOilList, this.props.vehicle.id, lastDate, lastKm, averageKmPerDay);
+            = AppUtils.getInfoForOilUsage( this.props.vehicleData.fillOilList, this.props.vehicle.id, lastDate, lastKm, averageKmPerDay);
         let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-            = AppUtils.getInfoCarAuthorizeDate(this.props.authorizeCarList, this.props.vehicle.id)
+            = AppUtils.getInfoCarAuthorizeDate(this.props.vehicleData.authorizeCarList, this.props.vehicle.id)
 
         return (
             <Content>
             <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate("VehicleDetail", 
+                onPress={() => {
+                    AppConstants.CURRENT_VEHICLE_ID = this.props.vehicle.id;
+                    this.props.navigation.navigate("VehicleDetail", 
                           {vehicleId: this.props.vehicle.id})
+                    }
                 }
             >
 
@@ -169,7 +175,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         backgroundColor: "white",
         flexDirection: "column",
-        borderRadius: 10,
+        borderRadius: 0,
         borderColor: "rgb(220, 220, 220)",
         borderWidth: 1,
         justifyContent: "flex-start",
@@ -209,11 +215,11 @@ const styles = StyleSheet.create({
         color: "blue"
     },
     vehicleButtons: {
-        alignSelf: "center",
+        alignSelf: "flex-start",
         flexDirection: "row",
         justifyContent: "flex-end",
-        alignItems: "center",
-        paddingRight: 0
+        alignItems: "flex-start",
+        marginRight: -10
     },
     vehicleButtonItem: {
         margin: 0,
@@ -254,4 +260,14 @@ const styles = StyleSheet.create({
     },
     
 })
-export default VehicleBasicReport;
+
+const mapStateToProps = (state) => ({
+    vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+    
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(VehicleBasicReport);

@@ -7,7 +7,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { Root } from "native-base";
 
 import AppNavigator from './navigation/AppNavigator';
+import { store, persistor } from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux';
 
+//If you are using react, wrap your root component with PersistGate. 
+//This delays the rendering of your app's UI until your persisted state has been retrieved and saved to redux
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
@@ -23,9 +28,13 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <Root>
-        <AppNavigator />
-        </Root>
+        <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Root>
+          <AppNavigator />
+          </Root>
+        </PersistGate>
+        </Provider>
       </View>
     );
   }

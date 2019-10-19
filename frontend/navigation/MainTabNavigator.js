@@ -14,10 +14,11 @@ import RegisterVehicleScreen from '../screens/RegisterVehicleScreen';
 import FillGasScreen from '../screens/addinfo/FillGasScreen';
 import FillOilScreen from '../screens/addinfo/FillOilScreen';
 import CarAuthorizeScreen from '../screens/addinfo/CarAuthorizeScreen';
-
 import VehicleDetailReport from '../screens/VehicleDetailReport';
+
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import VehicleSettingScreen from '../screens/setting/VehicleSettingScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -87,6 +88,7 @@ const CANCEL_INDEX = 4;
 const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
+    VehicleSetting: VehicleSettingScreen,
   },
   config
 );

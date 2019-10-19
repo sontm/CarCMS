@@ -3,6 +3,8 @@ import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../constants/AppConstants'
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Form, Item } from 'native-base';
+import { connect } from 'react-redux';
+import {actVehicleAddVehicle} from '../redux/VehicleReducer'
 
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
@@ -43,18 +45,25 @@ class RegisterVehicleScreen extends React.Component {
     save = async (newVehicle) => {
         try {
             console.log("WIll Save:")
+
+            // const prevVehiclesStorage = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
+            // let prevVehicles = JSON.parse(prevVehiclesStorage)
+            // if (!prevVehicles) {
+            //     prevVehicles = [];
+            // }
+            // newVehicle.id = prevVehicles.length + 1;
+            // prevVehicles.push(newVehicle)
+            // await AsyncStorage.setItem(AppContants.STORAGE_VEHICLE_LIST, JSON.stringify(prevVehicles))
+            let maxId = 0;
+            this.props.vehicleData.vehicleList.forEach(item => {
+                if (maxId < item.id) {
+                    maxId = item.id
+                }
+            })
+            newVehicle.id = maxId + 1;
             console.log(JSON.stringify(newVehicle))
-
-            const prevVehiclesStorage = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            let prevVehicles = JSON.parse(prevVehiclesStorage)
-            if (!prevVehicles) {
-                prevVehicles = [];
-            }
-            newVehicle.id = prevVehicles.length + 1;
-            prevVehicles.push(newVehicle)
-            await AsyncStorage.setItem(AppContants.STORAGE_VEHICLE_LIST, JSON.stringify(prevVehicles))
-
-            this.props.navigation.push("Home")
+            this.props.actVehicleAddVehicle(newVehicle)
+            this.props.navigation.navigate("Home")
         } catch (e) {
             console.error('Failed to save vehicleList.')
             console.log(e)
@@ -214,4 +223,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default RegisterVehicleScreen;
+const mapStateToProps = (state) => ({
+    vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+    actVehicleAddVehicle
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(RegisterVehicleScreen);
+

@@ -5,6 +5,9 @@ import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item,
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
 
+import { connect } from 'react-redux';
+import {actVehicleAddFillOil} from '../../redux/VehicleReducer'
+
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
     { id: 2,name: "Madza", models: [{id:5, name: "X3"},{id:6, name: "X4"},{id:7, name: "X5"},{id:8, name: "CX5"}]},
@@ -18,7 +21,6 @@ class FillOilScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            vehicleList: [],
             //id: 1, // increment
             vehicleId: 0,
             fillDate: new Date().toLocaleString(),
@@ -26,37 +28,18 @@ class FillOilScreen extends React.Component {
             currentKm: ""
         };
 
-        this.load = this.load.bind(this)
         this.save = this.save.bind(this)
     }
 
     componentWillMount() {
-        this.load()
+        this.setState({
+            vehicleId: AppContants.CURRENT_VEHICLE_ID
+        })
     }
-    load = async () => {
-        try {
-            let vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            vehicleList = JSON.parse(vehicleList)
-            // Add Default value
-            vehicleList.unshift({id: 0, brand:"-", model:"Please Select", licensePlate: "-"})
-
-            // If User choose for a Car
-            let selectedVehicle = 0;
-            if (this.props.navigation.state.params.vehicleId) {
-                selectedVehicle = this.props.navigation.state.params.vehicleId
-            }
-            this.setState({
-                vehicleList: vehicleList,
-                vehicleId: selectedVehicle
-            })
-        } catch (e) {
-            console.error('Failed to load vehicleList from AsyncStorage.')
-            console.log(e)
-        }
-    }
+    
     save = async (newVehicle) => {
         try {
-            console.log("WIll Save:")
+            console.log("WIll Save FillOil:")
             let newData = {
                 vehicleId: Number(this.state.vehicleId),
                 fillDate: this.state.fillDate,
@@ -65,14 +48,15 @@ class FillOilScreen extends React.Component {
             }
             console.log(newData)
 
-            const previousData = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
-            let newDataList = JSON.parse(previousData)
-            if (!newDataList) {
-                newDataList = [];
-            }
-            newData.id = newDataList.length + 1;
-            newDataList.push(newData)
-            await AsyncStorage.setItem(AppContants.STORAGE_FILL_OIL_LIST, JSON.stringify(newDataList))
+            let maxId = 0;
+            this.props.vehicleData.fillOilList.forEach(item => {
+                if (maxId < item.id) {
+                    maxId = item.id
+                }
+            })
+            newData.id = maxId + 1;
+
+            this.props.actVehicleAddFillOil(newData)
 
             this.props.navigation.push('VehicleDetail')
         } catch (e) {
@@ -101,7 +85,7 @@ class FillOilScreen extends React.Component {
                                 this.setState({vehicleId: itemValue})
                             }
                             >
-                            {this.state.vehicleList.map(item => (
+                            {this.props.vehicleData.vehicleList.map(item => (
                                 <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
                                     value={item.id} key={item.id}/>
                             ))}
@@ -212,4 +196,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default FillOilScreen;
+const mapStateToProps = (state) => ({
+    vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+    actVehicleAddFillOil
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(FillOilScreen);

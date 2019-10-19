@@ -5,6 +5,9 @@ import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item,
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
 
+import { connect } from 'react-redux';
+import {actVehicleAddCarAuthorize} from '../../redux/VehicleReducer'
+
 const DATA_BRAND_MODEL = [
     { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
     { id: 2,name: "Madza", models: [{id:5, name: "X3"},{id:6, name: "X4"},{id:7, name: "X5"},{id:8, name: "CX5"}]},
@@ -26,53 +29,34 @@ class CarAuthorizeScreen extends React.Component {
             currentKm: ""
         };
 
-        this.load = this.load.bind(this)
         this.save = this.save.bind(this)
     }
 
     componentWillMount() {
-        this.load()
+        this.setState({
+            vehicleId: AppContants.CURRENT_VEHICLE_ID
+        })
     }
-    load = async () => {
-        try {
-            let vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            vehicleList = JSON.parse(vehicleList)
-            // Add Default value
-            vehicleList.unshift({id: 0, brand:"-", model:"Please Select", licensePlate: "-"})
-
-            // If User choose for a Car
-            let selectedVehicle = 0;
-            if (this.props.navigation.state.params.vehicleId) {
-                selectedVehicle = this.props.navigation.state.params.vehicleId
-            }
-            this.setState({
-                vehicleList: vehicleList,
-                vehicleId: selectedVehicle
-            })
-        } catch (e) {
-            console.error('Failed to load vehicleList from AsyncStorage.')
-            console.log(e)
-        }
-    }
+    
     save = async (newVehicle) => {
         try {
-            console.log("WIll Save:")
+            console.log("WIll Save Car Authorize:")
             let newData = {
                 vehicleId: Number(this.state.vehicleId),
                 authorizeDate: this.state.authorizeDate,
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
+            let maxId = 0;
+            this.props.vehicleData.authorizeCarList.forEach(item => {
+                if (maxId < item.id) {
+                    maxId = item.id
+                }
+            })
+            newData.id = maxId + 1;
             console.log(newData)
 
-            const previousData = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
-            let newDataList = JSON.parse(previousData)
-            if (!newDataList) {
-                newDataList = [];
-            }
-            newData.id = newDataList.length + 1;
-            newDataList.push(newData)
-            await AsyncStorage.setItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST, JSON.stringify(newDataList))
+            this.props.actVehicleAddCarAuthorize(newData)
 
             this.props.navigation.navigate('VehicleDetail')
         } catch (e) {
@@ -101,7 +85,7 @@ class CarAuthorizeScreen extends React.Component {
                                 this.setState({vehicleId: itemValue})
                             }
                             >
-                            {this.state.vehicleList.map(item => (
+                            {this.props.vehicleData.vehicleList.map(item => (
                                 <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
                                     value={item.id} key={item.id}/>
                             ))}
@@ -212,4 +196,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CarAuthorizeScreen;
+const mapStateToProps = (state) => ({
+    vehicleData: state.vehicleData
+});
+const mapActionsToProps = {
+    actVehicleAddCarAuthorize
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(CarAuthorizeScreen);
