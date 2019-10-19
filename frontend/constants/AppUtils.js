@@ -1,6 +1,37 @@
 import AppConstants from './AppConstants'
 
+const dateFormat = require('dateformat');
+// dateFormat.i18n = {
+//     dayNames: [
+//         'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',
+//         'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+//     ],
+//     monthNames: [
+//         'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+//         'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+//     ],
+//     timeNames: [
+//         'a', 'p', 'am', 'pm', 'A', 'P', 'AM', 'PM'
+//     ]
+// };
+dateFormat.i18n = {
+    dayNames: [
+        'CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7',
+        'CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7',
+    ],
+    monthNames: [
+        'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8', 'T9', 'T10', 'T11','T12',
+        'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11','Tháng 12',
+    ],
+    timeNames: [
+        'S', 'C', 'S', 'C', 'S', 'C', 'S', 'C'
+    ]
+};
+
 class AppUtils {
+    formatDateMonthDayVN(t) {
+        return dateFormat(new Date(t), "d/mmm");
+    }
     // input: [{vehicleId: 1, fillDate: "", amount: 5, price: 3423434, currentKm: 1123, id: 2}]
 
     // Output of Average KM Weekly/Monthly
@@ -16,7 +47,7 @@ class AppUtils {
             fillGasList = fillGasListAll.filter(item => item.vehicleId == ofVehicleId);
         }
         let lastKm = 0;
-        let totalMoney = 0;
+        let totalMoneyGas = 0;
         let lastDate = 0;
         let todayLiter = 0;
 
@@ -38,7 +69,7 @@ class AppUtils {
 
                 // For money and Litre, not use the Last Fill date (because that fill is for next)
                 if (index != fillGasList.length -1) {
-                    totalMoney += item.price;
+                    totalMoneyGas += item.price;
                     todayLiter += item.amount;
                 }
 
@@ -65,16 +96,16 @@ class AppUtils {
             // 1.Average KM per Lit
             let averageKmPerLiter = (lastKm - beginKm) / todayLiter;
             // 2. Average Money per Lit
-            let averageMoneyPerLiter = totalMoney/ todayLiter;
+            let averageMoneyPerLiter = totalMoneyGas/ todayLiter;
             // 3. Average Money per Day
-            let averageMoneyPerDay = totalMoney/ diffDays;
+            let averageMoneyPerDay = totalMoneyGas/ diffDays;
             // 4. Average of KM per Day
             let averageKmPerDay = (lastKm - beginKm)/ diffDays;
             // 5. Mothly Report perMonth: KM, 
             // TODO
 
             return {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
-                arrMoneyPerWeek, arrKmPerWeek};
+                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas};
         } else {
             return {};
         }
@@ -120,6 +151,42 @@ class AppUtils {
             return {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil};
         }
         return {};
+    }
+
+    getInfoCarAuthorizeDate(authorizeListAll, ofVehicleId) {
+        if (!authorizeListAll) {
+            return {};
+        }
+        let authorizeList = authorizeListAll;
+        if (ofVehicleId) {
+            authorizeList = authorizeListAll.filter(item => item.vehicleId == ofVehicleId);
+        }
+        let totalMoneyAuthorize = 0;
+        let lastDate = null;
+        if (authorizeList && authorizeList.length > 0) {
+            authorizeList.forEach((item, index) => {
+                if (index == authorizeList.length -1) {
+                    lastDate = new Date(item.authorizeDate);
+                }
+                //if (index != authorizeList.length -1) {
+                    totalMoneyAuthorize += item.price;
+                //}
+            })
+        }
+        if (lastDate) {
+            let today = new Date();
+            let nextAuthorizeDate = new Date(lastDate)
+            nextAuthorizeDate = nextAuthorizeDate.setDate(nextAuthorizeDate.getDate() + AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR);
+
+            const diffTime = Math.abs(today - lastDate); // in ms
+            const diffDayFromLastAuthorize = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+            nextAuthorizeDate = new Date(nextAuthorizeDate)
+
+            return {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize};
+        } else {
+            return {}
+        }
     }
 }
 

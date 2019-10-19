@@ -13,8 +13,8 @@ expo init AwesomeProject
 
 1. Know current status of Car: 
     a.Dang Kiem
-    b.Do Xang
-    c.Thay Dau
+    b.Do Xang    -> Every time, have current KM 
+    c.Thay Dau		-> Need have current Moved KM
     d.Bao Tri Tong Quat
     e.Thay Lop, Sam
 

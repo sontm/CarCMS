@@ -25,21 +25,25 @@ class HomeScreen extends React.Component {
       vehicleList:[],
       fillGasList:[],
       fillOilList:[],
+      authorizeCarList:[],
     };
 
     this.navigateToInputInfo = this.navigateToInputInfo.bind(this)
   }
   componentDidMount() {
+    console.log("HOMESCreen DidMount")
     this.loadFromStorage()
   }
   loadFromStorage = async () => {
     const vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
     const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
     const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
+    const authorizeCarList = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
     this.setState({
       vehicleList: JSON.parse(vehicleList),
       fillGasList: JSON.parse(fillGasList),
-      fillOilList: JSON.parse(fillOilList)
+      fillOilList: JSON.parse(fillOilList),
+      authorizeCarList: JSON.parse(authorizeCarList),
     })
 
     //this.clearAsyncStorage()
@@ -50,8 +54,11 @@ class HomeScreen extends React.Component {
   navigateToInputInfo(id) {
     this.props.navigation.navigate('InputInfo', {vehicleId:id});
   }
+  componentDidUpdate() {
+    console.log("HOMESCreen DIDUpdate")
+  }
   render() {
-    console.log("Home Render")
+    console.log("HOMESCreen Render")
     console.log(this.state.vehicleList)
     return (
       <View style={styles.container}>

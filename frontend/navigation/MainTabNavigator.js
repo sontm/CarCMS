@@ -8,6 +8,7 @@ import HomeScreen from '../screens/HomeScreen';
 import RegisterVehicleScreen from '../screens/RegisterVehicleScreen';
 import FillGasScreen from '../screens/addinfo/FillGasScreen';
 import FillOilScreen from '../screens/addinfo/FillOilScreen';
+import CarAuthorizeScreen from '../screens/addinfo/CarAuthorizeScreen';
 
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
@@ -22,7 +23,8 @@ const HomeStack = createStackNavigator(
     Home: HomeScreen,
     NewVehicle: RegisterVehicleScreen,
     FillGas: FillGasScreen,
-    FillOil: FillOilScreen
+    FillOil: FillOilScreen,
+    CarAuthorize: CarAuthorizeScreen
   },
   config
 );
