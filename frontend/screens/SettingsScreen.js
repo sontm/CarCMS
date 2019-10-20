@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
+import { Platform } from 'react-native';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs } from 'native-base';
@@ -9,15 +10,11 @@ import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 
 import { connect } from 'react-redux';
-import {actVehicleOpenDetailVehicle} from '../redux/VehicleReducer'
 
 class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
-
-
   }
-
 
   render() {
     return (
@@ -192,7 +189,6 @@ const mapStateToProps = (state) => ({
     vehicleData: state.vehicleData
 });
 const mapActionsToProps = {
-    actVehicleOpenDetailVehicle
 };
   
 export default connect(

@@ -32,6 +32,22 @@ class AppUtils {
     formatDateMonthDayVN(t) {
         return dateFormat(new Date(t), "d/mmm");
     }
+    formatDateMonthDayYearVN(t) {
+        return dateFormat(new Date(t), "d-mmmm-yyyy");
+    }
+    getVietnamNameOfFillItemType(type) {
+        if (type == AppConstants.FILL_ITEM_GAS) {
+            return "Xăng Dầu";
+        } else if (type == AppConstants.FILL_ITEM_OIL) {
+            return "Dầu Nhớt";
+        } else if (type == AppConstants.FILL_ITEM_AUTH) {
+            return "Đăng Kiểm";
+        } else if (type == AppConstants.FILL_ITEM_EXPENSE) {
+            return "Chi Phí";
+        } else if (type == AppConstants.FILL_ITEM_SERVICE) {
+            return "Sửa Chữa";
+        }
+    }
     // input: [{vehicleId: 1, fillDate: "", amount: 5, price: 3423434, currentKm: 1123, id: 2}]
 
     // Output of Average KM Weekly/Monthly
@@ -166,7 +182,7 @@ class AppUtils {
         if (authorizeList && authorizeList.length > 0) {
             authorizeList.forEach((item, index) => {
                 if (index == authorizeList.length -1) {
-                    lastDate = new Date(item.authorizeDate);
+                    lastDate = new Date(item.fillDate);
                 }
                 //if (index != authorizeList.length -1) {
                     totalMoneyAuthorize += item.price;

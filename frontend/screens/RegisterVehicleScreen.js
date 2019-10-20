@@ -2,58 +2,66 @@ import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../constants/AppConstants'
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Form, Item } from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, 
+    Card, CardItem, Picker, Form, Item, CheckBox } from 'native-base';
 import { connect } from 'react-redux';
-import {actVehicleAddVehicle} from '../redux/VehicleReducer'
-
-const DATA_BRAND_MODEL = [
-    { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
-    { id: 2,name: "Madza", models: [{id:5, name: "X3"},{id:6, name: "X4"},{id:7, name: "X5"},{id:8, name: "CX5"}]},
-    { id: 3,name: "Honda", models: [{id:9, name: "CRV"},{id:10, name: "City"}]},
-    { id: 4,name: "Nissan", models: [{id:11, name: "X-Trail"},{id:12, name: "Sunny"},{id:13, name: "Surge"}]},
-    { id: 5,name: "Kia", models: [{id:14, name: "Morning"},{id:15, name: "K3"},{id:16, name: "Cerato"},{id:17, name: "Sorento"}]},
-    { id: 6,name: "Huyndai", models: [{id:18, name: "i10"},{id:19, name: "New i10"},{id:20, name: "Accent"},{id:21, name: "Elanta"}]},
-];
+import {actVehicleAddVehicle, actVehicleEditVehicle} from '../redux/VehicleReducer'
+import Layout from '../constants/Layout';
 
 class RegisterVehicleScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            //id: 1, // increment
+            id: 1, // increment
             brand: '',
             model: '',
             licensePlate: '',
-            checkedDate: new Date().toLocaleDateString()
+            checkedDate: new Date().toLocaleDateString(),
+            isDefault: false
         };
 
         this.save = this.save.bind(this)
+        this.handleToggleCheckDefault = this.handleToggleCheckDefault.bind(this)
     }
 
     componentWillMount() {
-        this.load()
-    }
-    load = async () => {
-        try {
-            const vehicle = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            console.log("VehicleList:")
-            console.log(JSON.parse(vehicle))
-        } catch (e) {
-            console.error('Failed to load vehicleList from AsyncStorage.')
-            console.log(e)
+        if (AppContants.CURRENT_VEHICLE_ID) {
+            for (let i = 0; i < this.props.vehicleData.vehicleList.length; i++) {
+                if (this.props.vehicleData.vehicleList[i].id == AppContants.CURRENT_VEHICLE_ID) {
+                    this.setState({
+                        id: AppContants.CURRENT_VEHICLE_ID,
+                        brand:this.props.vehicleData.vehicleList[i].brand,
+                        model: this.props.vehicleData.vehicleList[i].model,
+                        licensePlate: this.props.vehicleData.vehicleList[i].licensePlate,
+                        checkedDate: this.props.vehicleData.vehicleList[i].checkedDate,
+                        isDefault: this.props.vehicleData.vehicleList[i].isDefault
+                    })
+                }
+            }
+        } else {
+            // In case this is the First Car, Set it to Default
+            if (this.props.vehicleData.vehicleList.length < 1) {
+                this.setState({
+                    isDefault: true
+                })
+            }
         }
     }
-    save = async (newVehicle) => {
-        try {
+    handleToggleCheckDefault(e) {
+        console.log("handleToggleCheckDefault:")
+        console.log(e)
+        this.setState({
+            isDefault: !this.state.isDefault
+        })
+    }
+    save(newVehicle) {
+        if (AppContants.CURRENT_VEHICLE_ID) {
+            console.log("WIll Edit:")
+            console.log(JSON.stringify(newVehicle))
+            this.props.actVehicleEditVehicle(newVehicle)
+            this.props.navigation.navigate("Home")
+        } else {
             console.log("WIll Save:")
-
-            // const prevVehiclesStorage = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-            // let prevVehicles = JSON.parse(prevVehiclesStorage)
-            // if (!prevVehicles) {
-            //     prevVehicles = [];
-            // }
-            // newVehicle.id = prevVehicles.length + 1;
-            // prevVehicles.push(newVehicle)
-            // await AsyncStorage.setItem(AppContants.STORAGE_VEHICLE_LIST, JSON.stringify(prevVehicles))
             let maxId = 0;
             this.props.vehicleData.vehicleList.forEach(item => {
                 if (maxId < item.id) {
@@ -64,9 +72,6 @@ class RegisterVehicleScreen extends React.Component {
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleAddVehicle(newVehicle)
             this.props.navigation.navigate("Home")
-        } catch (e) {
-            console.error('Failed to save vehicleList.')
-            console.log(e)
         }
     }
 
@@ -99,8 +104,8 @@ class RegisterVehicleScreen extends React.Component {
                         <Item regular>
                         <Picker
                             mode="dropdown"
-                            style={{height: 50, width: "60%"}}
-                            placeholder="Select your SIM"
+                            style={{width: (Layout.window.width-40)*0.6}}
+                            placeholder="Select Brand"
                             placeholderStyle={{ color: "#bfc6ea" }}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.brand}
@@ -108,7 +113,7 @@ class RegisterVehicleScreen extends React.Component {
                                 this.setState({brand: itemValue})
                             }
                         >
-                            {this.getBrandsList(DATA_BRAND_MODEL).map(item => (
+                            {this.getBrandsList(AppContants.DATA_BRAND_MODEL).map(item => (
                                 <Picker.Item label={item.name} value={item.name} key={item.id}/>
                             ))}
                         </Picker>
@@ -122,7 +127,7 @@ class RegisterVehicleScreen extends React.Component {
                         <Item regular>
                         <Picker
                             mode="dropdown"
-                            style={{height: 50, width: "60%"}}
+                            style={{width: (Layout.window.width-40)*0.6}}
                             placeholder="Select Model"
                             placeholderStyle={{ color: "#bfc6ea" }}
                             placeholderIconColor="#007aff"
@@ -131,7 +136,7 @@ class RegisterVehicleScreen extends React.Component {
                                 this.setState({model: itemValue})
                             }
                         >
-                            {this.getModelsOfBrand(this.state.brand, DATA_BRAND_MODEL).map(item => (
+                            {this.getModelsOfBrand(this.state.brand, AppContants.DATA_BRAND_MODEL).map(item => (
                                 <Picker.Item label={item.name} value={item.name} key={item.name}/>
                             ))}
                         </Picker>
@@ -159,14 +164,25 @@ class RegisterVehicleScreen extends React.Component {
                             value={this.state.checkedDate}
                         />
                     </View>
-                    
+
+                    <View style={styles.rowContainer}>
+                        <View style={styles.rowLabel}>
+                            <CheckBox checked={this.state.isDefault}  color="green"
+                                onPress={this.handleToggleCheckDefault}
+                                style={{marginRight: 10}}/>
+                        </View>
+                        <View style={styles.rowForm}>
+                           <Text>Mặc Định</Text>
+                        </View>
+                    </View>
+
                     
 
                     <View style={styles.rowButton}>
                     <Button
                         style={styles.btnSubmit}
                         onPress={() => this.save(this.state)}
-                    ><Text>Create New Vehicle</Text></Button>
+                    ><Text>{AppContants.CURRENT_VEHICLE_ID ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
                     </View>
                 </View>
                 </Content>
@@ -179,12 +195,12 @@ RegisterVehicleScreen.navigationOptions = ({ navigation }) => ({
     header: (
         <Header>
           <Left>
-            <Button transparent onPress={() => navigation.navigate("Home")}>
+            <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>New Vehicle</Title>
+            <Title>Thông Tin Xe</Title>
           </Body>
           <Right />
         </Header>
@@ -203,16 +219,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center", // vertial align
     height: 50,
-    borderWidth: 1,
-    borderColor:"grey"
+    borderBottomColor: "rgb(230, 230, 230)",
+    borderBottomWidth: 0.5
   },
   rowLabel: {
     flex: 2,
     textAlign: "right",
-    paddingRight: 5
+    paddingRight: 5,
+    flexDirection: "row",
+    justifyContent: "flex-end"
   },
   rowForm: {
-    flex: 3
+    flex: 3,
+    flexDirection: "row"
   },
   rowButton: {
     marginTop: 20,
@@ -227,7 +246,7 @@ const mapStateToProps = (state) => ({
     vehicleData: state.vehicleData
 });
 const mapActionsToProps = {
-    actVehicleAddVehicle
+    actVehicleAddVehicle, actVehicleEditVehicle
 };
   
 export default connect(

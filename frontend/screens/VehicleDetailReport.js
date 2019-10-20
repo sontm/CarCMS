@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs } from 'native-base';
 import Layout from '../constants/Layout'
@@ -10,10 +10,7 @@ import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 
 import { connect } from 'react-redux';
-import {actVehicleOpenDetailVehicle} from '../redux/VehicleReducer'
-// vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
-// fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
-// fillOilList: {vehicleId: 1, fillDate: "10/14/2019, 11:56:44 PM", price: 500000, currentKm: 3000, id: 1}
+
 class VehicleDetailReport extends React.Component {
   constructor(props) {
     super(props);
@@ -22,33 +19,21 @@ class VehicleDetailReport extends React.Component {
     };
 
   }
+  componentWillMount() {
+    // Set Current Vehicle ID if not Set
+    if (!AppConstants.CURRENT_VEHICLE_ID) {
+        AppConstants.CURRENT_VEHICLE_ID = this.props.vehicleData.defaultVehicleId;
+    }
+  }
   componentDidMount() {
     //console.log("DetailReport DidMount:" + this.props.navigation.state.params.vehicleId)
 
-    //this.props.actVehicleOpenDetailVehicle(this.props.navigation.state.params.vehicleId)
     //AppConstants.CURRENT_VEHICLE_ID = this.props.navigation.state.params.vehicleId;
   }
 
   componentWillReceiveProps(nextProps) {
     console.log("DetailReport WillReceiveProps")
   }
-//   componentDidUpdate() {
-//     console.log("DetailReport DIDUpdate")
-//     if (this.props.navigation.state && this.props.navigation.state.params && 
-//             this.props.navigation.state.params.vehicleId && 
-//             AppConstants.CURRENT_VEHICLE_ID != this.props.navigation.state.params.vehicleId) {
-//         let vehicle;
-//         for(let i = 0; i < this.state.vehicleList.length; i++) {
-//             if (this.state.vehicleList[i].id == this.props.navigation.state.params.vehicleId) {
-//                 vehicle = this.state.vehicleList[i];
-//                 break;
-//             }
-//         }
-//         this.setState({
-//             currentVehicleId: this.props.navigation.state.params.vehicleId,
-//             vehicle: vehicle,
-//         })
-//     }
 
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
@@ -89,25 +74,6 @@ class VehicleDetailReport extends React.Component {
                 </Text>
                 </View>
 
-                <View style={styles.viewBtnAddData}>
-                    <Button
-                        style={styles.btnAddData}
-                        iconLeft transparent
-                        onPress={() =>
-                            ActionSheet.show(
-                            {
-                                options: BUTTONS,
-                                cancelButtonIndex: CANCEL_INDEX,
-                                title: "Choose category"
-                            },
-                            buttonIndex => this.handleAddDataClick(buttonIndex)
-                            )
-                        }
-                    >
-                        <Icon type="AntDesign" name='pluscircle' style={{fontSize: 35}}/>
-                    </Button>
-                    <Text style={styles.textAddData}>Add Data</Text>
-                </View>
             </View>
 
             <View style={styles.textRow}>
@@ -338,9 +304,13 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
             <Title>Vehicle Detail</Title>
           </Body>
           <Right>
-             <Button transparent onPress={() => {}}>
-              <Icon name="search" />
-            </Button>
+            <TouchableOpacity onPress={() => navigation.navigate("VehicleHistory")}>
+                <View style={styles.rightHistoryView}>
+                <Icon type="MaterialCommunityIcons" name="file-document-outline" style={styles.rightHistoryIcon}/>
+                <Text style={styles.rightHistoryText}>History</Text>
+                </View>
+            </TouchableOpacity>
+            
           </Right>
         </Header>
     )
@@ -382,23 +352,19 @@ const styles = StyleSheet.create({
         color: "blue"
     },
 
-    viewBtnAddData: {
-        alignSelf: "flex-start",
+    rightHistoryView: {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        padding: 0,
     },
-    btnAddData: {
-        alignSelf: "flex-start",
-        width: 60,
-        height: 50,
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center"
+    rightHistoryIcon: {
+        fontSize: 20,
+        color: "rgb(50,50,50)"
     },
-    textAddData: {
-        color: "blue"
+    rightHistoryText: {
+        textAlign: "center",
+        fontSize: 12,
+        color: "rgb(50,50,50)"
     },
 
     textRow: {
@@ -473,7 +439,6 @@ const mapStateToProps = (state) => ({
     vehicleData: state.vehicleData
 });
 const mapActionsToProps = {
-    actVehicleOpenDetailVehicle
 };
   
 export default connect(

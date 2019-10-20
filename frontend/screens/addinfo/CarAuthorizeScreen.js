@@ -6,44 +6,69 @@ import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
 
 import { connect } from 'react-redux';
-import {actVehicleAddCarAuthorize} from '../../redux/VehicleReducer'
-
-const DATA_BRAND_MODEL = [
-    { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
-    { id: 2,name: "Madza", models: [{id:5, name: "X3"},{id:6, name: "X4"},{id:7, name: "X5"},{id:8, name: "CX5"}]},
-    { id: 3,name: "Honda", models: [{id:9, name: "CRV"},{id:10, name: "City"}]},
-    { id: 4,name: "Nissan", models: [{id:11, name: "X-Trail"},{id:12, name: "Sunny"},{id:13, name: "Surge"}]},
-    { id: 5,name: "Kia", models: [{id:14, name: "Morning"},{id:15, name: "K3"},{id:16, name: "Cerato"},{id:17, name: "Sorento"}]},
-    { id: 6,name: "Huyndai", models: [{id:18, name: "i10"},{id:19, name: "New i10"},{id:20, name: "Accent"},{id:21, name: "Elanta"}]},
-];
+import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/VehicleReducer'
 
 class CarAuthorizeScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            vehicleList: [],
-            //id: 1, // increment
+            userId: 0,
+            id: 0, // increment
             vehicleId: 0,
-            authorizeDate: new Date().toLocaleString(),
+            fillDate: new Date().toLocaleString(),
             price: "",
-            currentKm: ""
+            currentKm: "",
+            amount: "",
+            type: "auth",
+            subType: "",
+            remark: "",
         };
 
         this.save = this.save.bind(this)
     }
 
     componentWillMount() {
-        this.setState({
-            vehicleId: AppContants.CURRENT_VEHICLE_ID
-        })
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
+            // Load from Info
+            for (let i = 0; i < this.props.vehicleData.authorizeCarList.length; i++) {
+                if (this.props.vehicleData.authorizeCarList[i].id == AppContants.CURRENT_EDIT_FILL_ID && 
+                        this.props.vehicleData.authorizeCarList[i].vehicleId == AppContants.CURRENT_VEHICLE_ID) {
+                    this.setState({
+                        ...this.props.vehicleData.authorizeCarList[i],
+                        vehicleId: AppContants.CURRENT_VEHICLE_ID,
+                        id: AppContants.CURRENT_EDIT_FILL_ID,
+                        fillDate:this.props.vehicleData.authorizeCarList[i].fillDate.toLocaleString(),
+                    })
+                }
+            }
+        } else {
+            this.setState({
+                vehicleId: AppContants.CURRENT_VEHICLE_ID
+            })
+        }
     }
     
     save = async (newVehicle) => {
-        try {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
+            console.log("WIll Edit FillOil:")
+            let newData = {
+                ...this.state,
+
+                vehicleId: Number(this.state.vehicleId),
+                fillDate: this.state.fillDate,
+                price: Number(this.state.price),
+                currentKm: Number(this.state.currentKm)
+            }
+
+            this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_AUTH)
+            this.props.navigation.goBack()
+        } else {
             console.log("WIll Save Car Authorize:")
             let newData = {
+                ...this.state,
+                
                 vehicleId: Number(this.state.vehicleId),
-                authorizeDate: this.state.authorizeDate,
+                fillDate: this.state.fillDate,
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
@@ -56,12 +81,9 @@ class CarAuthorizeScreen extends React.Component {
             newData.id = maxId + 1;
             console.log(newData)
 
-            this.props.actVehicleAddCarAuthorize(newData)
+            this.props.actVehicleAddFillItem(newData, AppContants.FILL_ITEM_AUTH)
 
             this.props.navigation.navigate('VehicleDetail')
-        } catch (e) {
-            console.error('Failed to save vehicleList.')
-            console.log(e)
         }
     }
 
@@ -100,8 +122,8 @@ class CarAuthorizeScreen extends React.Component {
                         <Item regular style={styles.rowForm}>
                         <Input
                             placeholder="Authorize Date"
-                            onChangeText={(authorizeDate) => this.setState({authorizeDate})}
-                            value={this.state.authorizeDate}
+                            onChangeText={(fillDate) => this.setState({fillDate})}
+                            value={this.state.fillDate}
                         />
                         </Item>
                     </View>
@@ -115,7 +137,7 @@ class CarAuthorizeScreen extends React.Component {
                             placeholder="VND"
                             keyboardType="numeric"
                             onChangeText={(price) => this.setState({price})}
-                            value={this.state.price}
+                            value={""+this.state.price}
                         />
                         </Item>
                     </View>
@@ -129,7 +151,20 @@ class CarAuthorizeScreen extends React.Component {
                             placeholder="Km"
                             keyboardType="numeric"
                             onChangeText={(currentKm) => this.setState({currentKm})}
-                            value={this.state.currentKm}
+                            value={""+this.state.currentKm}
+                        />
+                        </Item>
+                    </View>
+
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.rowLabel}>
+                            Ghi Chu:
+                        </Text>
+                        <Item regular style={styles.rowForm}>
+                        <Input
+                            placeholder="Ghi Chu"
+                            onChangeText={(remark) => this.setState({remark})}
+                            value={this.state.remark}
                         />
                         </Item>
                     </View>
@@ -200,7 +235,8 @@ const mapStateToProps = (state) => ({
     vehicleData: state.vehicleData
 });
 const mapActionsToProps = {
-    actVehicleAddCarAuthorize
+    actVehicleAddFillItem,
+    actVehicleEditFillItem
 };
   
 export default connect(

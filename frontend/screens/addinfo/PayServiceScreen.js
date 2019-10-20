@@ -4,12 +4,11 @@ import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item,
 
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
-
+import Layout from '../../constants/Layout';
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/VehicleReducer'
-import AppConstants from '../../constants/AppConstants';
 
-class FillOilScreen extends React.Component {
+class PayServiceScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,10 +16,10 @@ class FillOilScreen extends React.Component {
             id: 0, // increment
             vehicleId: 0,
             fillDate: new Date().toLocaleString(),
-            amount: "",
             price: "",
             currentKm: "",
-            type: "oil",
+            amount: "",
+            type: "service",
             subType: "",
             remark: "",
         };
@@ -29,18 +28,16 @@ class FillOilScreen extends React.Component {
     }
 
     componentWillMount() {
-        console.log("FILL OIL WILL MOUNT:")
-        console.log(this.props.navigation.state.params)
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            for (let i = 0; i < this.props.vehicleData.fillOilList.length; i++) {
-                if (this.props.vehicleData.fillOilList[i].id == AppContants.CURRENT_EDIT_FILL_ID && 
-                        this.props.vehicleData.fillOilList[i].vehicleId == AppContants.CURRENT_VEHICLE_ID) {
+            for (let i = 0; i < this.props.vehicleData.serviceList.length; i++) {
+                if (this.props.vehicleData.serviceList[i].id == AppContants.CURRENT_EDIT_FILL_ID && 
+                        this.props.vehicleData.serviceList[i].vehicleId == AppContants.CURRENT_VEHICLE_ID) {
                     this.setState({
-                        ...this.props.vehicleData.fillOilList[i],
+                        ...this.props.vehicleData.serviceList[i],
                         vehicleId: AppContants.CURRENT_VEHICLE_ID,
                         id: AppContants.CURRENT_EDIT_FILL_ID,
-                        fillDate:this.props.vehicleData.fillOilList[i].fillDate.toLocaleString(),
+                        fillDate:this.props.vehicleData.serviceList[i].fillDate.toLocaleString(),
                     })
                 }
             }
@@ -59,15 +56,15 @@ class FillOilScreen extends React.Component {
 
                 vehicleId: Number(this.state.vehicleId),
                 fillDate: this.state.fillDate,
-                amount: Number(this.state.amount),
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
+            console.log(newData)
 
-            this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_OIL)
+            this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_SERVICE)
             this.props.navigation.goBack()
         } else {
-            console.log("WIll Save FillOil:")
+            console.log("WIll Save Car Authorize:")
             let newData = {
                 ...this.state,
                 
@@ -76,19 +73,18 @@ class FillOilScreen extends React.Component {
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
-            console.log(newData)
-
             let maxId = 0;
-            this.props.vehicleData.fillOilList.forEach(item => {
+            this.props.vehicleData.serviceList.forEach(item => {
                 if (maxId < item.id) {
                     maxId = item.id
                 }
             })
             newData.id = maxId + 1;
+            console.log(newData)
 
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_OIL)
+            this.props.actVehicleAddFillItem(newData, AppContants.FILL_ITEM_SERVICE)
 
-            this.props.navigation.push('VehicleDetail')
+            this.props.navigation.navigate('VehicleDetail')
         }
     }
 
@@ -104,6 +100,7 @@ class FillOilScreen extends React.Component {
                         <Item regular>
                         <Picker
                             mode="dropdown"
+                            style={{width: (Layout.window.width-40)*0.6}}
                             placeholder="Select Car"
                             placeholderStyle={{ color: "#bfc6ea" }}
                             placeholderIconColor="#007aff"
@@ -122,11 +119,11 @@ class FillOilScreen extends React.Component {
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.rowLabel}>
-                            Fill Date:
+                            Date:
                         </Text>
                         <Item regular style={styles.rowForm}>
                         <Input
-                            placeholder="Fill Date"
+                            placeholder="Date"
                             onChangeText={(fillDate) => this.setState({fillDate})}
                             value={this.state.fillDate}
                         />
@@ -149,18 +146,27 @@ class FillOilScreen extends React.Component {
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.rowLabel}>
-                            Current Km:
+                            Loai Sua Chua:
                         </Text>
                         <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="Km"
-                            keyboardType="numeric"
-                            onChangeText={(currentKm) => this.setState({currentKm})}
-                            value={""+this.state.currentKm}
-                        />
+                            <Picker
+                                    mode="dropdown"
+                                    style={{width: (Layout.window.width-40)*0.6}}
+                                    placeholder="Select Service Type"
+                                    placeholderStyle={{ color: "#bfc6ea" }}
+                                    placeholderIconColor="#007aff"
+                                    selectedValue={this.state.subType}
+                                    onValueChange={(itemValue, itemIndex) =>
+                                        this.setState({subType: itemValue})
+                                    }
+                                >
+                                    {AppContants.DATA_SERVICE_TYPE.map(item => (
+                                        <Picker.Item label={item.name} value={item.name} key={item.id}/>
+                                    ))}
+                                </Picker>
                         </Item>
                     </View>
-                    
+
                     <View style={styles.rowContainer}>
                         <Text style={styles.rowLabel}>
                             Ghi Chu:
@@ -178,7 +184,7 @@ class FillOilScreen extends React.Component {
                     <Button
                         block primary
                         onPress={() => this.save(this.state)}
-                    ><Text>OK</Text></Button>
+                    ><Text>Add Data</Text></Button>
                     </View>
 
                 </View>
@@ -188,7 +194,7 @@ class FillOilScreen extends React.Component {
     }
 }
 
-FillOilScreen.navigationOptions = ({navigation}) => ({
+PayServiceScreen.navigationOptions = ({navigation}) => ({
     header: (
         <Header>
           <Left>
@@ -197,7 +203,7 @@ FillOilScreen.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title>Fill Oil</Title>
+            <Title>Sua Chua</Title>
           </Body>
           <Right />
         </Header>
@@ -246,4 +252,4 @@ const mapActionsToProps = {
   
 export default connect(
     mapStateToProps,mapActionsToProps
-)(FillOilScreen);
+)(PayServiceScreen);

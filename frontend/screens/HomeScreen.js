@@ -16,8 +16,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text,
 import { MonoText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
-import {actVehicleDeleteVehicle, actVehicleAddFillGas, actVehicleAddVehicle, 
-  actVehicleAddFillOil, actVehicleAddCarAuthorize} from '../redux/VehicleReducer'
+import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/VehicleReducer'
 
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
@@ -39,27 +38,21 @@ class HomeScreen extends React.Component {
     this.loadFromStorage()
   }
   loadFromStorage = async () => {
-    const vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-    const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
-    const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
-    const authorizeCarList = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
+    // const vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
+    // const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
+    // const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
+    // const authorizeCarList = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
     // JSON.parse(vehicleList).forEach(item => {
     //   this.props.actVehicleAddVehicle(item)
     // })
     // JSON.parse(fillGasList).forEach(item => {
-    //   this.props.actVehicleAddFillGas(item)
+    //   this.props.actVehicleAddFillItem(item)
     // })
     // JSON.parse(fillOilList).forEach(item => {
-    //   this.props.actVehicleAddFillOil(item)
+    //   this.props.actVehicleAddFillItem(item)
     // })
     // JSON.parse(authorizeCarList).forEach(item => {
-    //   this.props.actVehicleAddCarAuthorize(item)
-    // })
-    // this.setState({
-    //   vehicleList: JSON.parse(vehicleList),
-    //   fillGasList: JSON.parse(fillGasList),
-    //   fillOilList: JSON.parse(fillOilList),
-    //   authorizeCarList: JSON.parse(authorizeCarList),
+    //   this.props.actVehicleAddFillItem(item)
     // })
 
     //this.clearAsyncStorage()
@@ -196,8 +189,7 @@ const mapStateToProps = (state) => ({
   vehicleData: state.vehicleData
 });
 const mapActionsToProps = {
-  actVehicleDeleteVehicle, actVehicleAddFillGas, actVehicleAddVehicle, 
-  actVehicleAddFillOil, actVehicleAddCarAuthorize
+  actVehicleDeleteVehicle, actVehicleAddVehicle
 };
 
 export default connect(

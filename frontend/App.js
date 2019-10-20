@@ -10,33 +10,65 @@ import AppNavigator from './navigation/AppNavigator';
 import { store, persistor } from './redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
+// import {pushNotification} from './components/pushNotification'
+
+// pushNotification.configure();
 
 //If you are using react, wrap your root component with PersistGate. 
 //This delays the rendering of your app's UI until your persisted state has been retrieved and saved to redux
-export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = useState(false);
+class App extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+        isLoadingComplete: false
+      }
+      this.setLoadingComplete = this.setLoadingComplete.bind(this);
+  }
+  setLoadingComplete(param) {
+    this.setState({
+      isLoadingComplete: param
+    })
+  }
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
-    return (
-      <AppLoading
-        startAsync={loadResourcesAsync}
-        onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
-      />
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Root>
-          <AppNavigator />
-          </Root>
-        </PersistGate>
-        </Provider>
-      </View>
-    );
+  // These will be called Apter Redux-Load, so can connect to Server
+  // componentWillMount() {
+  //   console.log("App componentWillMount*********************")
+  // }
+  componentDidMount() {
+    console.log("App componentDidMount*********************")
+  }
+  async componentWillMount() {
+    console.log("App componentWillMount*********************")
+    // await Font.loadAsync({
+    //   Roboto: require("native-base/Fonts/Roboto.ttf"),
+    //   Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    // });
+    // this.setState({ loading: false });
+  }
+  render() {
+    //const [isLoadingComplete, setLoadingComplete] = useState(false);
+    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+      return (
+        <AppLoading
+          startAsync={loadResourcesAsync}
+          onError={handleLoadingError}
+          onFinish={() => handleFinishLoading(this.setLoadingComplete)}
+        />
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Root>
+            <AppNavigator />
+            </Root>
+          </PersistGate>
+          </Provider>
+        </View>
+      );
+    }
   }
 }
 
@@ -52,6 +84,8 @@ async function loadResourcesAsync() {
       // We include SpaceMono because we use it in HomeScreen.js. Feel free to
       // remove this if you are not using it in your app
       'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     }),
   ]);
 }
@@ -72,3 +106,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default App;

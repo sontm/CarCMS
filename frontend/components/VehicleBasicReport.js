@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, 
-    TouchableWithoutFeedback, ProgressViewIOS, Alert } from 'react-native';
-import {Content, Button, Text, Icon, Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs } from 'native-base';
+    TouchableWithoutFeedback, ProgressViewIOS, ProgressBarAndroid, Alert, Platform } from 'react-native';
+import {Content, Button, Text, Icon, Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, CheckBox } from 'native-base';
 import Layout from '../constants/Layout'
 
 import AppUtils from '../constants/AppUtils'
@@ -32,6 +32,11 @@ class VehicleBasicReport extends Component {
         super(props);
 
         this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this)
+        this.handleEditVehicle = this.handleEditVehicle.bind(this)
+    }
+    handleEditVehicle() {
+        AppConstants.CURRENT_VEHICLE_ID = this.props.vehicle.id;
+        this.props.navigation.navigate("NewVehicle");
     }
     handleDeleteVehicle() {
         Alert.alert(
@@ -76,31 +81,47 @@ class VehicleBasicReport extends Component {
 
                 <View style={styles.container} elevation={5}>
                     <View style={styles.vehicleInfoRow}>
-                        <Image
-                            source={
-                                require('../assets/images/toyota.png')
-                            }
-                            style={styles.vehicleLogo}
-                        />
+                        <View style={{flexDirection: "row"}}>
+                            <Image
+                                source={
+                                    require('../assets/images/toyota.png')
+                                }
+                                style={styles.vehicleLogo}
+                            />
 
-                        <View style={styles.vehicleInfoText}>
-                        <Text style={styles.vehicleInfoTextBrand}>
-                            {this.props.vehicle.brand + " " + this.props.vehicle.model}
-                        </Text>
-                        <Text style={styles.vehicleInfoTextPlate}>
-                            {this.props.vehicle.licensePlate}
-                        </Text>
+                            <View style={styles.vehicleInfoText}>
+                                <View style={{flexDirection: "row", alignItems: "center"}}>
+                                    <Text style={styles.vehicleInfoTextBrand}>
+                                        {this.props.vehicle.brand + " " + this.props.vehicle.model}
+                                    </Text>
+                                    {this.props.vehicle.isDefault ? <CheckBox checked={true}/> : null}
+                                </View>
+                                <Text style={styles.vehicleInfoTextPlate}>
+                                        {this.props.vehicle.licensePlate}
+                                </Text>
+                            </View>
                         </View>
 
-                        <View style={styles.vehicleButtons}>
-                            <Button danger transparent style={styles.vehicleButtonItem}
-                                onPress={this.handleDeleteVehicle}>
-                                <Icon type="MaterialIcons" name="delete" />
-                            </Button>
+                        <View style={styles.rightVehicleButtonViewContainer}>
+                            <TouchableOpacity 
+                                    onPress={() => this.handleEditVehicle()}>
+                                <View style={styles.rightVehicleButtonView}>
+                                    <Icon type="Feather" name="edit-3" style={styles.rightVehicleButtonIcon}/>
+                                    <Text style={styles.rightVehicleButtonText}>Sửa</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                    onPress={() => this.handleDeleteVehicle()}>
+                                <View style={styles.rightVehicleButtonView}>
+                                    <Icon type="MaterialIcons" name="delete" style={styles.rightVehicleButtonIconDelete}/>
+                                    <Text style={styles.rightVehicleButtonText}>Xoá</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                     </View>
 
                     <View style={styles.statRowRemind}>
+                        {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={passedKmFromPreviousOil? 
@@ -109,11 +130,20 @@ class VehicleBasicReport extends Component {
                             progressTintColor = "blue"
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
+                        ) : (
+                        <ProgressBarAndroid
+                            styleAttr="Horizontal"
+                            indeterminate={false}
+                            progress={passedKmFromPreviousOil? 
+                                passedKmFromPreviousOil/AppConstants.SETTING_KM_NEXT_OILFILL : 0}
+                            />
+                        )}
                         <Text style={styles.textRemind}>
                             {passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL} Km (Next Oil)
                         </Text>
                     </View>
                     <View style={styles.statRowRemind}>
+                        {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={diffDayFromLastAuthorize ?
@@ -124,6 +154,14 @@ class VehicleBasicReport extends Component {
                                     > 0.9 ? "red" : "blue"}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
+                        ) : (
+                        <ProgressBarAndroid
+                            styleAttr="Horizontal"
+                            indeterminate={false}
+                            progress={diffDayFromLastAuthorize ?
+                                diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0}
+                            />
+                        )}
                         <Text style={styles.textRemind}>
                         {diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR} Day (Next Authorize)
                         </Text>
@@ -224,6 +262,33 @@ const styles = StyleSheet.create({
     vehicleButtonItem: {
         margin: 0,
         padding: 0
+    },
+
+    rightVehicleButtonViewContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "flex-start",
+        marginRight: 0,
+    },
+    rightVehicleButtonView: {
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 10,
+        marginTop: 5
+    },
+    rightVehicleButtonIcon: {
+        fontSize: 20,
+        color: "rgb(70,70,70)"
+    },
+    rightVehicleButtonIconDelete: {
+        fontSize: 21,
+        color: "rgb(250, 100, 100)"
+    },
+    rightVehicleButtonText: {
+        textAlign: "center",
+        fontSize: 12,
+        color: "rgb(100,100,100)"
     },
 
     statRowRemind: {
