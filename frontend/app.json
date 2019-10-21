@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "HelloWorld",
-    "slug": "HelloWorld",
+    "name": "VehicleManagement",
+    "slug": "VehicleCMS",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -24,7 +24,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sansan.VehicleCMS"
+    },
+    "android": {
+      "package": "com.sansan.VehicleCMS"
     }
   }
 }
