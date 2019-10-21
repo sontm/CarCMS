@@ -7,6 +7,7 @@ import AppContants from '../../constants/AppConstants'
 import Layout from '../../constants/Layout';
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/VehicleReducer'
+import apputils from '../../constants/AppUtils';
 
 class PayServiceScreen extends React.Component {
     constructor(props) {
@@ -54,7 +55,7 @@ class PayServiceScreen extends React.Component {
             let newData = {
                 ...this.state,
 
-                vehicleId: Number(this.state.vehicleId),
+                vehicleId: (this.state.vehicleId),
                 fillDate: this.state.fillDate,
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
@@ -68,18 +69,18 @@ class PayServiceScreen extends React.Component {
             let newData = {
                 ...this.state,
                 
-                vehicleId: Number(this.state.vehicleId),
+                vehicleId: (this.state.vehicleId),
                 fillDate: this.state.fillDate,
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
-            let maxId = 0;
-            this.props.vehicleData.serviceList.forEach(item => {
-                if (maxId < item.id) {
-                    maxId = item.id
-                }
-            })
-            newData.id = maxId + 1;
+            // let maxId = 0;
+            // this.props.vehicleData.serviceList.forEach(item => {
+            //     if (maxId < item.id) {
+            //         maxId = item.id
+            //     }
+            // })
+            newData.id = apputils.uuidv4();
             console.log(newData)
 
             this.props.actVehicleAddFillItem(newData, AppContants.FILL_ITEM_SERVICE)

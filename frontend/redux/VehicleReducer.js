@@ -54,11 +54,11 @@ const initialState = {
     serviceList:[]
 };
 
-export const actVehicleAddVehicle = (vehicle) => (dispatch) => {
+export const actVehicleAddVehicle = (vehicle, syncFromServer = false) => (dispatch) => {
     console.log("actVehicleAddVehicle:")
     dispatch({
         type: VEHICLE_ADD,
-        payload: vehicle
+        payload: {data: vehicle, syncFromServer: syncFromServer}
     })
 }
 export const actVehicleEditVehicle = (vehicle) => (dispatch) => {
@@ -76,35 +76,34 @@ export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) =
     })
 }
 
-export const actVehicleAddFillItem = (data, type) => (dispatch) => {
+export const actVehicleAddFillItem = (data, type, syncFromServer = false) => (dispatch) => {
     console.log("actVehicleAddFillItem:")
     if (type == AppConstants.FILL_ITEM_GAS) {
         dispatch({
             type: VEHICLE_FILL_GAS_ADD,
-            payload: data
+            payload: {data: data, syncFromServer: syncFromServer}
         })
     } else if (type == AppConstants.FILL_ITEM_OIL) {
         dispatch({
             type: VEHICLE_FILL_OIL_ADD,
-            payload: data
+            payload: {data: data, syncFromServer: syncFromServer}
         })
     } else if (type == AppConstants.FILL_ITEM_AUTH) {
         dispatch({
             type: VEHICLE_CAR_AUTH_ADD,
-            payload: data
+            payload: {data: data, syncFromServer: syncFromServer}
         })
     } else if (type == AppConstants.FILL_ITEM_EXPENSE) {
         dispatch({
             type: VEHICLE_EXPENSE_ADD,
-            payload: data
+            payload: {data: data, syncFromServer: syncFromServer}
         })
     } else if (type == AppConstants.FILL_ITEM_SERVICE) {
         dispatch({
             type: VEHICLE_SERVICE_ADD,
-            payload: data
+            payload: {data: data, syncFromServer: syncFromServer}
         })
     }
-
 }
 
 // type: gas, oil, auth, 
@@ -184,10 +183,18 @@ export default function(state = initialState, action) {
     //     state.serviceList= [];
     //     return state;
     case VEHICLE_ADD:
-        let newStateVehicleAdd = {
-            ...state,
-            vehicleList: [...state.vehicleList, action.payload]
-        };
+        if (action.payload.syncFromServer) {
+            var newStateVehicleAdd = {
+                ...state,
+                vehicleList: [...action.payload.data]
+            };
+        } else {
+            var newStateVehicleAdd = {
+                ...state,
+                vehicleList: [...state.vehicleList, action.payload.data]
+            };
+        }
+        
         // Handle if this Vehicle is Default, change all Others
         if (action.payload.isDefault) {
             newStateVehicleAdd.defaultVehicleId = action.payload.id;
@@ -228,20 +235,44 @@ export default function(state = initialState, action) {
         }
         return newState;
     case VEHICLE_FILL_GAS_ADD:
-        return {
-            ...state,
-            fillGasList: [...state.fillGasList, action.payload]
-        };
+        if (action.payload.syncFromServer) {
+            return {
+                ...state,
+                fillGasList: [...action.payload.data]
+            };
+        } else {
+            return {
+                ...state,
+                fillGasList: [...state.fillGasList, action.payload.data]
+            };
+        }
+        
     case VEHICLE_FILL_OIL_ADD:
-        return {
-            ...state,
-            fillOilList: [...state.fillOilList, action.payload]
-        };
+        if (action.payload.syncFromServer) {
+            return {
+                ...state,
+                fillOilList: [...action.payload.data]
+            };
+        } else {
+            return {
+                ...state,
+                fillOilList: [...state.fillOilList, action.payload.data]
+            };
+        }
+
     case VEHICLE_CAR_AUTH_ADD:
-        return {
-            ...state,
-            authorizeCarList: [...state.authorizeCarList, action.payload]
-        };
+        if (action.payload.syncFromServer) {
+            return {
+                ...state,
+                authorizeCarList: [...action.payload.data]
+            };
+        } else {
+            return {
+                ...state,
+                authorizeCarList: [...state.authorizeCarList, action.payload.data]
+            };
+        }
+
     case VEHICLE_FILL_GAS_DEL:
         let newStateGasDel = {...state};
         for (let i = 0; i < newStateGasDel.fillGasList.length; i++) {
@@ -301,10 +332,17 @@ export default function(state = initialState, action) {
 
 
     case VEHICLE_EXPENSE_ADD:
-        return {
-            ...state,
-            expenseList: [...state.expenseList, action.payload]
-        };
+        if (action.payload.syncFromServer) {
+            return {
+                ...state,
+                expenseList: [...action.payload.data]
+            };
+        } else {
+            return {
+                ...state,
+                expenseList: [...state.expenseList, action.payload.data]
+            };
+        }
     case VEHICLE_EXPENSE_DEL:
         let newStateExpenseDel = {...state};
         for (let i = 0; i < newStateExpenseDel.expenseList.length; i++) {
@@ -326,10 +364,18 @@ export default function(state = initialState, action) {
 
 
     case VEHICLE_SERVICE_ADD:
-        return {
-            ...state,
-            serviceList: [...state.serviceList, action.payload]
-        };
+        if (action.payload.syncFromServer) {
+            return {
+                ...state,
+                serviceList: [...action.payload.data]
+            };
+        } else {
+            return {
+                ...state,
+                serviceList: [...state.serviceList, action.payload.data]
+            };
+        }
+
     case VEHICLE_SERVICE_DEL:
         let newStateServiceDel = {...state};
         for (let i = 0; i < newStateServiceDel.serviceList.length; i++) {

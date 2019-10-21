@@ -10,10 +10,88 @@ import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 
 import { connect } from 'react-redux';
+import Backend from '../constants/Backend';
+
+import {actVehicleAddVehicle, actVehicleAddFillItem} from '../redux/VehicleReducer';
 
 class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
+
+    this.syncDataToServer = this.syncDataToServer.bind(this)
+    this.syncDataFromServer = this.syncDataFromServer.bind(this)
+  }
+  syncDataToServer() {
+    Backend.postFillItemList(this.props.vehicleData.vehicleList, "vehicle",
+      response => {console.log("Sync Post Vehicle OK")},
+      error => {console.log(error)}
+    );
+
+    Backend.postFillItemList(this.props.vehicleData.fillGasList, "gas",
+      response => {console.log("Sync Post Gas OK")},
+      error => {console.log(error)}
+    );
+    Backend.postFillItemList(this.props.vehicleData.fillOilList, "oil",
+      response => {console.log("Sync Post Oil OK")},
+      error => {console.log(error)}
+    );
+    Backend.postFillItemList(this.props.vehicleData.authorizeCarList, "authcheck",
+      response => {console.log("Sync Post AuthCheck OK")},
+      error => {console.log(error)}
+    );
+    Backend.postFillItemList(this.props.vehicleData.expenseList, "expense",
+      response => {console.log("Sync Post Expense OK")},
+      error => {console.log(error)}
+    );
+    Backend.postFillItemList(this.props.vehicleData.serviceList, "service",
+      response => {console.log("Sync Post Service OK")},
+      error => {console.log(error)}
+    );
+  }
+  syncDataFromServer() {
+    Backend.getAllItemList("vehicle",
+      response => {
+        console.log("Sync Vehicle From Server OK");
+        this.props.actVehicleAddVehicle(response.data, true)
+      },
+      error => {console.log(error)}
+    );
+
+    Backend.getAllItemList("gas",
+      response => {
+        console.log("Sync Gas From Server OK");
+        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_GAS, true)
+      },
+      error => {console.log(error)}
+    );
+    Backend.getAllItemList("oil",
+      response => {
+        console.log("Sync Oil From Server OK");
+        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_OIL, true)
+      },
+      error => {console.log(error)}
+    );
+    Backend.getAllItemList("authcheck",
+      response => {
+        console.log("Sync authcheck From Server OK");
+        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_AUTH, true)
+      },
+      error => {console.log(error)}
+    );
+    Backend.getAllItemList("expense",
+      response => {
+        console.log("Sync expense From Server OK");
+        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_EXPENSE, true)
+      },
+      error => {console.log(error)}
+    );
+    Backend.getAllItemList("service",
+      response => {
+        console.log("Sync service From Server OK");
+        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_SERVICE, true)
+      },
+      error => {console.log(error)}
+    );
   }
 
   render() {
@@ -38,11 +116,22 @@ class SettingsScreen extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity 
-                onPress={() => {}}>
+                onPress={() => this.syncDataFromServer()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Synchronize Data</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Synchronize From Server</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+                onPress={() => this.syncDataToServer()}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Upload To Server</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -189,6 +278,7 @@ const mapStateToProps = (state) => ({
     vehicleData: state.vehicleData
 });
 const mapActionsToProps = {
+  actVehicleAddVehicle, actVehicleAddFillItem
 };
   
 export default connect(

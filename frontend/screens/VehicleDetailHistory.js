@@ -88,6 +88,7 @@ class VehicleDetailHistory extends React.Component {
 //         })
 //     }
     renderHistoryList() {
+        console.log("renderHistoryList, VehicleID:" + AppConstants.CURRENT_VEHICLE_ID)
         let displayDatas = [...this.props.vehicleData.authorizeCarList,
             ...this.props.vehicleData.fillOilList, ...this.props.vehicleData.fillGasList,
             ...this.props.vehicleData.expenseList, ...this.props.vehicleData.serviceList];

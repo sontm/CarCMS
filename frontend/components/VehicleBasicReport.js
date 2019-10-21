@@ -35,6 +35,7 @@ class VehicleBasicReport extends Component {
         this.handleEditVehicle = this.handleEditVehicle.bind(this)
     }
     handleEditVehicle() {
+        console.log("Edit Vehicle:" + this.props.vehicle.id)
         AppConstants.CURRENT_VEHICLE_ID = this.props.vehicle.id;
         this.props.navigation.navigate("NewVehicle");
     }

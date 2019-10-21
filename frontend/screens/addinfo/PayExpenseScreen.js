@@ -9,6 +9,7 @@ import Layout from '../../constants/Layout';
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/VehicleReducer'
 import AppConstants from '../../constants/AppConstants';
+import apputils from '../../constants/AppUtils';
 
 class PayExpenseScreen extends React.Component {
     constructor(props) {
@@ -55,7 +56,7 @@ class PayExpenseScreen extends React.Component {
             let newData = {
                 ...this.state,
 
-                vehicleId: Number(this.state.vehicleId),
+                vehicleId: (this.state.vehicleId),
                 fillDate: this.state.fillDate,
                 price: Number(this.state.price)
             }
@@ -67,19 +68,19 @@ class PayExpenseScreen extends React.Component {
             let newData = {
                 ...this.state,
                 
-                vehicleId: Number(this.state.vehicleId),
+                vehicleId: (this.state.vehicleId),
                 fillDate: this.state.fillDate,
                 price: Number(this.state.price)
             }
-            console.log(newData)
-            let maxId = 0;
-            this.props.vehicleData.expenseList.forEach(item => {
-                if (maxId < item.id) {
-                    maxId = item.id
-                }
-            })
-            newData.id = maxId + 1;
             
+            // let maxId = 0;
+            // this.props.vehicleData.expenseList.forEach(item => {
+            //     if (maxId < item.id) {
+            //         maxId = item.id
+            //     }
+            // })
+            newData.id = apputils.uuidv4();
+            console.log(newData)
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE)
 
             this.props.navigation.navigate('VehicleDetail')

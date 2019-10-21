@@ -137,8 +137,8 @@ const tabNavigator = createBottomTabNavigator({
               vertical
               active={props.navigation.state.index === 1}
               onPress={() => {
-                AppConstants.CURRENT_VEHICLE_ID = 0;
-                AppConstants.CURRENT_EDIT_FILL_ID = 0;
+                AppConstants.CURRENT_VEHICLE_ID = "0";
+                AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("HomeStack")
               }}>
               <Icon name='list' style={{fontSize: 26}}/>
@@ -181,8 +181,8 @@ const tabNavigator = createBottomTabNavigator({
               vertical
               active={props.navigation.state.index === 2}
               onPress={() => {
-                AppConstants.CURRENT_VEHICLE_ID = 0;
-                AppConstants.CURRENT_EDIT_FILL_ID = 0;
+                AppConstants.CURRENT_VEHICLE_ID = "0";
+                AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("SettingsStack")
               }}>
               <Icon name='more' style={{fontSize: 26}}/>

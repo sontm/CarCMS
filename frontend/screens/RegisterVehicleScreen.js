@@ -7,6 +7,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text,
 import { connect } from 'react-redux';
 import {actVehicleAddVehicle, actVehicleEditVehicle} from '../redux/VehicleReducer'
 import Layout from '../constants/Layout';
+import apputils from '../constants/AppUtils';
 
 class RegisterVehicleScreen extends React.Component {
     constructor(props) {
@@ -62,13 +63,13 @@ class RegisterVehicleScreen extends React.Component {
             this.props.navigation.navigate("Home")
         } else {
             console.log("WIll Save:")
-            let maxId = 0;
-            this.props.vehicleData.vehicleList.forEach(item => {
-                if (maxId < item.id) {
-                    maxId = item.id
-                }
-            })
-            newVehicle.id = maxId + 1;
+            // let maxId = 0;
+            // this.props.vehicleData.vehicleList.forEach(item => {
+            //     if (maxId < item.id) {
+            //         maxId = item.id
+            //     }
+            // })
+            newVehicle.id = apputils.uuidv4();
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleAddVehicle(newVehicle)
             this.props.navigation.navigate("Home")

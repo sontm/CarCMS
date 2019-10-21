@@ -8,6 +8,7 @@ import AppContants from '../../constants/AppConstants'
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/VehicleReducer'
 import AppConstants from '../../constants/AppConstants';
+import apputils from '../../constants/AppUtils';
 
 class FillOilScreen extends React.Component {
     constructor(props) {
@@ -57,7 +58,7 @@ class FillOilScreen extends React.Component {
             let newData = {
                 ...this.state,
 
-                vehicleId: Number(this.state.vehicleId),
+                vehicleId: (this.state.vehicleId),
                 fillDate: this.state.fillDate,
                 amount: Number(this.state.amount),
                 price: Number(this.state.price),
@@ -71,20 +72,20 @@ class FillOilScreen extends React.Component {
             let newData = {
                 ...this.state,
                 
-                vehicleId: Number(this.state.vehicleId),
+                vehicleId: (this.state.vehicleId),
                 fillDate: this.state.fillDate,
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
             console.log(newData)
 
-            let maxId = 0;
-            this.props.vehicleData.fillOilList.forEach(item => {
-                if (maxId < item.id) {
-                    maxId = item.id
-                }
-            })
-            newData.id = maxId + 1;
+            // let maxId = 0;
+            // this.props.vehicleData.fillOilList.forEach(item => {
+            //     if (maxId < item.id) {
+            //         maxId = item.id
+            //     }
+            // })
+            newData.id = apputils.uuidv4();
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_OIL)
 

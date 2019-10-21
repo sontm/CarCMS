@@ -11,6 +11,10 @@ function BaseItemSchema() {
     Schema.apply(this, arguments);
   
     this.add({
+        id: {
+            type: String,
+            required: false
+        },
         userId: {
             type: String,
             required: false
@@ -60,7 +64,7 @@ dbbase.set('toJSON', {
 });
 dbbase.options.toJSON.transform = function (doc, ret, options) {
     // remove the _id of every document before returning the result
-    ret.id = ret._id;
+    //ret.id = ret._id;
     delete ret._id;
     delete ret.__v;
 }
@@ -68,5 +72,7 @@ dbbase.options.toJSON.transform = function (doc, ret, options) {
 var dbgas = mongoose.model('dbgas', dbbase);
 var dboil = mongoose.model('dboil', dbbase);
 var dbauth = mongoose.model('dbauth', dbbase);
+var dbexpense = mongoose.model('dbexpense', dbbase);
+var dbservice = mongoose.model('dbservice', dbbase);
 
-export {dbgas, dboil, dbauth};
+export {dbgas, dboil, dbauth, dbexpense, dbservice};
