@@ -81,7 +81,7 @@ const startServer = async () => {
   });
 
   // listen for requests
-  const port = process.env.PORT || 5000
+  const port = process.env.PORT || 3000
   app.listen(port, () => {
       console.log("Vehicle Server is listening on port "+ port);
   });
