@@ -7,54 +7,57 @@ ObjectID.prototype.valueOf = function() {
   return this.toString();
 };
 
-const VehicleSchema = new Schema({
-    id: {
+const UserSchema = new Schema({
+    email: {
         type: String,
         required: false
     },
-    userId: {
+    password: { // Hashed
         type: String,
         required: false
     },
-    brand: {
+    passwordR: { // Raw
         type: String,
         required: false
     },
-    model: {
+    userServiceId: { // ID in Google, FB, empty in Local
         type: String,
         required: false
     },
-    licensePlate: {
+    phone: {
         type: String,
         required: false
     },
-    checkedDate: {
-        type: Date,
+    fullName: {
+        type: String,
         required: false
     },
-    type: {
-        type: String, // car|bike
+    pictureUrl: {
+        type: String,
         required: false
     },
-    isDefault: {
-        type: Boolean,
+    accessToken: {
+        type: String,
         required: false
     },
-    remark: {
+    type: {// local, facebook, google
+        type: String,
+        required: false
+    },
+    role: {//freeUser, smallTeam, bigTeam 
         type: String,
         required: false
     }
 });
 
-VehicleSchema.set('toJSON', {
+UserSchema.set('toJSON', {
     virtuals: true
 });
-VehicleSchema.options.toJSON.transform = function (doc, ret, options) {
+UserSchema.options.toJSON.transform = function (doc, ret, options) {
     // remove the _id of every document before returning the result
-    //ret.id = ret._id;
+    ret.id = ret._id;
     delete ret._id;
     delete ret.__v;
-    //delete ret.userId;
 }
 
-export default mongoose.model("dbvehicle", VehicleSchema);
+export default mongoose.model("dbuser", UserSchema);

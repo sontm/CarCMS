@@ -1,4 +1,5 @@
 import AppConstants from './AppConstants'
+import Backend from '../constants/Backend';
 
 const dateFormat = require('dateformat');
 // dateFormat.i18n = {
@@ -208,6 +209,135 @@ class AppUtils {
             return {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize};
         } else {
             return {}
+        }
+    }
+
+    async syncDataToServer(props) {
+      if (props.vehicleData.vehicleList && props.vehicleData.vehicleList.length > 0) {
+        Backend.postFillItemList(props.vehicleData.vehicleList, props.userData.token ,"vehicle",
+          response => {console.log("Sync Post Vehicle OK")},
+          error => {console.log(error)}
+        );
+      }
+      if (props.vehicleData.fillGasList && props.vehicleData.fillGasList.length > 0) {
+        Backend.postFillItemList(props.vehicleData.fillGasList, props.userData.token, "gas",
+          response => {console.log("Sync Post Gas OK")},
+          error => {console.log(error)}
+        );
+      }
+      if (props.vehicleData.fillOilList && props.vehicleData.fillOilList.length > 0) {
+        Backend.postFillItemList(props.vehicleData.fillOilList, props.userData.token, "oil",
+          response => {console.log("Sync Post Oil OK")},
+          error => {console.log(error)}
+        );
+      }
+      if (props.vehicleData.authorizeCarList && props.vehicleData.authorizeCarList.length > 0) {
+        Backend.postFillItemList(props.vehicleData.authorizeCarList, props.userData.token, "authcheck",
+          response => {console.log("Sync Post AuthCheck OK")},
+          error => {console.log(error)}
+        );
+      }
+      if (props.vehicleData.expenseList && props.vehicleData.expenseList.length > 0) {
+        Backend.postFillItemList(props.vehicleData.expenseList, props.userData.token, "expense",
+          response => {console.log("Sync Post Expense OK")},
+          error => {console.log(error)}
+        );
+      }
+      if (props.vehicleData.serviceList && props.vehicleData.serviceList.length > 0) {
+        Backend.postFillItemList(props.vehicleData.serviceList, props.userData.token, "service",
+          response => {console.log("Sync Post Service OK")},
+          error => {console.log(error)}
+        );
+      }
+    }
+    async syncDataFromServer(props) {
+        let isFailedInOneStep = false;
+        let syncData = {};
+        await new Promise((resolve, reject) => {
+          Backend.getAllItemList("vehicle", props.userData.token,
+            response => {
+              console.log("Sync Vehicle From Server OK");
+              //this.props.actVehicleAddVehicle(response.data, true)
+              syncData.vehicle = response.data;
+              resolve(response.data);
+            },
+            error => {console.log("Sync Vehicle From Server Error");console.log(error); isFailedInOneStep = true;reject(error)}
+          );
+        });
+    
+        if (!isFailedInOneStep) {
+          await new Promise((resolve, reject) => {
+            Backend.getAllItemList("gas", props.userData.token,
+              response => {
+                console.log("Sync Gas From Server OK");
+                //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_GAS, true)
+                syncData.gas = response.data;
+                resolve(response.data);
+              },
+              error => {console.log("Sync Gas From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+            );
+          });
+        }
+    
+        if (!isFailedInOneStep) {
+          await new Promise((resolve, reject) => {
+            Backend.getAllItemList("oil", props.userData.token,
+              response => {
+                console.log("Sync Oil From Server OK");
+                //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_OIL, true)
+                syncData.oil = response.data;
+                resolve(response.data);
+              },
+              error => {console.log("Sync Oil From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+            );
+          });
+        }
+    
+        if (!isFailedInOneStep) {
+          await new Promise((resolve, reject) => {
+            Backend.getAllItemList("authcheck", props.userData.token,
+              response => {
+                console.log("Sync authcheck From Server OK");
+                //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_AUTH, true)
+                syncData.authcheck = response.data;
+                resolve(response.data);
+              },
+              error => {console.log("Sync authcheck From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+            );
+          });
+        }
+    
+        if (!isFailedInOneStep) {
+          await new Promise((resolve, reject) => {
+            Backend.getAllItemList("expense", props.userData.token,
+              response => {
+                console.log("Sync expense From Server OK");
+                //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_EXPENSE, true)
+                syncData.expense = response.data;
+                resolve(response.data);
+              },
+              error => {console.log("Sync expense From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+            );
+          });
+        }
+    
+        if (!isFailedInOneStep) {
+          await new Promise((resolve, reject) => {
+            Backend.getAllItemList("service", props.userData.token,
+              response => {
+                console.log("Sync service From Server OK");
+                //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_SERVICE, true)
+                syncData.service = response.data;
+                resolve(response.data);
+              },
+              error => {console.log("Sync service From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+            );
+          });
+        }
+    
+        // IF not Failed at any step, Sync
+        if (!isFailedInOneStep) {
+          props.actVehicleSyncAllFromServer(syncData)
         }
     }
 }

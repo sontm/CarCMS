@@ -26,7 +26,8 @@ class RegisterVehicleScreen extends React.Component {
     }
 
     componentWillMount() {
-        if (AppContants.CURRENT_VEHICLE_ID) {
+        console.log("CURRENTVEHICLE:" + AppContants.CURRENT_VEHICLE_ID)
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
             for (let i = 0; i < this.props.vehicleData.vehicleList.length; i++) {
                 if (this.props.vehicleData.vehicleList[i].id == AppContants.CURRENT_VEHICLE_ID) {
                     this.setState({
@@ -56,7 +57,7 @@ class RegisterVehicleScreen extends React.Component {
         })
     }
     save(newVehicle) {
-        if (AppContants.CURRENT_VEHICLE_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit:")
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleEditVehicle(newVehicle)
@@ -183,7 +184,7 @@ class RegisterVehicleScreen extends React.Component {
                     <Button
                         style={styles.btnSubmit}
                         onPress={() => this.save(this.state)}
-                    ><Text>{AppContants.CURRENT_VEHICLE_ID ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
+                    ><Text>{((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
                     </View>
                 </View>
                 </Content>

@@ -1,6 +1,8 @@
 import { REHYDRATE } from 'redux-persist';
 import AppConstants from '../constants/AppConstants'
 
+const VEHICLE_SYNC_FROMSERVER = 'VEHICLE_SYNC_FROMSERVER';
+
 const VEHICLE_ADD = 'VEHICLE_ADD';
 const VEHICLE_EDIT = 'VEHICLE_EDIT';
 const VEHICLE_DEL = 'VEHICLE_DEL';
@@ -168,6 +170,15 @@ export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
     }
 }
 
+
+export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
+    console.log("actVehicleSyncFromServer:")
+    dispatch({
+        type: VEHICLE_SYNC_FROMSERVER,
+        payload: data
+    })
+    
+}
 //careful, this make AsyncStorage Lost All
 // case REHYDRATE:
 //     let havejustLoadState = {...state};
@@ -182,6 +193,16 @@ export default function(state = initialState, action) {
     //     state.expenseList= [];
     //     state.serviceList= [];
     //     return state;
+    case VEHICLE_SYNC_FROMSERVER:
+        return {
+            ...state,
+            vehicleList: action.payload.vehicle,
+            fillGasList: action.payload.gas,
+            fillOilList: action.payload.oil,
+            authorizeCarList: action.payload.authcheck,
+            expenseList: action.payload.expense,
+            serviceList: action.payload.service,
+        }
     case VEHICLE_ADD:
         if (action.payload.syncFromServer) {
             var newStateVehicleAdd = {

@@ -1,16 +1,20 @@
 import {dbgas, dboil, dbauth, dbexpense, dbservice} from "../database/models/BaseItemSchema";
 
-var dbModel;
-var type="gas";
+// User.find().or([{ name: param }, { nickname: param }])
+//     .then(users => { /*logic here*/ })
+//     .catch(error => { /*error logic here*/ })
 module.exports = {
   async create(req, res, dbModel, type) {
-    console.log(" ->[BaseCtrl] Create, Body")
+    console.log(" ->[BaseCtrl] Create of User:" + req.user.id)
     //console.log(req.body)
 
     // If this is Array, process each item
     if (req.body.constructor == Array) {
       for (let loop = 0; loop < req.body.length; loop++) {
         let element = req.body[loop];
+
+        element.userId = req.user.id;
+
         await new Promise((resolve, reject) => {
           dbModel.findOneAndUpdate({ id: element.id }, element, 
               {upsert:true, useFindAndModify: false}, function(err, doc){
@@ -22,6 +26,7 @@ module.exports = {
     } else {
       let item = await new dbModel({
         ...req.body,
+        userId: req.user.id
       });
       const result = await new Promise((resolve, reject) => {
         item.save((err, res) => {
@@ -60,7 +65,26 @@ module.exports = {
         res.status(200).send(result)
       }
     });
-  }
+  },
+
+
+  getAllOfUser(req, res, dbModel, type) {
+    console.log(" ->[BaseCtrl] Get All of UserID:" + req.user.id)
+    if (req.user) {
+      dbModel.find({userId: req.user.id}, function(err, result) {
+        if (err) {
+            console.log("    BaseCtrl Get All OF USER Error")
+            console.log(err);
+            res.status(500).send(err)
+        } else {
+            console.log("    BaseCtrl Get All OF USER OK")
+            // object of all the users
+            console.log(result);
+            res.status(200).send(result)
+        }
+      });
+    } else {
+      res.status(501).send({msg: "Require Authentication."})
+    }
+  },
 };
-exports.dbModel = dbModel;
-exports.type = type;

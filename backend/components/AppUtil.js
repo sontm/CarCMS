@@ -1,17 +1,16 @@
 
 class AppUtils {
     createUserFromRecordForJWT(userRecord) {
-        //userId:string,email:string,phone:string,password:string,fullName:string,pictureUrl:string,
-        //  accessToken:string,userType:string,roleId:integer
         if (userRecord) {
             let result = {
                 'id': userRecord.id,
-                'userId': userRecord.userId,
+                'userServiceId': userRecord.userServiceId,
                 'email': userRecord.email,
                 'phone': userRecord.phone,
                 'fullName': userRecord.fullName,
                 'pictureUrl': userRecord.pictureUrl,
-                'userType': userRecord.userType,
+                'type': userRecord.type,
+                'role': userRecord.role,
                 'accessToken': userRecord.accessToken
             }
             return result;

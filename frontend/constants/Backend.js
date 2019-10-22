@@ -1,17 +1,17 @@
 import axios from 'axios';
+import {AsyncStorage} from 'react-native';
 import AppConstants from './AppConstants';
+import { connect } from 'react-redux';
 
 class Backend {
     constructor() {
     }
-    createHeader() {
-        //if(Cookies.get('XSRF-TOKEN')) {
-            // TODO
-        if (false && localStorage.getItem(AppConstants.LOCAL_CSRF_TOKEN)) {
+    createHeader(token) {
+        if (token && token.length > 15) { // TODO carefull with this 15 length of token
             var headers = {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Credentials':true,
-                            'Authorization': 'CSRF-TOKEN ' + localStorage.getItem(AppContant.LOCAL_CSRF_TOKEN)
+                            'Authorization': 'Bearer ' + token
                         };
         } else {
             var headers = {
@@ -23,30 +23,39 @@ class Backend {
     }
 
     // Gas, Oil, Auth, Expense, Service List
-    postFillItemList(data, type, onOK, onError) {
+    // token is JWT token
+    postFillItemList(data, token, type, onOK, onError) {
         axios.post("/" + type,
             JSON.stringify(data),
-            { headers: this.createHeader()})
+            { headers: this.createHeader(token)})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
 
-    getAllItemList(type, onOK, onError) {
+    getAllItemList(type, token, onOK, onError) {
         axios.get("/" + type,
-            { headers: this.createHeader()})
+            { headers: this.createHeader(token)})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
 
     // USER---------------------------------------
-    // login({username, password}, onOK, onError) {
-    //     axios.post("/login",
-    //         JSON.stringify({'username': username, 'password': password}),
-    //        // { headers: this.createHeader(), withCredentials: true})
-    //         { headers: this.createHeader(),})
-    //         .then((response) => {onOK(response);})
-    //         .catch((error) => {onError(error);});
-    // }
+    login({email, password}, onOK, onError) {
+        axios.post("/login",
+            JSON.stringify({'email': email, 'password': password}),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    registerUser(data, onOK, onError) {
+        axios.post("/users",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
     
     // getUserProfile(onOK, onError) {
     //     axios.get("/users/profile",

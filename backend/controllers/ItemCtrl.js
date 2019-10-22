@@ -22,6 +22,10 @@ module.exports = {
     console.log("Gas Get By ID:" + req.params.id)
     ctrl.getById(req, res, dbgas, "gas")
   },
+  getGasAllOfUser(req, res) {
+    console.log("Gas Get All Of User")
+    ctrl.getAllOfUser(req, res, dbgas, "gas")
+  },
 
 
   createOil(req, res) {
@@ -35,6 +39,10 @@ module.exports = {
   getOilById(req, res) {
     console.log("Oil Get By ID:" + req.params.id)
     ctrl.getById(req, res, dboil, "oil")
+  },
+  getOilAllOfUser(req, res) {
+    console.log("Oil Get All OfUser")
+    ctrl.getAllOfUser(req, res, dboil, "oil")
   },
 
 
@@ -50,6 +58,10 @@ module.exports = {
   getAuthById(req, res) {
     console.log("AuthCheck Get By ID:" + req.params.id)
     ctrl.getById(req, res, dbauth, "auth")
+  },
+  getAuthAllOfUser(req, res) {
+    console.log("AuthCheck Get All OfUser")
+    ctrl.getAllOfUser(req, res, dbauth, "auth")
   },
 
 
@@ -67,6 +79,10 @@ module.exports = {
     console.log("Expense Get By ID:" + req.params.id)
     ctrl.getById(req, res, dbexpense, "expense")
   },
+  getExpenseAllOfUser(req, res) {
+    console.log("Expense Get All")
+    ctrl.getAllOfUser(req, res, dbexpense, "expense")
+  },
 
 
 
@@ -82,5 +98,9 @@ module.exports = {
   getServiceById(req, res) {
     console.log("Service Get By ID:" + req.params.id)
     ctrl.getById(req, res, dbservice, "service")
+  },
+  getServiceAllOfUser(req, res) {
+    console.log("Service Get All")
+    ctrl.getAllOfUser(req, res, dbservice, "service")
   },
 };

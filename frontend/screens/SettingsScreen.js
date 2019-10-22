@@ -1,7 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Platform } from 'react-native';
-import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs } from 'native-base';
 import Layout from '../constants/Layout'
@@ -12,7 +12,8 @@ import AppConstants from '../constants/AppConstants';
 import { connect } from 'react-redux';
 import Backend from '../constants/Backend';
 
-import {actVehicleAddVehicle, actVehicleAddFillItem} from '../redux/VehicleReducer';
+import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer} from '../redux/VehicleReducer';
+import {actUserLogout} from '../redux/UserReducer'
 
 class SettingsScreen extends React.Component {
   constructor(props) {
@@ -20,78 +21,30 @@ class SettingsScreen extends React.Component {
 
     this.syncDataToServer = this.syncDataToServer.bind(this)
     this.syncDataFromServer = this.syncDataFromServer.bind(this)
-  }
-  syncDataToServer() {
-    Backend.postFillItemList(this.props.vehicleData.vehicleList, "vehicle",
-      response => {console.log("Sync Post Vehicle OK")},
-      error => {console.log(error)}
-    );
-
-    Backend.postFillItemList(this.props.vehicleData.fillGasList, "gas",
-      response => {console.log("Sync Post Gas OK")},
-      error => {console.log(error)}
-    );
-    Backend.postFillItemList(this.props.vehicleData.fillOilList, "oil",
-      response => {console.log("Sync Post Oil OK")},
-      error => {console.log(error)}
-    );
-    Backend.postFillItemList(this.props.vehicleData.authorizeCarList, "authcheck",
-      response => {console.log("Sync Post AuthCheck OK")},
-      error => {console.log(error)}
-    );
-    Backend.postFillItemList(this.props.vehicleData.expenseList, "expense",
-      response => {console.log("Sync Post Expense OK")},
-      error => {console.log(error)}
-    );
-    Backend.postFillItemList(this.props.vehicleData.serviceList, "service",
-      response => {console.log("Sync Post Service OK")},
-      error => {console.log(error)}
-    );
+    this.handleLogout = this.handleLogout.bind(this)
   }
   syncDataFromServer() {
-    Backend.getAllItemList("vehicle",
-      response => {
-        console.log("Sync Vehicle From Server OK");
-        this.props.actVehicleAddVehicle(response.data, true)
-      },
-      error => {console.log(error)}
-    );
+    AppUtils.syncDataFromServer(this.props)
+  }
 
-    Backend.getAllItemList("gas",
-      response => {
-        console.log("Sync Gas From Server OK");
-        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_GAS, true)
-      },
-      error => {console.log(error)}
-    );
-    Backend.getAllItemList("oil",
-      response => {
-        console.log("Sync Oil From Server OK");
-        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_OIL, true)
-      },
-      error => {console.log(error)}
-    );
-    Backend.getAllItemList("authcheck",
-      response => {
-        console.log("Sync authcheck From Server OK");
-        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_AUTH, true)
-      },
-      error => {console.log(error)}
-    );
-    Backend.getAllItemList("expense",
-      response => {
-        console.log("Sync expense From Server OK");
-        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_EXPENSE, true)
-      },
-      error => {console.log(error)}
-    );
-    Backend.getAllItemList("service",
-      response => {
-        console.log("Sync service From Server OK");
-        this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_SERVICE, true)
-      },
-      error => {console.log(error)}
-    );
+  syncDataToServer() {
+    AppUtils.syncDataToServer(this.props)
+  }
+  handleLogout() {
+    Alert.alert(
+      'Do You Want to Sign out?',
+      null,
+      [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {text: 'Sign-out', style: 'destructive' , 
+              onPress: () => this.props.actUserLogout()},
+      ],
+      {cancelable: true}
+  )
   }
 
   render() {
@@ -170,16 +123,49 @@ class SettingsScreen extends React.Component {
                     Tai Khoan
                 </Text>
             </View>
+            {(true || !this.props.userData.isLogined) ? (
             <TouchableOpacity 
-                onPress={() => {}}>
+                onPress={() => this.props.navigation.navigate("Login")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="FontAwesome" name="user-circle" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Profile</Text></View>
+                  <Icon type="AntDesign" name="login" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Login</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
             </TouchableOpacity>
+            ) : null}
+
+            {(true || !this.props.userData.isLogined) ? (
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("RegisterUser")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="AntDesign" name="adduser" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>RegisterUser</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+            ) : null}
+
+            {(true || !this.props.userData.isLogined) ? (
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("Profile")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="FontAwesome" name="user-circle" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}>
+                  <Text style={styles.textNormal}>
+                    Profile
+                    {" : "+ (this.props.userData.isLogined ? this.props.userData.userProfile.fullName: "")}
+                  </Text>
+                </View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+            ) : null}
 
             <TouchableOpacity 
                 onPress={() => {}}>
@@ -191,6 +177,15 @@ class SettingsScreen extends React.Component {
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
             </TouchableOpacity>
+
+            {(true || !this.props.userData.isLogined) ? (
+            <View style={styles.rowContainer}>
+                <Button block danger onPress={() => this.handleLogout()} style={{width: "50%"}}>
+                  <Text>Log Out</Text>
+                </Button>
+            </View>
+            ) : null}
+            
         </View>
         </Content>
         </Container>
@@ -236,6 +231,7 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center", // vertial align
     margin: 5,
     paddingTop: 5,
@@ -275,10 +271,12 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData
+    vehicleData: state.vehicleData,
+    userData: state.userData
 });
 const mapActionsToProps = {
-  actVehicleAddVehicle, actVehicleAddFillItem
+  actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
+  actUserLogout
 };
   
 export default connect(

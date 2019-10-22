@@ -23,6 +23,10 @@ import VehicleDetailHistory from '../screens/VehicleDetailHistory';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import VehicleSettingScreen from '../screens/setting/VehicleSettingScreen';
+import LoginScreen from '../screens/setting/LoginScreen';
+import ProfileScreen from '../screens/setting/ProfileScreen';
+import RegisterUserScreen from '../screens/setting/RegisterUserScreen';
+
 import AppConstants from '../constants/AppConstants';
 
 const config = Platform.select({
@@ -98,6 +102,9 @@ const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
     VehicleSetting: VehicleSettingScreen,
+    Login: LoginScreen,
+    Profile: ProfileScreen,
+    RegisterUser: RegisterUserScreen
   },
   config
 );
@@ -156,7 +163,8 @@ const tabNavigator = createBottomTabNavigator({
                 },
                 (btnIndex) => {
                   if (btnIndex == NEW_VEHICLE) {
-                      props.navigation.navigate("NewVehicle")
+                      props.navigation.navigate("NewVehicle", 
+                          {createNew: true})
                   } else if (btnIndex == FILLGAS_INDEX) {
                       props.navigation.navigate("FillGas", 
                           {createNew: true})

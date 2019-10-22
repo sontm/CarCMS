@@ -3,6 +3,7 @@ require('dotenv').config()
 import bodyParser from 'body-parser'
 import mongoose from "mongoose";
 import Joi from "joi"
+const passport = require('passport');
 
 const startServer = async () => {
   const passport = require('passport');
@@ -33,8 +34,8 @@ const startServer = async () => {
   app.use(bodyParser.json())
   //app.use(cookieParser());
 
-  // app.use(passport.initialize());
-  // require('./components/AppPassPort');
+  app.use(passport.initialize());
+  require('./components/AppPassPort');
 
   // Log requests to the console.
   //app.use(logger('dev'));
