@@ -2,18 +2,21 @@
 class AppUtils {
     createUserFromRecordForJWT(userRecord) {
         if (userRecord) {
-            // let result = {
-            //     'id': userRecord.id,
-            //     'userServiceId': userRecord.userServiceId,
-            //     'email': userRecord.email,
-            //     'phone': userRecord.phone,
-            //     'fullName': userRecord.fullName,
-            //     'pictureUrl': userRecord.pictureUrl,
-            //     'type': userRecord.type,
-            //     'class': userRecord.class,
-            //     'accessToken': userRecord.accessToken
-            // }
-            return userRecord;
+            let result = {
+                'id': userRecord.id,
+                'userServiceId': userRecord.userServiceId,
+                'email': userRecord.email,
+                'phone': userRecord.phone,
+                'fullName': userRecord.fullName,
+                'pictureUrl': userRecord.pictureUrl,
+                'type': userRecord.type,
+                'class': userRecord.class,
+                'accessToken': userRecord.accessToken,
+                teamId: userRecord.teamId,
+                teamCode: userRecord.teamCode,
+                roleInTeam: userRecord.roleInTeam,
+            }
+            return result;
         }
         return {};
     }

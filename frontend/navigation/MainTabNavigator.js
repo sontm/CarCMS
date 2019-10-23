@@ -141,8 +141,8 @@ const TeamStack = createStackNavigator(
 );
 
 const tabNavigator = createBottomTabNavigator({
-    DetailStack,
     HomeStack,
+    DetailStack,
     TeamStack,
     // VehicleDetail: { screen: VehicleDetailReport },
     SettingsStack,
@@ -160,7 +160,7 @@ const tabNavigator = createBottomTabNavigator({
           <FooterTab>
             <Button
               vertical
-              active={props.navigation.state.index === 1}
+              active={props.navigation.state.index === 0}
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";

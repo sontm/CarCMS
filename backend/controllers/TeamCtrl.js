@@ -6,22 +6,26 @@ module.exports = {
   // req.body: teamId
   async getAllUserOfTeam(req, res) {
     console.log("getAllUserOfTeam:" + req.body.teamId)    
-    try {
-      // Find the User with this ID. Create new Team, assign teamId of User to this new ID
-      const allUsers = await new Promise((resolve, reject) => {
-        dbuser.find({teamId: req.body.teamId}, function(err, doc){
-          err ? reject(err) : resolve(doc);
+    if (req.body.teamId) {
+      try {
+        // Find the User with this ID. Create new Team, assign teamId of User to this new ID
+        const allUsers = await new Promise((resolve, reject) => {
+          dbuser.find({teamId: req.body.teamId}, function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
         });
-      });
-      res.status(200).send(allUsers)
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({msg: "Inter Server Error "})
-      throw error;
+        res.status(200).send(allUsers)
+      } catch (error) {
+        console.log(error);
+        res.status(500).send({msg: "Inter Server Error "})
+        throw error;
+      }
+    } else {
+      res.status(500).send({msg: "Wrong ID "})
     }
   },
 
-
+  // TODO. Need return new JWT token contain teamId and TeamCode of this User
   async createTeamOfUser(req, res) {
     console.log("Team Create of USERID:" + req.user.id)    
     let item = new dbteam({
@@ -96,6 +100,8 @@ module.exports = {
             err ? reject(err) : resolve(doc);
           });
         });
+
+        res.status(200).send({msg: "OK"})
       } else {
         res.status(400).send({msg: "Not Found User "})
       }
@@ -165,32 +171,34 @@ module.exports = {
               });
             });
 
-            // Find the User which Request, set him the teamId, teamCOde and role member
-            const requestUser = await new Promise((resolve, reject) => {
-              dbuser.findById(req.body.requestUserId, function(err, doc){
+            if (req.body.action == "approved") {
+              // Find the User which Request, set him the teamId, teamCOde and role member
+              const requestUser = await new Promise((resolve, reject) => {
+                dbuser.findById(req.body.requestUserId, function(err, doc){
+                  err ? reject(err) : resolve(doc);
+                });
+              });
+              if (requestUser) {
+                requestUser.teamCode = req.body.teamCode;
+                requestUser.teamId = req.body.teamId;
+                requestUser.roleInTeam = "member";
+
+                await new Promise((resolve, reject) => {
+                  requestUser.save(function(err, doc){
+                    err ? reject(err) : resolve(doc);
+                  });
+                });
+              }
+            }
+
+            // Return all New Requests
+            const allRequests = await new Promise((resolve, reject) => {
+              dbjointeam.find({teamCode: thisUser.teamCode, status: "requested"}, function(err, doc){
                 err ? reject(err) : resolve(doc);
               });
             });
-            if (requestUser) {
-              requestUser.teamCode = req.body.teamCode;
-              requestUser.teamId = req.body.teamId;
-              requestUser.roleInTeam = "member";
-
-              await new Promise((resolve, reject) => {
-                requestUser.save(function(err, doc){
-                  err ? reject(err) : resolve(doc);
-                });
-              });
-
-              // Return all New Requests
-              const allRequests = await new Promise((resolve, reject) => {
-                dbjointeam.find({teamCode: thisUser.teamCode, status: "requested"}, function(err, doc){
-                  err ? reject(err) : resolve(doc);
-                });
-              });
-              res.status(200).send(allRequests)
-              return;
-            }
+            res.status(200).send(allRequests)
+            return;
           } else {
             // Illegal status
           }

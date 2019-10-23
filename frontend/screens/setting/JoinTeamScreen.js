@@ -51,6 +51,7 @@ class JoinTeamScreen extends React.Component {
                         <Item regular style={styles.rowForm}>
                         <Input
                             placeholder="Auto Created"
+                            onChangeText={(code) => this.setState({code})}
                             value={this.state.code}
                         />
                         </Item>

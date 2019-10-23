@@ -31,14 +31,14 @@ class CarAuthorizeScreen extends React.Component {
     componentWillMount() {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            for (let i = 0; i < this.props.vehicleData.authorizeCarList.length; i++) {
-                if (this.props.vehicleData.authorizeCarList[i].id == AppContants.CURRENT_EDIT_FILL_ID && 
-                        this.props.vehicleData.authorizeCarList[i].vehicleId == AppContants.CURRENT_VEHICLE_ID) {
+            const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppContants.CURRENT_VEHICLE_ID);
+            for (let i = 0; i < currentVehicle.authorizeCarList.length; i++) {
+                if (currentVehicle.authorizeCarList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
-                        ...this.props.vehicleData.authorizeCarList[i],
+                        ...currentVehicle.authorizeCarList[i],
                         vehicleId: AppContants.CURRENT_VEHICLE_ID,
                         id: AppContants.CURRENT_EDIT_FILL_ID,
-                        fillDate:this.props.vehicleData.authorizeCarList[i].fillDate.toLocaleString(),
+                        fillDate:currentVehicle.authorizeCarList[i].fillDate.toLocaleString(),
                     })
                 }
             }

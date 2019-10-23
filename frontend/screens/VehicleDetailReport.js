@@ -37,21 +37,16 @@ class VehicleDetailReport extends React.Component {
 
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
-    let currentVehicle = {};
-    const arrVehicles = this.props.vehicleData.vehicleList.filter(
-        item => item.id == AppConstants.CURRENT_VEHICLE_ID);
-    if (arrVehicles && arrVehicles.length > 0) {
-        currentVehicle = arrVehicles[0];
-    }
+    const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+
     let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
         arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
-        = AppUtils.getStatForGasUsage(this.props.vehicleData.fillGasList, AppConstants.CURRENT_VEHICLE_ID);
+        = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
     let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-        = AppUtils.getInfoForOilUsage( this.props.vehicleData.fillOilList, AppConstants.CURRENT_VEHICLE_ID, 
+        = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
             lastDate, lastKm, averageKmPerDay);
     let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-        = AppUtils.getInfoCarAuthorizeDate(this.props.vehicleData.authorizeCarList, 
-            AppConstants.CURRENT_VEHICLE_ID)
+        = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
     return (
         <Container>

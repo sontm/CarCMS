@@ -18,7 +18,12 @@ class RegisterVehicleScreen extends React.Component {
             model: '',
             licensePlate: '',
             checkedDate: new Date().toLocaleDateString(),
-            isDefault: false
+            isDefault: false,
+            fillGasList:[],
+            fillOilList:[],
+            authorizeCarList:[],
+            expenseList:[],
+            serviceList:[]
         };
 
         this.save = this.save.bind(this)

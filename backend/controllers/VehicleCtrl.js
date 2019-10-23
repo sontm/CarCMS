@@ -3,6 +3,7 @@ import dbvehicle from "../database/models/dbvehicle";
 module.exports = {
   async create(req, res) {
     console.log("Vehicle Create of USERID:" + req.user.id)
+    console.log(req.body)
     // If this is Array, process each item
     if (req.body.constructor == Array) {
       for (let loop = 0; loop < req.body.length; loop++) {

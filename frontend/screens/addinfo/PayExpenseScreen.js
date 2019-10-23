@@ -32,14 +32,14 @@ class PayExpenseScreen extends React.Component {
     componentWillMount() {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            for (let i = 0; i < this.props.vehicleData.expenseList.length; i++) {
-                if (this.props.vehicleData.expenseList[i].id == AppContants.CURRENT_EDIT_FILL_ID && 
-                        this.props.vehicleData.expenseList[i].vehicleId == AppContants.CURRENT_VEHICLE_ID) {
+            const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+            for (let i = 0; i < currentVehicle.expenseList.length; i++) {
+                if (currentVehicle.expenseList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
-                        ...this.props.vehicleData.expenseList[i],
+                        ...currentVehicle.expenseList[i],
                         vehicleId: AppContants.CURRENT_VEHICLE_ID,
                         id: AppContants.CURRENT_EDIT_FILL_ID,
-                        fillDate:this.props.vehicleData.expenseList[i].fillDate.toLocaleString(),
+                        fillDate:currentVehicle.expenseList[i].fillDate.toLocaleString(),
                     })
                 }
             }

@@ -28,16 +28,18 @@ class FillGasScreen extends React.Component {
         this.save = this.save.bind(this)
     }
     componentWillMount() {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
+                AppContants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            for (let i = 0; i < this.props.vehicleData.fillGasList.length; i++) {
-                if (this.props.vehicleData.fillGasList[i].id == AppContants.CURRENT_EDIT_FILL_ID && 
-                        this.props.vehicleData.fillGasList[i].vehicleId == AppContants.CURRENT_VEHICLE_ID) {
+            const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+
+            for (let i = 0; i < currentVehicle.fillGasList.length; i++) {
+                if (currentVehicle.fillGasList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
-                        ...this.props.vehicleData.fillGasList[i],
+                        ...currentVehicle.fillGasList[i],
                         vehicleId: AppContants.CURRENT_VEHICLE_ID,
                         id: AppContants.CURRENT_EDIT_FILL_ID,
-                        fillDate:this.props.vehicleData.fillGasList[i].fillDate.toLocaleString(),
+                        fillDate:currentVehicle.fillGasList[i].fillDate.toLocaleString(),
                     })
                 }
             }
@@ -75,12 +77,7 @@ class FillGasScreen extends React.Component {
                 price: Number(this.state.price),
                 currentKm: Number(this.state.currentKm)
             }
-            // let maxId = 0;
-            // this.props.vehicleData.fillGasList.forEach(item => {
-            //     if (maxId < item.id) {
-            //         maxId = item.id
-            //     }
-            // })
+
             newData.id = apputils.uuidv4();
             console.log(JSON.stringify(newData))
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS)

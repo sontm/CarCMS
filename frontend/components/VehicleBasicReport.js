@@ -61,13 +61,15 @@ class VehicleBasicReport extends Component {
     }
     render() {
         console.log("VehicleReport Render")
+        const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == this.props.vehicle.id);
+
         let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
             arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
-            = AppUtils.getStatForGasUsage(this.props.vehicleData.fillGasList, this.props.vehicle.id);
+            = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
         let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-            = AppUtils.getInfoForOilUsage( this.props.vehicleData.fillOilList, this.props.vehicle.id, lastDate, lastKm, averageKmPerDay);
+            = AppUtils.getInfoForOilUsage( currentVehicle.fillOilList, lastDate, lastKm, averageKmPerDay);
         let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-            = AppUtils.getInfoCarAuthorizeDate(this.props.vehicleData.authorizeCarList, this.props.vehicle.id)
+            = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
         return (
             <Content>

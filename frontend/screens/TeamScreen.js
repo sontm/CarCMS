@@ -27,7 +27,7 @@ class TeamScreen extends React.Component {
 
   componentDidMount() {
     console.log("TeamScreen DidMount")
-    Backend.getAllUserOfTeam({teamId: this.props.userData.teamInfo.id}, this.props.userData.token, 
+    Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
       response => {
           console.log("GEt all Member in Team OK")
           console.log(response.data)

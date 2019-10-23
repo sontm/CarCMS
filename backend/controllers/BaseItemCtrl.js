@@ -1,10 +1,11 @@
 import {dbgas, dboil, dbauth, dbexpense, dbservice} from "../database/models/BaseItemSchema";
+import dbvehicle from "../database/models/dbvehicle";
 
 // User.find().or([{ name: param }, { nickname: param }])
 //     .then(users => { /*logic here*/ })
 //     .catch(error => { /*error logic here*/ })
 module.exports = {
-  async create(req, res, dbModel, type) {
+  async create(req, res, type) {
     console.log(" ->[BaseCtrl] Create of User:" + req.user.id)
     //console.log(req.body)
 
@@ -14,26 +15,93 @@ module.exports = {
         let element = req.body[loop];
 
         element.userId = req.user.id;
-
-        await new Promise((resolve, reject) => {
-          dbModel.findOneAndUpdate({ id: element.id }, element, 
-              {upsert:true, useFindAndModify: false}, function(err, doc){
+        //Find the Appropriate Vehicle
+        const theVehicle = await new Promise((resolve, reject) => {
+          dbvehicle.findOne({ id: element.vehicleId },function(err, doc){
             err ? reject(err) : resolve(doc);
           });
         });
+        if (theVehicle) {
+          if (type == "gas") {
+            if (!theVehicle.fillGasList) {
+              theVehicle.fillGasList = [];
+            }
+            theVehicle.fillGasList.push(element)
+          } else if (type == "oil") {
+            if (!theVehicle.fillOilList) {
+              theVehicle.fillOilList = [];
+            }
+            theVehicle.fillOilList.push(element)
+          } else if (type == "auth") {
+            if (!theVehicle.authorizeCarList) {
+              theVehicle.authorizeCarList = [];
+            }
+            theVehicle.authorizeCarList.push(element)
+          } else if (type == "service") {
+            if (!theVehicle.serviceList) {
+              theVehicle.serviceList = [];
+            }
+            theVehicle.serviceList.push(element)
+          } else if (type == "expense") {
+            if (!theVehicle.expenseList) {
+              theVehicle.expenseList = [];
+            }
+            theVehicle.expenseList.push(element)
+          }
+
+          // Save the vehicle with new Record
+          await new Promise((resolve, reject) => {
+            theVehicle.save(function(err, doc){
+              err ? reject(err) : resolve(doc);
+            });
+          });
+        }
+
       }
       res.status(200).send({msg: "Sync To Server OK for " + type})
     } else {
-      let item = await new dbModel({
-        ...req.body,
-        userId: req.user.id
-      });
-      const result = await new Promise((resolve, reject) => {
-        item.save((err, res) => {
-            err ? reject(err) : resolve(res);
+      //Find the Appropriate Vehicle
+      const theVehicle = await new Promise((resolve, reject) => {
+        dbvehicle.findOne({ id: req.body.vehicleId },function(err, doc){
+          err ? reject(err) : resolve(doc);
         });
       });
-      res.status(200).send({msg: "Add Item OK for " + type})
+      if (theVehicle) {
+        if (type == "gas") {
+          if (!theVehicle.fillGasList) {
+            theVehicle.fillGasList = [];
+          }
+          theVehicle.fillGasList.push(element)
+        } else if (type == "oil") {
+          if (!theVehicle.fillOilList) {
+            theVehicle.fillOilList = [];
+          }
+          theVehicle.fillOilList.push(element)
+        } else if (type == "auth") {
+          if (!theVehicle.authorizeCarList) {
+            theVehicle.authorizeCarList = [];
+          }
+          theVehicle.authorizeCarList.push(element)
+        } else if (type == "service") {
+          if (!theVehicle.serviceList) {
+            theVehicle.serviceList = [];
+          }
+          theVehicle.serviceList.push(element)
+        } else if (type == "expense") {
+          if (!theVehicle.expenseList) {
+            theVehicle.expenseList = [];
+          }
+          theVehicle.expenseList.push(element)
+        }
+
+        // Save the vehicle with new Record
+        await new Promise((resolve, reject) => {
+          theVehicle.save(function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
+        res.status(200).send({msg: "Add Item OK for " + type})
+      }
     }
   },
   getAll(req, res, dbModel, type) {

@@ -43,7 +43,12 @@ const VehicleSchema = new Schema({
     remark: {
         type: String,
         required: false
-    }
+    },
+    fillGasList: [],
+    fillOilList: [],
+    authorizeCarList: [],
+    expenseList: [],
+    serviceList: []
 });
 
 VehicleSchema.set('toJSON', {

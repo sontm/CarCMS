@@ -1,4 +1,5 @@
 import dbuser from "../database/models/dbuser";
+import dbteam from "../database/models/dbteam";
 const bcrypt = require('bcrypt')
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
@@ -31,6 +32,7 @@ module.exports = {
         .catch(error => res.status(400).send(error));
     });
   },
+
   login(req, res, next) {
     console.log("[UserCtrl], Login:")
     // Not use session, use JWT
@@ -55,9 +57,17 @@ module.exports = {
             // generate a signed son web token with the contents of user object and return it in the response
             const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
             console.log("      Auth, ReqLogin OK, token:" + token)
-            return res
-                .status(200)
-                .send({user, token})
+
+            // Return Team Info also
+            dbteam.findById(user.teamId,function(err, teamInfo) {
+              if (err) {
+                  res.status(500).send(err)
+              } else {
+                  return res
+                    .status(200)
+                    .send({user, token, teamInfo})
+                  }
+            });
         });
     })(req, res);
   },

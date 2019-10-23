@@ -12,56 +12,56 @@ import ctrl from './BaseItemCtrl'
 module.exports = {
   createGas(req, res) {
     console.log("Gas Create")
-    ctrl.create(req, res, dbgas, "gas")
+    ctrl.create(req, res, "gas")
   },
   getGasAll(req, res) {
     console.log("Gas Get All")
-    ctrl.getAll(req, res, dbgas, "gas")
+    ctrl.getAll(req, res, "gas")
   },
   getGasById(req, res) {
     console.log("Gas Get By ID:" + req.params.id)
-    ctrl.getById(req, res, dbgas, "gas")
+    ctrl.getById(req, res, "gas")
   },
   getGasAllOfUser(req, res) {
     console.log("Gas Get All Of User")
-    ctrl.getAllOfUser(req, res, dbgas, "gas")
+    ctrl.getAllOfUser(req, res, "gas")
   },
 
 
   createOil(req, res) {
     console.log("Oil Create")
-    ctrl.create(req, res, dboil, "oil")
+    ctrl.create(req, res, "oil")
   },
   getOilAll(req, res) {
     console.log("Oil Get All")
-    ctrl.getAll(req, res, dboil, "oil")
+    ctrl.getAll(req, res, "oil")
   },
   getOilById(req, res) {
     console.log("Oil Get By ID:" + req.params.id)
-    ctrl.getById(req, res, dboil, "oil")
+    ctrl.getById(req, res, "oil")
   },
   getOilAllOfUser(req, res) {
     console.log("Oil Get All OfUser")
-    ctrl.getAllOfUser(req, res, dboil, "oil")
+    ctrl.getAllOfUser(req, res, "oil")
   },
 
 
 
   createAuth(req, res) {
     console.log("AuthCheck Create")
-    ctrl.create(req, res, dbauth, "auth")
+    ctrl.create(req, res, "auth")
   },
   getAuthAll(req, res) {
     console.log("AuthCheck Get All")
-    ctrl.getAll(req, res, dbauth, "auth")
+    ctrl.getAll(req, res, "auth")
   },
   getAuthById(req, res) {
     console.log("AuthCheck Get By ID:" + req.params.id)
-    ctrl.getById(req, res, dbauth, "auth")
+    ctrl.getById(req, res, "auth")
   },
   getAuthAllOfUser(req, res) {
     console.log("AuthCheck Get All OfUser")
-    ctrl.getAllOfUser(req, res, dbauth, "auth")
+    ctrl.getAllOfUser(req, res, "auth")
   },
 
 
@@ -69,19 +69,19 @@ module.exports = {
 
   createExpense(req, res) {
     console.log("Expense Create")
-    ctrl.create(req, res, dbexpense, "expense")
+    ctrl.create(req, res, "expense")
   },
   getExpenseAll(req, res) {
     console.log("Expense Get All")
-    ctrl.getAll(req, res, dbexpense, "expense")
+    ctrl.getAll(req, res, "expense")
   },
   getExpenseById(req, res) {
     console.log("Expense Get By ID:" + req.params.id)
-    ctrl.getById(req, res, dbexpense, "expense")
+    ctrl.getById(req, res, "expense")
   },
   getExpenseAllOfUser(req, res) {
     console.log("Expense Get All")
-    ctrl.getAllOfUser(req, res, dbexpense, "expense")
+    ctrl.getAllOfUser(req, res, "expense")
   },
 
 
@@ -89,18 +89,18 @@ module.exports = {
 
   createService(req, res) {
     console.log("Service Create")
-    ctrl.create(req, res, dbservice, "service")
+    ctrl.create(req, res, "service")
   },
   getServiceAll(req, res) {
     console.log("Service Get All")
-    ctrl.getAll(req, res, dbservice, "service")
+    ctrl.getAll(req, res, "service")
   },
   getServiceById(req, res) {
     console.log("Service Get By ID:" + req.params.id)
-    ctrl.getById(req, res, dbservice, "service")
+    ctrl.getById(req, res, "service")
   },
   getServiceAllOfUser(req, res) {
     console.log("Service Get All")
-    ctrl.getAllOfUser(req, res, dbservice, "service")
+    ctrl.getAllOfUser(req, res, "service")
   },
 };

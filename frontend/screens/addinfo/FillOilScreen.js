@@ -34,14 +34,14 @@ class FillOilScreen extends React.Component {
         console.log(this.props.navigation.state.params)
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            for (let i = 0; i < this.props.vehicleData.fillOilList.length; i++) {
-                if (this.props.vehicleData.fillOilList[i].id == AppContants.CURRENT_EDIT_FILL_ID && 
-                        this.props.vehicleData.fillOilList[i].vehicleId == AppContants.CURRENT_VEHICLE_ID) {
+            const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+            for (let i = 0; i < currentVehicle.fillOilList.length; i++) {
+                if (currentVehicle.fillOilList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
-                        ...this.props.vehicleData.fillOilList[i],
+                        ...currentVehicle.fillOilList[i],
                         vehicleId: AppContants.CURRENT_VEHICLE_ID,
                         id: AppContants.CURRENT_EDIT_FILL_ID,
-                        fillDate:this.props.vehicleData.fillOilList[i].fillDate.toLocaleString(),
+                        fillDate:currentVehicle.fillOilList[i].fillDate.toLocaleString(),
                     })
                 }
             }
@@ -79,12 +79,6 @@ class FillOilScreen extends React.Component {
             }
             console.log(newData)
 
-            // let maxId = 0;
-            // this.props.vehicleData.fillOilList.forEach(item => {
-            //     if (maxId < item.id) {
-            //         maxId = item.id
-            //     }
-            // })
             newData.id = apputils.uuidv4();
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_OIL)

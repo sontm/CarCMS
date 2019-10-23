@@ -89,80 +89,68 @@ class VehicleDetailHistory extends React.Component {
 //     }
     renderHistoryList() {
         console.log("renderHistoryList, VehicleID:" + AppConstants.CURRENT_VEHICLE_ID)
-        let displayDatas = [...this.props.vehicleData.authorizeCarList,
-            ...this.props.vehicleData.fillOilList, ...this.props.vehicleData.fillGasList,
-            ...this.props.vehicleData.expenseList, ...this.props.vehicleData.serviceList];
+        let thisVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+        let displayDatas = [...thisVehicle.authorizeCarList,
+            ...thisVehicle.fillOilList, ...thisVehicle.fillGasList,
+            ...thisVehicle.expenseList, ...thisVehicle.serviceList];
         // Sort this data as Time order
         displayDatas.sort(function(a, b) { 
             return new Date(b.fillDate) - new Date(a.fillDate);
         })
         return displayDatas.map(item => {
-            if (item.vehicleId == AppConstants.CURRENT_VEHICLE_ID) {
-                return (
-                    <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                        <Left>
-                            {item.type == AppConstants.FILL_ITEM_GAS ? (
-                                <Button style={{ backgroundColor: "#FF9501" }}>
-                                    <Icon active type="MaterialCommunityIcons" name="fuel" />
-                                </Button>
-                            ) :
-                            (item.type == AppConstants.FILL_ITEM_OIL) ? (
-                                <Button style={{ backgroundColor: "#007AFF" }}>
-                                    <Icon active type="MaterialCommunityIcons" name="oil" />
-                                </Button>
-                            ) :
-                            (item.type == AppConstants.FILL_ITEM_AUTH) ? (
-                                <Button style={{ backgroundColor: "#3cc97b" }}>
-                                    <Icon active type="Octicons" name="verified" />
-                                </Button>
-                            ) : (item.type == AppConstants.FILL_ITEM_EXPENSE) ? (
-                                <Button style={{ backgroundColor: "gold" }}>
-                                    <Icon active type="MaterialIcons" name="attach-money" />
-                                </Button>
-                            ) : (item.type == AppConstants.FILL_ITEM_SERVICE) ? (
-                                <Button style={{ backgroundColor: "#df43fa" }}>
-                                    <Icon active type="Octicons" name="tools" />
-                                </Button>
-                            ) :null
-                            }
-                        </Left>
-                        <Body>
-                            <Text style={styles.listMainText}>{AppUtils.getVietnamNameOfFillItemType(item.type)}
-                            {". " + AppUtils.formatDateMonthDayYearVN(item.fillDate)}</Text>
-                            <Text style={styles.listSubText}>{item.price + " đ, " + 
-                                (item.currentKm ? (item.currentKm + "Km, ") : (item.subType ? item.subType : ""))}</Text>
-                        </Body>
-                        <Right>
-                            <TouchableOpacity 
-                                onPress={() => this.handleEditItem(item.id, item.type)}>
-                                <Icon type="Feather" name="edit-3" style={styles.listItemEditIcon}/></TouchableOpacity>
-                            <TouchableOpacity 
-                                onPress={() => this.handleDeleteItem(item.id, item.type)}>
-                                <Icon type="MaterialIcons" name="delete" style={styles.listItemDeleteIcon}/></TouchableOpacity>
-                        </Right>
-                    </ListItem>
-                    )
-                }
+            return (
+                <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
+                    
+                    <Left>
+                        {item.type == AppConstants.FILL_ITEM_GAS ? (
+                            <Button style={{ backgroundColor: "#FF9501" }}>
+                                <Icon active type="MaterialCommunityIcons" name="fuel" />
+                            </Button>
+                        ) :
+                        (item.type == AppConstants.FILL_ITEM_OIL) ? (
+                            <Button style={{ backgroundColor: "#007AFF" }}>
+                                <Icon active type="MaterialCommunityIcons" name="oil" />
+                            </Button>
+                        ) :
+                        (item.type == AppConstants.FILL_ITEM_AUTH) ? (
+                            <Button style={{ backgroundColor: "#3cc97b" }}>
+                                <Icon active type="Octicons" name="verified" />
+                            </Button>
+                        ) : (item.type == AppConstants.FILL_ITEM_EXPENSE) ? (
+                            <Button style={{ backgroundColor: "gold" }}>
+                                <Icon active type="MaterialIcons" name="attach-money" />
+                            </Button>
+                        ) : (item.type == AppConstants.FILL_ITEM_SERVICE) ? (
+                            <Button style={{ backgroundColor: "#df43fa" }}>
+                                <Icon active type="Octicons" name="tools" />
+                            </Button>
+                        ) :null
+                        }
+                    </Left>
+                    
+                    <Body>
+                    <TouchableOpacity onPress={() => this.handleEditItem(item.id, item.type)} key={item.id}>
+                        <Text style={styles.listMainText}>{AppUtils.getVietnamNameOfFillItemType(item.type)}
+                        {". " + AppUtils.formatDateMonthDayYearVN(item.fillDate)}</Text>
+                        <Text style={styles.listSubText}>{item.price + " đ, " + 
+                            (item.currentKm ? (item.currentKm + "Km, ") : (item.subType ? item.subType : ""))}</Text>
+                    </TouchableOpacity>
+                    </Body>
+                    <Right>
+                        <TouchableOpacity 
+                            onPress={() => this.handleDeleteItem(item.id, item.type)}>
+                            <Icon type="MaterialIcons" name="delete" style={styles.listItemDeleteIcon}/></TouchableOpacity>
+                    </Right>
+                </ListItem>
+                )
             }
         );
     }
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
-    let currentVehicle = {};
-    const arrVehicles = this.props.vehicleData.vehicleList.filter(
+
+    const currentVehicle = this.props.vehicleData.vehicleList.find(
         item => item.id == AppConstants.CURRENT_VEHICLE_ID);
-    if (arrVehicles && arrVehicles.length > 0) {
-        currentVehicle = arrVehicles[0];
-    }
-    let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
-        arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
-        = AppUtils.getStatForGasUsage(this.props.vehicleData.fillGasList, AppConstants.CURRENT_VEHICLE_ID);
-    let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-        = AppUtils.getInfoForOilUsage( this.props.vehicleData.fillOilList, AppConstants.CURRENT_VEHICLE_ID, 
-            lastDate, lastKm, averageKmPerDay);
-    let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-        = AppUtils.getInfoCarAuthorizeDate(this.props.vehicleData.authorizeCarList, 
-            AppConstants.CURRENT_VEHICLE_ID)
 
     return (
         <Container>

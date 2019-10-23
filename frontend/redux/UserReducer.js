@@ -54,6 +54,7 @@ export default function(state = initialState, action) {
             ...state,
             userProfile: action.payload.user,
             token: action.payload.token,
+            teamInfo: action.payload.teamInfo,
             isLogined: true
         };
     case USER_LOGOUT:

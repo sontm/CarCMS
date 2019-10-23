@@ -31,28 +31,28 @@ app.get('/api/vehicle/all', vehicle.getAll);
 app.get('/api/vehicleById/:id', vehicle.getById);
 
 
-app.post('/api/gas', passport.authenticate('jwt', {session: false}), itemController.createGas);
-app.get('/api/gas', passport.authenticate('jwt', {session: false}), itemController.getGasAllOfUser);
-app.get('/api/gas/all', itemController.getGasAll);
-app.get('/api/gasById/:id', itemController.getGasById);
+// app.post('/api/gas', passport.authenticate('jwt', {session: false}), itemController.createGas);
+// app.get('/api/gas', passport.authenticate('jwt', {session: false}), itemController.getGasAllOfUser);
+// app.get('/api/gas/all', itemController.getGasAll);
+// app.get('/api/gasById/:id', itemController.getGasById);
 
-app.post('/api/oil', passport.authenticate('jwt', {session: false}), itemController.createOil);
-app.get('/api/oil', passport.authenticate('jwt', {session: false}), itemController.getOilAllOfUser);
-app.get('/api/oil/all', itemController.getOilAll);
-app.get('/api/oilById/:id', itemController.getOilById);
+// app.post('/api/oil', passport.authenticate('jwt', {session: false}), itemController.createOil);
+// app.get('/api/oil', passport.authenticate('jwt', {session: false}), itemController.getOilAllOfUser);
+// app.get('/api/oil/all', itemController.getOilAll);
+// app.get('/api/oilById/:id', itemController.getOilById);
 
-app.post('/api/authcheck', passport.authenticate('jwt', {session: false}), itemController.createAuth);
-app.get('/api/authcheck', passport.authenticate('jwt', {session: false}), itemController.getAuthAllOfUser);
-app.get('/api/authcheck/all', itemController.getAuthAll);
-app.get('/api/authcheckById/:id', itemController.getAuthById);
+// app.post('/api/authcheck', passport.authenticate('jwt', {session: false}), itemController.createAuth);
+// app.get('/api/authcheck', passport.authenticate('jwt', {session: false}), itemController.getAuthAllOfUser);
+// app.get('/api/authcheck/all', itemController.getAuthAll);
+// app.get('/api/authcheckById/:id', itemController.getAuthById);
 
-app.post('/api/expense', passport.authenticate('jwt', {session: false}), itemController.createExpense);
-app.get('/api/expense', passport.authenticate('jwt', {session: false}), itemController.getExpenseAllOfUser);
-app.get('/api/expense/all', itemController.getExpenseAll);
-app.get('/api/expenseById/:id', itemController.getExpenseById);
+// app.post('/api/expense', passport.authenticate('jwt', {session: false}), itemController.createExpense);
+// app.get('/api/expense', passport.authenticate('jwt', {session: false}), itemController.getExpenseAllOfUser);
+// app.get('/api/expense/all', itemController.getExpenseAll);
+// app.get('/api/expenseById/:id', itemController.getExpenseById);
 
-app.post('/api/service', passport.authenticate('jwt', {session: false}), itemController.createService);
-app.get('/api/service', passport.authenticate('jwt', {session: false}), itemController.getServiceAllOfUser);
-app.get('/api/service/all', itemController.getServiceAll);
-app.get('/api/serviceById/:id', itemController.getServiceById);
+// app.post('/api/service', passport.authenticate('jwt', {session: false}), itemController.createService);
+// app.get('/api/service', passport.authenticate('jwt', {session: false}), itemController.getServiceAllOfUser);
+// app.get('/api/service/all', itemController.getServiceAll);
+// app.get('/api/serviceById/:id', itemController.getServiceById);
 };
