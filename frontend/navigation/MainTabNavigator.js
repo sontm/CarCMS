@@ -26,6 +26,12 @@ import VehicleSettingScreen from '../screens/setting/VehicleSettingScreen';
 import LoginScreen from '../screens/setting/LoginScreen';
 import ProfileScreen from '../screens/setting/ProfileScreen';
 import RegisterUserScreen from '../screens/setting/RegisterUserScreen';
+import CreateTeamScreen from '../screens/setting/CreateTeamScreen'
+import JoinTeamScreen from '../screens/setting/JoinTeamScreen'
+
+import TeamScreen from '../screens/TeamScreen';
+import JoinRequestScreen from '../screens/team/JoinRequestScreen'
+
 
 import AppConstants from '../constants/AppConstants';
 
@@ -104,7 +110,9 @@ const SettingsStack = createStackNavigator(
     VehicleSetting: VehicleSettingScreen,
     Login: LoginScreen,
     Profile: ProfileScreen,
-    RegisterUser: RegisterUserScreen
+    RegisterUser: RegisterUserScreen,
+    CreateTeam: CreateTeamScreen,
+    JoinTeam: JoinTeamScreen
   },
   config
 );
@@ -123,9 +131,19 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = '';
 
+
+const TeamStack = createStackNavigator(
+  {
+    Team: TeamScreen,
+    JoinRequest: JoinRequestScreen,
+  },
+  config
+);
+
 const tabNavigator = createBottomTabNavigator({
     DetailStack,
     HomeStack,
+    TeamStack,
     // VehicleDetail: { screen: VehicleDetailReport },
     SettingsStack,
 
@@ -151,6 +169,8 @@ const tabNavigator = createBottomTabNavigator({
               <Icon name='list' style={{fontSize: 26}}/>
               <Text>List</Text>
             </Button>
+            
+            
             <Button
               vertical
               //active={props.navigation.state.index === 0}
@@ -183,11 +203,24 @@ const tabNavigator = createBottomTabNavigator({
                   }
                 })
               }>
-              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 60, marginTop: -20, color: "blue"}}/>
+              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 50, marginTop: -10, color: "blue"}}/>
             </Button>
+            
             <Button
               vertical
               active={props.navigation.state.index === 2}
+              onPress={() => {
+                AppConstants.CURRENT_VEHICLE_ID = "0";
+                AppConstants.CURRENT_EDIT_FILL_ID = "0";
+                props.navigation.navigate("TeamStack")
+              }}>
+              <Icon type="Octicons" name='organization' style={{fontSize: 26}}/>
+              <Text>Team</Text>
+            </Button>
+            
+            <Button
+              vertical
+              active={props.navigation.state.index === 3}
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";

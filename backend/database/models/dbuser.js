@@ -44,10 +44,22 @@ const UserSchema = new Schema({
         type: String,
         required: false
     },
-    role: {//freeUser, smallTeam, bigTeam 
+    class: {//freeUser, smallTeam, bigTeam 
         type: String,
         required: false
-    }
+    },
+    teamId: {
+        type: String,
+        required: false
+    },
+    teamCode: {
+        type: String,
+        required: false
+    },
+    roleInTeam: {
+        type: String, // manager, member
+        required: false
+    },
 });
 
 UserSchema.set('toJSON', {

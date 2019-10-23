@@ -20,7 +20,7 @@ module.exports = {
       userInfo.fullName = req.body.fullName;
       userInfo.phone = req.body.phone;
       userInfo.type = "local";
-      userInfo.role = "freeUser";
+      userInfo.class = "freeUser";
 
       let item = new dbuser(userInfo);
 

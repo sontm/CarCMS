@@ -3,6 +3,7 @@ const passport = require('passport');
 import itemController from './ItemCtrl'
 import vehicle from './VehicleCtrl'
 import user from './UserCtrl'
+import team from './TeamCtrl';
 
 module.exports = (app) => {
 app.get('/api', (req, res) => res.status(200).send({
@@ -16,6 +17,13 @@ app.get('/api/users', user.getAll);
 app.get('/api/usersById/:id', user.getByEmailOrObjectId);
 // this request is Protected by JWT Authentication
 app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), user.getUserProfile);
+
+app.post('/api/team', passport.authenticate('jwt', {session: false}), team.createTeamOfUser);
+app.post('/api/team/join', passport.authenticate('jwt', {session: false}), team.joinTeam);
+app.get('/api/team/join', passport.authenticate('jwt', {session: false}), team.getAllJoinRequestWhichUserIsManager);
+app.post('/api/team/join/action', passport.authenticate('jwt', {session: false}), team.approveOrRejectJoinRequest);
+app.post('/api/team/users', passport.authenticate('jwt', {session: false}), team.getAllUserOfTeam);
+
 
 app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
 app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);

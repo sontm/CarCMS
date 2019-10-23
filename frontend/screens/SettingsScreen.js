@@ -69,6 +69,27 @@ class SettingsScreen extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("CreateTeam")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Create Team</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("JoinTeam")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Join Team</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
                 onPress={() => this.syncDataFromServer()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>

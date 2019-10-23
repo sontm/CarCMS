@@ -57,6 +57,49 @@ class Backend {
             .catch((error) => {onError(error);});
     }
     
+    // data: {teamId}
+    getAllUserOfTeam(data, token, onOK, onError) {
+        axios.post("/team/users",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+    createTeam(data, token, onOK, onError) {
+        axios.post("/team",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    joinTeam(data, token, onOK, onError) {
+        axios.post("/team/join",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+    getAllJoinTeamRequest(token, onOK, onError) {
+        axios.get("/team/join",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
+    approveOrRejectJoinRequest(data, token, onOK, onError) {
+        axios.post("/team/join/action",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
     // getUserProfile(onOK, onError) {
     //     axios.get("/users/profile",
     //         { headers: this.createHeader()})
