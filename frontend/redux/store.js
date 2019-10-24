@@ -6,9 +6,9 @@ import { persistStore, persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger'
 
-import VehicleReducer from './VehicleReducer';
 import SettingReducer from './SettingReducer';
 import UserReducer from './UserReducer';
+import TeamReducer from './TeamReducer';
 
 const initialState = {};
 
@@ -16,9 +16,9 @@ const middleware = [thunk, logger];
 //const middleware = [thunk];
 
 const reducers = combineReducers({
-  vehicleData: VehicleReducer,
   settingData: SettingReducer,
-  userData: UserReducer
+  userData: UserReducer,
+  teamData: TeamReducer
 });
 
 // Middleware: Redux Persist Config
@@ -29,7 +29,7 @@ const persistConfig = {
   storage: AsyncStorage,
   // Whitelist (Save Specific Reducers)
   whitelist: [
-    'vehicleData','settingData','userData'
+    'settingData','userData', 'teamData'
   ],
   // Blacklist (Don't Save Specific Reducers)
   blacklist: [

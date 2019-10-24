@@ -111,6 +111,9 @@ class JoinRequestScreen extends React.Component {
                         <TouchableOpacity 
                             onPress={() => this.handleJoin(item, "rejected")}>
                             <Icon type="AntDesign" name="closecircle" style={styles.listItemDeleteIcon}/></TouchableOpacity>
+                        <TouchableOpacity 
+                            onPress={() => this.handleJoin(item, "blocked")}>
+                            <Icon type="MaterialIcons" name="block" style={styles.listItemBlockIcon}/></TouchableOpacity>
                     </Right>
                 </ListItem>
             ))}
@@ -157,6 +160,10 @@ const styles = StyleSheet.create({
     color: "blue",
     fontSize: 34
   },
+  listItemBlockIcon: {
+    color: "rgb(250, 100, 100)",
+    fontSize: 30
+  }
 });
 
 const mapStateToProps = (state) => ({

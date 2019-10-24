@@ -1,7 +1,5 @@
 const passport = require('passport');
 
-import itemController from './ItemCtrl'
-import vehicle from './VehicleCtrl'
 import user from './UserCtrl'
 import team from './TeamCtrl';
 
@@ -18,6 +16,9 @@ app.get('/api/usersById/:id', user.getByEmailOrObjectId);
 // this request is Protected by JWT Authentication
 app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), user.getUserProfile);
 
+app.post('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.addVehicles);
+app.get('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.getAllVehiclesOfUser);
+
 app.post('/api/team', passport.authenticate('jwt', {session: false}), team.createTeamOfUser);
 app.post('/api/team/join', passport.authenticate('jwt', {session: false}), team.joinTeam);
 app.get('/api/team/join', passport.authenticate('jwt', {session: false}), team.getAllJoinRequestWhichUserIsManager);
@@ -25,11 +26,10 @@ app.post('/api/team/join/action', passport.authenticate('jwt', {session: false})
 app.post('/api/team/users', passport.authenticate('jwt', {session: false}), team.getAllUserOfTeam);
 
 
-app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
-app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);
-app.get('/api/vehicle/all', vehicle.getAll);
-app.get('/api/vehicleById/:id', vehicle.getById);
-
+// app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
+// app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);
+// app.get('/api/vehicle/all', vehicle.getAll);
+// app.get('/api/vehicleById/:id', vehicle.getById);
 
 // app.post('/api/gas', passport.authenticate('jwt', {session: false}), itemController.createGas);
 // app.get('/api/gas', passport.authenticate('jwt', {session: false}), itemController.getGasAllOfUser);

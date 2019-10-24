@@ -60,6 +60,51 @@ const UserSchema = new Schema({
         type: String, // manager, member
         required: false
     },
+    vehicleList: [
+        {
+            id: {
+                type: String,
+                required: false
+            },
+            userId: {
+                type: String,
+                required: false
+            },
+            brand: {
+                type: String,
+                required: false
+            },
+            model: {
+                type: String,
+                required: false
+            },
+            licensePlate: {
+                type: String,
+                required: false
+            },
+            checkedDate: {
+                type: Date,
+                required: false
+            },
+            type: {
+                type: String, // car|bike
+                required: false
+            },
+            isDefault: {
+                type: Boolean,
+                required: false
+            },
+            remark: {
+                type: String,
+                required: false
+            },
+            fillGasList: [],
+            fillOilList: [],
+            authorizeCarList: [],
+            expenseList: [],
+            serviceList: []
+        }
+    ]
 });
 
 UserSchema.set('toJSON', {

@@ -11,7 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 
-import {actVehicleDeleteFillItem} from '../redux/VehicleReducer'
+import {actVehicleDeleteFillItem} from '../redux/UserReducer'
 
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
@@ -89,7 +89,11 @@ class VehicleDetailHistory extends React.Component {
 //     }
     renderHistoryList() {
         console.log("renderHistoryList, VehicleID:" + AppConstants.CURRENT_VEHICLE_ID)
-        let thisVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+        if (this.props.navigation.state.params.vehicle) {
+            var thisVehicle = this.props.navigation.state.params.vehicle;
+        } else {
+            var thisVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+        }
         let displayDatas = [...thisVehicle.authorizeCarList,
             ...thisVehicle.fillOilList, ...thisVehicle.fillGasList,
             ...thisVehicle.expenseList, ...thisVehicle.serviceList];
@@ -149,9 +153,12 @@ class VehicleDetailHistory extends React.Component {
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
 
-    const currentVehicle = this.props.vehicleData.vehicleList.find(
+    if (this.props.navigation.state.params.vehicle) {
+        var currentVehicle = this.props.navigation.state.params.vehicle;
+    } else {
+        var currentVehicle = this.props.userData.vehicleList.find(
         item => item.id == AppConstants.CURRENT_VEHICLE_ID);
-
+    }
     return (
         <Container>
         <Content>
@@ -250,7 +257,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData
+    userData: state.userData
 });
 const mapActionsToProps = {
     actVehicleDeleteFillItem

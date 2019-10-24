@@ -61,8 +61,12 @@ class VehicleBasicReport extends Component {
     }
     render() {
         console.log("VehicleReport Render")
-        const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == this.props.vehicle.id);
-
+        if (this.props.vehicle) {
+            var currentVehicle = this.props.vehicle;
+        } else {
+            var currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.vehicle.id);
+        }
+        
         let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
             arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
             = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
@@ -77,7 +81,7 @@ class VehicleBasicReport extends Component {
                 onPress={() => {
                     AppConstants.CURRENT_VEHICLE_ID = this.props.vehicle.id;
                     this.props.navigation.navigate("VehicleDetail", 
-                          {vehicleId: this.props.vehicle.id})
+                          {vehicleId: this.props.vehicle.id, vehicle: currentVehicle})
                     }
                 }
             >
@@ -330,7 +334,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData
+    userData: state.userData
 });
 const mapActionsToProps = {
     

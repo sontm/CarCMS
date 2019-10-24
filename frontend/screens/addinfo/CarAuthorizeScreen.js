@@ -6,7 +6,7 @@ import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
 
 import { connect } from 'react-redux';
-import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/VehicleReducer'
+import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import apputils from '../../constants/AppUtils';
 
 class CarAuthorizeScreen extends React.Component {
@@ -31,7 +31,7 @@ class CarAuthorizeScreen extends React.Component {
     componentWillMount() {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppContants.CURRENT_VEHICLE_ID);
+            const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppContants.CURRENT_VEHICLE_ID);
             for (let i = 0; i < currentVehicle.authorizeCarList.length; i++) {
                 if (currentVehicle.authorizeCarList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
@@ -74,7 +74,7 @@ class CarAuthorizeScreen extends React.Component {
                 currentKm: Number(this.state.currentKm)
             }
             // let maxId = 0;
-            // this.props.vehicleData.authorizeCarList.forEach(item => {
+            // this.props.userData.authorizeCarList.forEach(item => {
             //     if (maxId < item.id) {
             //         maxId = item.id
             //     }
@@ -109,7 +109,7 @@ class CarAuthorizeScreen extends React.Component {
                                 this.setState({vehicleId: itemValue})
                             }
                             >
-                            {this.props.vehicleData.vehicleList.map(item => (
+                            {this.props.userData.vehicleList.map(item => (
                                 <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
                                     value={item.id} key={item.id}/>
                             ))}
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData
+    userData: state.userData
 });
 const mapActionsToProps = {
     actVehicleAddFillItem,

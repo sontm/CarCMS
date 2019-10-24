@@ -161,7 +161,7 @@ module.exports = {
           });
         });
         if (request) {
-          if (req.body.action == "approved" || req.body.action == "rejected") {
+          if (req.body.action == "approved" || req.body.action == "rejected" || req.body.action == "blocked") {
             request.status = req.body.action;
 
             // Save Request with new Type status

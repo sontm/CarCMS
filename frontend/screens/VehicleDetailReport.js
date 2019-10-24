@@ -22,7 +22,7 @@ class VehicleDetailReport extends React.Component {
   componentWillMount() {
     // Set Current Vehicle ID if not Set
     if (!AppConstants.CURRENT_VEHICLE_ID) {
-        AppConstants.CURRENT_VEHICLE_ID = this.props.vehicleData.defaultVehicleId;
+        AppConstants.CURRENT_VEHICLE_ID = this.props.userData.defaultVehicleId;
     }
   }
   componentDidMount() {
@@ -37,253 +37,269 @@ class VehicleDetailReport extends React.Component {
 
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
-    const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+    if (this.props.navigation.state.params.vehicle) {
+        var currentVehicle = this.props.navigation.state.params.vehicle;
+    } else {
+        var currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+    }
+    
+    if (currentVehicle) {
+        let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
+            arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
+            = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
+        let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+            = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
+                lastDate, lastKm, averageKmPerDay);
+        let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
+            = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
-    let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
-        arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
-        = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
-    let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-        = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
-            lastDate, lastKm, averageKmPerDay);
-    let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-        = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
-
-    return (
-        <Container>
-        <Content>
-        <View style={styles.container}>
-            <View style={styles.vehicleInfoRow}>
-                <Image
-                    source={
-                        require('../assets/images/toyota.png')
-                    }
-                    style={styles.vehicleLogo}
-                />
-
-                <View style={styles.vehicleInfoText}>
-                <Text style={styles.vehicleInfoTextBrand}>
-                    {currentVehicle.brand + " " + currentVehicle.model}
-                </Text>
-                <Text style={styles.vehicleInfoTextPlate}>
-                    {currentVehicle.licensePlate}
-                </Text>
-                </View>
-
-            </View>
-
-            <View style={styles.textRow}>
-                <Text><H2>
-                    Reminder
-                </H2></Text>
-            </View>
-            <View style={styles.statRow}>
-                <View style={styles.progressContainer}>
-                <VictoryPie
-                    colorScale={["tomato", "silver"]}
-                    data={[
-                        { x: "", y: passedKmFromPreviousOil },
-                        { x: "", y: AppConstants.SETTING_KM_NEXT_OILFILL },
-                    ]}
-                    height={150}
-                    innerRadius={60}
-                    radius={70}
-                    labels={() => null}
+        return (
+            <Container>
+            <Content>
+            <View style={styles.container}>
+                <View style={styles.vehicleInfoRow}>
+                    <Image
+                        source={
+                            require('../assets/images/toyota.png')
+                        }
+                        style={styles.vehicleLogo}
                     />
-                <View style={styles.labelProgress}>
-                    <Text>Oil:</Text>
-                    <Text style={styles.labelProgressText}>
-                        {passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
+
+                    <View style={styles.vehicleInfoText}>
+                    <Text style={styles.vehicleInfoTextBrand}>
+                        {currentVehicle.brand + " " + currentVehicle.model}
                     </Text>
-                    <Text>Km</Text>
-                </View>
-                <Text>Next:{nextEstimateDateForOil ? nextEstimateDateForOil.toLocaleDateString(): "NA"}</Text>
+                    <Text style={styles.vehicleInfoTextPlate}>
+                        {currentVehicle.licensePlate}
+                    </Text>
+                    </View>
+
                 </View>
 
-                <View style={styles.progressContainer}>
-                <VictoryPie
-                    colorScale={["tomato", "silver"]}
-                    data={[
-                        { x: "", y: diffDayFromLastAuthorize },
-                        { x: "", y: AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR },
-                    ]}
-                    height={150}
-                    innerRadius={60}
-                    radius={70}
-                    labels={() => null}
-                    />
-                <View style={styles.labelProgress}>
-                    <Text>Authorize:</Text>
-                    <Text style={styles.labelProgressText}>
-                        {diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR}
-                    </Text>
-                    <Text>Days</Text>
+                <View style={styles.textRow}>
+                    <Text><H2>
+                        Reminder
+                    </H2></Text>
                 </View>
-                <Text>Next:{nextAuthorizeDate ? nextAuthorizeDate.toLocaleDateString(): "NA"}</Text>
+                <View style={styles.statRow}>
+                    <View style={styles.progressContainer}>
+                    <VictoryPie
+                        colorScale={["tomato", "silver"]}
+                        data={[
+                            { x: "", y: passedKmFromPreviousOil },
+                            { x: "", y: AppConstants.SETTING_KM_NEXT_OILFILL },
+                        ]}
+                        height={150}
+                        innerRadius={60}
+                        radius={70}
+                        labels={() => null}
+                        />
+                    <View style={styles.labelProgress}>
+                        <Text>Oil:</Text>
+                        <Text style={styles.labelProgressText}>
+                            {passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
+                        </Text>
+                        <Text>Km</Text>
+                    </View>
+                    <Text>Next:{nextEstimateDateForOil ? nextEstimateDateForOil.toLocaleDateString(): "NA"}</Text>
+                    </View>
+
+                    <View style={styles.progressContainer}>
+                    <VictoryPie
+                        colorScale={["tomato", "silver"]}
+                        data={[
+                            { x: "", y: diffDayFromLastAuthorize },
+                            { x: "", y: AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR },
+                        ]}
+                        height={150}
+                        innerRadius={60}
+                        radius={70}
+                        labels={() => null}
+                        />
+                    <View style={styles.labelProgress}>
+                        <Text>Authorize:</Text>
+                        <Text style={styles.labelProgressText}>
+                            {diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR}
+                        </Text>
+                        <Text>Days</Text>
+                    </View>
+                    <Text>Next:{nextAuthorizeDate ? nextAuthorizeDate.toLocaleDateString(): "NA"}</Text>
+                    </View>
+                    
+                </View>
+
+
+                <View style={styles.textRow}>
+                    <Text><H2>
+                        Total Average Usage
+                    </H2></Text>
+                </View>
+                <View style={styles.statRow}>
+                    <Card style={styles.equalStartRow}>
+                        <CardItem header>
+                            <Text><H1>{averageKmPerLiter ? averageKmPerLiter.toFixed(1) : ""}</H1></Text>
+                        </CardItem>
+                        <CardItem>
+                        <Body>
+                            <Text>
+                            Km/Litre
+                            </Text>
+                        </Body>
+                        </CardItem>
+                    </Card>
+
+                    {/* <Card style={styles.equalStartRow}>
+                        <CardItem header>
+                            <Text><H1>{averageMoneyPerLiter}</H1></Text>
+                        </CardItem>
+                        <CardItem>
+                        <Body>
+                            <Text>VND/Litre</Text>
+                        </Body>
+                        </CardItem>
+                    </Card> */}
+
+                    <Card style={styles.equalStartRow}>
+                        <CardItem header>
+                            <Text><H1>{averageKmPerDay ? (averageKmPerDay*7).toFixed(0): ""}</H1></Text>
+                        </CardItem>
+                        <CardItem>
+                        <Body>
+                            <Text>Km/Week</Text>
+                        </Body>
+                        </CardItem>
+                    </Card>
+
+                    <Card style={styles.equalStartRow}>
+                        <CardItem header>
+                            <Text><H1>{averageMoneyPerDay ? (averageMoneyPerDay*7).toFixed(0) : ""}</H1></Text>
+                        </CardItem>
+                        <CardItem>
+                        <Body>
+                            <Text>VND/Week</Text>
+                        </Body>
+                        </CardItem>
+                    </Card>
                 </View>
                 
-            </View>
+                
 
-
-            <View style={styles.textRow}>
-                <Text><H2>
-                    Total Average Usage
-                </H2></Text>
-            </View>
-            <View style={styles.statRow}>
-                <Card style={styles.equalStartRow}>
-                    <CardItem header>
-                        <Text><H1>{averageKmPerLiter ? averageKmPerLiter.toFixed(1) : ""}</H1></Text>
-                    </CardItem>
-                    <CardItem>
-                    <Body>
-                        <Text>
-                        Km/Litre
-                        </Text>
-                    </Body>
-                    </CardItem>
-                </Card>
-
-                {/* <Card style={styles.equalStartRow}>
-                    <CardItem header>
-                        <Text><H1>{averageMoneyPerLiter}</H1></Text>
-                    </CardItem>
-                    <CardItem>
-                    <Body>
-                        <Text>VND/Litre</Text>
-                    </Body>
-                    </CardItem>
-                </Card> */}
-
-                <Card style={styles.equalStartRow}>
-                    <CardItem header>
-                        <Text><H1>{averageKmPerDay ? (averageKmPerDay*7).toFixed(0): ""}</H1></Text>
-                    </CardItem>
-                    <CardItem>
-                    <Body>
-                        <Text>Km/Week</Text>
-                    </Body>
-                    </CardItem>
-                </Card>
-
-                <Card style={styles.equalStartRow}>
-                    <CardItem header>
-                        <Text><H1>{averageMoneyPerDay ? (averageMoneyPerDay*7).toFixed(0) : ""}</H1></Text>
-                    </CardItem>
-                    <CardItem>
-                    <Body>
-                        <Text>VND/Week</Text>
-                    </Body>
-                    </CardItem>
-                </Card>
-            </View>
-            
-            
-
-            {/* <View style={styles.gasUsageContainer}>
-                <VictoryStack colorScale={["orange", "gold"]}
-                    style={{
-                        data: { strokeWidth: 0, fillOpacity: 0.2},
-                        labels: {
-                            fontSize: 10, fill: "#c43a31", padding: 5
-                        }
-                        }}
-                    labels={({ datum }) => datum.x.toLocaleDateString()}
-                    width={450}
-                    height={250}
-                >
-                <VictoryArea
-                    data={arrKmPerWeek}
-                    interpolation="linear"
-                />
-                </VictoryStack>
-            </View> */}
-
-            <View style={styles.textRow}>
-                <Text><H2>
-                    Gas Usage
-                </H2></Text>
-            </View>
-            <View style={styles.gasUsageContainer}>
-            <Tabs scrollWithoutAnimation={true} style={{backgroundColor: "grey"}}>
-                <Tab heading="Km Per Week" 
-                        tabStyle={{backgroundColor: "white"}}
-                        activeTabStyle={{backgroundColor: "white"}}>
-                    <VictoryChart
-                        width={Layout.window.width}
-                        height={300}
-                        domainPadding={{y: [10, 25], x: [10, 10]}}
-                        padding={{top:10,bottom:30,left:0,right:0}}
-                    >
-                    <VictoryLine colorScale={["tomato", "gold"]}
+                {/* <View style={styles.gasUsageContainer}>
+                    <VictoryStack colorScale={["orange", "gold"]}
                         style={{
-                            data: { stroke: "#c43a31" },
-                            parent: { border: "1px solid #ccc"}
-                        }}
-                        labels={({ datum }) => (datum.y.toFixed(0)+"Km")}
+                            data: { strokeWidth: 0, fillOpacity: 0.2},
+                            labels: {
+                                fontSize: 10, fill: "#c43a31", padding: 5
+                            }
+                            }}
+                        labels={({ datum }) => datum.x.toLocaleDateString()}
+                        width={450}
+                        height={250}
+                    >
+                    <VictoryArea
                         data={arrKmPerWeek}
-                        interpolation="natural"
+                        interpolation="linear"
                     />
-                    <VictoryAxis
-                        crossAxis
-                        standalone={false}
-                        tickFormat={(t) => `${AppUtils.formatDateMonthDayVN(new Date(t))}`}
-                        tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
-                        // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
-                    />
-                    </VictoryChart>
-                    
-                </Tab>
+                    </VictoryStack>
+                </View> */}
 
-                <Tab heading="Money Per Week"
-                    tabStyle={{backgroundColor: "white"}}
-                    activeTabStyle={{backgroundColor: "white"}}
-                    >
-                    <VictoryChart
-                        width={Layout.window.width}
-                        height={300}
-                        domainPadding={{y: [20, 20]}}
-                        padding={{top:10,bottom:30,left:50,right:0}}
-                    >
-                    <VictoryLine colorScale={["orange", "gold"]}
-                        style={{
-                            data: { stroke: "#c43a31" },
-                            parent: { border: "1px solid #ccc"}
-                        }}
-                        // labels={({ datum }) => datum.x.toLocaleDateString()}
-                        data={arrMoneyPerWeek}
-                        interpolation="natural"
-
-                    />
-                    </VictoryChart>
-                </Tab>
-            </Tabs>
-            </View>
-
-            <View style={styles.textRow}>
-                <Text><H2>
-                    Money Usage (K VND)
-                </H2></Text>
-            </View>
-            <View style={styles.statRow}>
-                <View style={styles.moneyUsagePieContainer}>
-                    <VictoryPie
-                        colorScale={["tomato", "orange", "gold", "cyan", "navy" ]}
-                        data={[
-                            { x: "Gas", y: totalMoneyGas },
-                            { x: "Oil", y: totalMoneyOil },
-                            { x: "Authorize", y: totalMoneyAuthorize },
-                        ]}
-                        radius={100}
-                        labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
-                        labelRadius={({ innerRadius }) => innerRadius + 20 }
-                        />
+                <View style={styles.textRow}>
+                    <Text><H2>
+                        Gas Usage
+                    </H2></Text>
                 </View>
-            </View>
+                <View style={styles.gasUsageContainer}>
+                <Tabs scrollWithoutAnimation={true} style={{backgroundColor: "grey"}}>
+                    <Tab heading="Km Per Week" 
+                            tabStyle={{backgroundColor: "white"}}
+                            activeTabStyle={{backgroundColor: "white"}}>
+                        <VictoryChart
+                            width={Layout.window.width}
+                            height={300}
+                            domainPadding={{y: [10, 25], x: [10, 10]}}
+                            padding={{top:10,bottom:30,left:0,right:0}}
+                        >
+                        <VictoryLine colorScale={["tomato", "gold"]}
+                            style={{
+                                data: { stroke: "#c43a31" },
+                                parent: { border: "1px solid #ccc"}
+                            }}
+                            labels={({ datum }) => (datum.y.toFixed(0)+"Km")}
+                            data={arrKmPerWeek}
+                            interpolation="natural"
+                        />
+                        <VictoryAxis
+                            crossAxis
+                            standalone={false}
+                            tickFormat={(t) => `${AppUtils.formatDateMonthDayVN(new Date(t))}`}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                        />
+                        </VictoryChart>
+                        
+                    </Tab>
 
-        </View>
-        </Content>
-        </Container>
-    )
+                    <Tab heading="Money Per Week"
+                        tabStyle={{backgroundColor: "white"}}
+                        activeTabStyle={{backgroundColor: "white"}}
+                        >
+                        <VictoryChart
+                            width={Layout.window.width}
+                            height={300}
+                            domainPadding={{y: [20, 20]}}
+                            padding={{top:10,bottom:30,left:50,right:0}}
+                        >
+                        <VictoryLine colorScale={["orange", "gold"]}
+                            style={{
+                                data: { stroke: "#c43a31" },
+                                parent: { border: "1px solid #ccc"}
+                            }}
+                            // labels={({ datum }) => datum.x.toLocaleDateString()}
+                            data={arrMoneyPerWeek}
+                            interpolation="natural"
+
+                        />
+                        </VictoryChart>
+                    </Tab>
+                </Tabs>
+                </View>
+
+                <View style={styles.textRow}>
+                    <Text><H2>
+                        Money Usage (K VND)
+                    </H2></Text>
+                </View>
+                <View style={styles.statRow}>
+                    <View style={styles.moneyUsagePieContainer}>
+                        <VictoryPie
+                            colorScale={["tomato", "orange", "gold", "cyan", "navy" ]}
+                            data={[
+                                { x: "Gas", y: totalMoneyGas },
+                                { x: "Oil", y: totalMoneyOil },
+                                { x: "Authorize", y: totalMoneyAuthorize },
+                            ]}
+                            radius={100}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            labelRadius={({ innerRadius }) => innerRadius + 20 }
+                            />
+                    </View>
+                </View>
+
+            </View>
+            </Content>
+            </Container>
+        )
+    } else {
+        return (
+            <Container>
+            <Content>
+            <View style={styles.container}>
+
+            </View>
+            </Content>
+            </Container>
+        )
+    }
     }
 }
 
@@ -291,7 +307,7 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
     header: (
         <Header>
           <Left>
-            <Button transparent onPress={() => navigation.navigate("Home")}>
+            <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
@@ -299,7 +315,7 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
             <Title>Vehicle Detail</Title>
           </Body>
           <Right>
-            <TouchableOpacity onPress={() => navigation.navigate("VehicleHistory")}>
+            <TouchableOpacity onPress={() => navigation.navigate("VehicleHistory", {vehicle: navigation.state.params.vehicle})}>
                 <View style={styles.rightHistoryView}>
                 <Icon type="MaterialCommunityIcons" name="file-document-outline" style={styles.rightHistoryIcon}/>
                 <Text style={styles.rightHistoryText}>History</Text>
@@ -431,7 +447,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData
+    userData: state.userData
 });
 const mapActionsToProps = {
 };

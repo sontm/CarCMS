@@ -17,6 +17,8 @@ import CarAuthorizeScreen from '../screens/addinfo/CarAuthorizeScreen';
 import PayServiceScreen from '../screens/addinfo/PayServiceScreen';
 import PayExpenseScreen from '../screens/addinfo/PayExpenseScreen';
 
+import MyVehicleScreen from '../screens/MyVehicleScreen'
+
 import VehicleDetailReport from '../screens/VehicleDetailReport';
 import VehicleDetailHistory from '../screens/VehicleDetailHistory';
 
@@ -31,6 +33,7 @@ import JoinTeamScreen from '../screens/setting/JoinTeamScreen'
 
 import TeamScreen from '../screens/TeamScreen';
 import JoinRequestScreen from '../screens/team/JoinRequestScreen'
+import MemberVehicleListScreen from '../screens/team/MemberVehicleListScreen'
 
 
 import AppConstants from '../constants/AppConstants';
@@ -43,10 +46,16 @@ const config = Platform.select({
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
+  },
+  config
+);
+
+const MyVehicleStack = createStackNavigator(
+  {
+    MyVehicle: MyVehicleScreen,
     NewVehicle: RegisterVehicleScreen,
     VehicleDetail: VehicleDetailReport,
     VehicleHistory: VehicleDetailHistory,
-    NewVehicle: RegisterVehicleScreen,
     FillGas: FillGasScreen,
     FillOil: FillOilScreen,
     CarAuthorize: CarAuthorizeScreen,
@@ -55,24 +64,6 @@ const HomeStack = createStackNavigator(
   },
   config
 );
-
-// HomeStack.navigationOptions = {
-//   tabBarLabel: 'Home',
-//   tabBarIcon: ({ focused }) => (
-//     <Ionicons
-//       name={
-//         Platform.OS === 'ios'
-//           ? `ios-information-circle${focused ? '' : '-outline'}`
-//           : 'md-information-circle'
-//       }
-//       size={26}
-//       style={{ marginBottom: -3 }}
-//       color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
-//     />
-//   ),
-// };
-
-// HomeStack.path = '';
 
 const DetailStack = createStackNavigator(
   {
@@ -112,7 +103,7 @@ const SettingsStack = createStackNavigator(
     Profile: ProfileScreen,
     RegisterUser: RegisterUserScreen,
     CreateTeam: CreateTeamScreen,
-    JoinTeam: JoinTeamScreen
+    JoinTeam: JoinTeamScreen,
   },
   config
 );
@@ -136,13 +127,17 @@ const TeamStack = createStackNavigator(
   {
     Team: TeamScreen,
     JoinRequest: JoinRequestScreen,
+    MemberVehicles: MemberVehicleListScreen,
+    VehicleDetail: VehicleDetailReport,
+    VehicleHistory: VehicleDetailHistory,
   },
   config
 );
 
 const tabNavigator = createBottomTabNavigator({
     HomeStack,
-    DetailStack,
+    MyVehicleStack,
+    //DetailStack,
     TeamStack,
     // VehicleDetail: { screen: VehicleDetailReport },
     SettingsStack,
@@ -166,7 +161,19 @@ const tabNavigator = createBottomTabNavigator({
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("HomeStack")
               }}>
-              <Icon name='list' style={{fontSize: 26}}/>
+              <Icon name='home' style={{fontSize: 26}}/>
+              <Text>Home</Text>
+            </Button>
+
+            <Button
+              vertical
+              active={props.navigation.state.index === 1}
+              onPress={() => {
+                AppConstants.CURRENT_VEHICLE_ID = "0";
+                AppConstants.CURRENT_EDIT_FILL_ID = "0";
+                props.navigation.navigate("MyVehicleStack")
+              }}>
+              <Icon type="MaterialIcons" name='view-list' style={{fontSize: 26}}/>
               <Text>List</Text>
             </Button>
             

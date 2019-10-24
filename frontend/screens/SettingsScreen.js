@@ -12,7 +12,7 @@ import AppConstants from '../constants/AppConstants';
 import { connect } from 'react-redux';
 import Backend from '../constants/Backend';
 
-import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer} from '../redux/VehicleReducer';
+import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer} from '../redux/UserReducer';
 import {actUserLogout} from '../redux/UserReducer'
 
 class SettingsScreen extends React.Component {
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData,
+    userData: state.userData,
     userData: state.userData
 });
 const mapActionsToProps = {

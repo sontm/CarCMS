@@ -5,7 +5,7 @@ import AppContants from '../constants/AppConstants'
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, 
     Card, CardItem, Picker, Form, Item, CheckBox } from 'native-base';
 import { connect } from 'react-redux';
-import {actVehicleAddVehicle, actVehicleEditVehicle} from '../redux/VehicleReducer'
+import {actVehicleAddVehicle, actVehicleEditVehicle} from '../redux/UserReducer'
 import Layout from '../constants/Layout';
 import apputils from '../constants/AppUtils';
 
@@ -33,21 +33,21 @@ class RegisterVehicleScreen extends React.Component {
     componentWillMount() {
         console.log("CURRENTVEHICLE:" + AppContants.CURRENT_VEHICLE_ID)
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
-            for (let i = 0; i < this.props.vehicleData.vehicleList.length; i++) {
-                if (this.props.vehicleData.vehicleList[i].id == AppContants.CURRENT_VEHICLE_ID) {
+            for (let i = 0; i < this.props.userData.vehicleList.length; i++) {
+                if (this.props.userData.vehicleList[i].id == AppContants.CURRENT_VEHICLE_ID) {
                     this.setState({
                         id: AppContants.CURRENT_VEHICLE_ID,
-                        brand:this.props.vehicleData.vehicleList[i].brand,
-                        model: this.props.vehicleData.vehicleList[i].model,
-                        licensePlate: this.props.vehicleData.vehicleList[i].licensePlate,
-                        checkedDate: this.props.vehicleData.vehicleList[i].checkedDate,
-                        isDefault: this.props.vehicleData.vehicleList[i].isDefault
+                        brand:this.props.userData.vehicleList[i].brand,
+                        model: this.props.userData.vehicleList[i].model,
+                        licensePlate: this.props.userData.vehicleList[i].licensePlate,
+                        checkedDate: this.props.userData.vehicleList[i].checkedDate,
+                        isDefault: this.props.userData.vehicleList[i].isDefault
                     })
                 }
             }
         } else {
             // In case this is the First Car, Set it to Default
-            if (this.props.vehicleData.vehicleList.length < 1) {
+            if (!this.props.userData.vehicleList || this.props.userData.vehicleList.length < 1) {
                 this.setState({
                     isDefault: true
                 })
@@ -70,7 +70,7 @@ class RegisterVehicleScreen extends React.Component {
         } else {
             console.log("WIll Save:")
             // let maxId = 0;
-            // this.props.vehicleData.vehicleList.forEach(item => {
+            // this.props.userData.vehicleList.forEach(item => {
             //     if (maxId < item.id) {
             //         maxId = item.id
             //     }
@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData
+    userData: state.userData
 });
 const mapActionsToProps = {
     actVehicleAddVehicle, actVehicleEditVehicle

@@ -25,7 +25,9 @@ class Backend {
     // Gas, Oil, Auth, Expense, Service List
     // token is JWT token
     postFillItemList(data, token, type, onOK, onError) {
-        axios.post("/" + type,
+        console.log("Backend sync to Server:" + token)
+        console.log(data)
+        axios.post("/users/vehicle",
             JSON.stringify(data),
             { headers: this.createHeader(token)})
             .then((response) => {onOK(response);})
@@ -33,7 +35,7 @@ class Backend {
     }
 
     getAllItemList(type, token, onOK, onError) {
-        axios.get("/" + type,
+        axios.get("/users/vehicle",
             { headers: this.createHeader(token)})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});

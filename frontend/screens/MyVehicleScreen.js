@@ -21,42 +21,16 @@ import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReduce
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
 // fillOilList: {vehicleId: 1, fillDate: "10/14/2019, 11:56:44 PM", price: 500000, currentKm: 3000, id: 1}
-class HomeScreen extends React.Component {
+class MyVehicleScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      vehicleList:[],
-      fillGasList:[],
-      fillOilList:[],
-      authorizeCarList:[],
-    };
 
     this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this)
   }
   componentDidMount() {
     console.log("HOMESCreen DidMount")
-    this.loadFromStorage()
   }
-  loadFromStorage = async () => {
-    // const vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-    // const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
-    // const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
-    // const authorizeCarList = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
-    // JSON.parse(vehicleList).forEach(item => {
-    //   this.props.actVehicleAddVehicle(item)
-    // })
-    // JSON.parse(fillGasList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-    // JSON.parse(fillOilList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-    // JSON.parse(authorizeCarList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-
-    //this.clearAsyncStorage()
-  }
+ 
   clearAsyncStorage = async() => {
     AsyncStorage.clear();
   }
@@ -65,16 +39,16 @@ class HomeScreen extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("HOMESCreen DIDUpdate")
+    console.log("MyVehicleScreen DIDUpdate")
   }
   componentWillReceiveProps(nextProps) {
-    console.log("HOMESCreen WillReceiveProps")
+    console.log("MyVehicleScreen WillReceiveProps")
   }
   componentWillUnmount() {
-    console.log("HOMESCreen Will UnMount")
+    console.log("MyVehicleScreen Will UnMount")
   }
   render() {
-    console.log("HOMESCreen Render")
+    console.log("MyVehicleScreen Render")
     return (
       <Container>
         <Header>
@@ -105,7 +79,7 @@ class HomeScreen extends React.Component {
   }
 }
 
-HomeScreen.navigationOptions = {
+MyVehicleScreen.navigationOptions = {
   header: null,
 };
 
@@ -128,5 +102,5 @@ const mapActionsToProps = {
 
 export default connect(
   mapStateToProps,mapActionsToProps
-)(HomeScreen);
+)(MyVehicleScreen);
 

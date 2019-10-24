@@ -6,7 +6,7 @@ import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
 
 import { connect } from 'react-redux';
-import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/VehicleReducer'
+import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import AppConstants from '../../constants/AppConstants';
 import apputils from '../../constants/AppUtils';
 
@@ -34,7 +34,7 @@ class FillOilScreen extends React.Component {
         console.log(this.props.navigation.state.params)
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            const currentVehicle = this.props.vehicleData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+            const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             for (let i = 0; i < currentVehicle.fillOilList.length; i++) {
                 if (currentVehicle.fillOilList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
@@ -107,7 +107,7 @@ class FillOilScreen extends React.Component {
                                 this.setState({vehicleId: itemValue})
                             }
                             >
-                            {this.props.vehicleData.vehicleList.map(item => (
+                            {this.props.userData.vehicleList.map(item => (
                                 <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
                                     value={item.id} key={item.id}/>
                             ))}
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    vehicleData: state.vehicleData
+    userData: state.userData
 });
 const mapActionsToProps = {
     actVehicleAddFillItem,

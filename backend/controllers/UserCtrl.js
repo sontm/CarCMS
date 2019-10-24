@@ -113,5 +113,66 @@ module.exports = {
     console.log("[UserCtrl] getUserProfile, User in Request")
     console.log(req.user)
     res.status(200).send(req.user)
+  },
+
+
+
+
+  async addVehicles(req, res) {
+    console.log("Vehicle Create of USERID:" + req.user.id)
+    console.log(req.body)
+    // Find current User record contain Vehicle data
+    const currentUser = await new Promise((resolve, reject) => {
+      dbuser.findById(req.user.id, function(err, doc){
+        err ? reject(err) : resolve(doc);
+      });
+    });
+    if (currentUser) {
+      
+      if (req.body.constructor == Array) {
+        // If this is Array, process each item
+        for (let loop = 0; loop < req.body.length; loop++) {
+          let element = req.body[loop];
+          currentUser.vehicleList.push({
+            ...element,
+            userId: req.user.id
+          });
+          await new Promise((resolve, reject) => {
+            currentUser.save(function(err, doc){
+              err ? reject(err) : resolve(doc);
+            });
+          });
+        }
+      } else {
+        currentUser.vehicleList.push({
+          ...req.body,
+          userId: req.user.id
+        });
+        await new Promise((resolve, reject) => {
+          currentUser.save(function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
+      }
+      res.status(200).send({msg: "Sync To Server Vehicle OK"})
+    } else {
+      res.status(500).send({msg: "Error, Not Found User"})
+    }
+  },
+
+  // Auth API
+  async getAllVehiclesOfUser(req, res) {
+    console.log("Vehicle Get OF USER ID:" + req.user.id)
+    // Find current User record contain Vehicle data
+    const currentUser = await new Promise((resolve, reject) => {
+      dbuser.findById(req.user.id, function(err, doc){
+        err ? reject(err) : resolve(doc);
+      });
+    });
+    if (currentUser) {
+      res.status(200).send(currentUser.vehicleList)
+    } else {
+      res.status(500).send({msg: "Error, Not Found User"})
+    }
   }
 };
