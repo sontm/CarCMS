@@ -119,7 +119,7 @@ module.exports = {
 
 
   async addVehicles(req, res) {
-    console.log("Vehicle Create of USERID:" + req.user.id)
+    console.log("Vehicle Sync of USERID:" + req.user.id)
     console.log(req.body)
     // Find current User record contain Vehicle data
     const currentUser = await new Promise((resolve, reject) => {
@@ -128,21 +128,24 @@ module.exports = {
       });
     });
     if (currentUser) {
-      
       if (req.body.constructor == Array) {
         // If this is Array, process each item
+        currentUser.vehicleList = [];
         for (let loop = 0; loop < req.body.length; loop++) {
           let element = req.body[loop];
+          // TODO for LOGIC of Sync
+
           currentUser.vehicleList.push({
             ...element,
             userId: req.user.id
           });
-          await new Promise((resolve, reject) => {
-            currentUser.save(function(err, doc){
-              err ? reject(err) : resolve(doc);
-            });
-          });
         }
+
+        await new Promise((resolve, reject) => {
+          currentUser.save(function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
       } else {
         currentUser.vehicleList.push({
           ...req.body,

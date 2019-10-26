@@ -70,26 +70,10 @@ class VehicleDetailHistory extends React.Component {
     )
   }
 
-//   componentDidUpdate() {
-//     console.log("DetailReport DIDUpdate")
-//     if (this.props.navigation.state && this.props.navigation.state.params && 
-//             this.props.navigation.state.params.vehicleId && 
-//             AppConstants.CURRENT_VEHICLE_ID != this.props.navigation.state.params.vehicleId) {
-//         let vehicle;
-//         for(let i = 0; i < this.state.vehicleList.length; i++) {
-//             if (this.state.vehicleList[i].id == this.props.navigation.state.params.vehicleId) {
-//                 vehicle = this.state.vehicleList[i];
-//                 break;
-//             }
-//         }
-//         this.setState({
-//             currentVehicleId: this.props.navigation.state.params.vehicleId,
-//             vehicle: vehicle,
-//         })
-//     }
+
     renderHistoryList() {
         console.log("renderHistoryList, VehicleID:" + AppConstants.CURRENT_VEHICLE_ID)
-        if (this.props.navigation.state.params.vehicle) {
+        if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
             var thisVehicle = this.props.navigation.state.params.vehicle;
         } else {
             var thisVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
@@ -153,7 +137,7 @@ class VehicleDetailHistory extends React.Component {
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
 
-    if (this.props.navigation.state.params.vehicle) {
+    if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
         var currentVehicle = this.props.navigation.state.params.vehicle;
     } else {
         var currentVehicle = this.props.userData.vehicleList.find(

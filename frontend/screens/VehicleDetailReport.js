@@ -37,7 +37,7 @@ class VehicleDetailReport extends React.Component {
 
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
-    if (this.props.navigation.state.params.vehicle) {
+    if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
         var currentVehicle = this.props.navigation.state.params.vehicle;
     } else {
         var currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
@@ -45,13 +45,20 @@ class VehicleDetailReport extends React.Component {
     
     if (currentVehicle) {
         let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
-            arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
+            arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly}
             = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
         let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
             = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
                 lastDate, lastKm, averageKmPerDay);
         let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
             = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
+
+        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,
+            totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
+            = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
+                currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
+        
+        let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
 
         return (
             <Container>
@@ -87,7 +94,7 @@ class VehicleDetailReport extends React.Component {
                         colorScale={["tomato", "silver"]}
                         data={[
                             { x: "", y: passedKmFromPreviousOil },
-                            { x: "", y: AppConstants.SETTING_KM_NEXT_OILFILL },
+                            { x: "", y: (AppConstants.SETTING_KM_NEXT_OILFILL -passedKmFromPreviousOil) },
                         ]}
                         height={150}
                         innerRadius={60}
@@ -109,7 +116,7 @@ class VehicleDetailReport extends React.Component {
                         colorScale={["tomato", "silver"]}
                         data={[
                             { x: "", y: diffDayFromLastAuthorize },
-                            { x: "", y: AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR },
+                            { x: "", y: (AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR -diffDayFromLastAuthorize) },
                         ]}
                         height={150}
                         innerRadius={60}
@@ -205,12 +212,50 @@ class VehicleDetailReport extends React.Component {
 
                 <View style={styles.textRow}>
                     <Text><H2>
-                        Gas Usage
+                        Monthly Gas Usage
                     </H2></Text>
+                    <Segment small>
+                        <Button small first active><Text style={{fontSize: 12}}>Km</Text></Button>
+                        <Button small><Text style={{fontSize: 12}}>đ</Text></Button>
+                        <Button small last><Text style={{fontSize: 12}}>đ/Km</Text></Button>
+                    </Segment>
                 </View>
                 <View style={styles.gasUsageContainer}>
                 <Tabs scrollWithoutAnimation={true} style={{backgroundColor: "grey"}}>
-                    <Tab heading="Km Per Week" 
+                    <Tab heading="Km Per Month" 
+                            tabStyle={{backgroundColor: "white"}}
+                            activeTabStyle={{backgroundColor: "white"}}>
+                        <VictoryChart
+                            width={Layout.window.width}
+                            height={300}
+                            domainPadding={{y: [10, 25], x: [0, 0]}}
+                            padding={{top:10,bottom:30,left:10,right:10}}
+                        >
+                        <VictoryLine colorScale={AppConstants.COLOR_SCALE_10}
+                            style={{
+                                data: { stroke: "#c43a31" },
+                                parent: { border: "1px solid #ccc"}
+                            }}
+                            labels={({ datum }) => (datum.y.toFixed(0))}
+                            data={arrTotalKmMonthly}
+                            interpolation="linear"
+                        />
+                        <VictoryAxis
+                            crossAxis
+                            standalone={false}
+                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
+                            //tickCount={arrTotalKmMonthly ? arrTotalKmMonthly.length/2 : 1}
+                            style={{
+                                grid: {stroke: "rgb(240,240,240)"},
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 0}
+                            }}
+                        />
+                        </VictoryChart>
+                        
+                    </Tab>
+
+                    <Tab heading="Money Per Week" 
                             tabStyle={{backgroundColor: "white"}}
                             activeTabStyle={{backgroundColor: "white"}}>
                         <VictoryChart
@@ -219,72 +264,136 @@ class VehicleDetailReport extends React.Component {
                             domainPadding={{y: [10, 25], x: [10, 10]}}
                             padding={{top:10,bottom:30,left:0,right:0}}
                         >
-                        <VictoryLine colorScale={["tomato", "gold"]}
+                        <VictoryBar colorScale={AppConstants.COLOR_SCALE_10}
                             style={{
-                                data: { stroke: "#c43a31" },
+                                data: { fill: "#c43a31" },
                                 parent: { border: "1px solid #ccc"}
                             }}
-                            labels={({ datum }) => (datum.y.toFixed(0)+"Km")}
-                            data={arrKmPerWeek}
-                            interpolation="natural"
+                            labels={({ datum }) => (AppUtils.formatMoneyToK(datum.y))}
+                            data={arrTotalMoneyMonthly}
+                            interpolation="linear"
                         />
                         <VictoryAxis
                             crossAxis
                             standalone={false}
-                            tickFormat={(t) => `${AppUtils.formatDateMonthDayVN(new Date(t))}`}
-                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
-                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
+                            //tickCount={arrTotalKmMonthly ? arrTotalKmMonthly.length/2 : 1}
+                            style={{
+                                grid: {stroke: "rgb(240,240,240)"},
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 0}
+                            }}
                         />
                         </VictoryChart>
                         
                     </Tab>
-
-                    <Tab heading="Money Per Week"
-                        tabStyle={{backgroundColor: "white"}}
-                        activeTabStyle={{backgroundColor: "white"}}
-                        >
-                        <VictoryChart
-                            width={Layout.window.width}
-                            height={300}
-                            domainPadding={{y: [20, 20]}}
-                            padding={{top:10,bottom:30,left:50,right:0}}
-                        >
-                        <VictoryLine colorScale={["orange", "gold"]}
-                            style={{
-                                data: { stroke: "#c43a31" },
-                                parent: { border: "1px solid #ccc"}
-                            }}
-                            // labels={({ datum }) => datum.x.toLocaleDateString()}
-                            data={arrMoneyPerWeek}
-                            interpolation="natural"
-
-                        />
-                        </VictoryChart>
-                    </Tab>
                 </Tabs>
                 </View>
+
+
 
                 <View style={styles.textRow}>
                     <Text><H2>
                         Money Usage (K VND)
                     </H2></Text>
                 </View>
+
+                <View style={styles.statRow}>
+                    <View style={styles.moneyUsageStackContainer}>
+                        <VictoryChart
+                            width={Layout.window.width}
+                            height={300}
+                            padding={{top:10,bottom:30,left:50,right:20}}
+                        >
+                        {/* TODO, Date X axis not Match */}
+                        <VictoryStack
+                            width={Layout.window.width}
+                            domainPadding={{y: [0, 10], x: [10, 0]}}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                        >
+                            <VictoryBar
+                                data={arrGasSpend}
+                                interpolation="linear"
+                            />
+                             <VictoryBar
+                                data={arrOilSpend}
+                                interpolation="linear"
+                            />
+                            <VictoryBar
+                                data={arrAuthSpend}
+                                interpolation="linear"
+                            />
+                            <VictoryBar
+                                data={arrExpenseSpend}
+                                interpolation="linear"
+                            />
+                            <VictoryBar
+                                data={arrServiceSpend}
+                                interpolation="linear"
+                            />
+                        </VictoryStack>
+                        <VictoryAxis
+                            crossAxis
+                            standalone={false}
+                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            style={{
+                                // grid: {stroke: "rgb(240,240,240)"},
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 0}
+                            }}
+                        />
+                        <VictoryAxis
+                            dependentAxis
+                            standalone={false}
+                            tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
+                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            style={{
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 0}
+                            }}
+                        />
+
+                        </VictoryChart>
+                    </View>
+                </View>
+
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
-                            colorScale={["tomato", "orange", "gold", "cyan", "navy" ]}
+                            colorScale={AppConstants.COLOR_SCALE_10}
                             data={[
-                                { x: "Gas", y: totalMoneyGas },
-                                { x: "Oil", y: totalMoneyOil },
-                                { x: "Authorize", y: totalMoneyAuthorize },
+                                { x: "Gas", y: totalGasSpend },
+                                { x: "Oil", y: totalOilSpend },
+                                { x: "Authorize", y: totalAuthSpend },
+                                { x: "Expense", y: totalExpenseSpend },
+                                { x: "Service", y: totalServiceSpend },
                             ]}
                             radius={100}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
-                            labelRadius={({ innerRadius }) => innerRadius + 20 }
+                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
                             />
                     </View>
                 </View>
 
+
+                <View style={styles.textRow}>
+                    <Text><H2>
+                        Expense Money Usage
+                    </H2></Text>
+                </View>
+                <View style={styles.statRow}>
+                    <View style={styles.moneyUsagePieContainer}>
+                        <VictoryPie
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            data={arrExpenseTypeSpend}
+                            radius={100}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
+                            />
+                    </View>
+                </View>
             </View>
             </Content>
             </Container>
@@ -382,7 +491,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         paddingTop: 10,
         paddingLeft: 5,
-        justifyContent: "flex-start",
+        justifyContent: "space-between",
+        alignItems: "center",
         flexWrap: "wrap",
         flexGrow: 100
     },
@@ -391,7 +501,8 @@ const styles = StyleSheet.create({
         padding: 3,
         justifyContent: "center",
         flexWrap: "wrap",
-        flexGrow: 100
+        flexGrow: 100,
+        // backgroundColor: "white"
     },
     equalStartRow: {
         flex: 1,
@@ -434,7 +545,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
-        backgroundColor: "green"
+    },
+
+    moneyUsageStackContainer: {
+        height: 300,
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
     },
 
     moneyUsagePieContainer: {
@@ -444,6 +561,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         alignSelf: "center",
     },
+
+
 })
 
 const mapStateToProps = (state) => ({

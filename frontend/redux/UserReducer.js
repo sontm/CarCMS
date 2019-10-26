@@ -30,6 +30,7 @@ const USER_REGISTER_OK = 'USER_REGISTER_OK';
 const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 
+// Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
     teamInfo: {},//"code": "bfOdOi7L", "id": "5db0564ed74e760f4a2c3db9","name": "PhuPhuong",
     userProfile: {},//"email": "tester3","fullName": "Test3","id": "","phone": "","type": "local", teamId, teamCode
@@ -371,9 +372,9 @@ export default function(state = initialState, action) {
         let newStateVehicleGasEdit = {...state}
         for (let i = 0; i < newStateVehicleGasEdit.vehicleList.length; i++) {
             if (newStateVehicleGasEdit.vehicleList[i].id == action.payload.vehicleId ) {
-                for (let i = 0; i < newStateVehicleGasEdit.vehicleList[i].fillGasList.length; i++) {
-                    if (newStateVehicleGasEdit.vehicleList[i].fillGasList[i].id == action.payload.id) {
-                        newStateVehicleGasEdit.vehicleList[i].fillGasList[i] = {...action.payload}
+                for (let j = 0; j < newStateVehicleGasEdit.vehicleList[i].fillGasList.length; j++) {
+                    if (newStateVehicleGasEdit.vehicleList[i].fillGasList[j].id == action.payload.id) {
+                        newStateVehicleGasEdit.vehicleList[i].fillGasList[j] = {...action.payload}
                         break;
                     }
                 }
@@ -384,9 +385,9 @@ export default function(state = initialState, action) {
         let newStateVehicleOilEdit = {...state}
         for (let i = 0; i < newStateVehicleOilEdit.vehicleList.length; i++) {
             if (newStateVehicleOilEdit.vehicleList[i].id == action.payload.vehicleId ) {
-                for (let i = 0; i < newStateVehicleOilEdit.vehicleList[i].fillOilList.length; i++) {
-                    if (newStateVehicleOilEdit.vehicleList[i].fillOilList[i].id == action.payload.id) {
-                        newStateVehicleOilEdit.vehicleList[i].fillOilList[i] = {...action.payload}
+                for (let j = 0; j < newStateVehicleOilEdit.vehicleList[i].fillOilList.length; j++) {
+                    if (newStateVehicleOilEdit.vehicleList[i].fillOilList[j].id == action.payload.id) {
+                        newStateVehicleOilEdit.vehicleList[i].fillOilList[j] = {...action.payload}
                         break;
                     }
                 }
@@ -397,9 +398,9 @@ export default function(state = initialState, action) {
         let newStateVehicleAuthEdit = {...state}
         for (let i = 0; i < newStateVehicleAuthEdit.vehicleList.length; i++) {
             if (newStateVehicleAuthEdit.vehicleList[i].id == action.payload.vehicleId ) {
-                for (let i = 0; i < newStateVehicleAuthEdit.vehicleList[i].authorizeCarList.length; i++) {
-                    if (newStateVehicleAuthEdit.vehicleList[i].authorizeCarList[i].id == action.payload.id) {
-                        newStateVehicleAuthEdit.vehicleList[i].authorizeCarList[i] = {...action.payload}
+                for (let k = 0; k < newStateVehicleAuthEdit.vehicleList[i].authorizeCarList.length; k++) {
+                    if (newStateVehicleAuthEdit.vehicleList[i].authorizeCarList[k].id == action.payload.id) {
+                        newStateVehicleAuthEdit.vehicleList[i].authorizeCarList[k] = {...action.payload}
                         break;
                     }
                 }
@@ -420,9 +421,9 @@ export default function(state = initialState, action) {
         let newStateVehicleExpenseEdit = {...state}
         for (let i = 0; i < newStateVehicleExpenseEdit.vehicleList.length; i++) {
             if (newStateVehicleExpenseEdit.vehicleList[i].id == action.payload.vehicleId ) {
-                for (let i = 0; i < newStateVehicleExpenseEdit.vehicleList[i].expenseList.length; i++) {
-                    if (newStateVehicleExpenseEdit.vehicleList[i].expenseList[i].id == action.payload.id) {
-                        newStateVehicleExpenseEdit.vehicleList[i].expenseList[i] = {...action.payload}
+                for (let k = 0; k < newStateVehicleExpenseEdit.vehicleList[i].expenseList.length; k++) {
+                    if (newStateVehicleExpenseEdit.vehicleList[i].expenseList[k].id == action.payload.id) {
+                        newStateVehicleExpenseEdit.vehicleList[i].expenseList[k] = {...action.payload}
                         break;
                     }
                 }
@@ -443,9 +444,9 @@ export default function(state = initialState, action) {
         let newStateVehicleServiceEdit = {...state}
         for (let i = 0; i < newStateVehicleServiceEdit.vehicleList.length; i++) {
             if (newStateVehicleServiceEdit.vehicleList[i].id == action.payload.vehicleId ) {
-                for (let i = 0; i < newStateVehicleServiceEdit.vehicleList[i].serviceList.length; i++) {
-                    if (newStateVehicleServiceEdit.vehicleList[i].serviceList[i].id == action.payload.id) {
-                        newStateVehicleServiceEdit.vehicleList[i].serviceList[i] = {...action.payload}
+                for (let k = 0; k < newStateVehicleServiceEdit.vehicleList[i].serviceList.length; k++) {
+                    if (newStateVehicleServiceEdit.vehicleList[i].serviceList[k].id == action.payload.id) {
+                        newStateVehicleServiceEdit.vehicleList[i].serviceList[k] = {...action.payload}
                         break;
                     }
                 }

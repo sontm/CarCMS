@@ -39,4 +39,31 @@ export default {
 
     SETTING_KM_NEXT_OILFILL: 1000,
     SETTING_DAY_NEXT_AUTHORIZE_CAR: 730, // 2year
+
+    //SERVER_API = "http://52.77.223.247:3000/api";
+    SERVER_API:  "http://localhost:3000/api",
+    COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"]
 };
+
+//https://codepen.io/whitelynx/pen/pbberp
+// Color from d3.scale.category20()
+// 0   #1f77b4
+// 1   #aec7e8
+// 2   #ff7f0e
+// 3   #ffbb78
+// 4   #2ca02c
+// 5   #98df8a
+// 6   #d62728
+// 7   #ff9896
+// 8   #9467bd
+// 9   #c5b0d5
+// 10  #8c564b
+// 11  #c49c94
+// 12  #e377c2
+// 13  #f7b6d2
+// 14  #7f7f7f
+// 15  #c7c7c7
+// 16  #bcbd22
+// 17  #dbdb8d
+// 18  #17becf
+// 19  #9edae5

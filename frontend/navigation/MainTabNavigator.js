@@ -210,7 +210,7 @@ const tabNavigator = createBottomTabNavigator({
                   }
                 })
               }>
-              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 50, marginTop: -10, color: "blue"}}/>
+              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: -10, color: "blue"}}/>
             </Button>
             
             <Button

@@ -12,8 +12,8 @@ import TeamReducer from './TeamReducer';
 
 const initialState = {};
 
-const middleware = [thunk, logger];
-//const middleware = [thunk];
+//const middleware = [thunk, logger];
+const middleware = [thunk];
 
 const reducers = combineReducers({
   settingData: SettingReducer,

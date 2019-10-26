@@ -39,8 +39,14 @@ class AppUtils {
     formatDateMonthDayVN(t) {
         return dateFormat(new Date(t), "d/mmm");
     }
+    formatDateMonthYearVN(t) {
+        return dateFormat(new Date(t), "yyyy/mm");
+    }
     formatDateMonthDayYearVN(t) {
         return dateFormat(new Date(t), "d-mmmm-yyyy");
+    }
+    formatMoneyToK(v) {
+        return (v/1000).toFixed(0) + "K";
     }
     getVietnamNameOfFillItemType(type) {
         if (type == AppConstants.FILL_ITEM_GAS) {
@@ -65,8 +71,22 @@ class AppUtils {
       return result;
     }
 
-    // input: [{vehicleId: 1, fillDate: "", amount: 5, price: 3423434, currentKm: 1123, id: 2}]
+    // Set the Time to End of that day
+    normalizeFillDate(input) {
+        return new Date(input.getFullYear()
+            ,input.getMonth()
+            ,input.getDate()
+            ,23,59,59); //23:59:59
+    }
+    // Set the Time to Begin of that day
+    normalizeDateBegin(input) {
+        return new Date(input.getFullYear()
+            ,input.getMonth()
+            ,input.getDate()
+            ,0,0,1); //23:59:59
+    }
 
+    // input: [{vehicleId: 1, fillDate: "", amount: 5, price: 3423434, currentKm: 1123, id: 2}]
     // Output of Average KM Weekly/Monthly
     // [{x:dateFillGas, y:average}]
     getStatForGasUsage(fillGasList) {
@@ -86,16 +106,21 @@ class AppUtils {
         let arrMoneyPerWeek = [];
         let arrKmPerWeek = [];
 
-        if (fillGasList && fillGasList.length > 0) {
-            fillGasList.forEach((item, index) => {
-                if (index == 0) {
-                    beginKm = item.currentKm;
-                    beginDate = new Date(item.fillDate);
-                } else if (index == fillGasList.length -1) {
-                    lastKm = item.currentKm;
-                    lastDate = new Date(item.fillDate);
-                }
+        let arrTotalKmMonthly = []; // Key is Month: i.e 6/2019: value {x, y}
+        let objTotalKmMonthly = {}; // Key is Month: i.e 6/2019: value
 
+        let arrTotalMoneyMonthly = [];
+        let objTotalMoneyMonthly = {}; // Key is Month: i.e 6/2019: value
+
+        if (fillGasList && fillGasList.length > 0) {
+            beginKm = fillGasList[0].currentKm;
+            beginDate = this.normalizeFillDate(new Date(fillGasList[0].fillDate))
+
+            lastKm = fillGasList[fillGasList.length -1].currentKm;
+            lastDate = this.normalizeFillDate(new Date(fillGasList[fillGasList.length -1].fillDate))
+
+            fillGasList.forEach((item, index) => {
+                
                 // For money and Litre, not use the Last Fill date (because that fill is for next)
                 if (index != fillGasList.length -1) {
                     totalMoneyGas += item.price;
@@ -104,18 +129,141 @@ class AppUtils {
 
                 // Calculate Average KM from Previous Fill Gas
                 if (index > 0) {
-                    const diffTime = Math.abs(new Date(item.fillDate) - 
-                        new Date(fillGasList[index-1].fillDate)); // in ms
+                    let currentDate = this.normalizeFillDate(new Date(fillGasList[index].fillDate));
+                    let prevDate = this.normalizeFillDate(new Date(fillGasList[index-1].fillDate));
+                    
+                    let currentMonthKey = "" + currentDate.getFullYear() + "/" + (currentDate.getMonth() + 1) ;
+                    let prevMonthKey = "" + prevDate.getFullYear() + "/" + (prevDate.getMonth() + 1);
+
+                    const diffTime = Math.abs(currentDate - prevDate); // in ms
                     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
                     let averageKMPerDay = (item.currentKm - fillGasList[index-1].currentKm)/diffDays;
                     // Money is from Previous Fill time
                     let averageMoneyPerDay = fillGasList[index-1].price/diffDays;
 
-                    arrMoneyPerWeek.push({x: new Date(item.fillDate), y: averageMoneyPerDay*7})
-                    arrKmPerWeek.push({x: new Date(item.fillDate), y: averageKMPerDay*7})
+                    arrMoneyPerWeek.push({x: new Date(item.fillDate), y: averageMoneyPerDay*30})
+                    arrKmPerWeek.push({x: new Date(item.fillDate), y: averageKMPerDay*30})
+
+                    let firstDayOfCurrentMonth = this.normalizeFillDate(new Date(currentDate.getFullYear(),currentDate.getMonth(),1))
+                    let lastDayOfPrevMonth = this.normalizeFillDate(new Date(prevDate.getFullYear(),prevDate.getMonth()+1,0))
+                    const diffDayCurrentToFirst = Math.ceil(Math.abs(currentDate - firstDayOfCurrentMonth) / (1000 * 60 * 60 * 24)); 
+                    const diffDayPrevToLast = Math.ceil(Math.abs(lastDayOfPrevMonth - prevDate) / (1000 * 60 * 60 * 24)); 
+                    
+                    
+                    if (currentDate.getMonth() != prevDate.getMonth()) {
+                        // two or three Diffirent Month
+
+                        if (!objTotalKmMonthly[""+prevMonthKey]) {
+                            // Not exist, create new
+                            objTotalKmMonthly[""+prevMonthKey] = {
+                                y: averageKMPerDay * diffDayPrevToLast,
+                                x: this.normalizeDateBegin(new Date(prevDate.getFullYear(),prevDate.getMonth()+1,0))
+                            }
+                            objTotalMoneyMonthly[""+prevMonthKey] = {
+                                y: averageMoneyPerDay * diffDayPrevToLast,
+                                x: this.normalizeDateBegin(new Date(prevDate.getFullYear(),prevDate.getMonth()+1,0))
+                            }
+                        } else {
+                            // Exist, increase
+                            objTotalKmMonthly[""+prevMonthKey].y += averageKMPerDay * diffDayPrevToLast;
+                            objTotalMoneyMonthly[""+prevMonthKey].y += averageMoneyPerDay * diffDayPrevToLast;
+                        }
+                        if (!objTotalKmMonthly[""+currentMonthKey]) {
+                            // Not exist, create new
+                            objTotalKmMonthly[""+currentMonthKey] = {
+                                y: averageKMPerDay * diffDayCurrentToFirst,
+                                x: this.normalizeDateBegin(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                            }
+                            objTotalMoneyMonthly[""+currentMonthKey] = {
+                                y: averageMoneyPerDay * diffDayCurrentToFirst,
+                                x: this.normalizeDateBegin(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                            }
+                        } else {
+                            // Exist, increase
+                            objTotalKmMonthly[""+currentMonthKey].y += averageKMPerDay * diffDayCurrentToFirst;
+                            objTotalMoneyMonthly[""+currentMonthKey].y += averageMoneyPerDay * diffDayCurrentToFirst;
+                        }
+
+                        // Loop Every Month Between Two Fill Date time
+                        let loopFirstDateOfMonth = new Date(
+                            lastDayOfPrevMonth.setDate(lastDayOfPrevMonth.getDate() + 1)
+                            );
+                        
+                        while (loopFirstDateOfMonth.getMonth() < firstDayOfCurrentMonth.getMonth() || 
+                        loopFirstDateOfMonth.getFullYear() < firstDayOfCurrentMonth.getFullYear()) {
+                            let loopLastdateOfMonth = new Date(loopFirstDateOfMonth.getFullYear(),loopFirstDateOfMonth.getMonth()+1,0);                            
+
+                            let diffDayPrevLast2FirstCurrent = 
+                                Math.ceil(Math.abs(loopLastdateOfMonth - loopFirstDateOfMonth) / (1000 * 60 * 60 * 24))
+                                + 1; 
+                            let loopMonthKey = "" + loopFirstDateOfMonth.getFullYear() + "/" + (loopFirstDateOfMonth.getMonth() + 1) ;
+                            
+                            if (!objTotalKmMonthly[""+loopMonthKey]) {
+                                // Not exist, create new
+                                objTotalKmMonthly[""+loopMonthKey] = {
+                                    y:averageKMPerDay * diffDayPrevLast2FirstCurrent,
+                                    x: this.normalizeDateBegin(new Date(loopFirstDateOfMonth.getFullYear(),
+                                    loopFirstDateOfMonth.getMonth()+1,0))
+                                }
+                                objTotalMoneyMonthly[""+loopMonthKey] = {
+                                    y:averageMoneyPerDay * diffDayPrevLast2FirstCurrent,
+                                    x: this.normalizeDateBegin(new Date(loopFirstDateOfMonth.getFullYear(),
+                                    loopFirstDateOfMonth.getMonth()+1,0))
+                                }
+                            } else {
+                                // Exist, increase
+                                objTotalKmMonthly[""+loopMonthKey].y += averageKMPerDay * diffDayPrevLast2FirstCurrent;
+                                objTotalMoneyMonthly[""+loopMonthKey].y += averageMoneyPerDay * diffDayPrevLast2FirstCurrent;
+                            }
+
+                            loopFirstDateOfMonth = new Date(
+                                loopLastdateOfMonth.setDate(loopLastdateOfMonth.getDate() + 1)
+                                );
+                        }
+                    } else {
+
+                        // Same Month
+                        if (!objTotalKmMonthly[""+currentMonthKey]) {
+                            // Not exist, create new
+                            objTotalKmMonthly[""+currentMonthKey] = {
+                                y: averageKMPerDay * diffDays,
+                                x: this.normalizeFillDate(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                            }
+                            objTotalMoneyMonthly[""+currentMonthKey] = {
+                                y: averageMoneyPerDay * diffDays,
+                                x: this.normalizeDateBegin(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                            }
+                        } else {
+                            // Exist, increase
+                            objTotalKmMonthly[""+currentMonthKey].y += averageKMPerDay * diffDays;
+                            objTotalMoneyMonthly[""+currentMonthKey].y += averageMoneyPerDay * diffDays;
+                        }
+
+                    }
                 } 
             })
+
+            // convert to Array for Chart
+            for (var prop in objTotalKmMonthly) {
+                if (Object.prototype.hasOwnProperty.call(objTotalKmMonthly, prop)) {
+                    arrTotalKmMonthly.push(objTotalKmMonthly[""+prop])
+                }
+            }
+            arrTotalKmMonthly.sort(function (a, b) {
+                return a.x.getTime() - b.x.getTime();
+            })
+
+            // convert to Array for Chart
+            for (var prop in objTotalMoneyMonthly) {
+                if (Object.prototype.hasOwnProperty.call(objTotalMoneyMonthly, prop)) {
+                    arrTotalMoneyMonthly.push(objTotalMoneyMonthly[""+prop])
+                }
+            }
+            arrTotalMoneyMonthly.sort(function (a, b) {
+                return a.x.getTime() - b.x.getTime();
+            })
+
         }
         if (todayLiter) {
             // Calculate Passed duration between begin and last date
@@ -134,7 +282,7 @@ class AppUtils {
             // TODO
 
             return {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
-                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas};
+                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly};
         } else {
             return {};
         }
@@ -211,8 +359,199 @@ class AppUtils {
             return {}
         }
     }
+    getInfoMoneySpend(gasList, oilList, authList, expenseList, serviceList) {
+        let arrGasSpend = [];
+        let objGasSpend = {};
+        let totalGasSpend = 0;
+        if (gasList && gasList.length > 0) {
+            gasList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                if (objGasSpend[""+dateKey]) {
+                    // Exist, add more
+                    objGasSpend[""+dateKey].y += item.price;
+                } else {
+                    // Not Exist, create new Month
+                    objGasSpend[""+dateKey] = {
+                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                        y: item.price
+                    }
+                }
+            })
+        }
+        // convert to Array for Chart
+        for (var prop in objGasSpend) {
+            if (Object.prototype.hasOwnProperty.call(objGasSpend, prop)) {
+                arrGasSpend.push(objGasSpend[""+prop])
+                totalGasSpend += objGasSpend[""+prop].y;
+            }
+        }
+        arrGasSpend.sort(function (a, b) {
+            return a.x.getTime() - b.x.getTime();
+        })
+
+        //------Oil
+        let arrOilSpend = [];
+        let objOilSpend = {};
+        let totalOilSpend = 0;
+        if (oilList && oilList.length > 0) {
+            oilList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                if (objOilSpend[""+dateKey]) {
+                    // Exist, add more
+                    objOilSpend[""+dateKey].y += item.price;
+                } else {
+                    // Not Exist, create new Month
+                    objOilSpend[""+dateKey] = {
+                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                        y: item.price
+                    }
+                }
+            })
+        }
+        // convert to Array for Chart
+        for (var prop in objOilSpend) {
+            if (Object.prototype.hasOwnProperty.call(objOilSpend, prop)) {
+                arrOilSpend.push(objOilSpend[""+prop])
+                totalOilSpend += objOilSpend[""+prop].y;
+            }
+        }
+        arrOilSpend.sort(function (a, b) {
+            return a.x.getTime() - b.x.getTime();
+        })
+
+
+        //------Auth
+        let arrAuthSpend = [];
+        let objAuthSpend = {};
+        let totalAuthSpend = 0;
+        if (authList && authList.length > 0) {
+            authList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                if (objAuthSpend[""+dateKey]) {
+                    // Exist, add more
+                    objAuthSpend[""+dateKey].y += item.price;
+                } else {
+                    // Not Exist, create new Month
+                    objAuthSpend[""+dateKey] = {
+                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                        y: item.price
+                    }
+                }
+            })
+        }
+        // convert to Array for Chart
+        for (var prop in objAuthSpend) {
+            if (Object.prototype.hasOwnProperty.call(objAuthSpend, prop)) {
+                arrAuthSpend.push(objAuthSpend[""+prop])
+                totalAuthSpend += objAuthSpend[""+prop].y;
+            }
+        }
+        arrAuthSpend.sort(function (a, b) {
+            return a.x.getTime() - b.x.getTime();
+        })
+
+
+
+        //------Expense
+        let arrExpenseSpend = [];
+        let objExpenseSpend = {};
+        let totalExpenseSpend = 0;
+        if (expenseList && expenseList.length > 0) {
+            expenseList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                if (objExpenseSpend[""+dateKey]) {
+                    // Exist, add more
+                    objExpenseSpend[""+dateKey].y += item.price;
+                } else {
+                    // Not Exist, create new Month
+                    objExpenseSpend[""+dateKey] = {
+                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                        y: item.price
+                    }
+                }
+            })
+        }
+        // convert to Array for Chart
+        for (var prop in objExpenseSpend) {
+            if (Object.prototype.hasOwnProperty.call(objExpenseSpend, prop)) {
+                arrExpenseSpend.push(objExpenseSpend[""+prop])
+                totalExpenseSpend += objExpenseSpend[""+prop].y;
+            }
+        }
+        arrExpenseSpend.sort(function (a, b) {
+            return a.x.getTime() - b.x.getTime();
+        })
+
+
+        //------Service
+        let arrServiceSpend = [];
+        let objServiceSpend = {};
+        let totalServiceSpend = 0;
+        if (serviceList && serviceList.length > 0) {
+            serviceList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                if (objServiceSpend[""+dateKey]) {
+                    // Exist, add more
+                    objServiceSpend[""+dateKey].y += item.price;
+                } else {
+                    // Not Exist, create new Month
+                    objServiceSpend[""+dateKey] = {
+                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                        y: item.price
+                    }
+                }
+            })
+        }
+        // convert to Array for Chart
+        for (var prop in objServiceSpend) {
+            if (Object.prototype.hasOwnProperty.call(objServiceSpend, prop)) {
+                arrServiceSpend.push(objServiceSpend[""+prop])
+                totalServiceSpend += objServiceSpend[""+prop].y;
+            }
+        }
+        arrServiceSpend.sort(function (a, b) {
+            return a.x.getTime() - b.x.getTime();
+        })
+
+        return {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,
+            totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend};
+    }
+    getInfoMoneySpendInExpense(expenseList) {
+        if (!expenseList) {
+            return {};
+        }
+
+        let objExpenseTypeSpend = {};// Key is subtype
+        let arrExpenseTypeSpend = [];
+        if (expenseList && expenseList.length > 0) {
+            expenseList.forEach((item, index) => {
+                if (objExpenseTypeSpend[""+item.subType]) {
+                    // Exist, increase
+                    objExpenseTypeSpend[""+item.subType] += item.price;
+                } else {
+                    objExpenseTypeSpend[""+item.subType] = item.price;
+                }
+            })
+        }
+        // convert to Array for Chart
+        for (var prop in objExpenseTypeSpend) {
+            if (Object.prototype.hasOwnProperty.call(objExpenseTypeSpend, prop)) {
+                arrExpenseTypeSpend.push({
+                    y: objExpenseTypeSpend[""+prop],
+                    x: prop
+                })
+            }
+        }
+        return {arrExpenseTypeSpend};
+    }
 
     async syncDataToServer(props) {
+        console.log("LengVehicleList:" + props.userData.vehicleList.length)
       if (props.userData.vehicleList && props.userData.vehicleList.length > 0) {
         Backend.postFillItemList(props.userData.vehicleList, props.userData.token ,"vehicle",
           response => {console.log("Sync Post Vehicle OK")},

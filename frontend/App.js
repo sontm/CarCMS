@@ -13,9 +13,9 @@ import { Provider } from 'react-redux';
 
 import axios from 'axios';
 import axiosDefaults from 'axios/lib/defaults';
-//axios.defaults.baseURL = "http://52.77.223.247:3000/api";
-axios.defaults.baseURL = "http://localhost:3000/api";
+import AppConstants from './constants/AppConstants';
 
+axios.defaults.baseURL = AppConstants.SERVER_API;
 
 // import {pushNotification} from './components/pushNotification'
 

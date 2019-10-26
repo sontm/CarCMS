@@ -15,6 +15,7 @@ import Backend from '../constants/Backend';
 import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer} from '../redux/UserReducer';
 import {actUserLogout} from '../redux/UserReducer'
 
+
 class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -105,7 +106,7 @@ class SettingsScreen extends React.Component {
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Upload To Server</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Upload To Server {AppConstants.SERVER_API}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
