@@ -32,7 +32,6 @@ import CreateTeamScreen from '../screens/setting/CreateTeamScreen'
 import JoinTeamScreen from '../screens/setting/JoinTeamScreen'
 
 import TeamScreen from '../screens/TeamScreen';
-import JoinRequestScreen from '../screens/team/JoinRequestScreen'
 import MemberVehicleListScreen from '../screens/team/MemberVehicleListScreen'
 
 
@@ -126,7 +125,6 @@ SettingsStack.path = '';
 const TeamStack = createStackNavigator(
   {
     Team: TeamScreen,
-    JoinRequest: JoinRequestScreen,
     MemberVehicles: MemberVehicleListScreen,
     VehicleDetail: VehicleDetailReport,
     VehicleHistory: VehicleDetailHistory,
@@ -162,7 +160,7 @@ const tabNavigator = createBottomTabNavigator({
                 props.navigation.navigate("HomeStack")
               }}>
               <Icon name='home' style={{fontSize: 26}}/>
-              <Text>Home</Text>
+              <Text style={{fontSize: 12}}>Home</Text>
             </Button>
 
             <Button
@@ -173,8 +171,8 @@ const tabNavigator = createBottomTabNavigator({
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("MyVehicleStack")
               }}>
-              <Icon type="MaterialIcons" name='view-list' style={{fontSize: 26}}/>
-              <Text>List</Text>
+              <Icon type="FontAwesome5" name='car' style={{fontSize: 26}}/>
+              <Text style={{fontSize: 12}}>Xe</Text>
             </Button>
             
             
@@ -210,7 +208,7 @@ const tabNavigator = createBottomTabNavigator({
                   }
                 })
               }>
-              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: -10, color: "blue"}}/>
+              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: -10, color: AppConstants.COLOR_PICKER_TEXT}}/>
             </Button>
             
             <Button
@@ -222,7 +220,7 @@ const tabNavigator = createBottomTabNavigator({
                 props.navigation.navigate("TeamStack")
               }}>
               <Icon type="Octicons" name='organization' style={{fontSize: 26}}/>
-              <Text>Team</Text>
+              <Text style={{fontSize: 12}}>Tổ Chức</Text>
             </Button>
             
             <Button
@@ -234,7 +232,7 @@ const tabNavigator = createBottomTabNavigator({
                 props.navigation.navigate("SettingsStack")
               }}>
               <Icon name='more' style={{fontSize: 26}}/>
-              <Text>More</Text>
+              <Text style={{fontSize: 12}}>Khác</Text>
             </Button>
           </FooterTab>
         </Footer>

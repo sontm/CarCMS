@@ -12,19 +12,39 @@ import {
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, 
-  Content,Text, Card, CardItem, Segment, ListItem, Badge } from 'native-base';
+  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker } from 'native-base';
 
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
-import {actTeamGetDataOK} from '../redux/TeamReducer'
+import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
+
+import TeamMembers from './team/TeamMembers'
+
+
+function getNameOfSortType(type) {
+  if (type == "auth") return "Lịch Đăng Kiểm";
+  if (type == "oil") return "Lịch Thay Dầu";
+  if (type == "kmLarge") return "Đi Nhiều";
+  if (type == "kmSmall") return "Đi Ít";
+  if (type == "gasBest") return "Hiệu Suất Xăng Tốt";
+  if (type == "gasWorst") return "Hiệu Suất Xăng Kém";
+  if (type == "moneyMonthlyLarge") return "Số Tiền Hàng Tháng Lớn";
+  if (type == "moneyMonthlySmall") return "Số Tiền Hàng Tháng Nhỏ";
+  return "Default";
+}
 
 class TeamScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activePage:0
+      activePage:0,
+      sortType: "auth",
+      changedSort: false
     }
+
+    this.onSortChange = this.onSortChange.bind(this)
+    this.onClearChange = this.onClearChange.bind(this)
 
     this.fetchTeamData = this.fetchTeamData.bind(this)
   }
@@ -48,6 +68,35 @@ class TeamScreen extends React.Component {
           })
       }
     );
+
+    Backend.getAllJoinTeamRequest(this.props.userData.token, 
+      response => {
+          console.log("GEt all JoinRequest OK")
+          console.log(response.data)
+          //this.props.actUserLoginOK(response.data)
+          //this.props.navigation.navigate("Settings")
+          this.props.actTeamGetJoinRequestOK(response.data)
+      },
+      error => {
+          console.log("GEt all JoinRequest ERROR")
+          console.log(JSON.stringify(error))
+          this.setState({
+              message: "Login Error!"
+          })
+      }
+    );
+  }
+  onSortChange(value) {
+    this.setState({
+      sortType: value,
+      changedSort: true
+    })
+  }
+  onClearChange() {
+    this.setState({
+      changedSort: false,
+      sortType: "auth"
+    })
   }
   componentDidMount() {
     console.log("TeamScreen DidMount")
@@ -61,75 +110,93 @@ class TeamScreen extends React.Component {
           allVehicles.push(...item.vehicleList)
         }
       })
-      return allVehicles.map(item => {
+      let viewDisplay = [];
+      if (this.state.changedSort) {
+        viewDisplay.push(
+          <View style={styles.filterInfoContainer} key="sort">
+            <Card style={{ borderRadius: 16, width: "80%", flexDirection:"row", justifyContent:"center", height: 30,alignItems:"center" }}>
+              <Button transparent onPress={this.onClearChange}>
+                  <Icon type="MaterialIcons" name="clear" />
+              </Button>
+              <Text>Sắp Xếp: {" " + getNameOfSortType(this.state.sortType)}</Text>
+            </Card>
+          </View>
+        )
+      }
+      
+      viewDisplay.push(allVehicles.map(item => {
         console.log(item)
         return (
         <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={() => {}}
           navigation={this.props.navigation}
         />
-      )})
+      )}))
+      return viewDisplay;
     } else if(this.state.activePage === 1) {
       return null
     } else {
-      return this.props.teamData.members.map(item => (
-        <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-            <Left>
-            </Left>
-            <Body>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate("MemberVehicles", {member: item})} key={item.id}>
-                <Text>{item.fullName}</Text>
-                <Text>{item.email}</Text>
-                </TouchableOpacity>
-            </Body>
-            <Right>
-              <Icon name="arrow-forward" style={styles.iconRight}/>
-            </Right>
-        </ListItem>
-
-      ))
+      return <TeamMembers navigation={this.props.navigation}/>;
     }
   }
   componentDidUpdate() {
     console.log("TeamScreen DidUpdate")
   }
+
   render() {
     console.log("TeamScreen Render")
     return (
       <Container>
-        <Header>
-          <Left>
+        <Header style={{justifyContent: "space-between"}}>
+          <Left style={{flex:1}}>
             <Button transparent onPress={this.fetchTeamData}>
               <Icon type="MaterialIcons" name="refresh" />
             </Button>
           </Left>
-          <Body>
-            <Title>Team Screen</Title>
-          </Body>
-          <Right>
-            <Button badge transparent onPress={() => this.props.navigation.navigate("JoinRequest")}>
-              <Icon name="notifications" />
-              <Badge danger style={styles.notifyBadge}>
-                <Text style={styles.notifyBadgeText}>9</Text>
-              </Badge>
-            </Button>
-          </Right>
-        </Header>
-        
-        <Segment>
+          <Body style={{flex:5, justifyContent: "center", alignItems:"center"}}>
+          <Segment style={{alignSelf:"center"}}>
           <Button first active={this.state.activePage === 0}
               onPress={() => this.setState({activePage: 0})}>
-            <Text>All Cars</Text>
+            <Text>Xe</Text>
           </Button>
           <Button active={this.state.activePage === 1}
               onPress={() => this.setState({activePage: 1})}>
-            <Text>Reports</Text>
+            <Text>Báo Cáo</Text>
           </Button>
           <Button last active={this.state.activePage === 2}
               onPress={() => this.setState({activePage: 2})}>
-            <Text>Members</Text>
+            <Text>Thành Viên</Text>
+            {this.props.teamData.joinRequests.length > 0 ? (
+              <Badge danger style={styles.notifyBadge}>
+                <Text style={styles.notifyBadgeText}>{this.props.teamData.joinRequests.length}</Text>
+              </Badge>
+            ) : (null)
+            }
           </Button>
         </Segment>
-
+          </Body>
+          <Right style={{flex:2}}>
+            {this.state.activePage == 0 ? 
+            (<Picker
+                mode="dropdown"
+                placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
+                //iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: "grey"}}/>}
+                //selectedValue="year2"
+                onValueChange={this.onSortChange.bind(this)}
+                textStyle={{ color: AppContants.COLOR_PICKER_TEXT}}
+                >
+                <Picker.Item label={getNameOfSortType("auth")} value="auth" />
+                <Picker.Item label={getNameOfSortType("oil")} value="oil" />
+                <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
+                <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />
+                <Picker.Item label={getNameOfSortType("gasBest")} value="gasBest" />
+                <Picker.Item label={getNameOfSortType("gasWorst")} value="gasWorst" />
+                <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
+                <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
+            </Picker>
+            ) : null}
+          </Right>
+        </Header>
+        
         <Content>
           <View style={styles.container}>
             <ScrollView
@@ -178,6 +245,12 @@ const styles = StyleSheet.create({
     position:"relative",
     top: -2,
     fontSize: 11,
+  },
+
+  filterInfoContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
 
@@ -186,7 +259,7 @@ const mapStateToProps = (state) => ({
   userData: state.userData
 });
 const mapActionsToProps = {
-  actTeamGetDataOK
+  actTeamGetDataOK, actTeamGetJoinRequestOK
 };
 
 export default connect(

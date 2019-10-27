@@ -77,11 +77,11 @@ class HomeScreen extends React.Component {
     console.log("HOMESCreen Render")
     return (
       <Container>
-        <Header>
+        <Header style={{backgroundColor: AppContants.COLOR_PICKER_TEXT}}>
           <Left>
           </Left>
           <Body>
-            <Title>HomeScreen</Title>
+            <Title>Tổng Quan</Title>
           </Body>
           <Right />
         </Header>
@@ -91,11 +91,8 @@ class HomeScreen extends React.Component {
             <ScrollView
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
-              {this.props.userData.vehicleList && this.props.userData.vehicleList.map(item => (
-                <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
-                  navigation={this.props.navigation} {...this.state}
-                />
-              ))}
+              
+              <Text> General Reports Here</Text>
 
             </ScrollView>
           </View>

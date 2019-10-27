@@ -13,7 +13,7 @@ class JoinTeamScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            code: "ufiATY0u",
+            code: "ZU2YE8yE",
         };
 
         this.handleSubmit = this.handleSubmit.bind(this)

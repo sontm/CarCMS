@@ -29,11 +29,11 @@ const persistConfig = {
   storage: AsyncStorage,
   // Whitelist (Save Specific Reducers)
   whitelist: [
-    'settingData','userData', 'teamData'
+    'settingData','userData'
   ],
   // Blacklist (Don't Save Specific Reducers)
   blacklist: [
-    '',
+    'teamData',
   ],
 };
 // Middleware: Redux Persist Persisted Reducer
