@@ -30,6 +30,7 @@ function getNameOfSortType(type) {
   if (type == "moneyMonthlySmall") return "Số Tiền Hàng Tháng Nhỏ";
   return "Default";
 }
+
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
 // fillOilList: {vehicleId: 1, fillDate: "10/14/2019, 11:56:44 PM", price: 500000, currentKm: 3000, id: 1}
@@ -78,6 +79,7 @@ class MyVehicleScreen extends React.Component {
       sortType: "auth"
     })
   }
+  
   render() {
     console.log("MyVehicleScreen Render")
     return (
@@ -107,7 +109,7 @@ class MyVehicleScreen extends React.Component {
                 onValueChange={this.onSortChange.bind(this)}
                 textStyle={{ color: AppContants.COLOR_PICKER_TEXT}}
                 >
-                <Picker.Item label={getNameOfSortType("auth")} value="auth" />
+                <Picker.Item label="Filter" value="auth" />
                 <Picker.Item label={getNameOfSortType("oil")} value="oil" />
                 <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
                 <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />

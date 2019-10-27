@@ -160,7 +160,7 @@ const tabNavigator = createBottomTabNavigator({
                 props.navigation.navigate("HomeStack")
               }}>
               <Icon name='home' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 12}}>Home</Text>
+              <Text style={{fontSize: 10}}>Home</Text>
             </Button>
 
             <Button
@@ -172,7 +172,7 @@ const tabNavigator = createBottomTabNavigator({
                 props.navigation.navigate("MyVehicleStack")
               }}>
               <Icon type="FontAwesome5" name='car' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 12}}>Xe</Text>
+              <Text style={{fontSize: 10}}>Xe</Text>
             </Button>
             
             
@@ -220,7 +220,7 @@ const tabNavigator = createBottomTabNavigator({
                 props.navigation.navigate("TeamStack")
               }}>
               <Icon type="Octicons" name='organization' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 12}}>Tổ Chức</Text>
+              <Text style={{fontSize: 10}}>Tổ Chức</Text>
             </Button>
             
             <Button
@@ -232,7 +232,7 @@ const tabNavigator = createBottomTabNavigator({
                 props.navigation.navigate("SettingsStack")
               }}>
               <Icon name='more' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 12}}>Khác</Text>
+              <Text style={{fontSize: 10}}>Khác</Text>
             </Button>
           </FooterTab>
         </Footer>

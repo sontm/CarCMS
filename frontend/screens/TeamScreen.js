@@ -165,7 +165,7 @@ class TeamScreen extends React.Component {
           <Button last active={this.state.activePage === 2}
               onPress={() => this.setState({activePage: 2})}>
             <Text>Thành Viên</Text>
-            {this.props.teamData.joinRequests.length > 0 ? (
+            {this.props.teamData.joinRequests && this.props.teamData.joinRequests.length > 0 ? (
               <Badge danger style={styles.notifyBadge}>
                 <Text style={styles.notifyBadgeText}>{this.props.teamData.joinRequests.length}</Text>
               </Badge>
