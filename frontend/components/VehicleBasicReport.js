@@ -67,7 +67,8 @@ class VehicleBasicReport extends Component {
             var currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.vehicle.id);
         }
         
-        let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
+        let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, 
+            lastDate, lastKm,
             arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
             = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
         let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}

@@ -9,6 +9,8 @@ import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 
+import GasUsageReport from '../components/GasUsageReport'
+
 import { connect } from 'react-redux';
 
 class VehicleDetailReport extends React.Component {
@@ -44,9 +46,7 @@ class VehicleDetailReport extends React.Component {
     }
     
     if (currentVehicle) {
-        let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, lastDate, lastKm,
-            arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly}
-            = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
+        let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
         let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
             = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
                 lastDate, lastKm, averageKmPerDay);
@@ -135,168 +135,32 @@ class VehicleDetailReport extends React.Component {
                     
                 </View>
 
-
-                <View style={styles.textRow}>
-                    <Text><H2>
-                        Total Average Usage
-                    </H2></Text>
-                </View>
-                <View style={styles.statRow}>
-                    <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H1>{averageKmPerLiter ? averageKmPerLiter.toFixed(1) : ""}</H1></Text>
-                        </CardItem>
-                        <CardItem>
-                        <Body>
-                            <Text>
-                            Km/Litre
-                            </Text>
-                        </Body>
-                        </CardItem>
-                    </Card>
-
-                    {/* <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H1>{averageMoneyPerLiter}</H1></Text>
-                        </CardItem>
-                        <CardItem>
-                        <Body>
-                            <Text>VND/Litre</Text>
-                        </Body>
-                        </CardItem>
-                    </Card> */}
-
-                    <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H1>{averageKmPerDay ? (averageKmPerDay*7).toFixed(0): ""}</H1></Text>
-                        </CardItem>
-                        <CardItem>
-                        <Body>
-                            <Text>Km/Week</Text>
-                        </Body>
-                        </CardItem>
-                    </Card>
-
-                    <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H1>{averageMoneyPerDay ? (averageMoneyPerDay*7).toFixed(0) : ""}</H1></Text>
-                        </CardItem>
-                        <CardItem>
-                        <Body>
-                            <Text>VND/Week</Text>
-                        </Body>
-                        </CardItem>
-                    </Card>
-                </View>
-                
-                
-
-                {/* <View style={styles.gasUsageContainer}>
-                    <VictoryStack colorScale={["orange", "gold"]}
-                        style={{
-                            data: { strokeWidth: 0, fillOpacity: 0.2},
-                            labels: {
-                                fontSize: 10, fill: "#c43a31", padding: 5
-                            }
-                            }}
-                        labels={({ datum }) => datum.x.toLocaleDateString()}
-                        width={450}
-                        height={250}
-                    >
-                    <VictoryArea
-                        data={arrKmPerWeek}
-                        interpolation="linear"
-                    />
-                    </VictoryStack>
-                </View> */}
-
-                <View style={styles.textRow}>
-                    <Text><H2>
-                        Monthly Gas Usage
-                    </H2></Text>
-                    <Segment small>
-                        <Button small first active><Text style={{fontSize: 12}}>Km</Text></Button>
-                        <Button small><Text style={{fontSize: 12}}>đ</Text></Button>
-                        <Button small last><Text style={{fontSize: 12}}>đ/Km</Text></Button>
-                    </Segment>
-                </View>
-                <View style={styles.gasUsageContainer}>
-                <Tabs scrollWithoutAnimation={true} style={{backgroundColor: "grey"}}>
-                    <Tab heading="Km Per Month" 
-                            tabStyle={{backgroundColor: "white"}}
-                            activeTabStyle={{backgroundColor: "white"}}>
-                        <VictoryChart
-                            width={Layout.window.width}
-                            height={300}
-                            domainPadding={{y: [10, 25], x: [0, 0]}}
-                            padding={{top:10,bottom:30,left:10,right:10}}
-                        >
-                        <VictoryLine colorScale={AppConstants.COLOR_SCALE_10}
-                            style={{
-                                data: { stroke: "#c43a31" },
-                                parent: { border: "1px solid #ccc"}
-                            }}
-                            labels={({ datum }) => (datum.y.toFixed(0))}
-                            data={arrTotalKmMonthly}
-                            interpolation="linear"
-                        />
-                        <VictoryAxis
-                            crossAxis
-                            standalone={false}
-                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                            //tickCount={arrTotalKmMonthly ? arrTotalKmMonthly.length/2 : 1}
-                            style={{
-                                grid: {stroke: "rgb(240,240,240)"},
-                                ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
-                            }}
-                        />
-                        </VictoryChart>
-                        
-                    </Tab>
-
-                    <Tab heading="Money Per Week" 
-                            tabStyle={{backgroundColor: "white"}}
-                            activeTabStyle={{backgroundColor: "white"}}>
-                        <VictoryChart
-                            width={Layout.window.width}
-                            height={300}
-                            domainPadding={{y: [10, 25], x: [10, 10]}}
-                            padding={{top:10,bottom:30,left:0,right:0}}
-                        >
-                        <VictoryBar colorScale={AppConstants.COLOR_SCALE_10}
-                            style={{
-                                data: { fill: "#c43a31" },
-                                parent: { border: "1px solid #ccc"}
-                            }}
-                            labels={({ datum }) => (AppUtils.formatMoneyToK(datum.y))}
-                            data={arrTotalMoneyMonthly}
-                            interpolation="linear"
-                        />
-                        <VictoryAxis
-                            crossAxis
-                            standalone={false}
-                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                            //tickCount={arrTotalKmMonthly ? arrTotalKmMonthly.length/2 : 1}
-                            style={{
-                                grid: {stroke: "rgb(240,240,240)"},
-                                ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
-                            }}
-                        />
-                        </VictoryChart>
-                        
-                    </Tab>
-                </Tabs>
-                </View>
-
-
+                <GasUsageReport currentVehicle={currentVehicle}/>
 
                 <View style={styles.textRow}>
                     <Text><H2>
                         Money Usage (K VND)
                     </H2></Text>
                 </View>
+                
+                <View style={styles.statRow}>
+                    <View style={styles.moneyUsagePieContainer}>
+                        <VictoryPie
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            data={[
+                                { x: "Gas", y: totalGasSpend },
+                                { x: "Oil", y: totalOilSpend },
+                                { x: "Authorize", y: totalAuthSpend },
+                                { x: "Expense", y: totalExpenseSpend },
+                                { x: "Service", y: totalServiceSpend },
+                            ]}
+                            radius={100}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
+                            />
+                    </View>
+                </View>
+
 
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsageStackContainer}>
@@ -356,24 +220,6 @@ class VehicleDetailReport extends React.Component {
                         />
 
                         </VictoryChart>
-                    </View>
-                </View>
-
-                <View style={styles.statRow}>
-                    <View style={styles.moneyUsagePieContainer}>
-                        <VictoryPie
-                            colorScale={AppConstants.COLOR_SCALE_10}
-                            data={[
-                                { x: "Gas", y: totalGasSpend },
-                                { x: "Oil", y: totalOilSpend },
-                                { x: "Authorize", y: totalAuthSpend },
-                                { x: "Expense", y: totalExpenseSpend },
-                                { x: "Service", y: totalServiceSpend },
-                            ]}
-                            radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
-                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
-                            />
                     </View>
                 </View>
 
