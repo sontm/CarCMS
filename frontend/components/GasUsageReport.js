@@ -2,13 +2,19 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
-    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Picker, Form, DatePicker } from 'native-base';
-import Layout from '../constants/Layout'
+    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Picker, Form, DatePicker, Toast } from 'native-base';
+import MyLayout from '../constants/Layout'
 
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
+// import { LineChart, Grid } from 'react-native-svg-charts'
 
+import {
+    LineChart
+  } from "react-native-chart-kit";
+
+const MYDATA = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
 
 function durationTypeToVietnamese(durationType) {
     if (durationType == "month") {
@@ -26,7 +32,9 @@ class GasUsageReport extends React.Component {
         duration: 12,
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
-        tillDate: new Date()
+        tillDate: new Date(),
+
+        popoverVisible: false,
     };
 
   }
@@ -48,6 +56,14 @@ class GasUsageReport extends React.Component {
     this.setState({
         tillDate: newDate
     });
+  }
+  onDataPointClick(value, dataset, getcolor, dataToDisplay) {
+      Toast.show({
+        text: "" + AppUtils.formatDateMonthYearVN(dataToDisplay[value.index].x) + ": " + 
+            dataToDisplay[value.index].y.toFixed(0),
+        //buttonText: "Okay",
+        type: "danger"
+      })
   }
 
   render() {
@@ -73,7 +89,7 @@ class GasUsageReport extends React.Component {
                 <Icon type="Entypo" name="arrow-long-up" 
                     style={{color: "#d62728", marginLeft: 5}} />
             )
-        } else if (avgMoneyPerKmMonthly > averageMoneyPerKmPerDay) {
+        } else if (avgMoneyPerKmMonthly < averageMoneyPerKmPerDay) {
             // This time Use so Much, 
             var iconInfoUsage= (
                 <Icon type="Entypo" name="arrow-long-down" 
@@ -81,7 +97,19 @@ class GasUsageReport extends React.Component {
             )
         }
         
+        let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(dataToDisplay,
+            (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
 
+        // const mydata = {
+        //     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+        //     datasets: [{
+        //       data: [ 20, 45, 28, 80, 99, 43 ],
+        //       color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+        //       strokeWidth: 2 // optional
+        //     }]
+        // }
+        console.log("dataChartKitLine------")
+        console.log(dataChartKitLine)
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>
@@ -143,9 +171,35 @@ class GasUsageReport extends React.Component {
                         iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
                     />
                 </View>
+
                 <View style={styles.gasUsageContainer}>
-                    <VictoryChart
-                        width={Layout.window.width}
+                    {dataChartKitLine.labels.length > 0 ? (
+                    <LineChart
+                        data={dataChartKitLine}
+                        width={MyLayout.window.width}
+                        height={300}
+                        withDots={true}
+                        withInnerLines={false}
+                        onDataPointClick={(value, dataset, getcolor) => {
+                            this.onDataPointClick(value, dataset, getcolor, dataToDisplay)
+                        }}
+                        verticalLabelRotation={45}
+                        chartConfig={{
+                            backgroundGradientFrom: "#03528a",
+                            backgroundGradientFromOpacity: 1,
+                            backgroundGradientTo: "#52038a",
+                            backgroundGradientToOpacity: 1,
+                            fillShadowGradient:"#dddddd",
+                            fillShadowGradientOpacity: 0.2,
+                            // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                            color: (opacity = 1) => `rgba(255, 255, 255, 1)`,
+                            strokeWidth: 2, // optional, default 3
+                            barPercentage: 0.9
+                        }}
+                    />) : (null)
+                    }
+                    {/* <VictoryChart
+                        width={MyLayout.window.width}
                         height={300}
                         domainPadding={{y: [50, 25], x: [10, 10]}}
                         padding={{top:10,bottom:30,left:10,right:10}}
@@ -170,7 +224,7 @@ class GasUsageReport extends React.Component {
                             tickLabels: {fontSize: 12, padding: 0}
                         }}
                     />
-                    </VictoryChart>
+                    </VictoryChart> */}
                 </View>
 
                 <View style={styles.textRow}>
@@ -181,7 +235,7 @@ class GasUsageReport extends React.Component {
                 <View style={styles.statRow}>
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
-                            <Text><H1>{avgKmMonthly ? avgKmMonthly.toFixed(1) : ""}</H1></Text>
+                            <Text><H2>{avgKmMonthly ? avgKmMonthly.toFixed(1) : ""}</H2></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
@@ -194,7 +248,7 @@ class GasUsageReport extends React.Component {
 
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
-                            <Text><H1>{avgMoneyMonthly ? (avgMoneyMonthly).toFixed(0): ""}</H1></Text>
+                            <Text><H2>{avgMoneyMonthly ? (avgMoneyMonthly).toFixed(0): ""}</H2></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
@@ -205,7 +259,7 @@ class GasUsageReport extends React.Component {
 
                     <Card style={styles.equalStartRow}>
                         <CardItem header  style={{flexDirection: "row", alignItems: "center"}}>
-                            <Text><H1>{avgMoneyPerKmMonthly ? (avgMoneyPerKmMonthly).toFixed(0) : ""}</H1></Text>
+                            <Text><H2>{avgMoneyPerKmMonthly ? (avgMoneyPerKmMonthly).toFixed(0) : ""}</H2></Text>
                             {iconInfoUsage}
                         </CardItem>
                         <CardItem>

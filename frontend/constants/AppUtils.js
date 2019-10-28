@@ -85,6 +85,53 @@ class AppUtils {
             ,input.getDate()
             ,0,0,1); //23:59:59
     }
+    // Input: [{x, y}, {x, y}]
+
+    // Output
+    //    {
+    //     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    //     datasets: [{
+    //       data: [ 20, 45, 28, 80, 99, 43 ],
+    //       color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+    //       strokeWidth: 2 // optional
+    //     }]
+    //   }
+    convertVictoryDataToChartkitData(data, funcFormatX) {
+        let newDataArr = [];
+        let labels = [];
+
+        // Label should be not Over 5
+        if (data.length > 5) {
+            var labelCount = 5;
+        } else {
+            var labelCount = data.length;
+        }
+
+        var labelStep = Math.ceil(data.length/labelCount);
+        let idxCount = 0;
+        data.forEach((item, index) => {
+            newDataArr.push(item.y);
+            if (index == 0 || index == (data.length-1)) {
+                labels.push(funcFormatX(item.x))
+                idxCount=0;
+            }
+            idxCount++;
+            if (idxCount == labelStep) {
+                labels.push(funcFormatX(item.x))
+                idxCount=0;
+            }
+            //add Label for First, Last
+        })
+        return {
+            labels: labels,
+            datasets: [{
+                data: newDataArr,
+                //color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // optional
+                color: (opacity = 1) => `rgba(255, 255, 255, 0.75)`, // optional
+                strokeWidth: 1
+            }]
+        }
+    }
 
     getLastDateAndKmFromGas(fillGasList) {
         if (!fillGasList) {

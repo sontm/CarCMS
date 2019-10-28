@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   AsyncStorage,
+  SafeAreaView
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, 
