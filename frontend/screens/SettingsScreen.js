@@ -13,8 +13,9 @@ import { connect } from 'react-redux';
 import Backend from '../constants/Backend';
 
 import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer} from '../redux/UserReducer';
-import {actUserLogout} from '../redux/UserReducer'
-
+import {actUserLogout, actUserLoginOK} from '../redux/UserReducer'
+import * as Google from 'expo-google-app-auth'
+import * as Facebook from 'expo-facebook';
 
 class SettingsScreen extends React.Component {
   constructor(props) {
@@ -23,6 +24,8 @@ class SettingsScreen extends React.Component {
     this.syncDataToServer = this.syncDataToServer.bind(this)
     this.syncDataFromServer = this.syncDataFromServer.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
+
+    this.doLoginGoogle = this.doLoginGoogle.bind(this)
   }
   syncDataFromServer() {
     AppUtils.syncDataFromServer(this.props)
@@ -46,6 +49,104 @@ class SettingsScreen extends React.Component {
       ],
       {cancelable: true}
   )
+  }
+  //Reponse Object:
+  // "accessToken": "CNyi5FoAg0AGniBwVr__RiKV9_i8Qdqy8Y3hxydYcW-M63g",
+  // "idToken": "eyJhnFGldJGEQ",
+  // "refreshToken": "wmyg3g",
+  // "type": "success",
+  // "user": Object {
+  //   "email": "xxx",
+  //   "familyName": "xxh",
+  //   "givenName": "xx",
+  //   "id": "1xxxx",
+  //   "name": "xxxh",
+  //   "photoUrl": "xxxw",
+  // },
+  async doLoginGoogle() {
+    try {
+      const result = await Google.logInAsync({
+        androidClientId: "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",
+        //iosClientId: YOUR_CLIENT_ID_HERE,  <-- if you use iOS
+        scopes: ["profile", "email"]
+      })
+
+      if (result.type === "success") {
+        console.log("Login Google OK")
+        console.log(result)
+
+        Backend.loginGoogle({
+          idToken: result.idToken
+        },
+        response => {
+          console.log("Backend Return OK")
+          console.log(response.data)
+          this.props.actUserLoginOK(response.data)
+        },
+        error => {
+          console.log(JSON.stringify(error))
+        })
+        // })
+      } else {
+        console.log("cancelled Google Login")
+      }
+    } catch (e) {
+      console.log("ERROR Google Login")
+      console.log(e)
+    }
+  }
+
+  async doLoginFacebook() {
+    try {
+      // const {
+      //   type,
+      //   token, // token to access
+      //   expires,
+      //   permissions,
+      //   declinedPermissions,
+      // } 
+      const result = await Facebook.logInWithReadPermissionsAsync('704967129987939', {
+        permissions: ['public_profile', 'email'],
+      });
+      if (result.type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(`https://graph.facebook.com/me?access_token=${result.token}&fields=id,name,birthday,email,address,gender,picture.type(normal)`);
+        const profile = await response.json() 
+        
+       // "email": "XX",
+        // "id": "YYY",
+        // "name": "XXX",
+        // "picture": Object {
+        //   "data": Object {
+        //     "height": 200,
+        //     "is_silhouette": false,
+        //     "url": "XXX",
+        //     "width": 200,
+        //   },
+        // },
+        console.log(result)
+        console.log('Logged in!', `Hi ${profile.name}!`);
+        console.log(profile)
+        
+        // Send the User Information and Access Token to Server for validate
+        Backend.loginFacebook({
+          accessToken: result.token,
+          userProfile: profile
+        },
+        response => {
+          console.log("Backend Return OK")
+          console.log(response.data)
+          this.props.actUserLoginOK(response.data)
+        },
+        error => {
+          console.log(JSON.stringify(error))
+        })
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      console.log(`Facebook Login Error: ${message}`);
+    }
   }
 
   render() {
@@ -145,6 +246,25 @@ class SettingsScreen extends React.Component {
                     Tai Khoan
                 </Text>
             </View>
+
+            <TouchableOpacity 
+                onPress={() => this.doLoginGoogle()}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="MaterialCommunityIcons" name="google" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Login with Google</Text></View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+                onPress={() => this.doLoginFacebook()}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="Ionicons" name="logo-facebook" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>Login with Facebook</Text></View>
+              </View>
+            </TouchableOpacity>
+
             {(true || !this.props.userData.isLogined) ? (
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("Login")}>
@@ -298,7 +418,7 @@ const mapStateToProps = (state) => ({
 });
 const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
-  actUserLogout
+  actUserLogout, actUserLoginOK
 };
   
 export default connect(

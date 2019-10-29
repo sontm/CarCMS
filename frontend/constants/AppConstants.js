@@ -40,8 +40,8 @@ export default {
     SETTING_KM_NEXT_OILFILL: 1000,
     SETTING_DAY_NEXT_AUTHORIZE_CAR: 730, // 2year
 
-    SERVER_API:"http://52.77.223.247:3000/api",
-    //SERVER_API:  "http://localhost:3000/api",
+    //SERVER_API:"http://52.77.223.247:3000/api",
+    SERVER_API:  "http://192.168.1.72:3000/api", // why localhost here not OK
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
     COLOR_PICKER_TEXT: "#1f77b4",
 

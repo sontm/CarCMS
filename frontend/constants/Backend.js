@@ -58,8 +58,28 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+    loginGoogle(data, onOK, onError) {
+        console.log("Backend, send data")
+        console.log((data))
+        axios.post("/login/google",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader()})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    loginFacebook(data, onOK, onError) {
+        console.log("Backend, send data Facebook")
+        console.log((data))
+        axios.post("/login/facebook",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader()})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
     
-    // data: {teamId}
+    // ------------------ data: {teamId}
     getAllUserOfTeam(data, token, onOK, onError) {
         axios.post("/team/users",
             JSON.stringify(data),

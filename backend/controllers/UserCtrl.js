@@ -1,8 +1,12 @@
 import dbuser from "../database/models/dbuser";
 import dbteam from "../database/models/dbteam";
+import apputil from "../components/AppUtil";
+import axios from 'axios';
 const bcrypt = require('bcrypt')
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client("654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com");
 
 module.exports = {
   // TODO for validate Email
@@ -71,6 +75,208 @@ module.exports = {
         });
     })(req, res);
   },
+
+  async loginGoogle(req, res, next) {
+    try {
+      console.log("loginGoogle------------")
+      console.log(req.body)
+      const ticket = await client.verifyIdToken({
+        idToken: req.body.idToken,
+        audience: [
+          "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",  // Android Specify the CLIENT_ID of the app that accesses the backend
+          "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com" // iOS
+        ]
+        // Or, if multiple clients access the backend:
+        //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+      });
+      const payload = ticket.getPayload();
+      console.log("Verity Google TOken OK")
+      //console.log(payload)
+      // Till here, aud, exp, iss is OK
+      // { iss: 'https://accounts.google.com',
+      // azp:
+      // '65oogleusercontent.com',
+      // aud:
+      // '6512rc1.apps.googleusercontent.com',
+      // sub: '10064770098098299751xxx7', <<---- User ID here
+      // email: '',
+      // email_verified: true,
+      // at_hash: 'WbFOyy_LD-0MdecfnRi8Pg',
+      // name: 'XXX',
+      // picture:
+      // 'https://lh3.googleusercontent.com/a-/AAuE7mA4DF_sq2s3a',
+      // given_name: 'Son',
+      // family_name: 'Tran minh',
+      // locale: 'en',
+      // iat: 1572364219,
+      // exp: 1572367819 }
+
+      // Check if the email  or sub (userServiceId) Existed
+      let item = {
+        email: payload.email,
+        userServiceId: payload.sub,
+        phone: "",
+        fullName: payload.name,
+        pictureUrl: payload.picture,
+        type: "google",
+        class: "freeUser",
+      };
+      try {
+        const theUser = await new Promise((resolve, reject) => {
+          // TODO for this AND query
+          dbuser.findOneAndUpdate({ email: item.email, userServiceId: item.userServiceId }, item, 
+              {upsert:true, useFindAndModify: false, new:true}, function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
+        console.log("Found User++++++++++++++")
+        console.log(theUser)
+        if (!theUser) {
+          // This is First time Create
+          var user = apputil.createUserFromRecordForJWT(item);
+        } else {
+          var user = apputil.createUserFromRecordForJWT(theUser);
+        }
+        
+        
+        const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
+        console.log("      Auth, Google LOgin OK, token:" + token)
+        console.log("userJwt-----")
+        console.log(user)
+        // Return Team Info also
+        dbteam.findById(user.teamId,function(err, teamInfo) {
+          if (err) {
+              res.status(500).send(err)
+          } else {
+              return res
+                .status(200)
+                .send({user, token, teamInfo})
+              }
+        });
+
+      } catch (err) {
+        console.log("create/find Google User Failed")
+        console.log(err)
+        res.status(500).send({msg: "Google Login Error"})
+      }
+    } catch (error) {
+      console.log("Cannot Verify Google idToken")
+      console.log(error)
+      res.status(500).send({msg: "Google Login Error"})
+    }
+  },
+
+
+  async loginFacebook(req, res, next) {
+    try {
+      console.log("loginFacebook------------")
+      console.log(req.body)
+      let userToken = req.body.accessToken;
+      const appToken = await new Promise((resolve, reject) => {
+        axios.get('https://graph.facebook.com/oauth/access_token?client_id=' 
+          + '704967129987939' + '&client_secret=' 
+          + 'a198785420e516c70853f12886b7bdca' + '&grant_type=client_credentials')
+          .then(response => {
+            console.log(response.data.access_token);
+            resolve(response.data.access_token)
+          })
+          .catch(error => {
+            console.log(error);
+            reject(err)
+          });
+      })
+      console.log(" appToken: " + appToken)
+
+      const responseData = await new Promise((resolve, reject) => {
+        axios.get('https://graph.facebook.com/debug_token?input_token=' + userToken + '&access_token=' + appToken)
+          .then(response => {
+            console.log(response.data)
+            // It will return
+            // "data": {
+            //   "app_id": "YYY",
+            //   "type": "USER",
+            //   "application": "QuanLyXe",
+            //   "data_access_expires_at": 1580145891,
+            //   "expires_at": 1577552671,
+            //   "is_valid": true,
+            //   "issued_at": 1572368671,
+            //   "metadata": {
+            //   "auth_type": "rerequest"
+            //   },
+            //   "scopes": [
+            //   "email",
+            //   "public_profile"
+            //   ],
+            //   "user_id": "XXX"  <-----We will Verify this
+            //   }
+            resolve(response.data.data)
+          })
+          .catch(error => {
+            console.log(error);
+            reject(error)
+          });
+      })
+      console.log("  AppID: " + responseData.app_id + ",UserID:" + responseData.user_id)
+      if (responseData.app_id == "704967129987939") {
+        let userProfile = req.body.userProfile;
+        if (userProfile.id == responseData.user_id) {
+          // Match User, do Insert or Get DB here
+          let item = {
+            email: userProfile.email,
+            userServiceId: userProfile.id,
+            phone: "",
+            fullName: userProfile.name,
+            pictureUrl: userProfile.picture.data.url,
+            type: "facebook",
+            class: "freeUser",
+          };
+          try {
+            const theUser = await new Promise((resolve, reject) => {
+              // TODO for this AND query, OR ??
+              dbuser.findOneAndUpdate({ email: item.email, userServiceId: item.userServiceId }, item, 
+                  {upsert:true, useFindAndModify: false, new:true}, function(err, doc){
+                err ? reject(err) : resolve(doc);
+              });
+            });
+            console.log("Found User++++++++++++++")
+            console.log(theUser)
+            if (!theUser) {
+              // This is First time Create
+              var user = apputil.createUserFromRecordForJWT(item);
+            } else {
+              var user = apputil.createUserFromRecordForJWT(theUser);
+            }
+            
+            const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
+            console.log("      Auth, Facebook LOgin OK, token:" + token)
+            console.log("userJwt-----")
+            console.log(user)
+            // Return Team Info also
+            dbteam.findById(user.teamId,function(err, teamInfo) {
+              if (err) {
+                  res.status(500).send(err)
+              } else {
+                  return res
+                    .status(200)
+                    .send({user, token, teamInfo})
+                  }
+            });
+    
+          } catch (err) {
+            console.log("create/find Google User Failed")
+            console.log(err)
+            res.status(500).send({msg: "Google Login Error"})
+          }
+        }
+      }
+    } catch (error) {
+      console.log("Cannot Verify FB idToken")
+      console.log(error)
+      res.status(500).send({msg: "FB Login Error"})
+    }
+  },
+
+
   getAll(req, res) {
     console.log("[UserCtrl] Get All")
     dbuser.find({}, function(err, result) {
@@ -86,6 +292,8 @@ module.exports = {
       }
     });
   },
+
+
   getByEmailOrObjectId(req, res) { // Get from Params
     // req.body.email or email, req.body.password
     console.log("[UserCtrl] getByEmailOrObjectId")

@@ -9,6 +9,8 @@ app.get('/api', (req, res) => res.status(200).send({
 }));
 
 app.post('/api/login', user.login);
+app.post('/api/login/google', user.loginGoogle);
+app.post('/api/login/facebook', user.loginFacebook);
 
 app.post('/api/users', user.registerLocalUser);
 app.get('/api/users', user.getAll);
