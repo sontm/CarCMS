@@ -10,8 +10,12 @@ import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 
 import GasUsageReport from '../components/GasUsageReport'
+import MoneyUsageReport from '../components/MoneyUsageReport'
+import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
 
 import { connect } from 'react-redux';
+import AppLocales from '../constants/i18n'
+import {actTempCalculateCarReport} from '../redux/TempDataReducer'
 
 class VehicleDetailReport extends React.Component {
   constructor(props) {
@@ -25,6 +29,16 @@ class VehicleDetailReport extends React.Component {
     // Set Current Vehicle ID if not Set
     if (!AppConstants.CURRENT_VEHICLE_ID) {
         AppConstants.CURRENT_VEHICLE_ID = this.props.userData.defaultVehicleId;
+    }
+    if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
+        var currentVehicle = this.props.navigation.state.params.vehicle;
+    } else {
+        var currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+    }
+    if (currentVehicle) {
+        console.log("CALL actTempCalculateCarReport:")
+        this.props.actTempCalculateCarReport(currentVehicle, null, this.props.tempData)
+        console.log("END actTempCalculateCarReport:")
     }
   }
   componentDidMount() {
@@ -44,21 +58,18 @@ class VehicleDetailReport extends React.Component {
     } else {
         var currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
     }
-    
     if (currentVehicle) {
-        let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
-        let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-            = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
-                lastDate, lastKm, averageKmPerDay);
-        let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-            = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
-
-        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,
-            totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
-            = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
-                currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
-        
-        let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
+        // let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
+        // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+        //     = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
+        //         lastDate, lastKm, averageKmPerDay);
+        // let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
+        //     = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
+        // let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,
+        //     totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
+        //     = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
+        //         currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
+        // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
 
         return (
             <Container>
@@ -83,163 +94,73 @@ class VehicleDetailReport extends React.Component {
 
                 </View>
 
-                <View style={styles.textRow}>
-                    <Text><H2>
-                        Reminder
-                    </H2></Text>
-                </View>
-                <View style={styles.statRow}>
-                    <View style={styles.progressContainer}>
-                    <VictoryPie
-                        colorScale={["tomato", "silver"]}
-                        data={[
-                            { x: "", y: passedKmFromPreviousOil },
-                            { x: "", y: (AppConstants.SETTING_KM_NEXT_OILFILL -passedKmFromPreviousOil) },
-                        ]}
-                        height={150}
-                        innerRadius={60}
-                        radius={70}
-                        labels={() => null}
-                        />
-                    <View style={styles.labelProgress}>
-                        <Text>Oil:</Text>
-                        <Text style={styles.labelProgressText}>
-                            {passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
-                        </Text>
-                        <Text>Km</Text>
-                    </View>
-                    <Text>Next:{nextEstimateDateForOil ? nextEstimateDateForOil.toLocaleDateString(): "NA"}</Text>
-                    </View>
-
-                    <View style={styles.progressContainer}>
-                    <VictoryPie
-                        colorScale={["tomato", "silver"]}
-                        data={[
-                            { x: "", y: diffDayFromLastAuthorize },
-                            { x: "", y: (AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR -diffDayFromLastAuthorize) },
-                        ]}
-                        height={150}
-                        innerRadius={60}
-                        radius={70}
-                        labels={() => null}
-                        />
-                    <View style={styles.labelProgress}>
-                        <Text>Authorize:</Text>
-                        <Text style={styles.labelProgressText}>
-                            {diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR}
-                        </Text>
-                        <Text>Days</Text>
-                    </View>
-                    <Text>Next:{nextAuthorizeDate ? nextAuthorizeDate.toLocaleDateString(): "NA"}</Text>
+                {this.props.tempData.carReports[currentVehicle.id] ? (
+                <View>
+                <View style={styles.reminderContainer}>
+                    <View style={styles.textRow}>
+                        <Text><H2>
+                            {AppLocales.t("CARDETAIL_REMINDER")}
+                        </H2></Text>
                     </View>
                     
+                    <View style={styles.statRow}>
+                        <View style={styles.progressContainer}>
+                        <VictoryPie
+                            colorScale={["tomato", "silver"]}
+                            data={[
+                                { x: "", y: this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil },
+                                { x: "", y: (AppConstants.SETTING_KM_NEXT_OILFILL - this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil) },
+                            ]}
+                            height={150}
+                            innerRadius={60}
+                            radius={70}
+                            labels={() => null}
+                            />
+                        <View style={styles.labelProgress}>
+                            <Text>{AppLocales.t("GENERAL_OIL") + ": "}</Text>
+                            <Text style={styles.labelProgressText}>
+                                {this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
+                            </Text>
+                            <Text>Km</Text>
+                        </View>
+                        <Text>{AppLocales.t("GENERAL_NEXT") + ": "}
+                            {this.props.tempData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil ? 
+                            this.props.tempData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil.toLocaleDateString(): "NA"}</Text>
+                        </View>
+
+                        <View style={styles.progressContainer}>
+                        <VictoryPie
+                            colorScale={["tomato", "silver"]}
+                            data={[
+                                { x: "", y: this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
+                                { x: "", y: (AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR -
+                                    this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
+                            ]}
+                            height={150}
+                            innerRadius={60}
+                            radius={70}
+                            labels={() => null}
+                            />
+                        <View style={styles.labelProgress}>
+                            <Text>{AppLocales.t("GENERAL_AUTHROIZE") + ": "}</Text>
+                            <Text style={styles.labelProgressText}>
+                                {this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR}
+                            </Text>
+                            <Text>{AppLocales.t("GENERAL_DAY")}</Text>
+                        </View>
+                        <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.tempData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
+                            this.props.tempData.carReports[currentVehicle.id].authReport.nextAuthorizeDate.toLocaleDateString(): "NA"}</Text>
+                        </View>
+                    </View>
                 </View>
 
                 <GasUsageReport currentVehicle={currentVehicle}/>
+                <MoneyUsageByTimeReport currentVehicle={currentVehicle}/>
+                <MoneyUsageReport currentVehicle={currentVehicle}/>
 
-                <View style={styles.textRow}>
-                    <Text><H2>
-                        Money Usage (K VND)
-                    </H2></Text>
                 </View>
-                
-                <View style={styles.statRow}>
-                    <View style={styles.moneyUsagePieContainer}>
-                        <VictoryPie
-                            colorScale={AppConstants.COLOR_SCALE_10}
-                            data={[
-                                { x: "Gas", y: totalGasSpend },
-                                { x: "Oil", y: totalOilSpend },
-                                { x: "Authorize", y: totalAuthSpend },
-                                { x: "Expense", y: totalExpenseSpend },
-                                { x: "Service", y: totalServiceSpend },
-                            ]}
-                            radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
-                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
-                            />
-                    </View>
-                </View>
+                ): null}
 
-
-                <View style={styles.statRow}>
-                    <View style={styles.moneyUsageStackContainer}>
-                        <VictoryChart
-                            width={Layout.window.width}
-                            height={300}
-                            padding={{top:10,bottom:30,left:50,right:20}}
-                        >
-                        {/* TODO, Date X axis not Match */}
-                        <VictoryStack
-                            width={Layout.window.width}
-                            domainPadding={{y: [0, 10], x: [10, 0]}}
-                            colorScale={AppConstants.COLOR_SCALE_10}
-                        >
-                            <VictoryBar
-                                data={arrGasSpend}
-                                interpolation="linear"
-                            />
-                             <VictoryBar
-                                data={arrOilSpend}
-                                interpolation="linear"
-                            />
-                            <VictoryBar
-                                data={arrAuthSpend}
-                                interpolation="linear"
-                            />
-                            <VictoryBar
-                                data={arrExpenseSpend}
-                                interpolation="linear"
-                            />
-                            <VictoryBar
-                                data={arrServiceSpend}
-                                interpolation="linear"
-                            />
-                        </VictoryStack>
-                        <VictoryAxis
-                            crossAxis
-                            standalone={false}
-                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
-                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
-                            style={{
-                                // grid: {stroke: "rgb(240,240,240)"},
-                                ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
-                            }}
-                        />
-                        <VictoryAxis
-                            dependentAxis
-                            standalone={false}
-                            tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
-                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
-                            style={{
-                                ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
-                            }}
-                        />
-
-                        </VictoryChart>
-                    </View>
-                </View>
-
-
-                <View style={styles.textRow}>
-                    <Text><H2>
-                        Expense Money Usage
-                    </H2></Text>
-                </View>
-                <View style={styles.statRow}>
-                    <View style={styles.moneyUsagePieContainer}>
-                        <VictoryPie
-                            colorScale={AppConstants.COLOR_SCALE_10}
-                            data={arrExpenseTypeSpend}
-                            radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
-                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
-                            />
-                    </View>
-                </View>
             </View>
             </Content>
             </Container>
@@ -267,7 +188,7 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title>Vehicle Detail</Title>
+            <Title>{AppLocales.t("CARDETAIL_HEADER")}</Title>
           </Body>
           <Right>
             <TouchableOpacity onPress={() => navigation.navigate("VehicleHistory", {vehicle: navigation.state.params.vehicle})}>
@@ -284,19 +205,20 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: "white",
-      marginTop: 20,
+      backgroundColor: AppConstants.COLOR_GREY_BG,
       flexDirection: "column",
       borderWidth: 0.5,
       borderColor: "grey",
-      justifyContent: "space-between"
+      justifyContent: "space-between",
     },
 
 
     vehicleInfoRow: {
+        backgroundColor: "white",
         height: 80,
         flexDirection: "row",
-        justifyContent: "space-around"
+        justifyContent: "space-around",
+        marginBottom: 20,
     },
     vehicleLogo: {
         width: 78,
@@ -333,21 +255,34 @@ const styles = StyleSheet.create({
         color: "rgb(50,50,50)"
     },
 
+    reminderContainer: {
+        backgroundColor: "white",
+        borderWidth: 0.5,
+        borderColor: "grey",
+        marginBottom: 20,
+        borderRadius: 7,
+       
+    },
+
     textRow: {
+        backgroundColor: "white",
         flexDirection: "row",
         paddingTop: 10,
         paddingLeft: 5,
         justifyContent: "space-between",
         alignItems: "center",
         flexWrap: "wrap",
-        flexGrow: 100
+        flexGrow: 100,
+        borderRadius: 7,
     },
     statRow: {
+        backgroundColor: "white",
         flexDirection: "row",
         padding: 3,
         justifyContent: "center",
         flexWrap: "wrap",
         flexGrow: 100,
+        borderRadius: 7,
         // backgroundColor: "white"
     },
     equalStartRow: {
@@ -412,9 +347,11 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    tempData: state.tempData
 });
 const mapActionsToProps = {
+    actTempCalculateCarReport
 };
   
 export default connect(

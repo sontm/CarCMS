@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import AppConstants from '../../constants/AppConstants';
 import apputils from '../../constants/AppUtils';
+import AppLocales from '../../constants/i18n';
 
 class PayExpenseScreen extends React.Component {
     constructor(props) {
@@ -93,49 +94,55 @@ class PayExpenseScreen extends React.Component {
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Vehicle:
-                        </Text>
-                        <Item regular>
                         <Picker
+                            style={{width: (Layout.window.width-40)*0.9, borderColor: "#1f77b4",borderWidth: 0.3,
+                                alignSelf:"center"}}
                             mode="dropdown"
-                            style={{width: (Layout.window.width-40)*0.6}}
-                            placeholder="Select Car"
-                            placeholderStyle={{ color: "#bfc6ea" }}
+                            iosIcon={<Icon name="arrow-down" />}
+                            placeholder={"--"+AppLocales.t("NEW_GAS_CAR")+"--"}
+                            placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.vehicleId}
                             onValueChange={(itemValue, itemIndex) =>
                                 this.setState({vehicleId: itemValue})
                             }
-                            >
+                        >
                             {this.props.userData.vehicleList.map(item => (
                                 <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}
                                     value={item.id} key={item.id}/>
                             ))}
                         </Picker>
-                        </Item>
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Date:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="Date"
-                            onChangeText={(fillDate) => this.setState({fillDate})}
-                            value={this.state.fillDate}
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
+                        <View style={styles.rowForm}>
+                        <DatePicker
+                            defaultDate={new Date()}
+                            minimumDate={new Date(2010, 1, 1)}
+                            maximumDate={new Date(2100, 12, 31)}
+                            locale={"vi"}
+                            timeZoneOffsetInMinutes={undefined}
+                            modalTransparent={false}
+                            animationType={"fade"}
+                            androidMode={"default"}
+                            placeHolderText={AppLocales.t("GENERAL_TODAY")+"(" + apputils.formatDateMonthDayYearVNShort(new Date()) + ")"}
+                            textStyle={{ color: "#1f77b4" }}
+                            placeHolderTextStyle={{ color: "#1f77b4" }}
+                            onDateChange={(fillDate) => this.setState({fillDate})}
+                            disabled={false}
+                            iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
                         />
+                        </View>
                         </Item>
                     </View>
                     
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Price(VND):
-                        </Text>
-                        <Item regular style={styles.rowForm}>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")+": "}</Label>
                         <Input
-                            placeholder="VND"
+                            style={styles.rowForm}
                             keyboardType="numeric"
                             onChangeText={(price) => this.setState({price})}
                             value={""+this.state.price}
@@ -145,13 +152,14 @@ class PayExpenseScreen extends React.Component {
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.rowLabel}>
-                            Current Km:
+                        {AppLocales.t("NEW_EXPENSE_TYPE")+":"}
                         </Text>
-                        <Item regular style={styles.rowForm}>
+                        <View style={styles.rowForm}>
                             <Picker
                                 mode="dropdown"
-                                style={{width: (Layout.window.width-40)*0.6}}
-                                placeholder="Select Expense Type"
+                                iosIcon={<Icon name="arrow-down" />}
+                                style={{width: (Layout.window.width-40)*0.6,
+                                    alignSelf:"center"}}
                                 placeholderStyle={{ color: "#bfc6ea" }}
                                 placeholderIconColor="#007aff"
                                 selectedValue={this.state.subType}
@@ -163,16 +171,14 @@ class PayExpenseScreen extends React.Component {
                                     <Picker.Item label={item.name} value={item.name} key={item.id}/>
                                 ))}
                             </Picker>
-                        </Item>
+                        </View>
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Ghi Chu:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_REMARK")+": "}</Label>
                         <Input
-                            placeholder="Ghi Chu"
+                            style={styles.rowForm}
                             onChangeText={(remark) => this.setState({remark})}
                             value={this.state.remark}
                         />
@@ -183,7 +189,7 @@ class PayExpenseScreen extends React.Component {
                     <Button
                         block primary
                         onPress={() => this.save(this.state)}
-                    ><Text>Add Data</Text></Button>
+                    ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
                     </View>
 
                 </View>
@@ -202,7 +208,7 @@ PayExpenseScreen.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title>Expense</Title>
+            <Title>{AppLocales.t("NEW_EXPENSE_HEADER")}</Title>
           </Body>
           <Right />
         </Header>
@@ -220,17 +226,21 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
     alignItems: "center", // vertial align
-    height: 50,
-    borderWidth: 1,
-    borderColor:"grey"
+    justifyContent: "center",
+    height: 54,
+    width: "90%",
+    alignSelf:"center"
   },
   rowLabel: {
     flex: 1,
     textAlign: "right",
-    paddingRight: 5
+    paddingRight: 5,
+    color: "rgb(120, 120, 120)"
   },
   rowForm: {
-    flex: 2
+    flex: 2,
+    borderBottomColor: "rgb(230, 230, 230)",
+    borderBottomWidth: 0.5
   },
   rowButton: {
     marginTop: 20,

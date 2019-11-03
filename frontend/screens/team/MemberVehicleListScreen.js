@@ -14,6 +14,7 @@ import {
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem } from 'native-base';
 
 import VehicleBasicReport from '../../components/VehicleBasicReport'
+import AppLocales from '../../constants/i18n'
 
 class MemberVehicleListScreen extends React.Component {
   constructor(props) {
@@ -54,7 +55,7 @@ MemberVehicleListScreen.navigationOptions = ({navigation}) => ({
         </Button>
       </Left>
       <Body>
-        <Title>Member Vehicle</Title>
+        <Title>{AppLocales.t("TEAM_MEMBER_CAR_HEADER")}</Title>
       </Body>
       <Right />
     </Header>

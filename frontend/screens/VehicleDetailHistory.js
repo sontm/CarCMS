@@ -13,6 +13,8 @@ import { connect } from 'react-redux';
 
 import {actVehicleDeleteFillItem} from '../redux/UserReducer'
 
+import AppLocales from '../constants/i18n'
+
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
 // fillOilList: {vehicleId: 1, fillDate: "10/14/2019, 11:56:44 PM", price: 500000, currentKm: 3000, id: 1}
@@ -118,7 +120,7 @@ class VehicleDetailHistory extends React.Component {
                     
                     <Body>
                     <TouchableOpacity onPress={() => this.handleEditItem(item.id, item.type)} key={item.id}>
-                        <Text style={styles.listMainText}>{AppUtils.getVietnamNameOfFillItemType(item.type)}
+                        <Text style={styles.listMainText}>{AppUtils.getNameOfFillItemType(item.type)}
                         {". " + AppUtils.formatDateMonthDayYearVN(item.fillDate)}</Text>
                         <Text style={styles.listSubText}>{item.price + " đ, " + 
                             (item.currentKm ? (item.currentKm + "Km, ") : (item.subType ? item.subType : ""))}</Text>
@@ -174,7 +176,7 @@ VehicleDetailHistory.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title>Detail History</Title>
+            <Title>{AppLocales.t("CARDETAIL_HISTORY_HEADER")}</Title>
           </Body>
           <Right>
           </Right>

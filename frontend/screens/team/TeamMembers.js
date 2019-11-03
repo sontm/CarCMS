@@ -15,6 +15,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text,
 
 import AppContants from '../../constants/AppConstants'
 import Backend from '../../constants/Backend'
+import AppLocales from '../../constants/i18n'
 
 import {actTeamGetJoinRequestOK} from '../../redux/TeamReducer'
 
@@ -75,7 +76,7 @@ class JoinRequestScreen extends React.Component {
     return (
         <View style={styles.container}>
           <View style={styles.textRow}>
-            <H2>Yêu Cầu Gia Nhập</H2>
+            <H3>{AppLocales.t("TEAM_MEM_JOIN_REQUEST")}</H3>
           </View>
           {this.props.teamData.joinRequests.map(item => (
               <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
@@ -100,7 +101,7 @@ class JoinRequestScreen extends React.Component {
           ))}
 
           <View style={styles.textRow}>
-            <H2>Danh Sách Thành Viên</H2>
+            <H3>{AppLocales.t("TEAM_MEM_LIST")}</H3>
           </View>
           {this.props.teamData.members.map(item => (
             <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>

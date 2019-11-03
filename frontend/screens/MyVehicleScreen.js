@@ -18,6 +18,7 @@ import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
 import Layout from '../constants/Layout'
+import AppLocales from '../constants/i18n'
 
 function getNameOfSortType(type) {
   if (type == "auth") return "Lịch Đăng Kiểm";
@@ -97,7 +98,7 @@ class MyVehicleScreen extends React.Component {
             {this.state.changedSort? (
               <Title style={styles.filterHeaderInfoText}>Sắp Xếp:{" "+getNameOfSortType(this.state.sortType)}</Title>
             ): (
-              <Title style={styles.filterHeaderInfoTextDefault}>My Vehicles</Title>
+              <Title style={styles.filterHeaderInfoTextDefault}>{AppLocales.t("MYCAR_HEADER")}</Title>
             )}
           </View>
           <Right style={{flex: 1}}> 
@@ -109,7 +110,7 @@ class MyVehicleScreen extends React.Component {
                 onValueChange={this.onSortChange.bind(this)}
                 textStyle={{ color: AppContants.COLOR_PICKER_TEXT}}
                 >
-                <Picker.Item label="Filter" value="auth" />
+                <Picker.Item label={getNameOfSortType("auth")} value="auth" />
                 <Picker.Item label={getNameOfSortType("oil")} value="oil" />
                 <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
                 <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />

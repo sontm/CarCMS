@@ -18,6 +18,8 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body,
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
+import AppLocales from '../constants/i18n'
+
 import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 
 import TeamMembers from './team/TeamMembers'
@@ -119,7 +121,7 @@ class TeamScreen extends React.Component {
               <Button transparent onPress={this.onClearChange}>
                   <Icon type="MaterialIcons" name="clear" />
               </Button>
-              <Text>Sắp Xếp: {" " + getNameOfSortType(this.state.sortType)}</Text>
+              <Text>{AppLocales.t("TEAM_SORT_LBL")}: {" " + getNameOfSortType(this.state.sortType)}</Text>
             </Card>
           </View>
         )
@@ -157,15 +159,15 @@ class TeamScreen extends React.Component {
           <Segment style={{alignSelf:"center"}}>
           <Button first active={this.state.activePage === 0}
               onPress={() => this.setState({activePage: 0})}>
-            <Text>Xe</Text>
+            <Text>{AppLocales.t("TEAM_HEADER_CAR")}</Text>
           </Button>
           <Button active={this.state.activePage === 1}
               onPress={() => this.setState({activePage: 1})}>
-            <Text>Báo Cáo</Text>
+            <Text>{AppLocales.t("TEAM_HEADER_REPORT")}</Text>
           </Button>
           <Button last active={this.state.activePage === 2}
               onPress={() => this.setState({activePage: 2})}>
-            <Text>Thành Viên</Text>
+            <Text>{AppLocales.t("TEAM_HEADER_MEMBER")}</Text>
             {this.props.teamData.joinRequests && this.props.teamData.joinRequests.length > 0 ? (
               <Badge danger style={styles.notifyBadge}>
                 <Text style={styles.notifyBadgeText}>{this.props.teamData.joinRequests.length}</Text>

@@ -17,6 +17,8 @@ import {actUserLogout, actUserLoginOK} from '../redux/UserReducer'
 import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
 
+import AppLocales from '../constants/i18n'
+
 class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -156,7 +158,7 @@ class SettingsScreen extends React.Component {
         <View style={styles.container}>
             <View style={styles.textRow}>
                 <Text style={styles.textSection}>
-                    Pro Version Features
+                    {AppLocales.t("SETTING_H1_PRO_FEATURE")}
                 </Text>
             </View>
             <TouchableOpacity 
@@ -164,7 +166,7 @@ class SettingsScreen extends React.Component {
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="MaterialCommunityIcons" name="crown" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Pro Version</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_PRO")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -174,8 +176,8 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("CreateTeam")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Create Team</Text></View>
+                  <Icon type="MaterialIcons" name="group-add" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_CREATE_TEAM")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -184,8 +186,8 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("JoinTeam")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Join Team</Text></View>
+                  <Icon type="MaterialIcons" name="person-add" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_JOIN_TEAM")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -195,10 +197,8 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.syncDataFromServer()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Synchronize From Server</Text></View>
-                <View style={styles.rowRightIcon}>
-                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+                  <Icon name="cloud-download" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_SYNC_FROM")}</Text></View>
               </View>
             </TouchableOpacity>
 
@@ -206,17 +206,15 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.syncDataToServer()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="Octicons" name="sync" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Upload To Server {AppConstants.SERVER_API}</Text></View>
-                <View style={styles.rowRightIcon}>
-                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+                  <Icon name="cloud-upload" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_SYNC_TO")} {AppConstants.SERVER_API}</Text></View>
               </View>
             </TouchableOpacity>
 
 
             <View style={styles.textRow}>
                 <Text style={styles.textSection}>
-                    Setting
+                {AppLocales.t("SETTING_H1_SETTING")}
                 </Text>
             </View>
             <TouchableOpacity 
@@ -224,7 +222,7 @@ class SettingsScreen extends React.Component {
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="MaterialIcons" name="settings" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Vehicle Setting</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_VEHICLE")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -234,7 +232,7 @@ class SettingsScreen extends React.Component {
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="MaterialIcons" name="access-alarm" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Remind Setting</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_REMIND")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -243,7 +241,7 @@ class SettingsScreen extends React.Component {
 
             <View style={styles.textRow}>
                 <Text style={styles.textSection}>
-                    Tai Khoan
+                {AppLocales.t("SETTING_H1_ACCOUNT")}
                 </Text>
             </View>
 
@@ -251,8 +249,10 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.doLoginGoogle()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="MaterialCommunityIcons" name="google" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Login with Google</Text></View>
+                  <Icon type="AntDesign" name="google" style={{...styles.iconLeft, color: "#DB4437"}} /></View>
+                <View style={styles.rowText}>
+                  <Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_LOGIN_GOOGLE")}</Text>
+                </View>
               </View>
             </TouchableOpacity>
 
@@ -260,8 +260,10 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.doLoginFacebook()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="Ionicons" name="logo-facebook" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Login with Facebook</Text></View>
+                  <Icon type="Ionicons" name="logo-facebook" style={{...styles.iconLeft, color:"#3b5998"}} /></View>
+                <View style={styles.rowText}>
+                  <Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_LOGIN_FB")}
+                  </Text></View>
               </View>
             </TouchableOpacity>
 
@@ -271,7 +273,7 @@ class SettingsScreen extends React.Component {
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="AntDesign" name="login" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Login</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_LOGIN")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -284,7 +286,7 @@ class SettingsScreen extends React.Component {
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="AntDesign" name="adduser" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>RegisterUser</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -296,10 +298,10 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("Profile")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="FontAwesome" name="user-circle" style={styles.iconLeft} /></View>
+                  <Icon type="Entypo" name="v-card" style={styles.iconLeft} /></View>
                 <View style={styles.rowText}>
                   <Text style={styles.textNormal}>
-                    Profile
+                  {AppLocales.t("SETTING_LBL_PROFILE")}
                     {" : "+ (this.props.userData.isLogined ? this.props.userData.userProfile.fullName: "")}
                   </Text>
                 </View>
@@ -314,7 +316,7 @@ class SettingsScreen extends React.Component {
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="Foundation" name="mail" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>Contact</Text></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_CONTACT")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -323,7 +325,7 @@ class SettingsScreen extends React.Component {
             {(true || !this.props.userData.isLogined) ? (
             <View style={styles.rowContainer}>
                 <Button block danger onPress={() => this.handleLogout()} style={{width: "50%"}}>
-                  <Text>Log Out</Text>
+                  <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
                 </Button>
             </View>
             ) : null}

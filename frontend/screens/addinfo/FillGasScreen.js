@@ -2,12 +2,15 @@ import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, 
+    Label, DatePicker } from 'native-base';
 
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import AppConstants from '../../constants/AppConstants';
 import apputils from '../../constants/AppUtils';
+import AppLocales from '../../constants/i18n';
+import Layout from '../../constants/Layout';
 
 class FillGasScreen extends React.Component {
     constructor(props) {
@@ -94,15 +97,13 @@ class FillGasScreen extends React.Component {
             <Content>
             <View style={styles.formContainer}>
                 <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Vehicle:
-                    </Text>
-                    <Item regular>
                     <Picker
-                        style={styles.rowForm}
+                        style={{width: (Layout.window.width-40)*0.9, borderColor: "#1f77b4",borderWidth: 0.3,
+                            alignSelf:"center"}}
                         mode="dropdown"
-                        placeholder="Select Car"
-                        placeholderStyle={{ color: "#bfc6ea" }}
+                        iosIcon={<Icon name="arrow-down" />}
+                        placeholder={"--"+AppLocales.t("NEW_GAS_CAR")+"--"}
+                        placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                         placeholderIconColor="#007aff"
                         selectedValue={this.state.vehicleId}
                         onValueChange={(itemValue, itemIndex) =>
@@ -114,29 +115,36 @@ class FillGasScreen extends React.Component {
                                 value={item.id} key={item.id}/>
                         ))}
                     </Picker>
-                    </Item>
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Fill Date:
-                    </Text>
-                    <Item regular style={styles.rowForm}>
-                    <Input
-                        placeholder="Fill Date"
-                        onChangeText={(fillDate) => this.setState({fillDate})}
-                        value={this.state.fillDate}
+                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
+                    <View style={styles.rowForm}>
+                    <DatePicker
+                        defaultDate={new Date()}
+                        minimumDate={new Date(2010, 1, 1)}
+                        maximumDate={new Date(2100, 12, 31)}
+                        locale={"vi"}
+                        timeZoneOffsetInMinutes={undefined}
+                        modalTransparent={false}
+                        animationType={"fade"}
+                        androidMode={"default"}
+                        placeHolderText={AppLocales.t("GENERAL_TODAY")+"(" + apputils.formatDateMonthDayYearVNShort(new Date()) + ")"}
+                        textStyle={{ color: "#1f77b4" }}
+                        placeHolderTextStyle={{ color: "#1f77b4" }}
+                        onDateChange={(fillDate) => this.setState({fillDate})}
+                        disabled={false}
+                        iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
                     />
+                    </View>
                     </Item>
                 </View>
                 <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Amount:
-                    </Text>
-                    <Item regular style={styles.rowForm}>
+                <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_AMOUNT")+": "}</Label>
                     <Input
                         style={styles.rowForm}
-                        placeholder="Lit"
                         keyboardType="numeric"
                         onChangeText={(amount) => this.setState({amount})}
                         value={""+this.state.amount}
@@ -145,13 +153,10 @@ class FillGasScreen extends React.Component {
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Price(VND):
-                    </Text>
-                    <Item regular style={styles.rowForm}>
+                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")+": "}</Label>
                     <Input
                         style={styles.rowForm}
-                        placeholder="VND"
                         keyboardType="numeric"
                         onChangeText={(price) => this.setState({price})}
                         value={""+this.state.price}
@@ -160,13 +165,10 @@ class FillGasScreen extends React.Component {
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Current Km:
-                    </Text>
-                    <Item regular style={styles.rowForm}>
+                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_CURRENTKM")+": "}</Label>
                     <Input
                         style={styles.rowForm}
-                        placeholder="Km"
                         keyboardType="numeric"
                         onChangeText={(currentKm) => this.setState({currentKm})}
                         value={""+this.state.currentKm}
@@ -175,12 +177,10 @@ class FillGasScreen extends React.Component {
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Text style={styles.rowLabel}>
-                        Ghi Chu:
-                    </Text>
-                    <Item regular style={styles.rowForm}>
+                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_REMARK")+": "}</Label>
                     <Input
-                        placeholder="Ghi Chu"
+                        style={styles.rowForm}
                         onChangeText={(remark) => this.setState({remark})}
                         value={this.state.remark}
                     />
@@ -191,7 +191,7 @@ class FillGasScreen extends React.Component {
                 <Button
                     block primary
                     onPress={() => this.save(this.state)}
-                ><Text>Add Data</Text></Button>
+                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
                 </View>
             </View>
             </Content>
@@ -209,7 +209,7 @@ FillGasScreen.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title>Fill Gas</Title>
+            <Title>{AppLocales.t("NEW_GAS_HEADER")}</Title>
           </Body>
           <Right />
         </Header>
@@ -227,17 +227,23 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
     alignItems: "center", // vertial align
-    height: 50,
-    borderWidth: 1,
-    borderColor:"grey"
+    justifyContent: "center",
+    height: 54,
+    width: "90%",
+    alignSelf:"center"
+    // borderWidth: 1,
+    // borderColor:"grey"
   },
   rowLabel: {
     flex: 1,
     textAlign: "right",
-    paddingRight: 5
+    paddingRight: 5,
+    color: "rgb(120, 120, 120)"
   },
   rowForm: {
-    flex: 2
+    flex: 2,
+    borderBottomColor: "rgb(230, 230, 230)",
+    borderBottomWidth: 0.5
   },
   rowButton: {
     marginTop: 20,

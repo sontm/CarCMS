@@ -4,11 +4,13 @@ import { View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity } fr
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Picker, Form, DatePicker, Toast } from 'native-base';
 import MyLayout from '../constants/Layout'
-
+import { connect } from 'react-redux';
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 // import { LineChart, Grid } from 'react-native-svg-charts'
+
+import AppLocales from '../constants/i18n'
 
 import {
     LineChart
@@ -33,22 +35,23 @@ class GasUsageReport extends React.Component {
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),
-
-        popoverVisible: false,
     };
 
+    this.displayByFilter = false;
   }
 
   onValueChangeDuration(value) {
     this.setState({
         duration: value
     });
+    this.displayByFilter = true;
   }
 
   onValueChangeDurationType(value) {
     this.setState({
         durationType: value
     });
+    this.displayByFilter = true;
   }
   // TODO for change Date
   onSetDateOption(newDate) {
@@ -56,6 +59,7 @@ class GasUsageReport extends React.Component {
     this.setState({
         tillDate: newDate
     });
+    this.displayByFilter = true;
   }
   onDataPointClick(value, dataset, getcolor, dataToDisplay) {
       Toast.show({
@@ -69,12 +73,18 @@ class GasUsageReport extends React.Component {
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
     if (this.props.currentVehicle) { //props
-        let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-            arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-            avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-            = AppUtils.getStatForGasUsage(this.props.currentVehicle.fillGasList, 
-                this.state.duration, this.state.durationType, this.state.tillDate);
-        
+        if (this.displayByFilter) {
+            var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
+                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
+                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+                = AppUtils.getStatForGasUsage(this.props.currentVehicle.fillGasList, 
+                    this.state.duration, this.state.durationType, this.state.tillDate);
+        } else {
+            var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
+                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
+                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+                = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport;
+        }
         if (this.state.activeDisplay == 1) {
             var dataToDisplay = arrTotalMoneyMonthly;
         } else if (this.state.activeDisplay == 2) {
@@ -82,6 +92,15 @@ class GasUsageReport extends React.Component {
         } else {
             var dataToDisplay = arrTotalKmMonthly;
         }
+        // } else {
+        //     if (this.state.activeDisplay == 1) {
+        //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyMonthly;
+        //     } else if (this.state.activeDisplay == 2) {
+        //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyPerKmMonthly;
+        //     } else {
+        //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalKmMonthly;
+        //     }
+        // }
         
         if (avgMoneyPerKmMonthly > averageMoneyPerKmPerDay) {
             // This time Use so Much, 
@@ -108,13 +127,11 @@ class GasUsageReport extends React.Component {
         //       strokeWidth: 2 // optional
         //     }]
         // }
-        console.log("dataChartKitLine------")
-        console.log(dataChartKitLine)
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>
                     <Text><H2>
-                        Monthly Gas Usage
+                        {AppLocales.t("CARDETAIL_H1_GAS_USAGE")}
                     </H2></Text>
                     <Segment small>
                         <Button small first onPress={() => this.setState({activeDisplay: 0})}
@@ -134,20 +151,23 @@ class GasUsageReport extends React.Component {
                         iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
                         selectedValue={this.state.duration}
                         onValueChange={this.onValueChangeDuration.bind(this)}
-                        textStyle={{ color: "#1f77b4" }}
-                        style={{width: 70}}
+                        textStyle={{ color: "#1f77b4", fontSize: 14 }}
+                        style={{width: 75}}
                         >
                         <Picker.Item label="6" value={6} />
                         <Picker.Item label="9" value={9} />
                         <Picker.Item label="12" value={12} />
+                        <Picker.Item label="18" value={18} />
+                        <Picker.Item label="24" value={24} />
+                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
                     </Picker>
                     <Picker
                         mode="dropdown"
                         iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
                         selectedValue={this.state.durationType}
                         onValueChange={this.onValueChangeDurationType.bind(this)}
-                        textStyle={{ color: "#1f77b4"}}
-                        style={{width: 90}}
+                        textStyle={{ color: "#1f77b4", fontSize: 14 }}
+                        style={{width: 75}}
                         >
                         <Picker.Item label="Tháng" value="month" />
                         <Picker.Item label="Quý" value="quarter" />
@@ -164,7 +184,7 @@ class GasUsageReport extends React.Component {
                         animationType={"fade"}
                         androidMode={"default"}
                         placeHolderText={"Hôm Nay"}
-                        textStyle={{ color: "#1f77b4" }}
+                        textStyle={{ color: "#1f77b4", fontSize: 14 }}
                         placeHolderTextStyle={{ color: "#1f77b4" }}
                         onDateChange={this.onSetDateOption.bind(this)}
                         disabled={false}
@@ -227,20 +247,23 @@ class GasUsageReport extends React.Component {
                     </VictoryChart> */}
                 </View>
 
+                {this.state.duration != AppLocales.t("GENERAL_ALL") ? (
+                <View>
                 <View style={styles.textRow}>
                     <Text><H2>
-                        Average in {this.state.duration + " " + durationTypeToVietnamese(this.state.durationType)}
+                    {AppLocales.t("CARDETAIL_AVERAGE_IN")}{this.state.duration + " " + durationTypeToVietnamese(this.state.durationType)}
                     </H2></Text>
                 </View>
                 <View style={styles.statRow}>
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
-                            <Text><H2>{avgKmMonthly ? avgKmMonthly.toFixed(1) : ""}</H2></Text>
+                            <Text><H2>{avgKmMonthly ? 
+                                avgKmMonthly.toFixed(1) : ""}</H2></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
                             <Text>
-                            Km/Month
+                            Km/{AppLocales.t("GENERAL_MONTH")}
                             </Text>
                         </Body>
                         </CardItem>
@@ -248,64 +271,71 @@ class GasUsageReport extends React.Component {
 
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
-                            <Text><H2>{avgMoneyMonthly ? (avgMoneyMonthly).toFixed(0): ""}</H2></Text>
+                            <Text><H2>{avgMoneyMonthly ?
+                             (avgMoneyMonthly).toFixed(0): ""}</H2></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
-                            <Text>VND/Month</Text>
+                            <Text>đ/{AppLocales.t("GENERAL_MONTH")}</Text>
                         </Body>
                         </CardItem>
                     </Card>
 
                     <Card style={styles.equalStartRow}>
                         <CardItem header  style={{flexDirection: "row", alignItems: "center"}}>
-                            <Text><H2>{avgMoneyPerKmMonthly ? (avgMoneyPerKmMonthly).toFixed(0) : ""}</H2></Text>
+                            <Text><H2>{avgMoneyPerKmMonthly ?
+                             (avgMoneyPerKmMonthly).toFixed(0) : ""}</H2></Text>
                             {iconInfoUsage}
                         </CardItem>
                         <CardItem>
                         <Body>
-                            <Text>VND/Km</Text>
+                            <Text>đ/Km</Text>
                         </Body>
                         </CardItem>
                     </Card>
                 </View>
+                </View>
+                ): null}
 
 
                 <View style={styles.textRow}>
                     <Text><H3>
-                        Average All Time
+                    {AppLocales.t("CARDETAIL_AVERAGE_ALL")}
                     </H3></Text>
                 </View>
                 <View style={styles.statRow}>
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
-                            <Text><H3>{averageKmPerDay ? (averageKmPerDay*30).toFixed(0): ""}</H3></Text>
+                            <Text><H3>{averageKmPerDay ? 
+                                (averageKmPerDay*30).toFixed(0): ""}</H3></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
-                            <Text style={{fontSize: 13}}>Km/Month</Text>
+                            <Text style={{fontSize: 13}}>Km/{AppLocales.t("GENERAL_MONTH")}</Text>
                         </Body>
                         </CardItem>
                     </Card>
 
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
-                            <Text><H3>{averageMoneyPerDay ? (averageMoneyPerDay*30).toFixed(0) : ""}</H3></Text>
+                            <Text><H3>{averageMoneyPerDay ? 
+                                (averageMoneyPerDay*30).toFixed(0) : ""}</H3></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
-                            <Text style={{fontSize: 13}}>VND/Month</Text>
+                            <Text style={{fontSize: 13}}>đ/{AppLocales.t("GENERAL_MONTH")}</Text>
                         </Body>
                         </CardItem>
                     </Card>
 
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
-                            <Text><H3>{averageMoneyPerKmPerDay ? averageMoneyPerKmPerDay.toFixed(0) : ""}</H3></Text>
+                            <Text><H3>{averageMoneyPerKmPerDay ? 
+                                averageMoneyPerKmPerDay.toFixed(0) : ""}</H3></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
-                            <Text style={{fontSize: 13}}>VND/Km</Text>
+                            <Text style={{fontSize: 13}}>đ/Km</Text>
                         </Body>
                         </CardItem>
                     </Card>
@@ -330,11 +360,12 @@ class GasUsageReport extends React.Component {
 const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
-      marginTop: 20,
       flexDirection: "column",
       borderWidth: 0.5,
       borderColor: "grey",
-      justifyContent: "space-between"
+      justifyContent: "space-between",
+      marginBottom: 20,
+      borderRadius: 7,
     },
     textRow: {
         flexDirection: "row",
@@ -384,5 +415,13 @@ const styles = StyleSheet.create({
 
 })
 
-
-export default GasUsageReport;
+const mapStateToProps = (state) => ({
+    tempData: state.tempData
+});
+const mapActionsToProps = {
+    
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(GasUsageReport);

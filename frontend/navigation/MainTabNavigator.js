@@ -22,7 +22,6 @@ import MyVehicleScreen from '../screens/MyVehicleScreen'
 import VehicleDetailReport from '../screens/VehicleDetailReport';
 import VehicleDetailHistory from '../screens/VehicleDetailHistory';
 
-import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import VehicleSettingScreen from '../screens/setting/VehicleSettingScreen';
 import LoginScreen from '../screens/setting/LoginScreen';
@@ -36,6 +35,7 @@ import MemberVehicleListScreen from '../screens/team/MemberVehicleListScreen'
 
 
 import AppConstants from '../constants/AppConstants';
+import AppLocales from '../constants/i18n'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -81,17 +81,17 @@ const BUTTONS = [
   { text: "Thêm Xe", icon: "american-football", iconColor: "#2c8ef4" },//0
   { text: "Đổ Xăng", icon: "american-football", iconColor: "#2c8ef4" },//1
   { text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
-  { text: "Đăng Kiểm", icon: "analytics", iconColor: "#f42ced" },//3
-  { text: "Chi Phí", icon: "analytics", iconColor: "#f42ced" },//4
-  { text: "Sửa Chữa", icon: "analytics", iconColor: "#f42ced" },//5
+  { text: "Chi Phí", icon: "analytics", iconColor: "#f42ced" },//3
+  { text: "Sửa Chữa", icon: "analytics", iconColor: "#f42ced" },//4
+  { text: "Đăng Kiểm", icon: "analytics", iconColor: "#f42ced" },//5
   { text: "Đóng", icon: "close", iconColor: "#25de5b" }//6
 ];
 const NEW_VEHICLE = 0;
 const FILLGAS_INDEX = 1;
 const FILLOIL_INDEX = 2;
-const CAR_AUTHORIZE_INDEX = 3;
-const PAY_EXPENSE_INDEX = 4;
-const PAY_SERVICE_INDEX = 5;
+const PAY_EXPENSE_INDEX = 3;
+const PAY_SERVICE_INDEX = 4;
+const CAR_AUTHORIZE_INDEX = 5;
 const CANCEL_INDEX = 6;
 
 const SettingsStack = createStackNavigator(
@@ -157,10 +157,10 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
-                props.navigation.navigate("HomeStack")
+                props.navigation.navigate("Home")
               }}>
               <Icon name='home' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>Home</Text>
+              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_HOME")}</Text>
             </Button>
 
             <Button
@@ -169,10 +169,10 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
-                props.navigation.navigate("MyVehicleStack")
+                props.navigation.navigate("MyVehicle")
               }}>
               <Icon type="FontAwesome5" name='car' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>Xe</Text>
+              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_MY_CAR")}</Text>
             </Button>
             
             
@@ -184,7 +184,7 @@ const tabNavigator = createBottomTabNavigator({
                 {
                     options: BUTTONS,
                     cancelButtonIndex: CANCEL_INDEX,
-                    title: "Choose category"
+                    //title: "Choose category"
                 },
                 (btnIndex) => {
                   if (btnIndex == NEW_VEHICLE) {
@@ -217,10 +217,10 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
-                props.navigation.navigate("TeamStack")
+                props.navigation.navigate("Team")
               }}>
               <Icon type="Octicons" name='organization' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>Tổ Chức</Text>
+              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_TEAM")}</Text>
             </Button>
             
             <Button
@@ -229,10 +229,10 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
-                props.navigation.navigate("SettingsStack")
+                props.navigation.navigate("Settings")
               }}>
               <Icon name='more' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>Khác</Text>
+              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_MORE")}</Text>
             </Button>
           </FooterTab>
         </Footer>

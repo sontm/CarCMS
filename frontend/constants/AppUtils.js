@@ -1,5 +1,6 @@
 import AppConstants from './AppConstants'
 import Backend from '../constants/Backend';
+import AppLocales from '../constants/i18n'
 
 const dateFormat = require('dateformat');
 // dateFormat.i18n = {
@@ -45,20 +46,23 @@ class AppUtils {
     formatDateMonthDayYearVN(t) {
         return dateFormat(new Date(t), "d-mmmm-yyyy");
     }
+    formatDateMonthDayYearVNShort(t) {
+        return dateFormat(new Date(t), "d/mm/yyyy");
+    }
     formatMoneyToK(v) {
         return (v/1000).toFixed(0) + "K";
     }
-    getVietnamNameOfFillItemType(type) {
+    getNameOfFillItemType(type) {
         if (type == AppConstants.FILL_ITEM_GAS) {
-            return "Xăng Dầu";
+            return AppLocales.t("GENERAL_GAS");
         } else if (type == AppConstants.FILL_ITEM_OIL) {
-            return "Dầu Nhớt";
+            return AppLocales.t("GENERAL_OIL");
         } else if (type == AppConstants.FILL_ITEM_AUTH) {
-            return "Đăng Kiểm";
+            return AppLocales.t("GENERAL_AUTHROIZE");
         } else if (type == AppConstants.FILL_ITEM_EXPENSE) {
-            return "Chi Phí";
+            return AppLocales.t("GENERAL_EXPENSE");
         } else if (type == AppConstants.FILL_ITEM_SERVICE) {
-            return "Sửa Chữa";
+            return AppLocales.t("GENERAL_SERVICE");
         }
     }
     makeRandomAlphaNumeric(length) {
@@ -100,36 +104,48 @@ class AppUtils {
         let newDataArr = [];
         let labels = [];
 
-        // Label should be not Over 5
-        if (data.length > 5) {
-            var labelCount = 5;
-        } else {
-            var labelCount = data.length;
-        }
+        if (data && data.length) {
+            // Label should be not Over 5
+            if (data && data.length > 5) {
+                var labelCount = 5;
+            } else {
+                var labelCount = (data && data.length) ? data.length: 2;
+            }
 
-        var labelStep = Math.ceil(data.length/labelCount);
-        let idxCount = 0;
-        data.forEach((item, index) => {
-            newDataArr.push(item.y);
-            if (index == 0 || index == (data.length-1)) {
-                labels.push(funcFormatX(item.x))
-                idxCount=0;
+            var labelStep = Math.ceil(data.length/labelCount);
+            let idxCount = 0;
+            data.forEach((item, index) => {
+                newDataArr.push(item.y);
+                if (index == 0 || index == (data.length-1)) {
+                    labels.push(funcFormatX(item.x))
+                    idxCount=0;
+                }
+                idxCount++;
+                if (idxCount == labelStep) {
+                    labels.push(funcFormatX(item.x))
+                    idxCount=0;
+                }
+                //add Label for First, Last
+            })
+            return {
+                labels: labels,
+                datasets: [{
+                    data: newDataArr,
+                    //color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // optional
+                    color: (opacity = 1) => `rgba(255, 255, 255, 0.75)`, // optional
+                    strokeWidth: 1
+                }]
             }
-            idxCount++;
-            if (idxCount == labelStep) {
-                labels.push(funcFormatX(item.x))
-                idxCount=0;
+        } else {
+            return {
+                labels: labels,
+                datasets: [{
+                    data: newDataArr,
+                    //color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // optional
+                    color: (opacity = 1) => `rgba(255, 255, 255, 0.75)`, // optional
+                    strokeWidth: 1
+                }]
             }
-            //add Label for First, Last
-        })
-        return {
-            labels: labels,
-            datasets: [{
-                data: newDataArr,
-                //color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // optional
-                color: (opacity = 1) => `rgba(255, 255, 255, 0.75)`, // optional
-                strokeWidth: 1
-            }]
         }
     }
 
@@ -165,35 +181,39 @@ class AppUtils {
     getStatForGasUsage(fillGasList, duration=12, durationType="month", tillDate=new Date()) {
         // Sort by fill Date
         // TODO
-        if (!fillGasList) {
+        if (!fillGasList || fillGasList.length < 1) {
             return {};
         }
 
         // End date is ENd of This Month
         let CALCULATE_END_DATE = this.normalizeFillDate(new Date(tillDate.getFullYear(),tillDate.getMonth()+1,0));
 
-        let CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
-            CALCULATE_END_DATE.getMonth() - duration + 1, 1));
+        if (duration > 200 || duration == AppLocales.t("GENERAL_ALL")) {
+            // THis Mean All data
+            var CALCULATE_START_DATE = this.normalizeFillDate(new Date(fillGasList[0].fillDate))
+        } else {
+            var CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+                CALCULATE_END_DATE.getMonth() - duration + 1, 1));
+            // In case of quarter, need End Date of First Month in THis Quarter
+            let baseEndDate = new Date(CALCULATE_END_DATE)
+            if (durationType == "quarter") {
+                let theQuarter = this.getQuarterNumberOfMonth(tillDate);
 
-        // In case of quarter, need End Date of First Month in THis Quarter
-        let baseEndDate = new Date(CALCULATE_END_DATE)
-        if (durationType == "quarter") {
-            let theQuarter = this.getQuarterNumberOfMonth(tillDate);
-
-            console.log("theQuarter:" + theQuarter + ",BaseENdDate")
-            baseEndDate = new Date( baseEndDate.setMonth((theQuarter-1) * 3))
-            console.log(baseEndDate)
-            CALCULATE_START_DATE = this.normalizeDateBegin(new Date(baseEndDate.getFullYear(), 
-                baseEndDate.getMonth() - duration*3 + 1 + 3, 1));
-        } else
-        // In case of year, just minus Full year
-        if (durationType == "year") {
-            CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear() - duration + 1, 
-                0, 1));
+                //console.log("theQuarter:" + theQuarter + ",BaseENdDate")
+                baseEndDate = new Date( baseEndDate.setMonth((theQuarter-1) * 3))
+                //console.log(baseEndDate)
+                CALCULATE_START_DATE = this.normalizeDateBegin(new Date(baseEndDate.getFullYear(), 
+                    baseEndDate.getMonth() - duration*3 + 1 + 3, 1));
+            } else
+            // In case of year, just minus Full year
+            if (durationType == "year") {
+                CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear() - duration + 1, 
+                    0, 1));
+            }
         }
-        console.log("CALCULATE_START_DATE-CALCULATE_END_DATE")
-        console.log(CALCULATE_START_DATE)
-        console.log(CALCULATE_END_DATE)
+        // console.log("CALCULATE_START_DATE-CALCULATE_END_DATE")
+        // console.log(CALCULATE_START_DATE)
+        // console.log(CALCULATE_END_DATE)
         let lastKm = 0;
         let totalMoneyGas = 0;
         let lastDate = 0;
@@ -236,9 +256,9 @@ class AppUtils {
                     break;
                 }
             }
-            console.log("START_IDX-END_IDX")
-            console.log(START_IDX)
-            console.log(END_IDX)
+            // console.log("START_IDX-END_IDX")
+            // console.log(START_IDX)
+            // console.log(END_IDX)
             // Calculate valid range (first - 1 and last + 1)
             fillGasList.forEach((item, index) => {
                 //Skip Invalid Index
@@ -429,7 +449,7 @@ class AppUtils {
                 }
             }
 
-            if (durationType == "quarter" | durationType == "year") {
+            if (durationType == "quarter") {
                 for (var prop in objQuarter) {
                     // Because these two Obj share same prop, so set in 1 for loop
                     if (Object.prototype.hasOwnProperty.call(objQuarter, prop) && 
@@ -449,6 +469,26 @@ class AppUtils {
                     }
                 }
             }
+            if (durationType == "year") {
+                for (var prop in objYear) {
+                    // Because these two Obj share same prop, so set in 1 for loop
+                    if (Object.prototype.hasOwnProperty.call(objYear, prop)) {
+                        if (objYear[""+prop].x > CALCULATE_START_DATE && objYear[""+prop].x < CALCULATE_END_DATE) {
+                            arrTotalKmMonthly.push({
+                                ...objYear[""+prop],
+                                //label: prop // TODO: Add this to Data automaticlly display in y axis
+                            })
+                            arrTotalMoneyMonthly.push(objYearMoney[""+prop])
+
+                            arrTotalMoneyPerKmMonthly.push({
+                                x: objYearMoney[""+prop].x,
+                                y: objYearMoney[""+prop].y/objYear[""+prop].y
+                            })
+                        }
+                    }
+                }
+            }
+
             arrTotalKmMonthly.sort(function (a, b) {
                 return a.x.getTime() - b.x.getTime();
             })
@@ -586,53 +626,132 @@ class AppUtils {
             return {}
         }
     }
-    getInfoMoneySpend(gasList, oilList, authList, expenseList, serviceList) {
+
+    getInfoMoneySpendByTime(theVehicle, duration=12, durationType="month", tillDate=new Date()) {
+        // End date is ENd of This Month
+        let CALCULATE_END_DATE = this.normalizeFillDate(new Date(tillDate.getFullYear(),tillDate.getMonth()+1,0));
+
+        if (duration > 200 || duration == AppLocales.t("GENERAL_ALL")) {
+            // THis Mean All data
+            var CALCULATE_START_DATE = this.normalizeFillDate(new Date(theVehicle.fillGasList[0].fillDate))
+        } else {
+            var CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+                CALCULATE_END_DATE.getMonth() - duration + 1, 1));
+            // In case of quarter, need End Date of First Month in THis Quarter
+            let baseEndDate = new Date(CALCULATE_END_DATE)
+            if (durationType == "quarter") {
+                let theQuarter = this.getQuarterNumberOfMonth(tillDate);
+
+                //console.log("theQuarter:" + theQuarter + ",BaseENdDate")
+                baseEndDate = new Date( baseEndDate.setMonth((theQuarter-1) * 3))
+                //console.log(baseEndDate)
+                CALCULATE_START_DATE = this.normalizeDateBegin(new Date(baseEndDate.getFullYear(), 
+                    baseEndDate.getMonth() - duration*3 + 1 + 3, 1));
+            } else
+            // In case of year, just minus Full year
+            if (durationType == "year") {
+                CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear() - duration + 1, 
+                    0, 1));
+            }
+        }
+        
         let arrGasSpend = [];
         let objGasSpend = {};
-        let totalGasSpend = 0;
-        if (gasList && gasList.length > 0) {
-            gasList.forEach(item => {
+        if (theVehicle.fillGasList && theVehicle.fillGasList.length > 0) {
+            theVehicle.fillGasList.forEach(item => {
                 let itemDate = this.normalizeFillDate(new Date(item.fillDate));
-                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
-                if (objGasSpend[""+dateKey]) {
-                    // Exist, add more
-                    objGasSpend[""+dateKey].y += item.price;
-                } else {
-                    // Not Exist, create new Month
-                    objGasSpend[""+dateKey] = {
-                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
-                        y: item.price
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                    if (objGasSpend[""+dateKey]) {
+                        // Exist, add more
+                        objGasSpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objGasSpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
                     }
                 }
             })
         }
+        let objQuarter={};
+        let objYear = {};
         // convert to Array for Chart
         for (var prop in objGasSpend) {
             if (Object.prototype.hasOwnProperty.call(objGasSpend, prop)) {
-                arrGasSpend.push(objGasSpend[""+prop])
-                totalGasSpend += objGasSpend[""+prop].y;
+                if (durationType == "quarter") {
+                    // Grouping to Quarter
+                    let quarterKey = "" + objGasSpend[""+prop].x.getFullYear() + "/Q" + 
+                        this.getQuarterNumberOfMonth(objGasSpend[""+prop].x);
+                    let baseDateOfQuarter = new Date(objGasSpend[""+prop].x.getFullYear(),
+                        this.getQuarterNumberOfMonth(objGasSpend[""+prop].x) * 3 - 2,15)
+
+                    if (objQuarter[""+quarterKey]) {
+                        objQuarter[""+quarterKey].y += objGasSpend[""+prop].y
+                    } else {
+                        objQuarter[""+quarterKey] = {
+                            x: baseDateOfQuarter,
+                            y: objGasSpend[""+prop].y
+                        }
+                    }
+                } else  if (durationType == "year") {
+                    let yearKey = "" + objGasSpend[""+prop].x.getFullYear();
+                    let baseDateOfYear = new Date(objGasSpend[""+prop].x.getFullYear(),
+                        5,15)
+                    if (objYear[""+yearKey]) {
+                        objYear[""+yearKey].y += objGasSpend[""+prop].y
+                    } else {
+                        objYear[""+yearKey] = {
+                            x: baseDateOfYear,
+                            y: objGasSpend[""+prop].y
+                        }
+                    }
+                } else {
+                    arrGasSpend.push(objGasSpend[""+prop])
+                }
             }
         }
+        if (durationType == "quarter") {
+            for (var prop in objQuarter) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objQuarter, prop)) {
+                        arrGasSpend.push(objQuarter[""+prop])
+                }
+            }
+        }
+        if (durationType == "year") {
+            for (var prop in objQuarter) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objQuarter, prop)) {
+                        arrGasSpend.push(objYear[""+prop])
+                }
+            }
+        }
+
         arrGasSpend.sort(function (a, b) {
             return a.x.getTime() - b.x.getTime();
         })
 
         //------Oil
+        objQuarter={};
+        objYear = {};
         let arrOilSpend = [];
         let objOilSpend = {};
-        let totalOilSpend = 0;
-        if (oilList && oilList.length > 0) {
-            oilList.forEach(item => {
+        if (theVehicle.fillOilList && theVehicle.fillOilList.length > 0) {
+            theVehicle.fillOilList.forEach(item => {
                 let itemDate = this.normalizeFillDate(new Date(item.fillDate));
-                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
-                if (objOilSpend[""+dateKey]) {
-                    // Exist, add more
-                    objOilSpend[""+dateKey].y += item.price;
-                } else {
-                    // Not Exist, create new Month
-                    objOilSpend[""+dateKey] = {
-                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
-                        y: item.price
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                    if (objOilSpend[""+dateKey]) {
+                        // Exist, add more
+                        objOilSpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objOilSpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
                     }
                 }
             })
@@ -640,31 +759,78 @@ class AppUtils {
         // convert to Array for Chart
         for (var prop in objOilSpend) {
             if (Object.prototype.hasOwnProperty.call(objOilSpend, prop)) {
-                arrOilSpend.push(objOilSpend[""+prop])
-                totalOilSpend += objOilSpend[""+prop].y;
+                if (durationType == "quarter") {
+                    // Grouping to Quarter
+                    let quarterKey = "" + objOilSpend[""+prop].x.getFullYear() + "/Q" + 
+                        this.getQuarterNumberOfMonth(objOilSpend[""+prop].x);
+                    let baseDateOfQuarter = new Date(objOilSpend[""+prop].x.getFullYear(),
+                        this.getQuarterNumberOfMonth(objOilSpend[""+prop].x) * 3 - 2,15)
+
+                    if (objQuarter[""+quarterKey]) {
+                        objQuarter[""+quarterKey].y += objOilSpend[""+prop].y
+                    } else {
+                        objQuarter[""+quarterKey] = {
+                            x: baseDateOfQuarter,
+                            y: objOilSpend[""+prop].y
+                        }
+                    }
+                } else  if (durationType == "year") {
+                    let yearKey = "" + objOilSpend[""+prop].x.getFullYear();
+                    let baseDateOfYear = new Date(objOilSpend[""+prop].x.getFullYear(),
+                        5,15)
+                    if (objYear[""+yearKey]) {
+                        objYear[""+yearKey].y += objOilSpend[""+prop].y
+                    } else {
+                        objYear[""+yearKey] = {
+                            x: baseDateOfYear,
+                            y: objOilSpend[""+prop].y
+                        }
+                    }
+                } else {
+                    arrOilSpend.push(objOilSpend[""+prop])
+                }
             }
         }
+        if (durationType == "quarter") {
+            for (var prop in objQuarter) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objQuarter, prop)) {
+                        arrOilSpend.push(objQuarter[""+prop])
+                }
+            }
+        }
+        if (durationType == "year") {
+            for (var prop in objYear) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objYear, prop)) {
+                        arrOilSpend.push(objYear[""+prop])
+                }
+            }
+        }
+
         arrOilSpend.sort(function (a, b) {
             return a.x.getTime() - b.x.getTime();
         })
 
-
         //------Auth
+        objQuarter={};
+        objYear = {};
         let arrAuthSpend = [];
         let objAuthSpend = {};
-        let totalAuthSpend = 0;
-        if (authList && authList.length > 0) {
-            authList.forEach(item => {
+        if (theVehicle.authorizeCarList && theVehicle.authorizeCarList.length > 0) {
+            theVehicle.authorizeCarList.forEach(item => {
                 let itemDate = this.normalizeFillDate(new Date(item.fillDate));
-                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
-                if (objAuthSpend[""+dateKey]) {
-                    // Exist, add more
-                    objAuthSpend[""+dateKey].y += item.price;
-                } else {
-                    // Not Exist, create new Month
-                    objAuthSpend[""+dateKey] = {
-                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
-                        y: item.price
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                    if (objAuthSpend[""+dateKey]) {
+                        // Exist, add more
+                        objAuthSpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objAuthSpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
                     }
                 }
             })
@@ -672,10 +838,55 @@ class AppUtils {
         // convert to Array for Chart
         for (var prop in objAuthSpend) {
             if (Object.prototype.hasOwnProperty.call(objAuthSpend, prop)) {
-                arrAuthSpend.push(objAuthSpend[""+prop])
-                totalAuthSpend += objAuthSpend[""+prop].y;
+                if (durationType == "quarter") {
+                    // Grouping to Quarter
+                    let quarterKey = "" + objAuthSpend[""+prop].x.getFullYear() + "/Q" + 
+                        this.getQuarterNumberOfMonth(objAuthSpend[""+prop].x);
+                    let baseDateOfQuarter = new Date(objAuthSpend[""+prop].x.getFullYear(),
+                        this.getQuarterNumberOfMonth(objAuthSpend[""+prop].x) * 3 - 2,15)
+
+                    if (objQuarter[""+quarterKey]) {
+                        objQuarter[""+quarterKey].y += objAuthSpend[""+prop].y
+                    } else {
+                        objQuarter[""+quarterKey] = {
+                            x: baseDateOfQuarter,
+                            y: objAuthSpend[""+prop].y
+                        }
+                    }
+                } else  if (durationType == "year") {
+                    let yearKey = "" + objAuthSpend[""+prop].x.getFullYear();
+                    let baseDateOfYear = new Date(objAuthSpend[""+prop].x.getFullYear(),
+                        5,15)
+                    if (objYear[""+yearKey]) {
+                        objYear[""+yearKey].y += objAuthSpend[""+prop].y
+                    } else {
+                        objYear[""+yearKey] = {
+                            x: baseDateOfYear,
+                            y: objAuthSpend[""+prop].y
+                        }
+                    }
+                } else {
+                    arrGasSpend.push(objAuthSpend[""+prop])
+                }
             }
         }
+        if (durationType == "quarter") {
+            for (var prop in objQuarter) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objQuarter, prop)) {
+                        arrAuthSpend.push(objQuarter[""+prop])
+                }
+            }
+        }
+        if (durationType == "year") {
+            for (var prop in objYear) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objYear, prop)) {
+                        arrAuthSpend.push(objYear[""+prop])
+                }
+            }
+        }
+
         arrAuthSpend.sort(function (a, b) {
             return a.x.getTime() - b.x.getTime();
         })
@@ -683,21 +894,24 @@ class AppUtils {
 
 
         //------Expense
+        objQuarter={};
+        objYear = {};
         let arrExpenseSpend = [];
         let objExpenseSpend = {};
-        let totalExpenseSpend = 0;
-        if (expenseList && expenseList.length > 0) {
-            expenseList.forEach(item => {
+        if (theVehicle.expenseList && theVehicle.expenseList.length > 0) {
+            theVehicle.expenseList.forEach(item => {
                 let itemDate = this.normalizeFillDate(new Date(item.fillDate));
-                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
-                if (objExpenseSpend[""+dateKey]) {
-                    // Exist, add more
-                    objExpenseSpend[""+dateKey].y += item.price;
-                } else {
-                    // Not Exist, create new Month
-                    objExpenseSpend[""+dateKey] = {
-                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
-                        y: item.price
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                    if (objExpenseSpend[""+dateKey]) {
+                        // Exist, add more
+                        objExpenseSpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objExpenseSpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
                     }
                 }
             })
@@ -705,8 +919,52 @@ class AppUtils {
         // convert to Array for Chart
         for (var prop in objExpenseSpend) {
             if (Object.prototype.hasOwnProperty.call(objExpenseSpend, prop)) {
-                arrExpenseSpend.push(objExpenseSpend[""+prop])
-                totalExpenseSpend += objExpenseSpend[""+prop].y;
+                if (durationType == "quarter") {
+                    // Grouping to Quarter
+                    let quarterKey = "" + objExpenseSpend[""+prop].x.getFullYear() + "/Q" + 
+                        this.getQuarterNumberOfMonth(objExpenseSpend[""+prop].x);
+                    let baseDateOfQuarter = new Date(objExpenseSpend[""+prop].x.getFullYear(),
+                        this.getQuarterNumberOfMonth(objExpenseSpend[""+prop].x) * 3 - 2,15)
+
+                    if (objQuarter[""+quarterKey]) {
+                        objQuarter[""+quarterKey].y += objExpenseSpend[""+prop].y
+                    } else {
+                        objQuarter[""+quarterKey] = {
+                            x: baseDateOfQuarter,
+                            y: objExpenseSpend[""+prop].y
+                        }
+                    }
+                } else  if (durationType == "year") {
+                    let yearKey = "" + objExpenseSpend[""+prop].x.getFullYear();
+                    let baseDateOfYear = new Date(objExpenseSpend[""+prop].x.getFullYear(),
+                        5,15)
+                    if (objYear[""+yearKey]) {
+                        objYear[""+yearKey].y += objExpenseSpend[""+prop].y
+                    } else {
+                        objYear[""+yearKey] = {
+                            x: baseDateOfYear,
+                            y: objExpenseSpend[""+prop].y
+                        }
+                    }
+                } else {
+                    arrExpenseSpend.push(objExpenseSpend[""+prop])
+                }
+            }
+        }
+        if (durationType == "quarter") {
+            for (var prop in objQuarter) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objQuarter, prop)) {
+                        arrExpenseSpend.push(objQuarter[""+prop])
+                }
+            }
+        }
+        if (durationType == "year") {
+            for (var prop in objYear) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objYear, prop)) {
+                        arrExpenseSpend.push(objYear[""+prop])
+                }
             }
         }
         arrExpenseSpend.sort(function (a, b) {
@@ -715,21 +973,24 @@ class AppUtils {
 
 
         //------Service
+        objQuarter={};
+        objYear = {};
         let arrServiceSpend = [];
         let objServiceSpend = {};
-        let totalServiceSpend = 0;
-        if (serviceList && serviceList.length > 0) {
-            serviceList.forEach(item => {
+        if (theVehicle.serviceList && theVehicle.serviceList.length > 0) {
+            theVehicle.serviceList.forEach(item => {
                 let itemDate = this.normalizeFillDate(new Date(item.fillDate));
-                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
-                if (objServiceSpend[""+dateKey]) {
-                    // Exist, add more
-                    objServiceSpend[""+dateKey].y += item.price;
-                } else {
-                    // Not Exist, create new Month
-                    objServiceSpend[""+dateKey] = {
-                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
-                        y: item.price
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                    if (objServiceSpend[""+dateKey]) {
+                        // Exist, add more
+                        objServiceSpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objServiceSpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
                     }
                 }
             })
@@ -737,16 +998,128 @@ class AppUtils {
         // convert to Array for Chart
         for (var prop in objServiceSpend) {
             if (Object.prototype.hasOwnProperty.call(objServiceSpend, prop)) {
-                arrServiceSpend.push(objServiceSpend[""+prop])
-                totalServiceSpend += objServiceSpend[""+prop].y;
+                if (durationType == "quarter") {
+                    // Grouping to Quarter
+                    let quarterKey = "" + objServiceSpend[""+prop].x.getFullYear() + "/Q" + 
+                        this.getQuarterNumberOfMonth(objServiceSpend[""+prop].x);
+                    let baseDateOfQuarter = new Date(objServiceSpend[""+prop].x.getFullYear(),
+                        this.getQuarterNumberOfMonth(objServiceSpend[""+prop].x) * 3 - 2,15)
+
+                    if (objQuarter[""+quarterKey]) {
+                        objQuarter[""+quarterKey].y += objServiceSpend[""+prop].y
+                    } else {
+                        objQuarter[""+quarterKey] = {
+                            x: baseDateOfQuarter,
+                            y: objServiceSpend[""+prop].y
+                        }
+                    }
+                } else  if (durationType == "year") {
+                    let yearKey = "" + objServiceSpend[""+prop].x.getFullYear();
+                    let baseDateOfYear = new Date(objServiceSpend[""+prop].x.getFullYear(),
+                        5,15)
+                    if (objYear[""+yearKey]) {
+                        objYear[""+yearKey].y += objServiceSpend[""+prop].y
+                    } else {
+                        objYear[""+yearKey] = {
+                            x: baseDateOfYear,
+                            y: objServiceSpend[""+prop].y
+                        }
+                    }
+                } else {
+                    arrServiceSpend.push(objServiceSpend[""+prop])
+                }
+            }
+        }
+        if (durationType == "quarter") {
+            for (var prop in objQuarter) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objQuarter, prop)) {
+                    arrServiceSpend.push(objQuarter[""+prop])
+                }
+            }
+        }
+        if (durationType == "year") {
+            for (var prop in objYear) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(objYear, prop)) {
+                    arrServiceSpend.push(objYear[""+prop])
+                }
             }
         }
         arrServiceSpend.sort(function (a, b) {
             return a.x.getTime() - b.x.getTime();
         })
 
-        return {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,
-            totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend};
+        return {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend};
+    }
+
+    getInfoMoneySpend(theVehicle, duration = 12, tillDate=new Date()) {
+        let CALCULATE_END_DATE = this.normalizeFillDate(new Date(tillDate.getFullYear(),tillDate.getMonth()+1,0));
+
+        if (duration > 200 || duration == AppLocales.t("GENERAL_ALL")) {
+            // THis Mean All data
+            var CALCULATE_START_DATE = this.normalizeFillDate(new Date(theVehicle.fillGasList[0].fillDate))
+        } else {
+            var CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+                CALCULATE_END_DATE.getMonth() - duration + 1, 1));
+        }
+
+        let totalGasSpend = 0;
+        if (theVehicle.fillGasList && theVehicle.fillGasList.length > 0) {
+            theVehicle.fillGasList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    totalGasSpend += item.price;
+                }
+            })
+        }
+
+        let totalOilSpend = 0;
+        if (theVehicle.fillOilList && theVehicle.fillOilList.length > 0) {
+            theVehicle.fillOilList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    totalOilSpend += item.price;
+                }
+            })
+        }
+
+
+        //------Auth
+        let totalAuthSpend = 0;
+        if (theVehicle.authorizeCarList && theVehicle.authorizeCarList.length > 0) {
+            theVehicle.authorizeCarList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    totalAuthSpend += item.price;
+                }
+            })
+        }
+
+
+        //------Expense
+        let totalExpenseSpend = 0;
+        if (theVehicle.expenseList && theVehicle.expenseList.length > 0) {
+            theVehicle.expenseList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    totalExpenseSpend += item.price;
+                }
+            })
+        }
+
+        //------Service
+        let totalServiceSpend = 0;
+        if (theVehicle.serviceList && theVehicle.serviceList.length > 0) {
+            theVehicle.serviceList.forEach(item => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
+                    totalServiceSpend += item.price;
+                }
+            })
+        }
+
+        return {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend};
     }
     getInfoMoneySpendInExpense(expenseList) {
         if (!expenseList) {

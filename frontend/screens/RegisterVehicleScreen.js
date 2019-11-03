@@ -3,11 +3,12 @@ import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../constants/AppConstants'
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, 
-    Card, CardItem, Picker, Form, Item, CheckBox } from 'native-base';
+    Card, CardItem, Picker, Form, Item, CheckBox, Label, Input } from 'native-base';
 import { connect } from 'react-redux';
 import {actVehicleAddVehicle, actVehicleEditVehicle} from '../redux/UserReducer'
 import Layout from '../constants/Layout';
 import apputils from '../constants/AppUtils';
+import AppLocales from '../constants/i18n';
 
 class RegisterVehicleScreen extends React.Component {
     constructor(props) {
@@ -17,7 +18,7 @@ class RegisterVehicleScreen extends React.Component {
             brand: '',
             model: '',
             licensePlate: '',
-            checkedDate: new Date().toLocaleDateString(),
+            //: new Date().toLocaleDateString(),
             isDefault: false,
             fillGasList:[],
             fillOilList:[],
@@ -40,7 +41,7 @@ class RegisterVehicleScreen extends React.Component {
                         brand:this.props.userData.vehicleList[i].brand,
                         model: this.props.userData.vehicleList[i].model,
                         licensePlate: this.props.userData.vehicleList[i].licensePlate,
-                        checkedDate: this.props.userData.vehicleList[i].checkedDate,
+                        //checkedDate: this.props.userData.vehicleList[i].checkedDate,
                         isDefault: this.props.userData.vehicleList[i].isDefault
                     })
                 }
@@ -66,7 +67,7 @@ class RegisterVehicleScreen extends React.Component {
             console.log("WIll Edit:")
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleEditVehicle(newVehicle)
-            this.props.navigation.navigate("Home")
+            this.props.navigation.navigate("MyVehicle")
         } else {
             console.log("WIll Save:")
             // let maxId = 0;
@@ -78,12 +79,13 @@ class RegisterVehicleScreen extends React.Component {
             newVehicle.id = apputils.uuidv4();
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleAddVehicle(newVehicle)
-            this.props.navigation.navigate("Home")
+            this.props.navigation.navigate("MyVehicle")
         }
     }
 
     getBrandsList(data) {
-        let result = [{ id: 0,name: "-Select Brand-"}];
+        //let result = [{ id: 0,name: "-"+AppLocales.t("NEW_CAR_BRAND")+"-"}];
+        let result = [];
         for (let i = 0; i < data.length; i++) {
             result.push({id: data[i].id, name: data[i].name})
         }
@@ -93,7 +95,7 @@ class RegisterVehicleScreen extends React.Component {
         for (let i = 0; i < data.length; i++) {
             if (data[i].id == brandNameOrId || data[i].name == brandNameOrId) {
                 let result = [...data[i].models];
-                result.unshift({ id: 0,name: "-Select Model-"});
+                //result.unshift({ id: 0,name: "-"+AppLocales.t("NEW_CAR_MODEL")+"-"});
                 return result;
             }
         }
@@ -105,72 +107,75 @@ class RegisterVehicleScreen extends React.Component {
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Brand:
-                        </Text>
-                        <Item regular>
-                        <Picker
-                            mode="dropdown"
-                            style={{width: (Layout.window.width-40)*0.6}}
-                            placeholder="Select Brand"
-                            placeholderStyle={{ color: "#bfc6ea" }}
-                            placeholderIconColor="#007aff"
-                            selectedValue={this.state.brand}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({brand: itemValue})
-                            }
-                        >
-                            {this.getBrandsList(AppContants.DATA_BRAND_MODEL).map(item => (
-                                <Picker.Item label={item.name} value={item.name} key={item.id}/>
-                            ))}
-                        </Picker>
+                        {/* <Text style={styles.rowLabel}>
+                            {AppLocales.t("NEW_CAR_BRAND")}:
+                        </Text> */}
+                        {/* <Item regular> */}
+                        <Item picker>
+                            <Label>{AppLocales.t("NEW_CAR_BRAND")+": "}</Label>
+                            <Picker
+                                mode="dropdown"
+                                iosIcon={<Icon name="arrow-down" />}
+                                style={{width: (Layout.window.width-40)*0.7}}
+                                placeholder={"--"+AppLocales.t("NEW_CAR_BRAND")+"--"}
+                                placeholderStyle={{ color: "#bfc6ea" }}
+                                placeholderIconColor="#007aff"
+                                selectedValue={this.state.brand}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    this.setState({brand: itemValue})
+                                }
+                            >
+                                {this.getBrandsList(AppContants.DATA_BRAND_MODEL).map(item => (
+                                    <Picker.Item label={item.name} value={item.name} key={item.id}/>
+                                ))}
+                            </Picker>
                         </Item>
+                        {/* </Item> */}
 
                     </View>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Model:
-                        </Text>
-                        <Item regular>
-                        <Picker
-                            mode="dropdown"
-                            style={{width: (Layout.window.width-40)*0.6}}
-                            placeholder="Select Model"
-                            placeholderStyle={{ color: "#bfc6ea" }}
-                            placeholderIconColor="#007aff"
-                            selectedValue={this.state.model}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({model: itemValue})
-                            }
-                        >
-                            {this.getModelsOfBrand(this.state.brand, AppContants.DATA_BRAND_MODEL).map(item => (
-                                <Picker.Item label={item.name} value={item.name} key={item.name}/>
-                            ))}
-                        </Picker>
+                        {/* <Text style={styles.rowLabel}>
+                        {AppLocales.t("NEW_CAR_MODEL")}:
+                        </Text> */}
+                        <Item picker>
+                            <Label>{AppLocales.t("NEW_CAR_MODEL")+": "}</Label>
+                            <Picker
+                                mode="dropdown"
+                                iosIcon={<Icon name="arrow-down" />}
+                                style={{width: (Layout.window.width-40)*0.7}}
+                                placeholder={"--"+AppLocales.t("NEW_CAR_MODEL")+"--"}
+                                placeholderStyle={{ color: "#bfc6ea" }}
+                                placeholderIconColor="#007aff"
+                                selectedValue={this.state.model}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    this.setState({model: itemValue})
+                                }
+                            >
+                                {this.getModelsOfBrand(this.state.brand, AppContants.DATA_BRAND_MODEL).map(item => (
+                                    <Picker.Item label={item.name} value={item.name} key={item.name}/>
+                                ))}
+                            </Picker>
                         </Item>
                     </View>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            License Plate:
+                        <Item inlineLabel>
+                            <Label>{AppLocales.t("NEW_CAR_PLATE")+": "}</Label>
+                            <Input 
+                                onChangeText={(licensePlate) => this.setState({licensePlate})}
+                                value={this.state.licensePlate}
+                            />
+                        </Item>
+                        {/* <Text style={styles.rowLabel}>
+                        {AppLocales.t("NEW_CAR_PLATE")}:
                         </Text>
                         <TextInput
-                            style={styles.rowForm}
+                            style={styles.rowFormTextInput}
                             placeholder="Number Plate"
                             onChangeText={(licensePlate) => this.setState({licensePlate})}
                             value={this.state.licensePlate}
-                        />
+                        /> */}
                     </View>
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Last Checked Date:
-                        </Text>
-                        <TextInput
-                            style={styles.rowForm}
-                            placeholder="TODO for DatePicker"
-                            onChangeText={(checkedDate) => this.setState({checkedDate})}
-                            value={this.state.checkedDate}
-                        />
-                    </View>
+  
 
                     <View style={styles.rowContainer}>
                         <View style={styles.rowLabel}>
@@ -178,8 +183,8 @@ class RegisterVehicleScreen extends React.Component {
                                 onPress={this.handleToggleCheckDefault}
                                 style={{marginRight: 10}}/>
                         </View>
-                        <View style={styles.rowForm}>
-                           <Text>Mặc Định</Text>
+                        <View style={styles.rowFormNoBorder}>
+                           <Text>{AppLocales.t("GENERAL_DEFAULT")}</Text>
                         </View>
                     </View>
 
@@ -224,10 +229,12 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
+    alignSelf:"center",
     alignItems: "center", // vertial align
-    height: 50,
-    borderBottomColor: "rgb(230, 230, 230)",
-    borderBottomWidth: 0.5
+    height: 60,
+    width: "90%"
+    // borderBottomColor: "rgb(230, 230, 230)",
+    // borderBottomWidth: 0.5
   },
   rowLabel: {
     flex: 2,
@@ -236,9 +243,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end"
   },
-  rowForm: {
+  rowFormNoBorder: {
     flex: 3,
     flexDirection: "row"
+  },
+  rowForm: {
+    flex: 3,
+    flexDirection: "row",
+    borderBottomColor: "rgb(230, 230, 230)",
+    borderBottomWidth: 0.5
   },
   rowButton: {
     marginTop: 20,

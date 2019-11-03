@@ -7,8 +7,9 @@ import Layout from '../constants/Layout'
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
-
+import AppLocales from '../constants/i18n'
 import { connect } from 'react-redux';
+import {actTempCalculateCarReport} from '../redux/TempDataReducer'
 
 const data = [
     { x: new Date("2018-01-15"), y: 13000 },
@@ -56,6 +57,17 @@ class VehicleBasicReport extends Component {
         )
 
     }
+    componentWillMount() {
+        console.log("VehicleReport WillMount")
+        if (this.props.vehicle) {
+            var currentVehicle = this.props.vehicle;
+        } else {
+            var currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.vehicle.id);
+        }
+        if (currentVehicle) {
+            this.props.actTempCalculateCarReport(currentVehicle, null, this.props.tempData)
+        }
+    }
     componentDidUpdate() {
         console.log("VehicleReport DIDUpdate")
     }
@@ -67,14 +79,14 @@ class VehicleBasicReport extends Component {
             var currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.vehicle.id);
         }
         
-        let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, 
-            lastDate, lastKm,
-            arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
-            = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
-        let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
-            = AppUtils.getInfoForOilUsage( currentVehicle.fillOilList, lastDate, lastKm, averageKmPerDay);
-        let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
-            = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
+        // let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, 
+        //     lastDate, lastKm,
+        //     arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas}
+        //     = AppUtils.getStatForGasUsage(currentVehicle.fillGasList);
+        // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+        //     = AppUtils.getInfoForOilUsage( currentVehicle.fillOilList, lastDate, lastKm, averageKmPerDay);
+        // let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
+        //     = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
         return (
             <Content>
@@ -128,12 +140,14 @@ class VehicleBasicReport extends Component {
                         </View>
                     </View>
 
+                    {this.props.tempData.carReports[currentVehicle.id] ? (
+                    <View>
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
-                            progress={passedKmFromPreviousOil? 
-                                passedKmFromPreviousOil/AppConstants.SETTING_KM_NEXT_OILFILL : 0}
+                            progress={this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil? 
+                                this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/AppConstants.SETTING_KM_NEXT_OILFILL : 0}
                             progressViewStyle = 'default'
                             progressTintColor = "blue"
                             trackTintColor = "rgba(230, 230, 230, 1)"
@@ -142,23 +156,24 @@ class VehicleBasicReport extends Component {
                         <ProgressBarAndroid
                             styleAttr="Horizontal"
                             indeterminate={false}
-                            progress={passedKmFromPreviousOil? 
-                                passedKmFromPreviousOil/AppConstants.SETTING_KM_NEXT_OILFILL : 0}
+                            progress={this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil? 
+                                this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/AppConstants.SETTING_KM_NEXT_OILFILL : 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                            {passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL} Km (Next Oil)
+                            {this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL} Km
+                            ({AppLocales.t("GENERAL_OIL")})
                         </Text>
                     </View>
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
-                            progress={diffDayFromLastAuthorize ?
-                                diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0}
+                            progress={this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
+                                this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0}
                             progressViewStyle = 'default'
-                            progressTintColor = {(diffDayFromLastAuthorize ?
-                                diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0) 
+                            progressTintColor = {(this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
+                                this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0) 
                                     > 0.9 ? "red" : "blue"}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
@@ -166,12 +181,12 @@ class VehicleBasicReport extends Component {
                         <ProgressBarAndroid
                             styleAttr="Horizontal"
                             indeterminate={false}
-                            progress={diffDayFromLastAuthorize ?
-                                diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0}
+                            progress={this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
+                                this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                        {diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR} Day (Next Authorize)
+                        {this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE")})
                         </Text>
                     </View>
 
@@ -180,9 +195,10 @@ class VehicleBasicReport extends Component {
                         
                             <Body>
                                 <Text style={styles.infoCardValue}>
-                                    {averageKmPerLiter ? averageKmPerLiter.toFixed(1) : ""}
+                                    {this.props.tempData.carReports[currentVehicle.id].gasReport.avgKmMonthly ? 
+                                        this.props.tempData.carReports[currentVehicle.id].gasReport.avgKmMonthly.toFixed(1) : ""}
                                 </Text>
-                                <Text style={styles.infoCardText}>Km/Litre</Text>
+                                <Text style={styles.infoCardText}>Km</Text>
                             </Body>
                       
                         </View>
@@ -190,21 +206,25 @@ class VehicleBasicReport extends Component {
                         <View style={styles.infoStatRow}>
                             <Body>
                                 <Text style={styles.infoCardValue}>
-                                    {averageKmPerDay ? (averageKmPerDay*7).toFixed(0): ""}
+                                    {this.props.tempData.carReports[currentVehicle.id].gasReport.avgMoneyPerKmMonthly ? 
+                                    (this.props.tempData.carReports[currentVehicle.id].gasReport.avgMoneyPerKmMonthly).toFixed(0): ""}
                                 </Text>
-                                <Text style={styles.infoCardText}>Km/Week</Text>
+                                <Text style={styles.infoCardText}>đ/Km</Text>
                             </Body>
                         </View>
 
                         <View style={styles.infoStatRow}>
                             <Body>
                                 <Text style={styles.infoCardValue}>
-                                    {averageMoneyPerDay ? (averageMoneyPerDay*7).toFixed(0) : ""}
+                                    {this.props.tempData.carReports[currentVehicle.id].moneyReport.totalExpenseSpend ? 
+                                    (this.props.tempData.carReports[currentVehicle.id].moneyReport.totalExpenseSpend).toFixed(0) : ""}
                                 </Text>
-                                <Text style={styles.infoCardText}>VND/Week</Text>
+                                <Text style={styles.infoCardText}>đ</Text>
                             </Body>
                         </View>
                     </View>
+                    </View>
+                    ): null }
 
                 </View>
             </TouchableOpacity>
@@ -335,10 +355,11 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    tempData: state.tempData
 });
 const mapActionsToProps = {
-    
+    actTempCalculateCarReport
 };
   
 export default connect(
