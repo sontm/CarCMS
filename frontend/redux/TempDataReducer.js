@@ -1,5 +1,6 @@
 const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
 import AppUtils from '../constants/AppUtils'
+import AppConstants from '../constants/AppConstants';
 const initialState = {
     carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
 };
@@ -28,7 +29,7 @@ async function actTempCalculateCarReportAsync(currentVehicle, options) {
         let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
             = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
-        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
+        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend, arrTotalMoneySpend}
             = AppUtils.getInfoMoneySpendByTime(currentVehicle);
 
         let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
@@ -42,7 +43,7 @@ async function actTempCalculateCarReportAsync(currentVehicle, options) {
                 avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly},
             oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil},
             authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize},
-            moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,
+            moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
                 totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend},
             expenseReport: {arrExpenseTypeSpend}
         }
@@ -51,11 +52,14 @@ async function actTempCalculateCarReportAsync(currentVehicle, options) {
 }
 export const actTempCalculateCarReport = (currentVehicle, options, prevTempData) => (dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
-    if (!prevTempData.carReports[currentVehicle.id]) {
+    if (!prevTempData.carReports[currentVehicle.id] || 
+            AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
         console.log(">>>actTempCalculateCarReport:")
+        let theIdx = AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id);
         actTempCalculateCarReportAsync(currentVehicle, options)
         .then (result => {
             console.log("<<<actTempCalculateCarReport FINISH")
+            AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.splice(theIdx, 1);
             dispatch({
                 type: TEMP_CALCULATE_CARREPORT,
                 payload: {id: currentVehicle.id, data: result}

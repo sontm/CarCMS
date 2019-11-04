@@ -98,6 +98,8 @@ export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) =
 
 export const actVehicleAddFillItem = (data, type) => (dispatch) => {
     console.log("actVehicleAddFillItem:")
+    AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(data.vehicleId)
+
     if (type == AppConstants.FILL_ITEM_GAS) {
         dispatch({
             type: VEHICLE_FILL_GAS_ADD,
@@ -129,6 +131,8 @@ export const actVehicleAddFillItem = (data, type) => (dispatch) => {
 // type: gas, oil, auth, 
 export const actVehicleDeleteFillItem = (itemId, type) => (dispatch) => {
     console.log("actVehicleDeleteFillItem:"+itemId+",type:" + type)
+    //AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(itemId.vehicleId)
+
     if (type == AppConstants.FILL_ITEM_GAS) {
         dispatch({
             type: VEHICLE_FILL_GAS_DEL,
@@ -160,6 +164,8 @@ export const actVehicleDeleteFillItem = (itemId, type) => (dispatch) => {
 // type: gas, oil, auth, 
 export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
     console.log("actVehicleEditFillItem:"+itemId+",type:" + type)
+    AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(itemId.vehicleId)
+
     if (type == AppConstants.FILL_ITEM_GAS) {
         dispatch({
             type: VEHICLE_FILL_GAS_EDIT,

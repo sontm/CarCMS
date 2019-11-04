@@ -1,5 +1,7 @@
 
 export default {
+    // Tempo data which
+    BUFFER_NEED_RECALCULATE_VEHICLE_ID: [],
     DATA_BRAND_MODEL:[
         { id: 1,name: "Toyota", models: [{id:1, name: "Vios"},{id:2, name: "Hilux"},{id:3, name: "Yaris"},{id:4, name: "Camry"}]},
         { id: 2,name: "Madza", models: [{id:5, name: "X3"},{id:6, name: "X4"},{id:7, name: "X5"},{id:8, name: "CX5"}]},

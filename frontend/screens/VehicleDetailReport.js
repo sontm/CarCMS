@@ -30,16 +30,6 @@ class VehicleDetailReport extends React.Component {
     if (!AppConstants.CURRENT_VEHICLE_ID) {
         AppConstants.CURRENT_VEHICLE_ID = this.props.userData.defaultVehicleId;
     }
-    if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
-        var currentVehicle = this.props.navigation.state.params.vehicle;
-    } else {
-        var currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
-    }
-    if (currentVehicle) {
-        console.log("CALL actTempCalculateCarReport:")
-        this.props.actTempCalculateCarReport(currentVehicle, null, this.props.tempData)
-        console.log("END actTempCalculateCarReport:")
-    }
   }
   componentDidMount() {
     //console.log("DetailReport DidMount:" + this.props.navigation.state.params.vehicleId)
@@ -58,7 +48,11 @@ class VehicleDetailReport extends React.Component {
     } else {
         var currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
     }
+
     if (currentVehicle) {
+        console.log("CALL actTempCalculateCarReport:")
+        this.props.actTempCalculateCarReport(currentVehicle, null, this.props.tempData)
+        console.log("END actTempCalculateCarReport:")
         // let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
         // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
         //     = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 

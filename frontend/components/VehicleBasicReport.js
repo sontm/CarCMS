@@ -59,14 +59,6 @@ class VehicleBasicReport extends Component {
     }
     componentWillMount() {
         console.log("VehicleReport WillMount")
-        if (this.props.vehicle) {
-            var currentVehicle = this.props.vehicle;
-        } else {
-            var currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.vehicle.id);
-        }
-        if (currentVehicle) {
-            this.props.actTempCalculateCarReport(currentVehicle, null, this.props.tempData)
-        }
     }
     componentDidUpdate() {
         console.log("VehicleReport DIDUpdate")
@@ -77,6 +69,9 @@ class VehicleBasicReport extends Component {
             var currentVehicle = this.props.vehicle;
         } else {
             var currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.vehicle.id);
+        }
+        if (currentVehicle) {
+            this.props.actTempCalculateCarReport(currentVehicle, null, this.props.tempData)
         }
         
         // let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, 

@@ -115,7 +115,7 @@ class AppUtils {
             var labelStep = Math.ceil(data.length/labelCount);
             let idxCount = 0;
             data.forEach((item, index) => {
-                newDataArr.push(item.y);
+                newDataArr.push(item.y.toFixed(0));
                 if (index == 0 || index == (data.length-1)) {
                     labels.push(funcFormatX(item.x))
                     idxCount=0;
@@ -654,7 +654,9 @@ class AppUtils {
                     0, 1));
             }
         }
-        
+        let arrTotalMoneySpend = [];
+        let objTotalMoneySpend = {};
+
         let arrGasSpend = [];
         let objGasSpend = {};
         if (theVehicle.fillGasList && theVehicle.fillGasList.length > 0) {
@@ -668,6 +670,18 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objGasSpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
+                    }
+
+                    // THis for total money
+                    if (objTotalMoneySpend[""+dateKey]) {
+                        // Exist, add more
+                        objTotalMoneySpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objTotalMoneySpend[""+dateKey] = {
                             x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
                             y: item.price
                         }
@@ -753,6 +767,18 @@ class AppUtils {
                             y: item.price
                         }
                     }
+
+                    // THis for total money
+                    if (objTotalMoneySpend[""+dateKey]) {
+                        // Exist, add more
+                        objTotalMoneySpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objTotalMoneySpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
+                    }
                 }
             })
         }
@@ -828,6 +854,18 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objAuthSpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
+                    }
+
+                    // THis for total money
+                    if (objTotalMoneySpend[""+dateKey]) {
+                        // Exist, add more
+                        objTotalMoneySpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objTotalMoneySpend[""+dateKey] = {
                             x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
                             y: item.price
                         }
@@ -913,6 +951,18 @@ class AppUtils {
                             y: item.price
                         }
                     }
+
+                    // THis for total money
+                    if (objTotalMoneySpend[""+dateKey]) {
+                        // Exist, add more
+                        objTotalMoneySpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objTotalMoneySpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
+                    }
                 }
             })
         }
@@ -992,6 +1042,18 @@ class AppUtils {
                             y: item.price
                         }
                     }
+
+                    // THis for total money
+                    if (objTotalMoneySpend[""+dateKey]) {
+                        // Exist, add more
+                        objTotalMoneySpend[""+dateKey].y += item.price;
+                    } else {
+                        // Not Exist, create new Month
+                        objTotalMoneySpend[""+dateKey] = {
+                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            y: item.price
+                        }
+                    }
                 }
             })
         }
@@ -1050,7 +1112,17 @@ class AppUtils {
             return a.x.getTime() - b.x.getTime();
         })
 
-        return {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend};
+        // convert to Array for Chart
+        for (var prop in objTotalMoneySpend) {
+            if (Object.prototype.hasOwnProperty.call(objTotalMoneySpend, prop)) {
+                arrTotalMoneySpend.push(objTotalMoneySpend[""+prop])
+            }
+        }
+        arrTotalMoneySpend.sort(function (a, b) {
+            return a.x.getTime() - b.x.getTime();
+        })
+
+        return {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend, arrTotalMoneySpend};
     }
 
     getInfoMoneySpend(theVehicle, duration = 12, tillDate=new Date()) {

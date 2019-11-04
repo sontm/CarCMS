@@ -20,6 +20,9 @@ export default {
 
     MYCAR_HEADER: "Xe Của Tôi",
 
+    HOME_MONEY_SPEND: "Chi Tiêu Các Xe",
+    HOME_GAS_USAGE: "Biểu Đồ Xăng Các Xe",
+
     CARDETAIL_HEADER: "Báo Cáo Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",
     CARDETAIL_H1_GAS_USAGE: "Biểu Đồ Xăng",
