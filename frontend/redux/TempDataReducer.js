@@ -1,8 +1,13 @@
-const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
+
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
+const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
+const TEMP_CALCULATE_TEAMCARREPORT = 'TEMP_CALCULATE_TEAMCARREPORT';
+const TEMP_CAR_LIST = 'TEMP_CAR_LIST';
 const initialState = {
     carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
+    teamCarList:[],
+    teamCarReports: {}
 };
 
 async function actTempCalculateCarReportAsync(currentVehicle, options) {
@@ -69,9 +74,33 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevTempData)
             console.log(error)
         })
     }
-    
 }
 
+export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
+    // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
+    console.log("actTempCalculateTeamCarReport cALEED WITH:" + currentVehicle.id)
+    actTempCalculateCarReportAsync(currentVehicle)
+    .then (result => {
+        dispatch({
+            type: TEMP_CALCULATE_TEAMCARREPORT,
+            payload: {id: currentVehicle.id, data: result}
+        })
+    })
+    .catch (error => {
+        console.log(error)
+    })
+
+}
+
+export const actTempSetTeamCarList = (list, dispatch) =>  {
+    // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
+    console.log("actTempSetTeamCarListcalled with---------------")
+    dispatch({
+        type: TEMP_CAR_LIST,
+        payload: list
+    })
+
+}
 
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
@@ -84,6 +113,18 @@ export default function(state = initialState, action) {
         newState.carReports[""+action.payload.id] = action.payload.data
 
         return newState;
+    case TEMP_CALCULATE_TEAMCARREPORT:
+        let newStateTeam = {
+            ...state,
+        };
+        newStateTeam.teamCarReports[""+action.payload.id] = action.payload.data
+
+        return newStateTeam;
+    case TEMP_CAR_LIST:
+        return {
+            ...state,
+            teamCarList: action.payload
+        }
     default:
         return state;
     }

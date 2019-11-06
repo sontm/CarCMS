@@ -58,13 +58,13 @@ class VehicleBasicReport extends Component {
 
     }
     componentWillMount() {
-        console.log("VehicleReport WillMount")
+        //console.log("VehicleReport WillMount")
     }
     componentDidUpdate() {
-        console.log("VehicleReport DIDUpdate")
+        //console.log("VehicleReport DIDUpdate")
     }
     render() {
-        console.log("VehicleReport Render")
+        // console.log("VehicleReport Render")
         if (this.props.vehicle) {
             var currentVehicle = this.props.vehicle;
         } else {

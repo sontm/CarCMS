@@ -1,3 +1,5 @@
+import {actTempCalculateTeamCarReport, actTempSetTeamCarList} from './TempDataReducer'
+
 const TEAM_GET_OK = 'TEAM_GET_OK';
 const TEAM_GET_JOIN_REQ_OK = 'TEAM_GET_JOIN_REQ_OK';
 
@@ -11,6 +13,20 @@ export const actTeamGetDataOK = (data) => (dispatch) => {
     dispatch({
         type: TEAM_GET_OK,
         payload: data
+    })
+    
+
+    // Calculate Data for each Car here
+    let teamCarList = [];
+    data.forEach (mem => { // Each Member
+        teamCarList.push(...mem.vehicleList);
+    })
+    actTempSetTeamCarList(teamCarList, dispatch);
+
+    data.forEach (mem => {
+        mem.vehicleList.forEach((item, idx) => {
+            actTempCalculateTeamCarReport(item, dispatch)
+        })
     })
 }
 

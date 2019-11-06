@@ -10,89 +10,33 @@ import {
   View,
   AsyncStorage
 } from 'react-native';
-import Layout from '../constants/Layout'
-import AppUtils from '../constants/AppUtils'
-import AppConstants from '../constants/AppConstants';
-import AppLocales from '../constants/i18n';
+import Layout from '../../constants/Layout'
+import AppUtils from '../../constants/AppUtils'
+import AppConstants from '../../constants/AppConstants';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, H2, H3, H1 } from 'native-base';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
-import { MonoText } from '../components/StyledText';
-import {
-  LineChart
-} from "react-native-chart-kit";
 
-import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
-import {actTempCalculateCarReport} from '../redux/TempDataReducer'
+import VehicleBasicReport from '../../components/VehicleBasicReport'
+import AppLocales from '../../constants/i18n'
 
-// vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
-// fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
-// fillOilList: {vehicleId: 1, fillDate: "10/14/2019, 11:56:44 PM", price: 500000, currentKm: 3000, id: 1}
-class HomeScreen extends React.Component {
+class TeamReport extends React.Component {
   constructor(props) {
-    super(props);
-    this.state = {
-      vehicleList:[],
-      fillGasList:[],
-      fillOilList:[],
-      authorizeCarList:[],
-    };
+    super(props)
 
-    this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this)
-  }
-  componentDidMount() {
-    console.log("HOMESCreen DidMount")
-    //this.loadFromStorage()
-    this.props.userData.vehicleList.forEach(element => {
-      this.props.actTempCalculateCarReport(element, null, this.props.tempData)
-    });
-  }
-  loadFromStorage = async () => {
-    // const vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-    // const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
-    // const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
-    // const authorizeCarList = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
-    // JSON.parse(vehicleList).forEach(item => {
-    //   this.props.actVehicleAddVehicle(item)
-    // })
-    // JSON.parse(fillGasList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-    // JSON.parse(fillOilList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-    // JSON.parse(authorizeCarList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-
-    //this.clearAsyncStorage()
-  }
-  clearAsyncStorage = async() => {
-    AsyncStorage.clear();
-  }
-  handleDeleteVehicle(vehicleId, licensePlate) {
-    this.props.actVehicleDeleteVehicle(vehicleId, licensePlate)
   }
 
-  componentDidUpdate() {
-    console.log("HOMESCreen DIDUpdate")
-  }
-  componentWillReceiveProps(nextProps) {
-    console.log("HOMESCreen WillReceiveProps")
-  }
-  componentWillUnmount() {
-    console.log("HOMESCreen Will UnMount")
-  }
   calculateAllVehicleTotalMoney(numberOfMonth) {
     let arrTotalAllCars = [];
-    this.props.userData.vehicleList.forEach(element => {
-      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
-        let {arrTotalMoneySpend} = this.props.tempData.carReports[element.id].moneyReport;
+    this.props.tempData.teamCarList.forEach(element => {
+      if (this.props.tempData.teamCarReports && this.props.tempData.teamCarReports[element.id]) {
+        let {arrTotalMoneySpend} = this.props.tempData.teamCarReports[element.id].moneyReport;
         //console.log(arrTotalMoneySpend)
         // Only Keep numberOfMonth element at the end
         if (arrTotalMoneySpend.length > numberOfMonth) {
           arrTotalMoneySpend.splice(0, arrTotalMoneySpend.length - numberOfMonth);
         }
+        if (arrTotalMoneySpend && arrTotalMoneySpend.length > 0)
         arrTotalAllCars.push(arrTotalMoneySpend)
       }
     });
@@ -100,38 +44,31 @@ class HomeScreen extends React.Component {
   }
   calculateAllVehicleGasUsage(numberOfMonth) {
     let arrGasAllCars = [];
-    this.props.userData.vehicleList.forEach(element => {
-      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
+    this.props.tempData.teamCarList.forEach(element => {
+      if (this.props.tempData.teamCarReports && this.props.tempData.teamCarReports[element.id]) {
         var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
           arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
           avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-          = this.props.tempData.carReports[element.id].gasReport;
+          = this.props.tempData.teamCarReports[element.id].gasReport;
 
         // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
         //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
         
         // arrGasAllCars.push(dataChartKitLine)
+        if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0)
         arrGasAllCars.push(arrTotalKmMonthly)
       }
     })
     return arrGasAllCars;
   }
+
   render() {
-    console.log("HOMESCreen Render")
+    console.log("TeamReport Render")
     let arrTotalAllCars = this.calculateAllVehicleTotalMoney(6);
     let arrGasAllCars = this.calculateAllVehicleGasUsage(12);
-    console.log(arrGasAllCars.length)
+
     return (
       <Container>
-        <Header style={{backgroundColor: AppConstants.COLOR_PICKER_TEXT}}>
-          <Left>
-          </Left>
-          <Body>
-            <Title>Tổng Quan</Title>
-          </Body>
-          <Right />
-        </Header>
-        
         <Content>
           <View style={styles.container}>
             <ScrollView
@@ -199,32 +136,6 @@ class HomeScreen extends React.Component {
                 </View>
 
                 <View style={styles.gasUsageContainer}>
-                  {/* {arrGasAllCars.length > 0 ? (
-                    <LineChart
-                        data={arrGasAllCars[0]}
-                        width={Layout.window.width}
-                        height={300}
-                        withDots={true}
-                        withInnerLines={false}
-                        onDataPointClick={(value, dataset, getcolor) => {
-                            this.onDataPointClick(value, dataset, getcolor, dataToDisplay)
-                        }}
-                        verticalLabelRotation={45}
-                        chartConfig={{
-                            backgroundGradientFrom: "#03528a",
-                            backgroundGradientFromOpacity: 1,
-                            backgroundGradientTo: "#52038a",
-                            backgroundGradientToOpacity: 1,
-                            fillShadowGradient:"#dddddd",
-                            fillShadowGradientOpacity: 0.2,
-                            // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            color: (opacity = 1) => `rgba(255, 255, 255, 1)`,
-                            strokeWidth: 2, // optional, default 3
-                            barPercentage: 0.9
-                        }}
-                    />) : (null)
-                  } */}
-                  
                   <VictoryChart
                       width={Layout.window.width}
                       height={350}
@@ -268,6 +179,7 @@ class HomeScreen extends React.Component {
                   </VictoryChart>
                 </View>
               </View>
+
             </ScrollView>
           </View>
         </Content>
@@ -275,10 +187,6 @@ class HomeScreen extends React.Component {
     );
   }
 }
-
-HomeScreen.navigationOptions = {
-  header: null,
-};
 
 const styles = StyleSheet.create({
   container: {
@@ -288,7 +196,6 @@ const styles = StyleSheet.create({
   contentContainer: {
 
   },
-
   textRow: {
     flexDirection: "row",
     paddingTop: 10,
@@ -323,15 +230,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  userData: state.userData,
   tempData: state.tempData
 });
 const mapActionsToProps = {
-  actVehicleDeleteVehicle, actVehicleAddVehicle,
-  actTempCalculateCarReport
 };
 
 export default connect(
   mapStateToProps,mapActionsToProps
-)(HomeScreen);
+)(TeamReport);
 

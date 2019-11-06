@@ -23,7 +23,7 @@ import AppLocales from '../constants/i18n'
 import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 
 import TeamMembers from './team/TeamMembers'
-
+import TeamReport from './team/TeamReport'
 
 function getNameOfSortType(type) {
   if (type == "auth") return "Lịch Đăng Kiểm";
@@ -52,10 +52,12 @@ class TeamScreen extends React.Component {
     this.fetchTeamData = this.fetchTeamData.bind(this)
   }
   fetchTeamData() {
+    console.log("My Team IDDDDDD")
+    console.log(this.props.userData.userProfile.teamId)
     Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
       response => {
           console.log("GEt all Member in Team OK")
-          console.log(response.data)
+          // console.log(response.data)
           //this.props.actUserLoginOK(response.data)
           //this.props.navigation.navigate("Settings")
           // this.setState({
@@ -75,7 +77,7 @@ class TeamScreen extends React.Component {
     Backend.getAllJoinTeamRequest(this.props.userData.token, 
       response => {
           console.log("GEt all JoinRequest OK")
-          console.log(response.data)
+          // console.log(response.data)
           //this.props.actUserLoginOK(response.data)
           //this.props.navigation.navigate("Settings")
           this.props.actTeamGetJoinRequestOK(response.data)
@@ -128,7 +130,6 @@ class TeamScreen extends React.Component {
       }
       
       viewDisplay.push(allVehicles.map(item => {
-        console.log(item)
         return (
         <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={() => {}}
           navigation={this.props.navigation}
@@ -136,7 +137,7 @@ class TeamScreen extends React.Component {
       )}))
       return viewDisplay;
     } else if(this.state.activePage === 1) {
-      return null
+      return <TeamReport navigation={this.props.navigation}/>;
     } else {
       return <TeamMembers navigation={this.props.navigation}/>;
     }
