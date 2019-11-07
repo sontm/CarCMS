@@ -89,6 +89,39 @@ class AppUtils {
             ,input.getDate()
             ,0,0,1); //23:59:59
     }
+
+    // arr can be 1D or 2D
+    calculateAverageOfArray(arr, dimension = 1) {
+        if (dimension == 1) {
+            var sum, avg = 0;
+            // dividing by 0 will return Infinity
+            // arr must contain at least 1 element to use reduce
+            if (arr.length)
+            {
+                sum = arr.reduce(function(a, b) { return a + b; });
+                avg = sum / arr.length;
+            }
+        } else if (dimension == 2) {
+            var sum = 0, avg = 0, count = 0;
+            // dividing by 0 will return Infinity
+            // arr must contain at least 1 element to use reduce
+            if (arr.length)
+            {
+                arr.forEach(subArr => {
+                    if (subArr && subArr.length) {
+                        subArr.forEach(obj => {
+                            if (obj.y > 0) {
+                                sum += obj.y;
+                            }
+                            count++;
+                        })
+                    }
+                })
+                avg = sum / count;
+            }
+        }
+        return {sum, avg};
+    }
     // Input: [{x, y}, {x, y}]
 
     // Output

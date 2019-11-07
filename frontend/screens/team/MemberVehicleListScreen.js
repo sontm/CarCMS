@@ -25,8 +25,6 @@ class MemberVehicleListScreen extends React.Component {
   render() {
     console.log("MemberVehicleListScreen Render")
     return (
-      <Container>
-        <Content>
           <View style={styles.container}>
             <ScrollView
               style={styles.container}
@@ -40,8 +38,6 @@ class MemberVehicleListScreen extends React.Component {
 
             </ScrollView>
           </View>
-        </Content>
-      </Container>
     );
   }
 }

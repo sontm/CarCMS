@@ -2,7 +2,7 @@ import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Root } from "native-base";
 
@@ -63,18 +63,33 @@ class App extends React.Component {
         />
       );
     } else {
-      return (
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <Root>
-            <AppNavigator />
-            </Root>
-          </PersistGate>
-          </Provider>
-        </View>
-      );
+      if (Platform.OS === 'ios') {
+        return (
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <Root>
+              <AppNavigator />
+              </Root>
+            </PersistGate>
+            </Provider>
+          </View>
+        );
+      } else {
+        return (
+          <SafeAreaView style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <Root>
+              <AppNavigator />
+              </Root>
+            </PersistGate>
+            </Provider>
+          </SafeAreaView>
+        );
+      }
     }
   }
 }

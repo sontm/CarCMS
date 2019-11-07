@@ -3,12 +3,13 @@ import React from 'react';
 import { View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Picker, Form, DatePicker, Toast } from 'native-base';
-import MyLayout from '../constants/Layout'
+import Layout from '../constants/Layout'
 import { connect } from 'react-redux';
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 // import { LineChart, Grid } from 'react-native-svg-charts'
+import {actTempCalculateCarReport} from '../redux/TempDataReducer'
 
 import AppLocales from '../constants/i18n'
 
@@ -70,28 +71,107 @@ class GasUsageReport extends React.Component {
       })
   }
 
+  calculateAllVehicleGasUsage(numberOfMonth) {
+    let arrGasKmAllCars = [];
+    let arrGasMoneyAllCars = [];
+    let arrGasMoneyPerKmAllCars = [];
+    this.props.userData.vehicleList.forEach(element => {
+      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
+        var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
+          arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
+          avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+          = this.props.tempData.carReports[element.id].gasReport;
+
+        // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
+        //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
+        
+        // arrGasAllCars.push(dataChartKitLine)
+        arrGasKmAllCars.push(arrTotalKmMonthly)
+        arrGasMoneyAllCars.push(arrTotalMoneyMonthly)
+        arrGasMoneyPerKmAllCars.push(arrTotalMoneyPerKmMonthly)
+      }
+    })
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars};
+  }
+
+  calculateAllVehicleGasUsageTeam(numberOfMonth) {
+    let arrGasKmAllCars = [];
+    let arrGasMoneyAllCars = [];
+    let arrGasMoneyPerKmAllCars = [];
+    this.props.tempData.teamCarList.forEach(element => {
+      if (this.props.tempData.teamCarReports && this.props.tempData.teamCarReports[element.id]) {
+        var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
+          arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
+          avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+          = this.props.tempData.teamCarReports[element.id].gasReport;
+
+        // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
+        //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
+        
+        // arrGasAllCars.push(dataChartKitLine)
+        if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
+            arrGasKmAllCars.push(arrTotalKmMonthly)
+        }
+        if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
+            arrGasMoneyAllCars.push(arrTotalMoneyMonthly)
+        }
+        if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
+            arrGasMoneyPerKmAllCars.push(arrTotalMoneyPerKmMonthly)
+        }
+      }
+    })
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars};
+  }
+
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
-    if (this.props.currentVehicle) { //props
+    //isTotalReport mean this is used in Home screen or Team screen
+    if (this.props.currentVehicle || this.props.isTotalReport) { //props
         if (this.displayByFilter) {
             var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
                 arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
                 avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
                 = AppUtils.getStatForGasUsage(this.props.currentVehicle.fillGasList, 
                     this.state.duration, this.state.durationType, this.state.tillDate);
+            if (this.state.activeDisplay == 1) {
+                var dataToDisplay = arrTotalMoneyMonthly;
+            } else if (this.state.activeDisplay == 2) {
+                var dataToDisplay = arrTotalMoneyPerKmMonthly;
+            } else {
+                var dataToDisplay = arrTotalKmMonthly;
+            }
         } else {
-            var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-                = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport;
+            if (this.props.isTotalReport) {
+                if (this.props.isTeamDisplay) {
+                    var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsageTeam(12);
+                } else {
+                    var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsage(12);
+                }
+                var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
+                var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
+                var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
+                if (this.state.activeDisplay == 1) {
+                    var dataToDisplay = arrGasKmAllCars;
+                } else if (this.state.activeDisplay == 2) {
+                    var dataToDisplay = arrGasMoneyAllCars;
+                } else {
+                    var dataToDisplay = arrGasMoneyPerKmAllCars;
+                }
+            } else {
+                var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
+                    arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
+                    avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+                    = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport;
+                if (this.state.activeDisplay == 1) {
+                    var dataToDisplay = arrTotalMoneyMonthly;
+                } else if (this.state.activeDisplay == 2) {
+                    var dataToDisplay = arrTotalMoneyPerKmMonthly;
+                } else {
+                    var dataToDisplay = arrTotalKmMonthly;
+                }
+            }
         }
-        if (this.state.activeDisplay == 1) {
-            var dataToDisplay = arrTotalMoneyMonthly;
-        } else if (this.state.activeDisplay == 2) {
-            var dataToDisplay = arrTotalMoneyPerKmMonthly;
-        } else {
-            var dataToDisplay = arrTotalKmMonthly;
-        }
+
         // } else {
         //     if (this.state.activeDisplay == 1) {
         //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyMonthly;
@@ -101,7 +181,10 @@ class GasUsageReport extends React.Component {
         //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalKmMonthly;
         //     }
         // }
-        
+        if (!AppConstants.TEMPO_USE_BARCHART_GAS) {
+            let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(dataToDisplay,
+                (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
+        }
         if (avgMoneyPerKmMonthly > averageMoneyPerKmPerDay) {
             // This time Use so Much, 
             var iconInfoUsage= (
@@ -115,9 +198,6 @@ class GasUsageReport extends React.Component {
                     style={{color: "#2ca02c", marginLeft: 5}} />
             )
         }
-        
-        let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(dataToDisplay,
-            (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
 
         // const mydata = {
         //     labels: ['January', 'February', 'March', 'April', 'May', 'June'],
@@ -131,7 +211,9 @@ class GasUsageReport extends React.Component {
             <View style={styles.container}>
                 <View style={styles.textRow}>
                     <Text><H2>
-                        {AppLocales.t("CARDETAIL_H1_GAS_USAGE")}
+                        {this.props.isTotalReport ? 
+                            AppLocales.t("HOME_GAS_USAGE") :
+                            AppLocales.t("CARDETAIL_H1_GAS_USAGE")}
                     </H2></Text>
                     <Segment small>
                         <Button small first onPress={() => this.setState({activeDisplay: 0})}
@@ -192,11 +274,63 @@ class GasUsageReport extends React.Component {
                     />
                 </View>
 
+                {AppConstants.TEMPO_USE_BARCHART_GAS ? (
+                    <View style={styles.gasUsageContainer}>
+                        <VictoryChart
+                            width={Layout.window.width}
+                            height={300}
+                            padding={{top:10,bottom:30,left:50,right:20}}
+                        >
+                        {/* TODO, Date X axis not Match */}
+                        <VictoryStack
+                            width={Layout.window.width}
+                            domainPadding={{y: [0, 10], x: [10, 0]}}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                        >
+                        {this.props.isTotalReport ? (
+                            dataToDisplay.map((item, idx) => (
+                                <VictoryBar
+                                key={idx}
+                                data={item}
+                                />
+                            ))
+                        ) : (
+                            <VictoryBar
+                                data={dataToDisplay}
+                            />
+                        )}
+                        </VictoryStack>
+                        <VictoryAxis
+                            crossAxis
+                            standalone={false}
+                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            style={{
+                                // grid: {stroke: "rgb(240,240,240)"},
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 0}
+                            }}
+                        />
+                        <VictoryAxis
+                            dependentAxis
+                            standalone={false}
+                            tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
+                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            style={{
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 0}
+                            }}
+                        />
+
+                        </VictoryChart>
+                    </View>
+                ): (
                 <View style={styles.gasUsageContainer}>
                     {dataChartKitLine.labels.length > 0 ? (
                     <LineChart
                         data={dataChartKitLine}
-                        width={MyLayout.window.width}
+                        width={Layout.window.width}
                         height={300}
                         withDots={true}
                         withInnerLines={false}
@@ -218,34 +352,8 @@ class GasUsageReport extends React.Component {
                         }}
                     />) : (null)
                     }
-                    {/* <VictoryChart
-                        width={MyLayout.window.width}
-                        height={300}
-                        domainPadding={{y: [50, 25], x: [10, 10]}}
-                        padding={{top:10,bottom:30,left:10,right:10}}
-                    >
-                    <VictoryLine colorScale={AppConstants.COLOR_SCALE_10}
-                        style={{
-                            data: { stroke: "#c43a31" },
-                            parent: { border: "1px solid #ccc"}
-                        }}
-                        labels={({ datum }) => (datum.y.toFixed(0))}
-                        data={dataToDisplay}
-                        interpolation="linear"
-                    />
-                    <VictoryAxis
-                        crossAxis
-                        standalone={false}
-                        tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                        //tickCount={dataToDisplay ? dataToDisplay.length-1 : 3}
-                        style={{
-                            grid: {stroke: "rgb(240,240,240)"},
-                            ticks: {stroke: "grey", size: 5},
-                            tickLabels: {fontSize: 12, padding: 0}
-                        }}
-                    />
-                    </VictoryChart> */}
                 </View>
+                )}
 
                 {this.state.duration != AppLocales.t("GENERAL_ALL") ? (
                 <View>
@@ -296,50 +404,6 @@ class GasUsageReport extends React.Component {
                 </View>
                 </View>
                 ): null}
-
-
-                <View style={styles.textRow}>
-                    <Text><H3>
-                    {AppLocales.t("CARDETAIL_AVERAGE_ALL")}
-                    </H3></Text>
-                </View>
-                <View style={styles.statRow}>
-                    <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H3>{averageKmPerDay ? 
-                                (averageKmPerDay*30).toFixed(0): ""}</H3></Text>
-                        </CardItem>
-                        <CardItem>
-                        <Body>
-                            <Text style={{fontSize: 13}}>Km/{AppLocales.t("GENERAL_MONTH")}</Text>
-                        </Body>
-                        </CardItem>
-                    </Card>
-
-                    <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H3>{averageMoneyPerDay ? 
-                                (averageMoneyPerDay*30).toFixed(0) : ""}</H3></Text>
-                        </CardItem>
-                        <CardItem>
-                        <Body>
-                            <Text style={{fontSize: 13}}>đ/{AppLocales.t("GENERAL_MONTH")}</Text>
-                        </Body>
-                        </CardItem>
-                    </Card>
-
-                    <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H3>{averageMoneyPerKmPerDay ? 
-                                averageMoneyPerKmPerDay.toFixed(0) : ""}</H3></Text>
-                        </CardItem>
-                        <CardItem>
-                        <Body>
-                            <Text style={{fontSize: 13}}>đ/Km</Text>
-                        </Body>
-                        </CardItem>
-                    </Card>
-                </View>
                 
             </View>
         )
@@ -416,10 +480,11 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    tempData: state.tempData
+    tempData: state.tempData,
+    userData: state.userData
 });
 const mapActionsToProps = {
-    
+    actTempCalculateCarReport
 };
   
 export default connect(

@@ -44,15 +44,54 @@ class MoneyUsageByTimeReport extends React.Component {
     this.displayByFilter = true;
   }
 
+  calculateAllVehicleTotalMoney(numberOfMonth) {
+    let arrTotalAllCars = [];
+    this.props.userData.vehicleList.forEach(element => {
+      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
+        let {arrTotalMoneySpend} = this.props.tempData.carReports[element.id].moneyReport;
+        //console.log(arrTotalMoneySpend)
+        // Only Keep numberOfMonth element at the end
+        if (arrTotalMoneySpend.length > numberOfMonth) {
+          arrTotalMoneySpend.splice(0, arrTotalMoneySpend.length - numberOfMonth);
+        }
+        arrTotalAllCars.push(arrTotalMoneySpend)
+      }
+    });
+    return arrTotalAllCars;
+  }
+  calculateAllVehicleTotalMoneyTeam(numberOfMonth) {
+    let arrTotalAllCars = [];
+    this.props.tempData.teamCarList.forEach(element => {
+      if (this.props.tempData.teamCarReports && this.props.tempData.teamCarReports[element.id]) {
+        let {arrTotalMoneySpend} = this.props.tempData.teamCarReports[element.id].moneyReport;
+        //console.log(arrTotalMoneySpend)
+        // Only Keep numberOfMonth element at the end
+        if (arrTotalMoneySpend.length > numberOfMonth) {
+          arrTotalMoneySpend.splice(0, arrTotalMoneySpend.length - numberOfMonth);
+        }
+        if (arrTotalMoneySpend && arrTotalMoneySpend.length > 0)
+        arrTotalAllCars.push(arrTotalMoneySpend)
+      }
+    });
+    return arrTotalAllCars;
+  }
   render() {
-    if (this.props.currentVehicle) {
+    if (this.props.currentVehicle || this.props.isTotalReport) {
         if (this.displayByFilter) {
             var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
                 = AppUtils.getInfoMoneySpendByTime(this.props.currentVehicle,
                     this.state.duration, this.state.durationType, this.state.tillDate);
         } else {
-            var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
-                = this.props.tempData.carReports[this.props.currentVehicle.id].moneyReport;
+            if (this.props.isTotalReport) {
+                if (this.props.isTeamDisplay) {
+                    var arrTotalAllCars = this.calculateAllVehicleTotalMoneyTeam(6);
+                } else {
+                    var arrTotalAllCars = this.calculateAllVehicleTotalMoney(6);
+                }
+            } else {
+                var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
+                    = this.props.tempData.carReports[this.props.currentVehicle.id].moneyReport;
+            }
         }
 
         return (
@@ -60,7 +99,9 @@ class MoneyUsageByTimeReport extends React.Component {
                 
                 <View style={styles.textRow}>
                     <Text><H2>
-                    {AppLocales.t("CARDETAIL_H1_MONEY_USAGE_BYTIME")}
+                    {this.props.isTotalReport ? 
+                            AppLocales.t("HOME_MONEY_SPEND") :
+                            AppLocales.t("CARDETAIL_H1_MONEY_USAGE_BYTIME")}
                     </H2></Text>
                 </View>
 
@@ -119,11 +160,26 @@ class MoneyUsageByTimeReport extends React.Component {
                             padding={{top:10,bottom:30,left:50,right:20}}
                         >
                         {/* TODO, Date X axis not Match */}
+                        {this.props.isTotalReport ? (
+                            <VictoryStack
+                                width={Layout.window.width}
+                                domainPadding={{y: [0, 10], x: [10, 0]}}
+                                colorScale={AppConstants.COLOR_SCALE_10}
+                            >
+                            {arrTotalAllCars.map((item, idx) => (
+                                <VictoryBar
+                                key={idx}
+                                data={item}
+                                />
+                            ))}
+                            </VictoryStack>
+                        ) : (
                         <VictoryStack
                             width={Layout.window.width}
                             domainPadding={{y: [0, 10], x: [10, 0]}}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         >
+                        
                             {arrGasSpend && arrGasSpend.length ?
                             <VictoryBar
                                 data={arrGasSpend}
@@ -153,7 +209,9 @@ class MoneyUsageByTimeReport extends React.Component {
                                 data={arrServiceSpend}
                                 interpolation="linear"
                             /> : null}
+                        
                         </VictoryStack>
+                        )}
                         <VictoryAxis
                             crossAxis
                             standalone={false}
@@ -271,7 +329,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    tempData: state.tempData
+    tempData: state.tempData,
+    userData: state.userData
 });
 const mapActionsToProps = {
 };

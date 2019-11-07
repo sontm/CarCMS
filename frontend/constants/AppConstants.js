@@ -42,6 +42,8 @@ export default {
     SETTING_KM_NEXT_OILFILL: 1000,
     SETTING_DAY_NEXT_AUTHORIZE_CAR: 730, // 2year
 
+    TEMPO_USE_BARCHART_GAS: true,
+
     SERVER_API:"http://52.77.223.247:3000/api",
     //SERVER_API:  "http://192.168.1.81:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here not OK

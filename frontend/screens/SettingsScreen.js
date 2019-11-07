@@ -68,8 +68,9 @@ class SettingsScreen extends React.Component {
   async doLoginGoogle() {
     try {
       const result = await Google.logInAsync({
+        // behavior: "web",
         androidClientId: "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",
-        //iosClientId: YOUR_CLIENT_ID_HERE,  <-- if you use iOS
+        iosClientId: "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com",
         scopes: ["profile", "email"]
       })
 

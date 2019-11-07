@@ -21,6 +21,8 @@ import { MonoText } from '../components/StyledText';
 import {
   LineChart
 } from "react-native-chart-kit";
+import GasUsageReport from '../components/GasUsageReport'
+import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
 
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
 import {actTempCalculateCarReport} from '../redux/TempDataReducer'
@@ -98,29 +100,9 @@ class HomeScreen extends React.Component {
     });
     return arrTotalAllCars;
   }
-  calculateAllVehicleGasUsage(numberOfMonth) {
-    let arrGasAllCars = [];
-    this.props.userData.vehicleList.forEach(element => {
-      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
-        var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-          arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-          avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-          = this.props.tempData.carReports[element.id].gasReport;
-
-        // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
-        //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
-        
-        // arrGasAllCars.push(dataChartKitLine)
-        arrGasAllCars.push(arrTotalKmMonthly)
-      }
-    })
-    return arrGasAllCars;
-  }
   render() {
     console.log("HOMESCreen Render")
     let arrTotalAllCars = this.calculateAllVehicleTotalMoney(6);
-    let arrGasAllCars = this.calculateAllVehicleGasUsage(12);
-    console.log(arrGasAllCars.length)
     return (
       <Container>
         <Header style={{backgroundColor: AppConstants.COLOR_PICKER_TEXT}}>
@@ -138,136 +120,10 @@ class HomeScreen extends React.Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
               
-              <View style={styles.moneySpendContainer}>
-                <View style={styles.textRow}>
-                    <Text><H2>
-                    {AppLocales.t("HOME_MONEY_SPEND")}
-                    </H2></Text>
-                </View>
+              <MoneyUsageByTimeReport isTotalReport={true} />
 
-                <View style={styles.barChartStackContainer}>
-                  <VictoryChart
-                      width={Layout.window.width}
-                      height={300}
-                      padding={{top:10,bottom:30,left:50,right:20}}
-                  >
-                  {/* TODO, Date X axis not Match */}
-                  <VictoryStack
-                      width={Layout.window.width}
-                      domainPadding={{y: [0, 10], x: [10, 0]}}
-                      colorScale={AppConstants.COLOR_SCALE_10}
-                  >
-                  {arrTotalAllCars.map((item, idx) => (
-                    <VictoryBar
-                      key={idx}
-                      data={item}
-                    />
-                  ))}
-                  </VictoryStack>
-                  <VictoryAxis
-                      crossAxis
-                      standalone={false}
-                      tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                      tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
-                      // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
-                      style={{
-                          // grid: {stroke: "rgb(240,240,240)"},
-                          ticks: {stroke: "grey", size: 5},
-                          tickLabels: {fontSize: 12, padding: 0}
-                      }}
-                  />
-                  <VictoryAxis
-                      dependentAxis
-                      standalone={false}
-                      tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
-                      // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
-                      style={{
-                          ticks: {stroke: "grey", size: 5},
-                          tickLabels: {fontSize: 12, padding: 0}
-                      }}
-                  />
+              <GasUsageReport isTotalReport={true} />
 
-                  </VictoryChart>
-                </View>
-              </View>
-
-              <View style={styles.moneySpendContainer}>
-                <View style={styles.textRow}>
-                    <Text><H2>
-                    {AppLocales.t("HOME_GAS_USAGE")}
-                    </H2></Text>
-                </View>
-
-                <View style={styles.gasUsageContainer}>
-                  {/* {arrGasAllCars.length > 0 ? (
-                    <LineChart
-                        data={arrGasAllCars[0]}
-                        width={Layout.window.width}
-                        height={300}
-                        withDots={true}
-                        withInnerLines={false}
-                        onDataPointClick={(value, dataset, getcolor) => {
-                            this.onDataPointClick(value, dataset, getcolor, dataToDisplay)
-                        }}
-                        verticalLabelRotation={45}
-                        chartConfig={{
-                            backgroundGradientFrom: "#03528a",
-                            backgroundGradientFromOpacity: 1,
-                            backgroundGradientTo: "#52038a",
-                            backgroundGradientToOpacity: 1,
-                            fillShadowGradient:"#dddddd",
-                            fillShadowGradientOpacity: 0.2,
-                            // color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                            color: (opacity = 1) => `rgba(255, 255, 255, 1)`,
-                            strokeWidth: 2, // optional, default 3
-                            barPercentage: 0.9
-                        }}
-                    />) : (null)
-                  } */}
-                  
-                  <VictoryChart
-                      width={Layout.window.width}
-                      height={350}
-                      padding={{top:10,bottom:30,left:50,right:20}}
-                  >
-                  <VictoryStack
-                      width={Layout.window.width}
-                      domainPadding={{y: [0, 10], x: [10, 0]}}
-                      colorScale={AppConstants.COLOR_SCALE_10}
-                  >
-                  {arrGasAllCars && arrGasAllCars.map((item, idx) => (
-                    <VictoryBar
-                      key={idx}
-                      data={item}
-                    />
-                  ))}
-                  </VictoryStack>
-                  <VictoryAxis
-                      crossAxis
-                      standalone={false}
-                      tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                      tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
-                      // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
-                      style={{
-                          // grid: {stroke: "rgb(240,240,240)"},
-                          ticks: {stroke: "grey", size: 5},
-                          tickLabels: {fontSize: 12, padding: 0}
-                      }}
-                  />
-                  <VictoryAxis
-                      dependentAxis
-                      standalone={false}
-                      tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
-                      // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
-                      style={{
-                          ticks: {stroke: "grey", size: 5},
-                          tickLabels: {fontSize: 12, padding: 0}
-                      }}
-                  />
-
-                  </VictoryChart>
-                </View>
-              </View>
             </ScrollView>
           </View>
         </Content>
