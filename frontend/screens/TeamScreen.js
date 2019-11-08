@@ -105,7 +105,9 @@ class TeamScreen extends React.Component {
   }
   componentDidMount() {
     console.log("TeamScreen DidMount")
-    this.fetchTeamData()
+
+    // TODO* whento call fetch team Data ?
+    //this.fetchTeamData()
   }
   renderComponent = () => {
     if(this.state.activePage === 0) {

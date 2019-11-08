@@ -1,5 +1,6 @@
 import { REHYDRATE } from 'redux-persist';
 import AppConstants from '../constants/AppConstants'
+import AppUtils from '../constants/AppUtils'
 
 const VEHICLE_SYNC_FROMSERVER = 'VEHICLE_SYNC_FROMSERVER';
 
@@ -30,6 +31,8 @@ const USER_REGISTER_OK = 'USER_REGISTER_OK';
 const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 
+const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
+
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
     teamInfo: {},//"code": "bfOdOi7L", "id": "5db0564ed74e760f4a2c3db9","name": "PhuPhuong",
@@ -37,7 +40,8 @@ const initialState = {
     isLogined: false,
     token: "",
     defaultVehicleId: "",
-    vehicleList:[]//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
+    vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
+    carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
 };
 
 export const actUserRegisterOK = (data) => (dispatch) => {
@@ -204,6 +208,28 @@ export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
     
 }
 
+
+export const actTempCalculateCarReport = (currentVehicle, options, prevTempData) => (dispatch) => {
+    // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
+    if (!prevTempData.carReports[currentVehicle.id] || 
+            AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
+        console.log(">>>actTempCalculateCarReport:")
+        let theIdx = AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id);
+        AppUtils.actTempCalculateCarReportAsync(currentVehicle, options)
+        .then (result => {
+            console.log("<<<actTempCalculateCarReport FINISH")
+            AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.splice(theIdx, 1);
+            dispatch({
+                type: TEMP_CALCULATE_CARREPORT,
+                payload: {id: currentVehicle.id, data: result}
+            })
+        })
+        .catch (error => {
+            console.log(error)
+        })
+    }
+}
+
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
     switch (action.type) {
@@ -211,7 +237,7 @@ export default function(state = initialState, action) {
     //     console.log("HVE JUST LOAD STATE--------------")
     //     let newAA = {...state}; // THis code will Lose all
     //     if (!state.vehicleList) state.vehicleList= [];
-    //     return state;
+    //     return newAA;
     case USER_CREATE_TEAM_OK:
         return {
             ...state,
@@ -459,6 +485,14 @@ export default function(state = initialState, action) {
             }
         }
         return newStateVehicleServiceEdit;
+
+    case TEMP_CALCULATE_CARREPORT:
+        let newStateCarReport = {
+            ...state,
+        };
+        newStateCarReport.carReports[""+action.payload.id] = action.payload.data
+
+        return newStateCarReport;
     default:
         return state;
     }

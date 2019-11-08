@@ -41,6 +41,8 @@ export default {
     TEAM_MEM_LIST:"Danh Sách Thành Viên",
     TEAM_MEMBER_CAR_HEADER:"Xe Của Thành Viên",
 
+    TEAM_REPORT_TOP_CAR_MONEYUSAGE: "Top Chi Tiêu Nhiều",
+
 
     SETTING_H1_PRO_FEATURE: "Phiên Bản PRO",
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",

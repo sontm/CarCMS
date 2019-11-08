@@ -19,6 +19,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text,
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 import GasUsageReport from '../../components/GasUsageReport'
 import MoneyUsageByTimeReport from '../../components/MoneyUsageByTimeReport'
+import MoneyUsageReport from '../../components/MoneyUsageReport'
 
 import VehicleBasicReport from '../../components/VehicleBasicReport'
 import AppLocales from '../../constants/i18n'
@@ -28,8 +29,6 @@ class TeamReport extends React.Component {
     super(props)
 
   }
-
-  
 
   render() {
     console.log("TeamReport Render")
@@ -41,7 +40,7 @@ class TeamReport extends React.Component {
           contentContainerStyle={styles.contentContainer}>
           
           <MoneyUsageByTimeReport isTotalReport={true} isTeamDisplay={true}/>
-
+          <MoneyUsageReport isTotalReport={true} isTeamDisplay={true}/>
           <GasUsageReport isTotalReport={true} isTeamDisplay={true}/>
 
         </ScrollView>

@@ -35,18 +35,48 @@ class MoneyUsageReport extends React.Component {
     this.displayByFilter = true;
   }
   
+  calculateAllVehicleTotalMoneyPercent(numberOfMonth) {
+    let totalGasSpendTeam = 0, totalOilSpendTeam = 0, totalAuthSpendTeam = 0, 
+        totalExpenseSpendTeam = 0, totalServiceSpendTeam = 0;
+    this.props.teamData.teamCarList.forEach(element => {
+      if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+        let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend} 
+            = this.props.teamData.teamCarReports[element.id].moneyReport;
+        
+        totalGasSpendTeam += totalGasSpend;
+        totalOilSpendTeam += totalOilSpend;
+        totalAuthSpendTeam += totalAuthSpend;
+        totalExpenseSpendTeam += totalExpenseSpend;
+        totalServiceSpendTeam += totalServiceSpend;
+      }
+    });
+    return {totalGasSpendTeam,totalOilSpendTeam,totalAuthSpendTeam,
+        totalExpenseSpendTeam, totalServiceSpendTeam};
+  }
   render() {
-    if (this.props.currentVehicle) {
+    if (this.props.currentVehicle || this.props.isTotalReport) {
         if (this.displayByFilter) {
             var {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
                 = AppUtils.getInfoMoneySpend(this.props.currentVehicle,
                     this.state.duration, this.state.tillDate);
             var {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(this.props.currentVehicle.expenseList);
         } else {
-            var {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
-                = this.props.tempData.carReports[this.props.currentVehicle.id].moneyReport;
+            if (this.props.isTotalReport) {
+                let {totalGasSpendTeam,totalOilSpendTeam,totalAuthSpendTeam,
+                    totalExpenseSpendTeam, totalServiceSpendTeam} = this.calculateAllVehicleTotalMoneyPercent(6);
+                
+                var totalGasSpend = totalGasSpendTeam;
+                var totalOilSpend = totalOilSpendTeam;
+                var totalAuthSpend = totalAuthSpendTeam;
+                var totalExpenseSpend = totalExpenseSpendTeam;
+                var totalServiceSpend = totalServiceSpendTeam;
 
-            var {arrExpenseTypeSpend} = this.props.tempData.carReports[this.props.currentVehicle.id].expenseReport;
+            } else {
+                var {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
+                    = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
+
+                var {arrExpenseTypeSpend} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
+            }
         }
 
         return (
@@ -107,11 +137,13 @@ class MoneyUsageReport extends React.Component {
                             ]}
                             radius={100}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
-                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
+                            labelRadius={({ innerRadius }) => innerRadius + 105 }
                             />
                     </View>
                 </View>
 
+                {!this.props.isTotalReport ? (
+                <View>
                 <View style={{...styles.textRow, marginTop: 15}}>
                     <Text><H3>
                     {AppLocales.t("CARDETAIL_H1_EXPENSE_USAGE")}
@@ -124,10 +156,12 @@ class MoneyUsageReport extends React.Component {
                             data={arrExpenseTypeSpend}
                             radius={100}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
-                            // labelRadius={({ innerRadius }) => innerRadius + 20 }
+                            //labelRadius={({ innerRadius }) => innerRadius + 20 }
                             />
                     </View>
                 </View>
+                </View>
+                ) : null}
 
             </View>
         )
@@ -151,6 +185,7 @@ const styles = StyleSheet.create({
       flexDirection: "column",
       borderRadius: 7,
       justifyContent: "space-between",
+      marginBottom: 20,
     },
 
 
@@ -218,7 +253,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    tempData: state.tempData
+    userData: state.userData,
+    teamData: state.teamData
 });
 const mapActionsToProps = {
 };

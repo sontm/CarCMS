@@ -47,8 +47,8 @@ class MoneyUsageByTimeReport extends React.Component {
   calculateAllVehicleTotalMoney(numberOfMonth) {
     let arrTotalAllCars = [];
     this.props.userData.vehicleList.forEach(element => {
-      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
-        let {arrTotalMoneySpend} = this.props.tempData.carReports[element.id].moneyReport;
+      if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
+        let {arrTotalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
         //console.log(arrTotalMoneySpend)
         // Only Keep numberOfMonth element at the end
         if (arrTotalMoneySpend.length > numberOfMonth) {
@@ -61,9 +61,9 @@ class MoneyUsageByTimeReport extends React.Component {
   }
   calculateAllVehicleTotalMoneyTeam(numberOfMonth) {
     let arrTotalAllCars = [];
-    this.props.tempData.teamCarList.forEach(element => {
-      if (this.props.tempData.teamCarReports && this.props.tempData.teamCarReports[element.id]) {
-        let {arrTotalMoneySpend} = this.props.tempData.teamCarReports[element.id].moneyReport;
+    this.props.teamData.teamCarList.forEach(element => {
+      if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+        let {arrTotalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
         //console.log(arrTotalMoneySpend)
         // Only Keep numberOfMonth element at the end
         if (arrTotalMoneySpend.length > numberOfMonth) {
@@ -75,6 +75,60 @@ class MoneyUsageByTimeReport extends React.Component {
     });
     return arrTotalAllCars;
   }
+  calculateEachVehicleTotalMoneyTeam(numberOfMonth) {
+    let arrTotalGasEachCars = [];
+    let arrTotalOilEachCars = [];
+    let arrTotalAuthEachCars = [];
+    let arrTotalExpenseEachCars = [];
+    let arrTotalServiceEachCars = [];
+
+    this.props.teamData.teamCarList.forEach((element, carIdx) => {
+      if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend} 
+            = this.props.teamData.teamCarReports[element.id].moneyReport;
+        let xValue = carIdx + 1;
+        //let xValue = element.licensePlate;
+        //let xValue = element.licensePlate;
+        let thisCarGasItem = {x: xValue, y: 0};
+        if (arrGasSpend && arrGasSpend.length) {
+            arrGasSpend.forEach(item => {
+                thisCarGasItem.y += item.y;
+            })
+            arrTotalGasEachCars.push(thisCarGasItem);
+        }
+        let thisCarOilItem = {x: xValue, y: 0};
+        if (arrOilSpend && arrOilSpend.length) {
+            arrOilSpend.forEach(item => {
+                thisCarOilItem.y += item.y;
+            })
+            arrTotalOilEachCars.push(thisCarOilItem);
+        }
+        let thisCarAuthItem = {x: xValue, y: 0};
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                thisCarAuthItem.y += item.y;
+            })
+            arrTotalAuthEachCars.push(thisCarAuthItem);
+        }
+        let thisCarExpenseItem = {x: xValue, y: 0};
+        if (arrExpenseSpend && arrExpenseSpend.length) {
+            arrExpenseSpend.forEach(item => {
+                thisCarExpenseItem.y += item.y;
+            })
+            arrTotalExpenseEachCars.push(thisCarExpenseItem);
+        }
+        let thisCarServiceItem = {x: xValue, y: 0};
+        if (arrServiceSpend && arrServiceSpend.length) {
+            arrServiceSpend.forEach(item => {
+                thisCarServiceItem.y += item.y;
+            })
+            arrTotalServiceEachCars.push(thisCarServiceItem);
+        }
+      }
+    });
+    return {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
+        arrTotalExpenseEachCars, arrTotalServiceEachCars}
+  }
   render() {
     if (this.props.currentVehicle || this.props.isTotalReport) {
         if (this.displayByFilter) {
@@ -85,12 +139,15 @@ class MoneyUsageByTimeReport extends React.Component {
             if (this.props.isTotalReport) {
                 if (this.props.isTeamDisplay) {
                     var arrTotalAllCars = this.calculateAllVehicleTotalMoneyTeam(6);
+                    var {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
+                        arrTotalExpenseEachCars, arrTotalServiceEachCars}
+                        = this.calculateEachVehicleTotalMoneyTeam(6);
                 } else {
                     var arrTotalAllCars = this.calculateAllVehicleTotalMoney(6);
                 }
             } else {
                 var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
-                    = this.props.tempData.carReports[this.props.currentVehicle.id].moneyReport;
+                    = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
             }
         }
 
@@ -221,7 +278,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
+                                tickLabels: {fontSize: 12, padding: 5, angle: 30}
                             }}
                         />
                         <VictoryAxis
@@ -238,6 +295,85 @@ class MoneyUsageByTimeReport extends React.Component {
                         </VictoryChart>
                     </View>
                 </View>
+
+                {(this.props.isTotalReport && this.props.isTeamDisplay) ? (
+                <View>
+                <View style={{...styles.textRow, marginTop: 5}}>
+                    <Text><H3>
+                    {AppLocales.t("TEAM_REPORT_TOP_CAR_MONEYUSAGE")}
+                    </H3></Text>
+                </View>
+
+                <View style={styles.statRow}>
+                    <View style={styles.moneyUsageStackContainerEachCar}>
+                        <VictoryChart
+                            width={Layout.window.width}
+                            height={300}
+                            padding={{top:10,bottom:30,left:50,right:20}}
+                        >
+                        <VictoryStack
+                            width={Layout.window.width}
+                            domainPadding={{y: [0, 10], x: [10, 0]}}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                        >
+                            {arrTotalGasEachCars && arrTotalGasEachCars.length ?
+                            <VictoryBar
+                                data={arrTotalGasEachCars}
+                                interpolation="linear"
+                            /> : null}
+
+                            {arrTotalOilEachCars && arrTotalOilEachCars.length ?
+                            <VictoryBar
+                                data={arrTotalOilEachCars}
+                                interpolation="linear"
+                            /> : null}
+
+                            {arrTotalAuthEachCars && arrTotalAuthEachCars.length ?
+                            <VictoryBar
+                                data={arrTotalAuthEachCars}
+                                interpolation="linear"
+                            /> : null}
+
+                            {arrTotalExpenseEachCars && arrTotalExpenseEachCars.length ?
+                            <VictoryBar
+                                data={arrTotalExpenseEachCars}
+                                interpolation="linear"
+                            /> : null}
+
+                            {arrTotalServiceEachCars && arrTotalServiceEachCars.length ?
+                            <VictoryBar
+                                data={arrTotalServiceEachCars}
+                                interpolation="linear"
+                            /> : null}
+                        
+                        </VictoryStack>
+                        <VictoryAxis
+                            crossAxis
+                            standalone={false}
+                            tickFormat={(t) => `${this.props.teamData.teamCarList[t-1].licensePlate}`}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            style={{
+                                // grid: {stroke: "rgb(240,240,240)"},
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 5, angle: 30}
+                            }}
+                        />
+                        <VictoryAxis
+                            dependentAxis
+                            standalone={false}
+                            tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
+                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            style={{
+                                ticks: {stroke: "grey", size: 5},
+                                tickLabels: {fontSize: 12, padding: 0},
+                            }}
+                        />
+                        </VictoryChart>
+                    </View>
+                </View>
+                </View>
+                ) : null }
             </View>
         )
     } else {
@@ -316,6 +452,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         alignSelf: "center",
     },
+    moneyUsageStackContainerEachCar: {
+        height: 300,
+        justifyContent: "center",
+        alignItems: "center",
+        alignSelf: "center",
+        marginBottom: 10
+    },
 
     moneyUsagePieContainer: {
         width: Layout.window.width,
@@ -329,8 +472,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    tempData: state.tempData,
-    userData: state.userData
+    userData: state.userData,
+    teamData: state.teamData
 });
 const mapActionsToProps = {
 };

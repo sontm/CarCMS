@@ -25,7 +25,7 @@ import GasUsageReport from '../components/GasUsageReport'
 import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
 
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
-import {actTempCalculateCarReport} from '../redux/TempDataReducer'
+import {actTempCalculateCarReport} from '../redux/UserReducer'
 
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
@@ -46,7 +46,7 @@ class HomeScreen extends React.Component {
     console.log("HOMESCreen DidMount")
     //this.loadFromStorage()
     this.props.userData.vehicleList.forEach(element => {
-      this.props.actTempCalculateCarReport(element, null, this.props.tempData)
+      this.props.actTempCalculateCarReport(element, null, this.props.userData)
     });
   }
   loadFromStorage = async () => {
@@ -88,8 +88,8 @@ class HomeScreen extends React.Component {
   calculateAllVehicleTotalMoney(numberOfMonth) {
     let arrTotalAllCars = [];
     this.props.userData.vehicleList.forEach(element => {
-      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
-        let {arrTotalMoneySpend} = this.props.tempData.carReports[element.id].moneyReport;
+      if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
+        let {arrTotalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
         //console.log(arrTotalMoneySpend)
         // Only Keep numberOfMonth element at the end
         if (arrTotalMoneySpend.length > numberOfMonth) {
@@ -179,8 +179,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  userData: state.userData,
-  tempData: state.tempData
+  userData: state.userData
 });
 const mapActionsToProps = {
   actVehicleDeleteVehicle, actVehicleAddVehicle,

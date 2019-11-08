@@ -1,28 +1,42 @@
-import {actTempCalculateTeamCarReport, actTempSetTeamCarList} from './TempDataReducer'
+import AppUtils from '../constants/AppUtils'
+import AppConstants from '../constants/AppConstants';
+const TEMP_CALCULATE_TEAMCARREPORT = 'TEMP_CALCULATE_TEAMCARREPORT';
+const TEMP_CAR_LIST = 'TEMP_CAR_LIST';
 
 const TEAM_GET_OK = 'TEAM_GET_OK';
 const TEAM_GET_JOIN_REQ_OK = 'TEAM_GET_JOIN_REQ_OK';
 
 const initialState = {
     members: [],
-    joinRequests: []
+    joinRequests: [],
+    teamCarList:[],
+    teamCarReports: {}
 };
 
+
+export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
+    // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
+    console.log("actTempCalculateTeamCarReport cALEED WITH:" + currentVehicle.id)
+    AppUtils.actTempCalculateCarReportAsync(currentVehicle)
+    .then (result => {
+        dispatch({
+            type: TEMP_CALCULATE_TEAMCARREPORT,
+            payload: {id: currentVehicle.id, data: result}
+        })
+    })
+    .catch (error => {
+        console.log(error)
+    })
+
+}
+
 export const actTeamGetDataOK = (data) => (dispatch) => {
-    console.log("actSettingSetVehicleDefault:")
+    console.log("actTeamGetDataOK:")
     dispatch({
         type: TEAM_GET_OK,
         payload: data
     })
     
-
-    // Calculate Data for each Car here
-    let teamCarList = [];
-    data.forEach (mem => { // Each Member
-        teamCarList.push(...mem.vehicleList);
-    })
-    actTempSetTeamCarList(teamCarList, dispatch);
-
     data.forEach (mem => {
         mem.vehicleList.forEach((item, idx) => {
             actTempCalculateTeamCarReport(item, dispatch)
@@ -39,6 +53,7 @@ export const actTeamGetJoinRequestOK = (data) => (dispatch) => {
 }
 
 
+
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
     switch (action.type) {
@@ -48,10 +63,31 @@ export default function(state = initialState, action) {
             joinRequests: action.payload
         };
     case TEAM_GET_OK:
+        // Calculate Data for each Car here
+        let teamCarList = [];
+        action.payload.forEach (mem => { // Each Member
+            teamCarList.push(...mem.vehicleList);
+        })
+
         return {
             ...state,
-            members: action.payload
+            members: action.payload,
+            carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
+            teamCarList:teamCarList,
+            teamCarReports: {}
         };
+    case TEMP_CALCULATE_TEAMCARREPORT:
+        let newStateTeam = {
+            ...state,
+        };
+        newStateTeam.teamCarReports[""+action.payload.id] = action.payload.data
+
+        return newStateTeam;
+    case TEMP_CAR_LIST:
+        return {
+            ...state,
+            teamCarList: action.payload
+        }
     default:
         return state;
     }

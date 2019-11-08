@@ -15,7 +15,7 @@ import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
-import {actTempCalculateCarReport} from '../redux/TempDataReducer'
+import {actTempCalculateCarReport} from '../redux/UserReducer'
 
 class VehicleDetailReport extends React.Component {
   constructor(props) {
@@ -51,7 +51,7 @@ class VehicleDetailReport extends React.Component {
 
     if (currentVehicle) {
         console.log("CALL actTempCalculateCarReport:")
-        this.props.actTempCalculateCarReport(currentVehicle, null, this.props.tempData)
+        this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
         console.log("END actTempCalculateCarReport:")
         // let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
         // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
@@ -64,7 +64,9 @@ class VehicleDetailReport extends React.Component {
         //     = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
         //         currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
-
+        console.log("Typeof~~~~~~~~~~~~~~~~~~")
+        console.log(typeof this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil)
+        console.log(this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil)
         return (
             <Container>
             <Content>
@@ -88,7 +90,7 @@ class VehicleDetailReport extends React.Component {
 
                 </View>
 
-                {this.props.tempData.carReports[currentVehicle.id] ? (
+                {this.props.userData.carReports[currentVehicle.id] ? (
                 <View>
                 <View style={styles.reminderContainer}>
                     <View style={styles.textRow}>
@@ -102,48 +104,50 @@ class VehicleDetailReport extends React.Component {
                         <VictoryPie
                             colorScale={["tomato", "silver"]}
                             data={[
-                                { x: "", y: this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil },
-                                { x: "", y: (AppConstants.SETTING_KM_NEXT_OILFILL - this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil) },
+                                { x: "", y: this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil },
+                                { x: "", y: (AppConstants.SETTING_KM_NEXT_OILFILL - this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil) },
                             ]}
                             height={150}
-                            innerRadius={60}
+                            innerRadius={65}
                             radius={70}
                             labels={() => null}
                             />
                         <View style={styles.labelProgress}>
                             <Text>{AppLocales.t("GENERAL_OIL") + ": "}</Text>
                             <Text style={styles.labelProgressText}>
-                                {this.props.tempData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
+                                {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
                             </Text>
                             <Text>Km</Text>
                         </View>
                         <Text>{AppLocales.t("GENERAL_NEXT") + ": "}
-                            {this.props.tempData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil ? 
-                            this.props.tempData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil.toLocaleDateString(): "NA"}</Text>
+                            {this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil ? 
+                            AppUtils.formatDateMonthDayYearVNShort(
+                                this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil): "NA"}</Text>
                         </View>
 
                         <View style={styles.progressContainer}>
                         <VictoryPie
                             colorScale={["tomato", "silver"]}
                             data={[
-                                { x: "", y: this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
+                                { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
                                 { x: "", y: (AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR -
-                                    this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
+                                    this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
                             ]}
                             height={150}
-                            innerRadius={60}
+                            innerRadius={65}
                             radius={70}
                             labels={() => null}
                             />
                         <View style={styles.labelProgress}>
                             <Text>{AppLocales.t("GENERAL_AUTHROIZE") + ": "}</Text>
                             <Text style={styles.labelProgressText}>
-                                {this.props.tempData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR}
+                                {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR}
                             </Text>
                             <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                         </View>
-                        <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.tempData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
-                            this.props.tempData.carReports[currentVehicle.id].authReport.nextAuthorizeDate.toLocaleDateString(): "NA"}</Text>
+                        <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
+                            AppUtils.formatDateMonthDayYearVNShort(
+                                this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate): "NA"}</Text>
                         </View>
                     </View>
                 </View>
@@ -341,8 +345,7 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    userData: state.userData,
-    tempData: state.tempData
+    userData: state.userData
 });
 const mapActionsToProps = {
     actTempCalculateCarReport

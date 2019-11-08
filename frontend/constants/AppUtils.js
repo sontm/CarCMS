@@ -1376,6 +1376,52 @@ class AppUtils {
         // }
     
     }
+
+    async actTempCalculateCarReportAsync(currentVehicle, options) {
+        return new Promise((resolve, reject) => {
+            if ( !options ) {
+                // Default
+                options = {
+                    durationType: "month",
+                    tillDate: new Date(),
+                    duration: 12,
+                }
+            }
+    
+            //let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
+            let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
+                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
+                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+                = this.getStatForGasUsage(currentVehicle.fillGasList, 
+                    options.duration, options.durationType, options.tillDate);
+    
+            let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+                = this.getInfoForOilUsage(currentVehicle.fillOilList, 
+                    lastDate, lastKm, averageKmPerDay);
+            let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
+                = this.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
+    
+            let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend, arrTotalMoneySpend}
+                = this.getInfoMoneySpendByTime(currentVehicle);
+    
+            let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
+                = this.getInfoMoneySpend(currentVehicle);
+            
+            let {arrExpenseTypeSpend} = this.getInfoMoneySpendInExpense(currentVehicle.expenseList);
+    
+            let result = {
+                gasReport: {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
+                    arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
+                    avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly},
+                oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil},
+                authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize},
+                moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
+                    totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend},
+                expenseReport: {arrExpenseTypeSpend}
+            }
+            resolve(result)
+        });
+    }
 }
 
 const apputils = new AppUtils();

@@ -9,7 +9,6 @@ import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 // import { LineChart, Grid } from 'react-native-svg-charts'
-import {actTempCalculateCarReport} from '../redux/TempDataReducer'
 
 import AppLocales from '../constants/i18n'
 
@@ -76,11 +75,11 @@ class GasUsageReport extends React.Component {
     let arrGasMoneyAllCars = [];
     let arrGasMoneyPerKmAllCars = [];
     this.props.userData.vehicleList.forEach(element => {
-      if (this.props.tempData.carReports && this.props.tempData.carReports[element.id]) {
+      if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
         var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
           arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
           avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-          = this.props.tempData.carReports[element.id].gasReport;
+          = this.props.userData.carReports[element.id].gasReport;
 
         // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
         //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
@@ -98,12 +97,12 @@ class GasUsageReport extends React.Component {
     let arrGasKmAllCars = [];
     let arrGasMoneyAllCars = [];
     let arrGasMoneyPerKmAllCars = [];
-    this.props.tempData.teamCarList.forEach(element => {
-      if (this.props.tempData.teamCarReports && this.props.tempData.teamCarReports[element.id]) {
+    this.props.teamData.teamCarList.forEach(element => {
+      if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
           arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
           avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-          = this.props.tempData.teamCarReports[element.id].gasReport;
+          = this.props.teamData.teamCarReports[element.id].gasReport;
 
         // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
         //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
@@ -161,7 +160,7 @@ class GasUsageReport extends React.Component {
                 var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
                     arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
                     avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-                    = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport;
+                    = this.props.userData.carReports[this.props.currentVehicle.id].gasReport;
                 if (this.state.activeDisplay == 1) {
                     var dataToDisplay = arrTotalMoneyMonthly;
                 } else if (this.state.activeDisplay == 2) {
@@ -174,11 +173,11 @@ class GasUsageReport extends React.Component {
 
         // } else {
         //     if (this.state.activeDisplay == 1) {
-        //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyMonthly;
+        //         var dataToDisplay = this.props.userData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyMonthly;
         //     } else if (this.state.activeDisplay == 2) {
-        //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyPerKmMonthly;
+        //         var dataToDisplay = this.props.userData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyPerKmMonthly;
         //     } else {
-        //         var dataToDisplay = this.props.tempData.carReports[this.props.currentVehicle.id].gasReport.arrTotalKmMonthly;
+        //         var dataToDisplay = this.props.userData.carReports[this.props.currentVehicle.id].gasReport.arrTotalKmMonthly;
         //     }
         // }
         if (!AppConstants.TEMPO_USE_BARCHART_GAS) {
@@ -309,7 +308,7 @@ class GasUsageReport extends React.Component {
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
+                                tickLabels: {fontSize: 12,padding: 5, angle: 30}
                             }}
                         />
                         <VictoryAxis
@@ -480,11 +479,10 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    tempData: state.tempData,
-    userData: state.userData
+    userData: state.userData,
+    teamData: state.teamData
 });
 const mapActionsToProps = {
-    actTempCalculateCarReport
 };
   
 export default connect(
