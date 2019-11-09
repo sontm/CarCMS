@@ -18,6 +18,7 @@ import AppConstants from '../../constants/AppConstants';
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, H2, H3, H1 } from 'native-base';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 import GasUsageReport from '../../components/GasUsageReport'
+import GasUsageTopReport from '../../components/GasUsageTopReport'
 import MoneyUsageByTimeReport from '../../components/MoneyUsageByTimeReport'
 import MoneyUsageReport from '../../components/MoneyUsageReport'
 
@@ -42,7 +43,8 @@ class TeamReport extends React.Component {
           <MoneyUsageByTimeReport isTotalReport={true} isTeamDisplay={true}/>
           <MoneyUsageReport isTotalReport={true} isTeamDisplay={true}/>
           <GasUsageReport isTotalReport={true} isTeamDisplay={true}/>
-
+          <GasUsageTopReport isTotalReport={true} isTeamDisplay={true}/>
+          
         </ScrollView>
       </SafeAreaView>
     );

@@ -23,6 +23,8 @@ import {
 } from "react-native-chart-kit";
 import GasUsageReport from '../components/GasUsageReport'
 import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
+import MoneyUsageReport from '../components/MoneyUsageReport'
+import ReminderReport from '../components/ReminderReport'
 
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
 import {actTempCalculateCarReport} from '../redux/UserReducer'
@@ -85,27 +87,35 @@ class HomeScreen extends React.Component {
   componentWillUnmount() {
     console.log("HOMESCreen Will UnMount")
   }
-  calculateAllVehicleTotalMoney(numberOfMonth) {
-    let arrTotalAllCars = [];
+  calculateAllVehicleTotalMoney() {
+    let totalMoneyPrivate = 0;
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
-        let {arrTotalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
-        //console.log(arrTotalMoneySpend)
-        // Only Keep numberOfMonth element at the end
-        if (arrTotalMoneySpend.length > numberOfMonth) {
-          arrTotalMoneySpend.splice(0, arrTotalMoneySpend.length - numberOfMonth);
-        }
-        arrTotalAllCars.push(arrTotalMoneySpend)
+        let {totalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
+
+        totalMoneyPrivate += totalMoneySpend;
       }
     });
-    return arrTotalAllCars;
+    return totalMoneyPrivate;
+  }
+  calculateAllVehicleTotalMoneyTeam() {
+    let totalMoneyTeam = 0;
+    this.props.teamData.teamCarList.forEach(element => {
+      if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+        let {totalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
+        
+        totalMoneyTeam += totalMoneySpend;
+      }
+    });
+    return totalMoneyTeam;
   }
   render() {
     console.log("HOMESCreen Render")
-    let arrTotalAllCars = this.calculateAllVehicleTotalMoney(6);
+    let totalMoneyPrivate = this.calculateAllVehicleTotalMoney();
+    let totalMoneyTeam = this.calculateAllVehicleTotalMoneyTeam();
     return (
       <Container>
-        <Header style={{backgroundColor: AppConstants.COLOR_PICKER_TEXT}}>
+        <Header style={styles.headerContainer}>
           <Left>
           </Left>
           <Body>
@@ -120,8 +130,35 @@ class HomeScreen extends React.Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
               
-              <MoneyUsageByTimeReport isTotalReport={true} />
+              <View style={styles.statRow}>
+                <Card style={styles.equalStartRow}>
+                    <CardItem header>
+                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyPrivate)}</H2></Text>
+                    </CardItem>
+                    <CardItem>
+                    <Body>
+                        <Text style={{alignSelf: "center", fontSize: 13}}>
+                        {AppLocales.t("HOME_TOTAL_PRIVATE")}
+                        </Text>
+                    </Body>
+                    </CardItem>
+                </Card>
+                <Card style={styles.equalStartRow}>
+                    <CardItem header>
+                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyTeam)}</H2></Text>
+                    </CardItem>
+                    <CardItem footer>
+                    <Body>
+                    <Text style={{alignSelf: "center", fontSize: 13}}>
+                        {AppLocales.t("HOME_TOTAL_TEAM")}
+                        </Text>
+                    </Body>
+                    </CardItem>
+                </Card>
+              </View>
 
+              <ReminderReport />
+              <MoneyUsageByTimeReport isTotalReport={true} />
               <GasUsageReport isTotalReport={true} />
 
             </ScrollView>
@@ -144,6 +181,29 @@ const styles = StyleSheet.create({
   contentContainer: {
 
   },
+  headerContainer: {
+    backgroundColor: AppConstants.COLOR_PICKER_TEXT
+  },
+  statRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    flexGrow: 100,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: AppConstants.COLOR_PICKER_TEXT
+  },
+  equalStartRow: {
+      flex: 1,
+      margin: 5,
+      padding: 0,
+      borderWidth: 0.5,
+      borderRadius: 7,
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+  },
+
 
   textRow: {
     flexDirection: "row",
@@ -179,7 +239,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  userData: state.userData
+  userData: state.userData,
+  teamData: state.teamData
 });
 const mapActionsToProps = {
   actVehicleDeleteVehicle, actVehicleAddVehicle,

@@ -199,30 +199,38 @@ export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
 }
 
 
-export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
-    console.log("actVehicleSyncFromServer:")
-    dispatch({
-        type: VEHICLE_SYNC_FROMSERVER,
-        payload: data
-    })
-    
-}
 
 
-export const actTempCalculateCarReport = (currentVehicle, options, prevTempData) => (dispatch) => {
+
+export const actTempCalculateCarReport = (currentVehicle, options, prevTempData, theDispatch) => (dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
-    if (!prevTempData.carReports[currentVehicle.id] || 
+    console.log("actTempCalculateCarReport calleddddddddddd")
+    if (!prevTempData || !prevTempData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
         console.log(">>>actTempCalculateCarReport:")
         let theIdx = AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id);
+        // For calcualte All Time data
+        options = {
+            durationType: "month",
+            tillDate: new Date(),
+            duration: 300,
+        }
+
         AppUtils.actTempCalculateCarReportAsync(currentVehicle, options)
         .then (result => {
             console.log("<<<actTempCalculateCarReport FINISH")
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.splice(theIdx, 1);
-            dispatch({
-                type: TEMP_CALCULATE_CARREPORT,
-                payload: {id: currentVehicle.id, data: result}
-            })
+            if (theDispatch) {
+                theDispatch({
+                    type: TEMP_CALCULATE_CARREPORT,
+                    payload: {id: currentVehicle.id, data: result}
+                })
+            } else {
+                dispatch({
+                    type: TEMP_CALCULATE_CARREPORT,
+                    payload: {id: currentVehicle.id, data: result}
+                })
+            }
         })
         .catch (error => {
             console.log(error)
@@ -230,6 +238,15 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevTempData)
     }
 }
 
+export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
+    console.log("actVehicleSyncFromServer:")
+    dispatch({
+        type: VEHICLE_SYNC_FROMSERVER,
+        payload: data
+    })
+
+    // TODO for when SYnc, need re-calcualte Report
+}
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
     switch (action.type) {
@@ -263,7 +280,8 @@ export default function(state = initialState, action) {
     case VEHICLE_SYNC_FROMSERVER:
         return {
             ...state,
-            vehicleList: action.payload
+            vehicleList: action.payload,
+            carReports: {}
         }
     case VEHICLE_ADD:
         var newStateVehicleAdd = {

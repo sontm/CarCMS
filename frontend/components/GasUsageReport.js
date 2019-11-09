@@ -150,11 +150,11 @@ class GasUsageReport extends React.Component {
                 var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
                 var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
                 if (this.state.activeDisplay == 1) {
-                    var dataToDisplay = arrGasKmAllCars;
-                } else if (this.state.activeDisplay == 2) {
                     var dataToDisplay = arrGasMoneyAllCars;
-                } else {
+                } else if (this.state.activeDisplay == 2) {
                     var dataToDisplay = arrGasMoneyPerKmAllCars;
+                } else {
+                    var dataToDisplay = arrGasKmAllCars;
                 }
             } else {
                 var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,

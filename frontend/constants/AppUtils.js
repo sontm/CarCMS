@@ -38,16 +38,21 @@ class AppUtils {
         });
     }
     formatDateMonthDayVN(t) {
+        if (t)
         return dateFormat(new Date(t), "d/mmm");
     }
     formatDateMonthYearVN(t) {
+        if (t)
         return dateFormat(new Date(t), "yyyy/mm");
     }
     formatDateMonthDayYearVN(t) {
+        if (t)
         return dateFormat(new Date(t), "d-mmmm-yyyy");
     }
     formatDateMonthDayYearVNShort(t) {
+        if (t)
         return dateFormat(new Date(t), "d/mm/yyyy");
+        
     }
     formatMoneyToK(v) {
         return (v/1000).toFixed(0) + "K";
@@ -666,7 +671,11 @@ class AppUtils {
 
         if (duration > 200 || duration == AppLocales.t("GENERAL_ALL")) {
             // THis Mean All data
-            var CALCULATE_START_DATE = this.normalizeFillDate(new Date(theVehicle.fillGasList[0].fillDate))
+            //var CALCULATE_START_DATE = this.normalizeFillDate(new Date(theVehicle.fillGasList[0].fillDate))
+
+            // get in 100 month ago
+            var CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+                CALCULATE_END_DATE.getMonth() - 100 + 1, 1));
         } else {
             var CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
                 CALCULATE_END_DATE.getMonth() - duration + 1, 1));
@@ -1163,7 +1172,10 @@ class AppUtils {
 
         if (duration > 200 || duration == AppLocales.t("GENERAL_ALL")) {
             // THis Mean All data
-            var CALCULATE_START_DATE = this.normalizeFillDate(new Date(theVehicle.fillGasList[0].fillDate))
+            //var CALCULATE_START_DATE = this.normalizeFillDate(new Date(theVehicle.fillGasList[0].fillDate))
+            
+            var CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+                CALCULATE_END_DATE.getMonth() - 100 + 1, 1));
         } else {
             var CALCULATE_START_DATE = this.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
                 CALCULATE_END_DATE.getMonth() - duration + 1, 1));
@@ -1224,7 +1236,8 @@ class AppUtils {
             })
         }
 
-        return {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend};
+        let totalMoneySpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
+        return {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend};
     }
     getInfoMoneySpendInExpense(expenseList) {
         if (!expenseList) {
@@ -1402,12 +1415,13 @@ class AppUtils {
                 = this.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
     
             let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend, arrTotalMoneySpend}
-                = this.getInfoMoneySpendByTime(currentVehicle);
+                = this.getInfoMoneySpendByTime(currentVehicle, options.duration, options.durationType, options.tillDate);
     
-            let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
-                = this.getInfoMoneySpend(currentVehicle);
+            let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend}
+                = this.getInfoMoneySpend(currentVehicle, options.duration, options.tillDate);
             
-            let {arrExpenseTypeSpend} = this.getInfoMoneySpendInExpense(currentVehicle.expenseList);
+            let {arrExpenseTypeSpend} = this.getInfoMoneySpendInExpense(currentVehicle.expenseList,
+                options.duration, options.durationType, options.tillDate);
     
             let result = {
                 gasReport: {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
@@ -1416,7 +1430,7 @@ class AppUtils {
                 oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil},
                 authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize},
                 moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
-                    totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend},
+                    totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend},
                 expenseReport: {arrExpenseTypeSpend}
             }
             resolve(result)

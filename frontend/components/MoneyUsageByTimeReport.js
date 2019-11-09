@@ -46,6 +46,7 @@ class MoneyUsageByTimeReport extends React.Component {
 
   calculateAllVehicleTotalMoney(numberOfMonth) {
     let arrTotalAllCars = [];
+    let arrTotalEachCarsAllCategory = [];
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
         let {arrTotalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
@@ -55,10 +56,42 @@ class MoneyUsageByTimeReport extends React.Component {
           arrTotalMoneySpend.splice(0, arrTotalMoneySpend.length - numberOfMonth);
         }
         arrTotalAllCars.push(arrTotalMoneySpend)
+        
+        if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
+            let totalThisCarMoney = {
+                x: ""+element.licensePlate,
+                y: 0
+            };
+            arrTotalMoneySpend.forEach(item => {
+                totalThisCarMoney.y += item.y;
+            })
+            arrTotalEachCarsAllCategory.push(totalThisCarMoney)
+        }
       }
     });
-    return arrTotalAllCars;
+    return {arrTotalAllCars, arrTotalEachCarsAllCategory};
   }
+  calculateAllVehicleTotalMoneyPercentPrivate(numberOfMonth) {
+    let totalGasSpendPrivate = 0, totalOilSpendPrivate = 0, totalAuthSpendPrivate = 0, 
+        totalExpenseSpendPrivate = 0, totalServiceSpendPrivate = 0;
+    this.props.userData.vehicleList.forEach(element => {
+      if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
+        let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend} 
+            = this.props.userData.carReports[element.id].moneyReport;
+        
+        totalGasSpendPrivate += totalGasSpend;
+        totalOilSpendPrivate += totalOilSpend;
+        totalAuthSpendPrivate += totalAuthSpend;
+        totalExpenseSpendPrivate += totalExpenseSpend;
+        totalServiceSpendPrivate += totalServiceSpend;
+      }
+    });
+    return {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
+        totalExpenseSpendPrivate, totalServiceSpendPrivate};
+  }
+
+
+
   calculateAllVehicleTotalMoneyTeam(numberOfMonth) {
     let arrTotalAllCars = [];
     this.props.teamData.teamCarList.forEach(element => {
@@ -143,7 +176,10 @@ class MoneyUsageByTimeReport extends React.Component {
                         arrTotalExpenseEachCars, arrTotalServiceEachCars}
                         = this.calculateEachVehicleTotalMoneyTeam(6);
                 } else {
-                    var arrTotalAllCars = this.calculateAllVehicleTotalMoney(6);
+                    var {arrTotalAllCars, arrTotalEachCarsAllCategory} = this.calculateAllVehicleTotalMoney(6);
+                    var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
+                        totalExpenseSpendPrivate, totalServiceSpendPrivate}
+                        = this.calculateAllVehicleTotalMoneyPercentPrivate(12);
                 }
             } else {
                 var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
@@ -350,7 +386,8 @@ class MoneyUsageByTimeReport extends React.Component {
                         <VictoryAxis
                             crossAxis
                             standalone={false}
-                            tickFormat={(t) => `${this.props.teamData.teamCarList[t-1].licensePlate}`}
+                            tickFormat={(t) => `${(this.props.teamData.teamCarList && this.props.teamData.teamCarList[t-1])? 
+                                this.props.teamData.teamCarList[t-1].licensePlate : t}`}
                             tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
@@ -374,6 +411,41 @@ class MoneyUsageByTimeReport extends React.Component {
                 </View>
                 </View>
                 ) : null }
+
+                {(this.props.isTotalReport && !this.props.isTeamDisplay) ? (
+                <View>
+                <View style={styles.statRow}>
+                    <View style={styles.moneyUsagePieContainer}>
+                        <VictoryPie
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            data={arrTotalEachCarsAllCategory}
+                            innerRadius={80}
+                            radius={100}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            labelRadius={({ radius }) => radius + 10 }
+                            />
+                    </View>
+                </View>
+                <View style={styles.statRow}>
+                    <View style={styles.moneyUsagePieContainer}>
+                        <VictoryPie
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            data={[
+                                { x: AppLocales.t("GENERAL_GAS"), y: totalGasSpendPrivate },
+                                { x: AppLocales.t("GENERAL_OIL"), y: totalOilSpendPrivate },
+                                { x: AppLocales.t("GENERAL_AUTHROIZE"), y: totalAuthSpendPrivate },
+                                { x: AppLocales.t("GENERAL_EXPENSE"), y: totalExpenseSpendPrivate },
+                                { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpendPrivate },
+                            ]}
+                            innerRadius={80}
+                            radius={100}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            labelRadius={({ radius }) => radius+10 }
+                            />
+                    </View>
+                </View>
+                </View>
+                ) : null}
             </View>
         )
     } else {

@@ -11,7 +11,8 @@ export default {
     GENERAL_TODAY:"Hôm Nay",
     GENERAL_ADDDATA:"Thêm Dữ Liệu",
     GENERAL_ALL:"Tất Cả",
-
+    GENERAL_PRIVATE: "Cá Nhân",
+    GENERAL_TEAM: "Tổ Chức",
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Xe",
@@ -20,8 +21,12 @@ export default {
 
     MYCAR_HEADER: "Xe Của Tôi",
 
+    HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
+    HOME_TOTAL_TEAM: "Tổng Chi Phí Tổ Chức",
     HOME_MONEY_SPEND: "Chi Tiêu Các Xe",
     HOME_GAS_USAGE: "Biểu Đồ Xăng Các Xe",
+    HOME_REMIND: "Nhắc Nhở",
+    
 
     CARDETAIL_HEADER: "Báo Cáo Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",
@@ -42,7 +47,9 @@ export default {
     TEAM_MEMBER_CAR_HEADER:"Xe Của Thành Viên",
 
     TEAM_REPORT_TOP_CAR_MONEYUSAGE: "Top Chi Tiêu Nhiều",
-
+    TEAM_REPORT_TOP_CAR_GASUSAGE_KM: "Top Đi Nhiều",
+    TEAM_REPORT_TOP_CAR_GASUSAGE_MONEY: "Top Chi Tiêu Xăng Nhiều",
+    TEAM_REPORT_TOP_CAR_GASUSAGE_MONEYKM: "Top Hiệu Suất Xăng Cao",
 
     SETTING_H1_PRO_FEATURE: "Phiên Bản PRO",
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",

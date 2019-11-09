@@ -9,7 +9,7 @@ const TEAM_GET_JOIN_REQ_OK = 'TEAM_GET_JOIN_REQ_OK';
 const initialState = {
     members: [],
     joinRequests: [],
-    teamCarList:[],
+    teamCarList:[], // will have new "ownerFullName" as fullname of user
     teamCarReports: {}
 };
 
@@ -17,7 +17,14 @@ const initialState = {
 export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
     console.log("actTempCalculateTeamCarReport cALEED WITH:" + currentVehicle.id)
-    AppUtils.actTempCalculateCarReportAsync(currentVehicle)
+    // For calcualte All Time data
+    let options = {
+        durationType: "month",
+        tillDate: new Date(),
+        duration: 300,
+    }
+
+    AppUtils.actTempCalculateCarReportAsync(currentVehicle, options)
     .then (result => {
         dispatch({
             type: TEMP_CALCULATE_TEAMCARREPORT,
@@ -66,7 +73,13 @@ export default function(state = initialState, action) {
         // Calculate Data for each Car here
         let teamCarList = [];
         action.payload.forEach (mem => { // Each Member
-            teamCarList.push(...mem.vehicleList);
+            let newCarList = [];
+            mem.vehicleList.forEach(item => {
+                //New information
+                item.ownerFullName = mem.fullName;
+                newCarList.push(item);
+            })
+            teamCarList.push(...newCarList);
         })
 
         return {
