@@ -20,6 +20,7 @@ export default {
     NAV_BOT_MORE: "Khác",
 
     MYCAR_HEADER: "Xe Của Tôi",
+    HOME_HEADER: "Quản Lý Xe",
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
     HOME_TOTAL_TEAM: "Tổng Chi Phí Tổ Chức",
@@ -38,7 +39,7 @@ export default {
     CARDETAIL_AVERAGE_ALL: "Trung Bình Tổng Thời Gian",
     CARDETAIL_HISTORY_HEADER: "Lịch Sử Sử Dụng",
 
-    TEAM_HEADER_CAR: "Danh Sách Xe",
+    TEAM_HEADER_CAR: "  Xe  ",
     TEAM_HEADER_REPORT: "Báo Cáo",
     TEAM_HEADER_MEMBER: "Thành Viên",
     TEAM_SORT_LBL:"Sắp Xếp",

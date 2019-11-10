@@ -98,13 +98,16 @@ class AppUtils {
     // arr can be 1D or 2D
     calculateAverageOfArray(arr, dimension = 1) {
         if (dimension == 1) {
-            var sum, avg = 0;
+            var sum = 0, avg = 0, count=0;
             // dividing by 0 will return Infinity
             // arr must contain at least 1 element to use reduce
             if (arr.length)
             {
-                sum = arr.reduce(function(a, b) { return a + b; });
-                avg = sum / arr.length;
+                arr.forEach(item => {
+                    sum+= item.y;
+                    count++;
+                })
+                avg = sum / count;
             }
         } else if (dimension == 2) {
             var sum = 0, avg = 0, count = 0;
@@ -1239,6 +1242,8 @@ class AppUtils {
         let totalMoneySpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
         return {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend};
     }
+
+    // TODO: Calcualte by Months here. Or no Need ?
     getInfoMoneySpendInExpense(expenseList) {
         if (!expenseList) {
             return {};

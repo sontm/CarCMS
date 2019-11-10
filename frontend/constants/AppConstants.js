@@ -51,6 +51,8 @@ export default {
     COLOR_PICKER_TEXT: "#1f77b4",
     COLOR_GREY_BG: "rgb(200, 200, 200)",
     COLOR_GREY_LIGHT_BG: "rgb(240, 240, 240)",
+    COLOR_HEADER_BG: "#3b5998",
+    COLOR_HEADER_BUTTON: "white",
     COLOR_BUTTON_BG: "#3b5998", // FB color
 };
 

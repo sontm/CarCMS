@@ -31,7 +31,7 @@ class GasUsageReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        duration: 12,
+        duration: 6,
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),
@@ -70,107 +70,279 @@ class GasUsageReport extends React.Component {
       })
   }
 
-  calculateAllVehicleGasUsage(numberOfMonth) {
+  // Used in Detail report
+  calculateOneVehicleGasUsage() {
+    let arrGasKmThisCar = [];
+    let arrGasMoneyThisCar = [];
+    let arrGasMoneyPerKmThisCar = [];
+
+    if (this.props.currentVehicle && this.props.currentVehicle.id &&  this.props.userData.carReports[this.props.currentVehicle.id]) {
+        var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
+            = this.props.userData.carReports[this.props.currentVehicle.id].gasReport;    
+
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+        if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
+            arrTotalKmMonthly.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    arrGasKmThisCar.push(item)
+                }
+            })
+        }
+        
+        if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
+            arrTotalMoneyMonthly.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    arrGasMoneyThisCar.push(item)
+                }
+            })
+        }
+
+        if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
+            arrTotalMoneyPerKmMonthly.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    arrGasMoneyPerKmThisCar.push(item)
+                }
+            })
+        }
+    }
+    return {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar};
+  }
+
+
+  calculateAllVehicleGasUsage() {
     let arrGasKmAllCars = [];
     let arrGasMoneyAllCars = [];
     let arrGasMoneyPerKmAllCars = [];
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
-        var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-          arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-          avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+        var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
           = this.props.userData.carReports[element.id].gasReport;
 
-        // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
-        //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+        if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
+            let filterArr = [];
+            arrTotalKmMonthly.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    filterArr.push(item)
+                }
+            })
+            arrGasKmAllCars.push(filterArr)
+        }
         
-        // arrGasAllCars.push(dataChartKitLine)
-        arrGasKmAllCars.push(arrTotalKmMonthly)
-        arrGasMoneyAllCars.push(arrTotalMoneyMonthly)
-        arrGasMoneyPerKmAllCars.push(arrTotalMoneyPerKmMonthly)
+        if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
+            let filterArr = [];
+            arrTotalMoneyMonthly.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    filterArr.push(item)
+                }
+            })
+            arrGasMoneyAllCars.push(filterArr)
+        }
+
+        if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
+            let filterArr = [];
+            arrTotalMoneyPerKmMonthly.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    filterArr.push(item)
+                }
+            })
+            arrGasMoneyPerKmAllCars.push(filterArr)
+        }
       }
     })
     return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars};
   }
 
-  calculateAllVehicleGasUsageTeam(numberOfMonth) {
+  calculateAllVehicleGasUsageTeam(isMergeData = true) {
     let arrGasKmAllCars = [];
     let arrGasMoneyAllCars = [];
     let arrGasMoneyPerKmAllCars = [];
+
+    let objGasKmAllCars = {};
+    let objGasMoneyAllCars = {};
+    let objGasMoneyPerKmAllCars = {};
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
-        var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-          arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-          avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+        var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
           = this.props.teamData.teamCarReports[element.id].gasReport;
 
         // let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(arrTotalKmMonthly,
         //   (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
         
         // arrGasAllCars.push(dataChartKitLine)
-        if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
-            arrGasKmAllCars.push(arrTotalKmMonthly)
+        if (isMergeData) {
+            if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
+                arrTotalKmMonthly.forEach(item => {
+                    if (new Date(item.x) >= CALCULATE_START_DATE) {
+                        if (objGasKmAllCars[""+item.x]) {
+                            // exist
+                            objGasKmAllCars[""+item.x]+= item.y;
+                        } else {
+                            objGasKmAllCars[""+item.x] = item.y;
+                        }
+                    }
+                })
+            }
+        } else {
+            if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
+                let filterArr = [];
+                arrTotalKmMonthly.forEach(item => {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE) {
+                        item.x = xDate;
+                        filterArr.push(item)
+                    }
+                })
+
+                if (filterArr.length)
+                    arrGasKmAllCars.push(filterArr)
+            }
         }
-        if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
-            arrGasMoneyAllCars.push(arrTotalMoneyMonthly)
+
+        if (isMergeData) {
+            if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
+                arrTotalKmMonthly.forEach(item => {
+                    if (new Date(item.x) >= CALCULATE_START_DATE) {
+                        if (objGasMoneyAllCars[""+item.x]) {
+                            // exist
+                            objGasMoneyAllCars[""+item.x]+= item.y;
+                        } else {
+                            objGasMoneyAllCars[""+item.x] = item.y;
+                        }
+                    }
+                })
+            }
+        } else {
+            if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
+                let filterArr = [];
+                arrTotalMoneyMonthly.forEach(item => {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE) {
+                        item.x = xDate;
+                        filterArr.push(item)
+                    }
+                })
+                if (filterArr.length)
+                    arrGasMoneyAllCars.push(filterArr)
+            }
         }
-        if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
-            arrGasMoneyPerKmAllCars.push(arrTotalMoneyPerKmMonthly)
+
+        if (isMergeData) {
+            if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
+                arrTotalKmMonthly.forEach(item => {
+                    if (new Date(item.x) >= CALCULATE_START_DATE) {
+                        if (objGasMoneyPerKmAllCars[""+item.x]) {
+                            // exist
+                            objGasMoneyPerKmAllCars[""+item.x]+= item.y;
+                        } else {
+                            objGasMoneyPerKmAllCars[""+item.x] = item.y;
+                        }
+                    }
+                })
+            }
+        } else {
+            if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
+                let filterArr = [];
+                arrTotalMoneyPerKmMonthly.forEach(item => {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE) {
+                        item.x = xDate;
+                        filterArr.push(item)
+                    }
+                })
+                if (filterArr.length)
+                    arrGasMoneyPerKmAllCars.push(filterArr)
+            }
         }
       }
     })
+
+    if (isMergeData) {
+        // convert to Array for Chart
+        console.log("objGasKmAllCars-^^^^^^^^^^^^^^^^^^^^^^^")
+        console.log(objGasKmAllCars)
+        for (var prop in objGasKmAllCars) {
+            if (Object.prototype.hasOwnProperty.call(objGasKmAllCars, prop)) {
+                arrGasKmAllCars.push({x: new Date(prop), y: objGasKmAllCars[""+prop]})
+            }
+        }
+        console.log("arrGasKmAllCars)))))))))))))))))")
+        console.log(arrGasKmAllCars)
+        for (var prop in objGasMoneyAllCars) {
+            if (Object.prototype.hasOwnProperty.call(objGasMoneyAllCars, prop)) {
+                arrGasMoneyAllCars.push({x: new Date(prop), y: objGasMoneyAllCars[""+prop]})
+            }
+        }
+        for (var prop in objGasMoneyPerKmAllCars) {
+            if (Object.prototype.hasOwnProperty.call(objGasMoneyPerKmAllCars, prop)) {
+                arrGasMoneyPerKmAllCars.push({x: new Date(prop), y: objGasMoneyPerKmAllCars[""+prop]})
+            }
+        }
+    }
     return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars};
   }
 
   render() {
-    console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
+    console.log("GasUsageReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
     //isTotalReport mean this is used in Home screen or Team screen
     if (this.props.currentVehicle || this.props.isTotalReport) { //props
-        if (this.displayByFilter) {
-            var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-                = AppUtils.getStatForGasUsage(this.props.currentVehicle.fillGasList, 
-                    this.state.duration, this.state.durationType, this.state.tillDate);
-            if (this.state.activeDisplay == 1) {
-                var dataToDisplay = arrTotalMoneyMonthly;
-            } else if (this.state.activeDisplay == 2) {
-                var dataToDisplay = arrTotalMoneyPerKmMonthly;
+        if (this.props.isTotalReport) {
+            if (this.props.isTeamDisplay) {
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsageTeam();
             } else {
-                var dataToDisplay = arrTotalKmMonthly;
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsage();
+            }
+            var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
+            var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
+            var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
+            if (this.state.activeDisplay == 1) {
+                var dataToDisplay = arrGasMoneyAllCars;
+            } else if (this.state.activeDisplay == 2) {
+                var dataToDisplay = arrGasMoneyPerKmAllCars;
+            } else {
+                var dataToDisplay = arrGasKmAllCars;
             }
         } else {
-            if (this.props.isTotalReport) {
-                if (this.props.isTeamDisplay) {
-                    var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsageTeam(12);
-                } else {
-                    var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsage(12);
-                }
-                var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
-                var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
-                var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
-                if (this.state.activeDisplay == 1) {
-                    var dataToDisplay = arrGasMoneyAllCars;
-                } else if (this.state.activeDisplay == 2) {
-                    var dataToDisplay = arrGasMoneyPerKmAllCars;
-                } else {
-                    var dataToDisplay = arrGasKmAllCars;
-                }
+            // this is One Vehicle in Detail Report
+            let {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar} =
+                this.calculateOneVehicleGasUsage();
+            if (this.state.activeDisplay == 1) {
+                var dataToDisplay = arrGasMoneyThisCar;
+            } else if (this.state.activeDisplay == 2) {
+                var dataToDisplay = arrGasMoneyPerKmThisCar;
             } else {
-                var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-                    arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-                    avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-                    = this.props.userData.carReports[this.props.currentVehicle.id].gasReport;
-                if (this.state.activeDisplay == 1) {
-                    var dataToDisplay = arrTotalMoneyMonthly;
-                } else if (this.state.activeDisplay == 2) {
-                    var dataToDisplay = arrTotalMoneyPerKmMonthly;
-                } else {
-                    var dataToDisplay = arrTotalKmMonthly;
-                }
+                var dataToDisplay = arrGasKmThisCar;
             }
-        }
 
+            var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmThisCar, 1).avg;
+            var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyThisCar, 1).avg;
+            var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmThisCar, 1).avg;
+        }
         // } else {
         //     if (this.state.activeDisplay == 1) {
         //         var dataToDisplay = this.props.userData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyMonthly;
@@ -183,19 +355,6 @@ class GasUsageReport extends React.Component {
         if (!AppConstants.TEMPO_USE_BARCHART_GAS) {
             let dataChartKitLine = AppUtils.convertVictoryDataToChartkitData(dataToDisplay,
                 (t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`)
-        }
-        if (avgMoneyPerKmMonthly > averageMoneyPerKmPerDay) {
-            // This time Use so Much, 
-            var iconInfoUsage= (
-                <Icon type="Entypo" name="arrow-long-up" 
-                    style={{color: "#d62728", marginLeft: 5}} />
-            )
-        } else if (avgMoneyPerKmMonthly < averageMoneyPerKmPerDay) {
-            // This time Use so Much, 
-            var iconInfoUsage= (
-                <Icon type="Entypo" name="arrow-long-down" 
-                    style={{color: "#2ca02c", marginLeft: 5}} />
-            )
         }
 
         // const mydata = {
@@ -286,7 +445,7 @@ class GasUsageReport extends React.Component {
                             domainPadding={{y: [0, 10], x: [10, 0]}}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         >
-                        {this.props.isTotalReport ? (
+                        {(this.props.isTotalReport && !this.props.isTeamDisplay) ? (
                             dataToDisplay.map((item, idx) => (
                                 <VictoryBar
                                 key={idx}
@@ -314,7 +473,7 @@ class GasUsageReport extends React.Component {
                         <VictoryAxis
                             dependentAxis
                             standalone={false}
-                            tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
+                            tickFormat={(t) => `${this.state.activeDisplay!= 0 ? AppUtils.formatMoneyToK(t) :t}`}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
@@ -392,7 +551,6 @@ class GasUsageReport extends React.Component {
                         <CardItem header  style={{flexDirection: "row", alignItems: "center"}}>
                             <Text><H2>{avgMoneyPerKmMonthly ?
                              (avgMoneyPerKmMonthly).toFixed(0) : ""}</H2></Text>
-                            {iconInfoUsage}
                         </CardItem>
                         <CardItem>
                         <Body>

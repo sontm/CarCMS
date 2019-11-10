@@ -115,11 +115,11 @@ class HomeScreen extends React.Component {
     let totalMoneyTeam = this.calculateAllVehicleTotalMoneyTeam();
     return (
       <Container>
-        <Header style={styles.headerContainer}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
           <Left>
           </Left>
           <Body>
-            <Title><HeaderText>Tổng Quan</HeaderText></Title>
+            <Title><HeaderText>{AppLocales.t("HOME_HEADER")}</HeaderText></Title>
           </Body>
           <Right />
         </Header>
@@ -179,9 +179,6 @@ const styles = StyleSheet.create({
   contentContainer: {
 
   },
-  headerContainer: {
-    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
-  },
   statRow: {
     flexDirection: "row",
     justifyContent: "center",
@@ -189,7 +186,7 @@ const styles = StyleSheet.create({
     flexGrow: 100,
     paddingTop: 10,
     // paddingBottom: 10,
-    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
+    backgroundColor: AppConstants.COLOR_HEADER_BG
   },
   equalStartRow: {
       flex: 1,

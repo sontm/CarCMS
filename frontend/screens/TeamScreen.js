@@ -152,9 +152,9 @@ class TeamScreen extends React.Component {
     console.log("TeamScreen Render")
     return (
       <Container>
-        <Header noLeft style={{justifyContent: "space-between", backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
-          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
-          <Segment style={{alignSelf:"center",backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
+        <Header noLeft style={{justifyContent: "space-between", backgroundColor: AppContants.COLOR_HEADER_BG}}>
+          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppContants.COLOR_HEADER_BG}}>
+          <Segment style={{alignSelf:"center",backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setState({activePage: 0})}>
             <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_CAR")}</Text>
@@ -177,7 +177,7 @@ class TeamScreen extends React.Component {
           </Body>
           <Right style={{flex:1}}>
             <Button transparent onPress={this.fetchTeamData}>
-              <Icon type="MaterialIcons" name="refresh" style={{color: AppConstants.COLOR_BUTTON_BG}} />
+              <Icon type="MaterialIcons" name="refresh" style={{color: "white"}} />
             </Button>
           </Right>
         </Header>
@@ -248,21 +248,23 @@ const styles = StyleSheet.create({
   },
 
   activeSegment: {
-    backgroundColor: AppConstants.COLOR_BUTTON_BG,
-    color:"white",
-    borderColor: AppConstants.COLOR_BUTTON_BG
+    //backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    backgroundColor: "white",
+    color:AppConstants.COLOR_BUTTON_BG,
+    borderColor: "white"
   },
   inActiveSegment: {
-      backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
-      color:AppConstants.COLOR_PICKER_TEXT,
-      borderColor: AppConstants.COLOR_BUTTON_BG
+    backgroundColor: "#aec7e8",
+    color:AppConstants.COLOR_PICKER_TEXT,
+    borderColor: "white"
   },
   activeSegmentText: {
-      color:"white",
+      //color:"white",
+      color:AppConstants.COLOR_PICKER_TEXT,
       fontSize: 12
   },
   inActiveSegmentText: {
-      color:AppConstants.COLOR_PICKER_TEXT,
+      color: "black",
       fontSize: 12
   },
 });

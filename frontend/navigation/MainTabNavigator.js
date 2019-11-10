@@ -255,6 +255,7 @@ const styles = StyleSheet.create({
 
   btnActive: {
     backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    padding: 0
   },
   iconActive: {
     fontSize: 26,
@@ -265,11 +266,11 @@ const styles = StyleSheet.create({
     color: "grey"
   },
   textActive: {
-    fontSize: 10,
+    fontSize: 9,
     color: "white"
   },
   textInActive: {
-    fontSize: 10,
+    fontSize: 9,
     color: "grey"
   }
 })

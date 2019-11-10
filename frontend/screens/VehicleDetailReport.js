@@ -245,12 +245,12 @@ const styles = StyleSheet.create({
     },
     rightHistoryIcon: {
         fontSize: 20,
-        color: "rgb(50,50,50)"
+        color: AppConstants.COLOR_HEADER_BUTTON
     },
     rightHistoryText: {
         textAlign: "center",
         fontSize: 12,
-        color: "rgb(50,50,50)"
+        color: AppConstants.COLOR_HEADER_BUTTON
     },
 
     reminderContainer: {

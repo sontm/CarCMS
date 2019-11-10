@@ -16,7 +16,7 @@ class MoneyUsageReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        duration: 12,
+        duration: 6,
         tillDate: new Date(),
     };
   }
@@ -35,48 +35,141 @@ class MoneyUsageReport extends React.Component {
     this.displayByFilter = true;
   }
   
-  calculateAllVehicleTotalMoneyPercent(numberOfMonth) {
+  calculateAllVehicleTotalMoneyPercentTeam(numberOfMonth) {
     let totalGasSpendTeam = 0, totalOilSpendTeam = 0, totalAuthSpendTeam = 0, 
         totalExpenseSpendTeam = 0, totalServiceSpendTeam = 0;
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
-        let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend} 
+        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend} 
             = this.props.teamData.teamCarReports[element.id].moneyReport;
-        
-        totalGasSpendTeam += totalGasSpend;
-        totalOilSpendTeam += totalOilSpend;
-        totalAuthSpendTeam += totalAuthSpend;
-        totalExpenseSpendTeam += totalExpenseSpend;
-        totalServiceSpendTeam += totalServiceSpend;
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+           
+            
+        // Only Keep numberOfMonth
+        if (arrGasSpend && arrGasSpend.length) {
+            arrGasSpend.forEach(item => {
+                if (new Date(item.x) > CALCULATE_START_DATE) {
+                    totalGasSpendTeam += item.y;
+                }
+            })
+        }
+        if (arrOilSpend && arrOilSpend.length) {
+            arrOilSpend.forEach(item => {
+                if (new Date(item.x) > CALCULATE_START_DATE) {
+                    totalOilSpendTeam += item.y;
+                }
+            })
+        }
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                if (new Date(item.x) > CALCULATE_START_DATE) {
+                    totalAuthSpendTeam += item.y;
+                }
+            })
+        }
+        if (arrExpenseSpend && arrExpenseSpend.length) {
+            arrExpenseSpend.forEach(item => {
+                if (new Date(item.x) > CALCULATE_START_DATE) {
+                    totalExpenseSpendTeam += item.y;
+                }
+            })
+        }
+        if (arrServiceSpend && arrServiceSpend.length) {
+            arrServiceSpend.forEach(item => {
+                if (new Date(item.x) > CALCULATE_START_DATE) {
+                    totalServiceSpendTeam += item.y;
+                }
+            })
+        }
       }
     });
     return {totalGasSpendTeam,totalOilSpendTeam,totalAuthSpendTeam,
         totalExpenseSpendTeam, totalServiceSpendTeam};
   }
+
+  calculateAllVehicleTotalMoneyPercentPrivate() {
+    let totalGasSpendPrivate = 0, totalOilSpendPrivate = 0, totalAuthSpendPrivate = 0, 
+        totalExpenseSpendPrivate = 0, totalServiceSpendPrivate = 0;
+    if (this.props.currentVehicle && this.props.currentVehicle.id &&  this.props.userData.carReports[this.props.currentVehicle.id]) {
+        var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
+            = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;    
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+           
+        // Only Keep numberOfMonth
+        if (arrGasSpend && arrGasSpend.length) {
+            arrGasSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalGasSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrOilSpend && arrOilSpend.length) {
+            arrOilSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalOilSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalAuthSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrExpenseSpend && arrExpenseSpend.length) {
+            arrExpenseSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalExpenseSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrServiceSpend && arrServiceSpend.length) {
+            arrServiceSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalServiceSpendPrivate += item.y;
+                }
+            })
+        }
+    }
+    return {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
+        totalExpenseSpendPrivate, totalServiceSpendPrivate};
+  }
   render() {
     if (this.props.currentVehicle || this.props.isTotalReport) {
-        if (this.displayByFilter) {
-            var {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
-                = AppUtils.getInfoMoneySpend(this.props.currentVehicle,
-                    this.state.duration, this.state.tillDate);
-            var {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(this.props.currentVehicle.expenseList);
+        if (this.props.isTotalReport) {
+            let {totalGasSpendTeam,totalOilSpendTeam,totalAuthSpendTeam,
+                totalExpenseSpendTeam, totalServiceSpendTeam} = this.calculateAllVehicleTotalMoneyPercentTeam();
+            
+            var totalGasSpend = totalGasSpendTeam;
+            var totalOilSpend = totalOilSpendTeam;
+            var totalAuthSpend = totalAuthSpendTeam;
+            var totalExpenseSpend = totalExpenseSpendTeam;
+            var totalServiceSpend = totalServiceSpendTeam;
+
         } else {
-            if (this.props.isTotalReport) {
-                let {totalGasSpendTeam,totalOilSpendTeam,totalAuthSpendTeam,
-                    totalExpenseSpendTeam, totalServiceSpendTeam} = this.calculateAllVehicleTotalMoneyPercent(6);
-                
-                var totalGasSpend = totalGasSpendTeam;
-                var totalOilSpend = totalOilSpendTeam;
-                var totalAuthSpend = totalAuthSpendTeam;
-                var totalExpenseSpend = totalExpenseSpendTeam;
-                var totalServiceSpend = totalServiceSpendTeam;
+            var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
+                totalExpenseSpendPrivate, totalServiceSpendPrivate}
+                = this.calculateAllVehicleTotalMoneyPercentPrivate()
 
-            } else {
-                var {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
-                    = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
-
-                var {arrExpenseTypeSpend} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
-            }
+            var totalGasSpend = totalGasSpendPrivate;
+            var totalOilSpend = totalOilSpendPrivate
+            var totalAuthSpend = totalAuthSpendPrivate;
+            var totalExpenseSpend = totalExpenseSpendPrivate;
+            var totalServiceSpend = totalServiceSpendPrivate;
+            // TODO calculate by Arr of each Type
+            var {arrExpenseTypeSpend} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
         }
 
         return (

@@ -16,7 +16,7 @@ class MoneyUsageByTimeReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        duration: 12,
+        duration: 6,
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),
@@ -44,25 +44,94 @@ class MoneyUsageByTimeReport extends React.Component {
     this.displayByFilter = true;
   }
 
-  calculateAllVehicleTotalMoney(numberOfMonth) {
+  calculateOneVehicleTotalMoneyPrivate() {
+    let arrTotalGasOneCar = [];
+    let arrTotalOilOneCar = [];
+    let arrTotalAuthOneCar = [];
+    let arrTotalExpenseOneCar = [];
+    let arrTotalServiceOneCar = [];
+
+    this.props.teamData.teamCarList.forEach((element, carIdx) => {
+      if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend} 
+            = this.props.teamData.teamCarReports[element.id].moneyReport;
+        let xValue = carIdx + 1;
+
+        let thisCarGasItem = {x: xValue, y: 0};
+        if (arrGasSpend && arrGasSpend.length) {
+            arrGasSpend.forEach(item => {
+                thisCarGasItem.y += item.y;
+            })
+            arrTotalGasOneCar.push(thisCarGasItem);
+        }
+        let thisCarOilItem = {x: xValue, y: 0};
+        if (arrOilSpend && arrOilSpend.length) {
+            arrOilSpend.forEach(item => {
+                thisCarOilItem.y += item.y;
+            })
+            arrTotalOilOneCar.push(thisCarOilItem);
+        }
+        let thisCarAuthItem = {x: xValue, y: 0};
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                thisCarAuthItem.y += item.y;
+            })
+            arrTotalAuthOneCar.push(thisCarAuthItem);
+        }
+        let thisCarExpenseItem = {x: xValue, y: 0};
+        if (arrExpenseSpend && arrExpenseSpend.length) {
+            arrExpenseSpend.forEach(item => {
+                thisCarExpenseItem.y += item.y;
+            })
+            arrTotalExpenseOneCar.push(thisCarExpenseItem);
+        }
+        let thisCarServiceItem = {x: xValue, y: 0};
+        if (arrServiceSpend && arrServiceSpend.length) {
+            arrServiceSpend.forEach(item => {
+                thisCarServiceItem.y += item.y;
+            })
+            arrTotalServiceOneCar.push(thisCarServiceItem);
+        }
+      }
+    });
+    return {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
+        arrTotalExpenseOneCar, arrTotalServiceOneCar}
+  }
+
+
+  calculateAllVehicleTotalMoney() {
     let arrTotalAllCars = [];
     let arrTotalEachCarsAllCategory = [];
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
+          // TODO* arrTotalMoneySpend is Wrong....
         let {arrTotalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
-        //console.log(arrTotalMoneySpend)
-        // Only Keep numberOfMonth element at the end
-        if (arrTotalMoneySpend.length > numberOfMonth) {
-          arrTotalMoneySpend.splice(0, arrTotalMoneySpend.length - numberOfMonth);
-        }
-        arrTotalAllCars.push(arrTotalMoneySpend)
-        
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+        let filteredArrTotalMoneySpend = [];
+
+        // Only Keep numberOfMonth
         if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
+            arrTotalMoneySpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    filteredArrTotalMoneySpend.push(item)
+                }
+            })
+        }
+
+        arrTotalAllCars.push(filteredArrTotalMoneySpend)
+        
+        if (filteredArrTotalMoneySpend && filteredArrTotalMoneySpend.length) {
             let totalThisCarMoney = {
                 x: ""+element.licensePlate,
                 y: 0
             };
-            arrTotalMoneySpend.forEach(item => {
+            filteredArrTotalMoneySpend.forEach(item => {
                 totalThisCarMoney.y += item.y;
             })
             arrTotalEachCarsAllCategory.push(totalThisCarMoney)
@@ -71,21 +140,61 @@ class MoneyUsageByTimeReport extends React.Component {
     });
     return {arrTotalAllCars, arrTotalEachCarsAllCategory};
   }
-  calculateAllVehicleTotalMoneyPercentPrivate(numberOfMonth) {
+  calculateAllVehicleTotalMoneyPercentPrivate() {
     let totalGasSpendPrivate = 0, totalOilSpendPrivate = 0, totalAuthSpendPrivate = 0, 
         totalExpenseSpendPrivate = 0, totalServiceSpendPrivate = 0;
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
-        let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend} 
-            = this.props.userData.carReports[element.id].moneyReport;
-        
-        totalGasSpendPrivate += totalGasSpend;
-        totalOilSpendPrivate += totalOilSpend;
-        totalAuthSpendPrivate += totalAuthSpend;
-        totalExpenseSpendPrivate += totalExpenseSpend;
-        totalServiceSpendPrivate += totalServiceSpend;
-      }
-    });
+        var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
+        = this.props.userData.carReports[element.id].moneyReport;
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+           
+        // Only Keep numberOfMonth
+        if (arrGasSpend && arrGasSpend.length) {
+            arrGasSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalGasSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrOilSpend && arrOilSpend.length) {
+            arrOilSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalOilSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalAuthSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrExpenseSpend && arrExpenseSpend.length) {
+            arrExpenseSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalExpenseSpendPrivate += item.y;
+                }
+            })
+        }
+        if (arrServiceSpend && arrServiceSpend.length) {
+            arrServiceSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalServiceSpendPrivate += item.y;
+                }
+            })
+        }
+        }
+    })
     return {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
         totalExpenseSpendPrivate, totalServiceSpendPrivate};
   }
@@ -97,13 +206,24 @@ class MoneyUsageByTimeReport extends React.Component {
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         let {arrTotalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
-        //console.log(arrTotalMoneySpend)
-        // Only Keep numberOfMonth element at the end
-        if (arrTotalMoneySpend.length > numberOfMonth) {
-          arrTotalMoneySpend.splice(0, arrTotalMoneySpend.length - numberOfMonth);
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+        let filteredArrTotalMoneySpend = [];
+        // Only Keep numberOfMonth
+        if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
+            arrTotalMoneySpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    item.x = xDate;
+                    filteredArrTotalMoneySpend.push(item)
+                }
+            })
         }
-        if (arrTotalMoneySpend && arrTotalMoneySpend.length > 0)
-        arrTotalAllCars.push(arrTotalMoneySpend)
+        if (filteredArrTotalMoneySpend && filteredArrTotalMoneySpend.length > 0)
+            arrTotalAllCars.push(filteredArrTotalMoneySpend)
       }
     });
     return arrTotalAllCars;
@@ -164,27 +284,22 @@ class MoneyUsageByTimeReport extends React.Component {
   }
   render() {
     if (this.props.currentVehicle || this.props.isTotalReport) {
-        if (this.displayByFilter) {
-            var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
-                = AppUtils.getInfoMoneySpendByTime(this.props.currentVehicle,
-                    this.state.duration, this.state.durationType, this.state.tillDate);
-        } else {
-            if (this.props.isTotalReport) {
-                if (this.props.isTeamDisplay) {
-                    var arrTotalAllCars = this.calculateAllVehicleTotalMoneyTeam(6);
-                    var {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
-                        arrTotalExpenseEachCars, arrTotalServiceEachCars}
-                        = this.calculateEachVehicleTotalMoneyTeam(6);
-                } else {
-                    var {arrTotalAllCars, arrTotalEachCarsAllCategory} = this.calculateAllVehicleTotalMoney(6);
-                    var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
-                        totalExpenseSpendPrivate, totalServiceSpendPrivate}
-                        = this.calculateAllVehicleTotalMoneyPercentPrivate(12);
-                }
+        if (this.props.isTotalReport) {
+            if (this.props.isTeamDisplay) {
+                var arrTotalAllCars = this.calculateAllVehicleTotalMoneyTeam(6);
+                var {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
+                    arrTotalExpenseEachCars, arrTotalServiceEachCars}
+                    = this.calculateEachVehicleTotalMoneyTeam();
             } else {
-                var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
-                    = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
+                var {arrTotalAllCars, arrTotalEachCarsAllCategory} = this.calculateAllVehicleTotalMoney(6);
+                var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
+                    totalExpenseSpendPrivate, totalServiceSpendPrivate}
+                    = this.calculateAllVehicleTotalMoneyPercentPrivate();
             }
+        } else {
+            var {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
+                arrTotalExpenseOneCar, arrTotalServiceOneCar}
+                = this.calculateOneVehicleTotalMoneyPrivate();
         }
 
         return (
@@ -272,34 +387,34 @@ class MoneyUsageByTimeReport extends React.Component {
                             domainPadding={{y: [0, 10], x: [10, 0]}}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         >
-                        
-                            {arrGasSpend && arrGasSpend.length ?
+                            {/* This is FOr One Car in Detail Report */}
+                            {arrTotalGasOneCar && arrTotalGasOneCar.length ?
                             <VictoryBar
-                                data={arrGasSpend}
+                                data={arrTotalGasOneCar}
                                 interpolation="linear"
                             /> : null}
 
-                            {arrOilSpend && arrOilSpend.length ?
+                            {arrTotalOilOneCar && arrTotalOilOneCar.length ?
                             <VictoryBar
-                                data={arrOilSpend}
+                                data={arrTotalOilOneCar}
                                 interpolation="linear"
                             /> : null}
 
-                            {arrAuthSpend && arrAuthSpend.length ?
+                            {arrTotalAuthOneCar && arrTotalAuthOneCar.length ?
                             <VictoryBar
-                                data={arrAuthSpend}
+                                data={arrTotalAuthOneCar}
                                 interpolation="linear"
                             /> : null}
 
-                            {arrExpenseSpend && arrExpenseSpend.length ?
+                            {arrTotalExpenseOneCar && arrTotalExpenseOneCar.length ?
                             <VictoryBar
-                                data={arrExpenseSpend}
+                                data={arrTotalExpenseOneCar}
                                 interpolation="linear"
                             /> : null}
 
-                            {arrServiceSpend && arrServiceSpend.length ?
+                            {arrTotalServiceOneCar && arrTotalServiceOneCar.length ?
                             <VictoryBar
-                                data={arrServiceSpend}
+                                data={arrTotalServiceOneCar}
                                 interpolation="linear"
                             /> : null}
                         

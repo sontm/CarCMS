@@ -78,7 +78,7 @@ class MyVehicleScreen extends React.Component {
     console.log("MyVehicleScreen Render")
     return (
       <Container>
-        <Header style={{backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
+        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Body>
           <Title><HeaderText>{AppLocales.t("MYCAR_HEADER")}</HeaderText></Title>
           </Body>
@@ -86,7 +86,7 @@ class MyVehicleScreen extends React.Component {
         
         <Content>
           <View style={styles.container}>
-            <View style={styles.sortContainer}>
+            {/* <View style={styles.sortContainer}>
               <Picker
                   mode="dropdown"
                   placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
@@ -104,7 +104,7 @@ class MyVehicleScreen extends React.Component {
                   <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
                   <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
               </Picker>
-            </View>
+            </View> */}
             <ScrollView
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
