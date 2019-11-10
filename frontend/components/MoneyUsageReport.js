@@ -136,7 +136,7 @@ class MoneyUsageReport extends React.Component {
                                 { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpend },
                             ]}
                             radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             labelRadius={({ innerRadius }) => innerRadius + 105 }
                             />
                     </View>
@@ -155,7 +155,7 @@ class MoneyUsageReport extends React.Component {
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={arrExpenseTypeSpend}
                             radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             //labelRadius={({ innerRadius }) => innerRadius + 20 }
                             />
                     </View>

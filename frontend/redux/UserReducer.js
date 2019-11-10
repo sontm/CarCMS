@@ -205,7 +205,7 @@ export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
 export const actTempCalculateCarReport = (currentVehicle, options, prevTempData, theDispatch) => (dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
     console.log("actTempCalculateCarReport calleddddddddddd")
-    if (!prevTempData || !prevTempData.carReports[currentVehicle.id] || 
+    if (!prevTempData || !prevTempData.carReports || !prevTempData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
         console.log(">>>actTempCalculateCarReport:")
         let theIdx = AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id);

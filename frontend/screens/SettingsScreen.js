@@ -6,6 +6,8 @@ import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Ic
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs } from 'native-base';
 import Layout from '../constants/Layout'
 
+import {HeaderText} from '../components/StyledText'
+
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 
@@ -339,20 +341,7 @@ class SettingsScreen extends React.Component {
 }
 
 SettingsScreen.navigationOptions = ({navigation}) => ({
-    header: (
-        <Header>
-          <Left>
-          </Left>
-          <Body>
-            <Title>More Settings</Title>
-          </Body>
-          <Right>
-             <Button transparent onPress={() => {}}>
-              <Icon name="search" />
-            </Button>
-          </Right>
-        </Header>
-    )
+    header: null
 });
 
 const styles = StyleSheet.create({

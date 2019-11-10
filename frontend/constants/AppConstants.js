@@ -50,7 +50,8 @@ export default {
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
     COLOR_PICKER_TEXT: "#1f77b4",
     COLOR_GREY_BG: "rgb(200, 200, 200)",
-
+    COLOR_GREY_LIGHT_BG: "rgb(240, 240, 240)",
+    COLOR_BUTTON_BG: "#3b5998", // FB color
 };
 
 //https://codepen.io/whitelynx/pen/pbberp

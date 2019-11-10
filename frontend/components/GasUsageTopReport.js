@@ -153,14 +153,14 @@ class GasUsageTopReport extends React.Component {
                     </H3></Text>
                     <Segment small>
                         <Button small first onPress={() => this.setState({activeDisplay: 0})}
-                            active={this.state.activeDisplay === 0}>
-                            <Text style={{fontSize: 12}}>Km</Text></Button>
+                            style={this.state.activeDisplay === 0 ? styles.activeSegment : styles.inActiveSegment}>
+                            <Text style={this.state.activeDisplay === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>Km</Text></Button>
                         <Button small  onPress={() => this.setState({activeDisplay: 1})}
-                            active={this.state.activeDisplay === 1}>
-                            <Text style={{fontSize: 12}}>đ</Text></Button>
+                            style={this.state.activeDisplay === 1 ? styles.activeSegment : styles.inActiveSegment}>
+                            <Text style={this.state.activeDisplay === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ</Text></Button>
                         <Button small last  onPress={() => this.setState({activeDisplay: 2})}
-                            active={this.state.activeDisplay === 2}>
-                            <Text style={{fontSize: 12}}>đ/Km</Text></Button>
+                            style={this.state.activeDisplay === 2 ? styles.activeSegment : styles.inActiveSegment}>
+                            <Text style={this.state.activeDisplay === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ/Km</Text></Button>
                     </Segment>
                 </View>
                 <View style={styles.textRowOption}>
@@ -268,6 +268,24 @@ const styles = StyleSheet.create({
       marginBottom: 20,
       borderRadius: 7,
     },
+
+    activeSegment: {
+        backgroundColor: AppConstants.COLOR_BUTTON_BG,
+        color:"white",
+    },
+    inActiveSegment: {
+        backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+        color:AppConstants.COLOR_PICKER_TEXT,
+    },
+    activeSegmentText: {
+        color:"white",
+        fontSize: 12
+    },
+    inActiveSegmentText: {
+        color:AppConstants.COLOR_PICKER_TEXT,
+        fontSize: 12
+    },
+
     textRow: {
         flexDirection: "row",
         paddingTop: 10,

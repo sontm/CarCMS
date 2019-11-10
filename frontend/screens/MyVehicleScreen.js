@@ -13,7 +13,7 @@ import {
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Fab } from 'native-base';
 
-import { MonoText } from '../components/StyledText';
+import { HeaderText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
@@ -21,14 +21,14 @@ import Layout from '../constants/Layout'
 import AppLocales from '../constants/i18n'
 
 function getNameOfSortType(type) {
-  if (type == "auth") return "Lịch Đăng Kiểm";
-  if (type == "oil") return "Lịch Thay Dầu";
-  if (type == "kmLarge") return "Đi Nhiều";
-  if (type == "kmSmall") return "Đi Ít";
-  if (type == "gasBest") return "Hiệu Suất Xăng Tốt";
-  if (type == "gasWorst") return "Hiệu Suất Xăng Kém";
-  if (type == "moneyMonthlyLarge") return "Số Tiền Hàng Tháng Lớn";
-  if (type == "moneyMonthlySmall") return "Số Tiền Hàng Tháng Nhỏ";
+  if (type == "auth") return "Sắp Xếp theo 'Lịch Đăng Kiểm'";
+  if (type == "oil") return "Sắp Xếp theo 'Lịch Thay Dầu'";
+  if (type == "kmLarge") return "Sắp Xếp theo 'Đi Nhiều'";
+  if (type == "kmSmall") return "Sắp Xếp theo 'Đi Ít'";
+  if (type == "gasBest") return "Sắp Xếp theo 'Hiệu Suất Xăng Tốt'";
+  if (type == "gasWorst") return "Sắp Xếp theo 'Hiệu Suất Xăng Kém'";
+  if (type == "moneyMonthlyLarge") return "Sắp Xếp theo 'Số Tiền Hàng Tháng Lớn'";
+  if (type == "moneyMonthlySmall") return "Sắp Xếp theo 'Số Tiền Hàng Tháng Nhỏ'";
   return "Default";
 }
 
@@ -46,7 +46,6 @@ class MyVehicleScreen extends React.Component {
 
     this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this)
     this.onSortChange = this.onSortChange.bind(this)
-    this.onClearChange = this.onClearChange.bind(this)
   }
   componentDidMount() {
     console.log("HOMESCreen DidMount")
@@ -74,56 +73,38 @@ class MyVehicleScreen extends React.Component {
       changedSort: true
     })
   }
-  onClearChange() {
-    this.setState({
-      changedSort: false,
-      sortType: "auth"
-    })
-  }
   
   render() {
     console.log("MyVehicleScreen Render")
     return (
       <Container>
-        <Header>
-          <View style={styles.filterHeaderInfo}>
-            <View style={styles.filterHeaderInfoLeftButton}>
-              {this.state.changedSort? (
-              <Button transparent onPress={this.onClearChange}>
-                <Icon type="MaterialIcons" name="clear" />
-              </Button>
-              ) : null}
-            </View>
-
-            {this.state.changedSort? (
-              <Title style={styles.filterHeaderInfoText}>Sắp Xếp:{" "+getNameOfSortType(this.state.sortType)}</Title>
-            ): (
-              <Title style={styles.filterHeaderInfoTextDefault}>{AppLocales.t("MYCAR_HEADER")}</Title>
-            )}
-          </View>
-          <Right style={{flex: 1}}> 
-            <Picker
-                mode="dropdown"
-                placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
-                //iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: "grey"}}/>}
-                //selectedValue="year2"
-                onValueChange={this.onSortChange.bind(this)}
-                textStyle={{ color: AppContants.COLOR_PICKER_TEXT}}
-                >
-                <Picker.Item label={getNameOfSortType("auth")} value="auth" />
-                <Picker.Item label={getNameOfSortType("oil")} value="oil" />
-                <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
-                <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />
-                <Picker.Item label={getNameOfSortType("gasBest")} value="gasBest" />
-                <Picker.Item label={getNameOfSortType("gasWorst")} value="gasWorst" />
-                <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
-                <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
-            </Picker>
-          </Right>
+        <Header style={{backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
+          <Body>
+          <Title><HeaderText>{AppLocales.t("MYCAR_HEADER")}</HeaderText></Title>
+          </Body>
         </Header>
         
         <Content>
           <View style={styles.container}>
+            <View style={styles.sortContainer}>
+              <Picker
+                  mode="dropdown"
+                  placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
+                  iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: AppContants.COLOR_BUTTON_BG}}/>}
+                  selectedValue={this.state.sortType}
+                  onValueChange={this.onSortChange.bind(this)}
+                  textStyle={{ color: AppContants.COLOR_PICKER_TEXT, backgroundColor: "red", textAlign: "center"}}
+                  >
+                  <Picker.Item label={getNameOfSortType("auth")} value="auth" />
+                  <Picker.Item label={getNameOfSortType("oil")} value="oil" />
+                  <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
+                  <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />
+                  <Picker.Item label={getNameOfSortType("gasBest")} value="gasBest" />
+                  <Picker.Item label={getNameOfSortType("gasWorst")} value="gasWorst" />
+                  <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
+                  <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
+              </Picker>
+            </View>
             <ScrollView
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
@@ -153,6 +134,15 @@ const styles = StyleSheet.create({
   contentContainer: {
 
   },
+  sortContainer: {
+    marginLeft: 10,
+    marginRight: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center"
+  },
+
   filterHeaderInfo: {
     flexDirection: "row",
     justifyContent: "space-around",

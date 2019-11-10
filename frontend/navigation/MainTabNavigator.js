@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { withNavigation } from 'react-navigation';
 
@@ -150,29 +150,31 @@ const tabNavigator = createBottomTabNavigator({
     tabBarComponent: props => {
       return (
         <Footer>
-          <FooterTab>
+          <FooterTab style={styles.footerContainer}>
             <Button
               vertical
               active={props.navigation.state.index === 0}
+              style={props.navigation.state.index==0?styles.btnActive:null}
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("Home")
               }}>
-              <Icon name='home' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_HOME")}</Text>
+              <Icon name='home' style={props.navigation.state.index==0?styles.iconActive:styles.iconInActive}/>
+              <Text style={props.navigation.state.index==0?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_HOME")}</Text>
             </Button>
 
             <Button
               vertical
               active={props.navigation.state.index === 1}
+              style={props.navigation.state.index==1?styles.btnActive:null}
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("MyVehicle")
               }}>
-              <Icon type="FontAwesome5" name='car' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_MY_CAR")}</Text>
+              <Icon type="FontAwesome5" name='car' style={props.navigation.state.index==1?styles.iconActive:styles.iconInActive}/>
+              <Text style={props.navigation.state.index==1?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_MY_CAR")}</Text>
             </Button>
             
             
@@ -214,25 +216,27 @@ const tabNavigator = createBottomTabNavigator({
             <Button
               vertical
               active={props.navigation.state.index === 2}
+              style={props.navigation.state.index==2?styles.btnActive:null}
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("Team")
               }}>
-              <Icon type="Octicons" name='organization' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_TEAM")}</Text>
+              <Icon type="Octicons" name='organization' style={props.navigation.state.index==2?styles.iconActive:styles.iconInActive}/>
+              <Text style={props.navigation.state.index==2?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_TEAM")}</Text>
             </Button>
             
             <Button
               vertical
               active={props.navigation.state.index === 3}
+              style={props.navigation.state.index==3?styles.btnActive:null}
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("Settings")
               }}>
-              <Icon name='more' style={{fontSize: 26}}/>
-              <Text style={{fontSize: 10}}>{AppLocales.t("NAV_BOT_MORE")}</Text>
+              <Icon name='more' style={props.navigation.state.index==3?styles.iconActive:styles.iconInActive}/>
+              <Text style={props.navigation.state.index==3?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_MORE")}</Text>
             </Button>
           </FooterTab>
         </Footer>
@@ -243,4 +247,30 @@ const tabNavigator = createBottomTabNavigator({
 
 tabNavigator.path = '';
 
+const styles = StyleSheet.create({
+  footerContainer: {
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    // color: "white"
+  },
+
+  btnActive: {
+    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+  },
+  iconActive: {
+    fontSize: 26,
+    color: "white"
+  },
+  iconInActive: {
+    fontSize: 26,
+    color: "grey"
+  },
+  textActive: {
+    fontSize: 10,
+    color: "white"
+  },
+  textInActive: {
+    fontSize: 10,
+    color: "grey"
+  }
+})
 export default (tabNavigator);

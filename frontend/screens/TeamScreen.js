@@ -17,6 +17,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body,
 
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
+import AppConstants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
 import AppLocales from '../constants/i18n'
 
@@ -26,14 +27,14 @@ import TeamMembers from './team/TeamMembers'
 import TeamReport from './team/TeamReport'
 
 function getNameOfSortType(type) {
-  if (type == "auth") return "Lịch Đăng Kiểm";
-  if (type == "oil") return "Lịch Thay Dầu";
-  if (type == "kmLarge") return "Đi Nhiều";
-  if (type == "kmSmall") return "Đi Ít";
-  if (type == "gasBest") return "Hiệu Suất Xăng Tốt";
-  if (type == "gasWorst") return "Hiệu Suất Xăng Kém";
-  if (type == "moneyMonthlyLarge") return "Số Tiền Hàng Tháng Lớn";
-  if (type == "moneyMonthlySmall") return "Số Tiền Hàng Tháng Nhỏ";
+  if (type == "auth") return "Sắp Xếp theo 'Lịch Đăng Kiểm'";
+  if (type == "oil") return "Sắp Xếp theo 'Lịch Thay Dầu'";
+  if (type == "kmLarge") return "Sắp Xếp theo 'Đi Nhiều'";
+  if (type == "kmSmall") return "Sắp Xếp theo 'Đi Ít'";
+  if (type == "gasBest") return "Sắp Xếp theo 'Hiệu Suất Xăng Tốt'";
+  if (type == "gasWorst") return "Sắp Xếp theo 'Hiệu Suất Xăng Kém'";
+  if (type == "moneyMonthlyLarge") return "Sắp Xếp theo 'Số Tiền Hàng Tháng Lớn'";
+  if (type == "moneyMonthlySmall") return "Sắp Xếp theo 'Số Tiền Hàng Tháng Nhỏ'";
   return "Default";
 }
 
@@ -42,13 +43,10 @@ class TeamScreen extends React.Component {
     super(props);
     this.state = {
       activePage:0,
-      sortType: "auth",
-      changedSort: false
+      sortType: "auth"
     }
 
     this.onSortChange = this.onSortChange.bind(this)
-    this.onClearChange = this.onClearChange.bind(this)
-
     this.fetchTeamData = this.fetchTeamData.bind(this)
   }
   fetchTeamData() {
@@ -93,16 +91,10 @@ class TeamScreen extends React.Component {
   }
   onSortChange(value) {
     this.setState({
-      sortType: value,
-      changedSort: true
+      sortType: value
     })
   }
-  onClearChange() {
-    this.setState({
-      changedSort: false,
-      sortType: "auth"
-    })
-  }
+
   componentDidMount() {
     console.log("TeamScreen DidMount")
 
@@ -118,19 +110,27 @@ class TeamScreen extends React.Component {
         }
       })
       let viewDisplay = [];
-      if (this.state.changedSort) {
-        viewDisplay.push(
-          <View style={styles.filterInfoContainer} key="sort">
-            <Card style={{ borderRadius: 16, width: "80%", flexDirection:"row", justifyContent:"center", height: 30,alignItems:"center" }}>
-              <Button transparent onPress={this.onClearChange}>
-                  <Icon type="MaterialIcons" name="clear" />
-              </Button>
-              <Text>{AppLocales.t("TEAM_SORT_LBL")}: {" " + getNameOfSortType(this.state.sortType)}</Text>
-            </Card>
-          </View>
-        )
-      }
-      
+      viewDisplay.push(
+        <View style={styles.sortContainer} key="sorting">
+          <Picker
+            mode="dropdown"
+            placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
+            iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: "grey"}}/>}
+            selectedValue={this.state.sortType}
+            onValueChange={this.onSortChange.bind(this)}
+            textStyle={{ color: AppContants.COLOR_PICKER_TEXT}}
+          >
+            <Picker.Item label={getNameOfSortType("auth")} value="auth" />
+            <Picker.Item label={getNameOfSortType("oil")} value="oil" />
+            <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
+            <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />
+            <Picker.Item label={getNameOfSortType("gasBest")} value="gasBest" />
+            <Picker.Item label={getNameOfSortType("gasWorst")} value="gasWorst" />
+            <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
+            <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
+          </Picker>
+        </View>
+      )
       viewDisplay.push(allVehicles.map(item => {
         return (
         <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={() => {}}
@@ -152,25 +152,20 @@ class TeamScreen extends React.Component {
     console.log("TeamScreen Render")
     return (
       <Container>
-        <Header style={{justifyContent: "space-between"}}>
-          <Left style={{flex:1}}>
-            <Button transparent onPress={this.fetchTeamData}>
-              <Icon type="MaterialIcons" name="refresh" />
-            </Button>
-          </Left>
-          <Body style={{flex:5, justifyContent: "center", alignItems:"center"}}>
-          <Segment style={{alignSelf:"center"}}>
-          <Button first active={this.state.activePage === 0}
+        <Header noLeft style={{justifyContent: "space-between", backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
+          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
+          <Segment style={{alignSelf:"center",backgroundColor: AppContants.COLOR_GREY_LIGHT_BG}}>
+          <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setState({activePage: 0})}>
-            <Text>{AppLocales.t("TEAM_HEADER_CAR")}</Text>
+            <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_CAR")}</Text>
           </Button>
-          <Button active={this.state.activePage === 1}
+          <Button style={this.state.activePage === 1 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setState({activePage: 1})}>
-            <Text>{AppLocales.t("TEAM_HEADER_REPORT")}</Text>
+            <Text style={this.state.activePage === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_REPORT")}</Text>
           </Button>
-          <Button last active={this.state.activePage === 2}
+          <Button last style={this.state.activePage === 2 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setState({activePage: 2})}>
-            <Text>{AppLocales.t("TEAM_HEADER_MEMBER")}</Text>
+            <Text style={this.state.activePage === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_MEMBER")}</Text>
             {this.props.teamData.joinRequests && this.props.teamData.joinRequests.length > 0 ? (
               <Badge danger style={styles.notifyBadge}>
                 <Text style={styles.notifyBadgeText}>{this.props.teamData.joinRequests.length}</Text>
@@ -180,26 +175,10 @@ class TeamScreen extends React.Component {
           </Button>
         </Segment>
           </Body>
-          <Right style={{flex:2}}>
-            {this.state.activePage == 0 ? 
-            (<Picker
-                mode="dropdown"
-                placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
-                //iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: "grey"}}/>}
-                //selectedValue="year2"
-                onValueChange={this.onSortChange.bind(this)}
-                textStyle={{ color: AppContants.COLOR_PICKER_TEXT}}
-                >
-                <Picker.Item label={getNameOfSortType("auth")} value="auth" />
-                <Picker.Item label={getNameOfSortType("oil")} value="oil" />
-                <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
-                <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />
-                <Picker.Item label={getNameOfSortType("gasBest")} value="gasBest" />
-                <Picker.Item label={getNameOfSortType("gasWorst")} value="gasWorst" />
-                <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
-                <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
-            </Picker>
-            ) : null}
+          <Right style={{flex:1}}>
+            <Button transparent onPress={this.fetchTeamData}>
+              <Icon type="MaterialIcons" name="refresh" style={{color: AppConstants.COLOR_BUTTON_BG}} />
+            </Button>
           </Right>
         </Header>
         
@@ -231,6 +210,15 @@ const styles = StyleSheet.create({
   contentContainer: {
 
   },
+  sortContainer: {
+    marginLeft: 10,
+    marginRight: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center"
+  },
+
   listItemRow: {
     marginTop: 7
   },
@@ -257,7 +245,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
+
+  activeSegment: {
+    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    color:"white",
+    borderColor: AppConstants.COLOR_BUTTON_BG
+  },
+  inActiveSegment: {
+      backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+      color:AppConstants.COLOR_PICKER_TEXT,
+      borderColor: AppConstants.COLOR_BUTTON_BG
+  },
+  activeSegmentText: {
+      color:"white",
+      fontSize: 12
+  },
+  inActiveSegmentText: {
+      color:AppConstants.COLOR_PICKER_TEXT,
+      fontSize: 12
+  },
 });
 
 const mapStateToProps = (state) => ({

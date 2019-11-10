@@ -63,33 +63,19 @@ class App extends React.Component {
         />
       );
     } else {
-      if (Platform.OS === 'ios') {
-        return (
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <Root>
-              <AppNavigator />
-              </Root>
-            </PersistGate>
-            </Provider>
-          </View>
-        );
-      } else {
-        return (
-          <SafeAreaView style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <Root>
-              <AppNavigator />
-              </Root>
-            </PersistGate>
-            </Provider>
-          </SafeAreaView>
-        );
-      }
+      //https://stackoverflow.com/questions/45044941/react-native-expo-stacknavigator-overlaps-notification-bar
+      // need add margin of status bar
+      return (
+        <View style={styles.container}>
+          <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Root>
+            <AppNavigator />
+            </Root>
+          </PersistGate>
+          </Provider>
+        </View>
+      );
     }
   }
 }
@@ -126,7 +112,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
+    marginTop: StatusBar.currentHeight
+  }
 });
 
 export default App;

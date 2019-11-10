@@ -11,7 +11,7 @@ import {
   AsyncStorage
 } from 'react-native';
 
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem } from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker} from 'native-base';
 
 import VehicleBasicReport from '../../components/VehicleBasicReport'
 import AppLocales from '../../constants/i18n'
@@ -19,15 +19,12 @@ import AppLocales from '../../constants/i18n'
 class MemberVehicleListScreen extends React.Component {
   constructor(props) {
     super(props)
-
   }
-
   render() {
     console.log("MemberVehicleListScreen Render")
     return (
           <View style={styles.container}>
             <ScrollView
-              style={styles.container}
               contentContainerStyle={styles.contentContainer}>
               {this.props.navigation.state.params && this.props.navigation.state.params.member &&
                 this.props.navigation.state.params.member.vehicleList.map(item => (
@@ -65,6 +62,14 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
 
+  },
+  sortContainer: {
+    marginLeft: 10,
+    marginRight: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center"
   },
 });
 

@@ -17,7 +17,7 @@ import AppLocales from '../constants/i18n';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, H2, H3, H1 } from 'native-base';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
-import { MonoText } from '../components/StyledText';
+import { HeaderText } from '../components/StyledText';
 import {
   LineChart
 } from "react-native-chart-kit";
@@ -119,50 +119,48 @@ class HomeScreen extends React.Component {
           <Left>
           </Left>
           <Body>
-            <Title>Tổng Quan</Title>
+            <Title><HeaderText>Tổng Quan</HeaderText></Title>
           </Body>
           <Right />
         </Header>
         
         <Content>
-          <View style={styles.container}>
-            <ScrollView
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}>
-              
-              <View style={styles.statRow}>
-                <Card style={styles.equalStartRow}>
-                    <CardItem header>
-                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyPrivate)}</H2></Text>
-                    </CardItem>
-                    <CardItem>
-                    <Body>
-                        <Text style={{alignSelf: "center", fontSize: 13}}>
-                        {AppLocales.t("HOME_TOTAL_PRIVATE")}
-                        </Text>
-                    </Body>
-                    </CardItem>
-                </Card>
-                <Card style={styles.equalStartRow}>
-                    <CardItem header>
-                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyTeam)}</H2></Text>
-                    </CardItem>
-                    <CardItem footer>
-                    <Body>
-                    <Text style={{alignSelf: "center", fontSize: 13}}>
-                        {AppLocales.t("HOME_TOTAL_TEAM")}
-                        </Text>
-                    </Body>
-                    </CardItem>
-                </Card>
-              </View>
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.contentContainer}>
+            
+            <View style={styles.statRow}>
+              <Card style={styles.equalStartRow}>
+                  <CardItem header>
+                      <View style={{alignItems: "center"}}>
+                      <Text><H2>{AppUtils.formatMoneyToK(totalMoneyPrivate)}</H2></Text>
+                      <Body>
+                      <Text style={{alignSelf: "center", fontSize: 13}}>
+                      {AppLocales.t("HOME_TOTAL_PRIVATE")}
+                      </Text>
+                  </Body>
+                  </View>
+                  </CardItem>
+              </Card>
+              <Card style={styles.equalStartRow}>
+                  <CardItem header>
+                      <View style={{alignItems: "center"}}>
+                      <Text><H2>{AppUtils.formatMoneyToK(totalMoneyTeam)}</H2></Text>
+                      <Body>
+                      <Text style={{alignSelf: "center", fontSize: 13}}>
+                          {AppLocales.t("HOME_TOTAL_TEAM")}
+                          </Text>
+                      </Body>
+                      </View>
+                  </CardItem>
+              </Card>
+            </View>
 
-              <ReminderReport />
-              <MoneyUsageByTimeReport isTotalReport={true} />
-              <GasUsageReport isTotalReport={true} />
+            <ReminderReport/>
+            <MoneyUsageByTimeReport isTotalReport={true} />
+            <GasUsageReport isTotalReport={true} />
 
-            </ScrollView>
-          </View>
+          </ScrollView>
         </Content>
       </Container>
     );
@@ -182,7 +180,7 @@ const styles = StyleSheet.create({
 
   },
   headerContainer: {
-    backgroundColor: AppConstants.COLOR_PICKER_TEXT
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
   },
   statRow: {
     flexDirection: "row",
@@ -190,12 +188,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flexGrow: 100,
     paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: AppConstants.COLOR_PICKER_TEXT
+    // paddingBottom: 10,
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
   equalStartRow: {
       flex: 1,
-      margin: 5,
+      margin: 12,
       padding: 0,
       borderWidth: 0.5,
       borderRadius: 7,

@@ -111,19 +111,21 @@ class ReminderReport extends React.Component {
                 {AppLocales.t("HOME_REMIND")}
                 </H2></Text>
 
-                <Segment small style={{marginRight: 5}}>
-                    <Button small first onPress={() => this.setState({activeDisplay: 0})}
-                        active={this.state.activeDisplay === 0}>
-                        <Text style={{fontSize: 12}}>{AppLocales.t("GENERAL_PRIVATE")}</Text>
+                <Segment small style={styles.segmentContainer}>
+                    <Button small onPress={() => this.setState({activeDisplay: 0})}
+                        style={this.state.activeDisplay === 0 ? styles.activeSegment : styles.inActiveSegment}>
+                        <Text style={this.state.activeDisplay === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>
+                            {AppLocales.t("GENERAL_PRIVATE")}</Text>
                         {this.numRemindPrivate > 0 ? (
                         <Badge danger style={styles.notifyBadge}>
                             <Text style={styles.notifyBadgeText}>{this.numRemindPrivate}</Text>
                         </Badge>
                         ): null}
                     </Button>
-                    <Button small  onPress={() => this.setState({activeDisplay: 1})}
-                        active={this.state.activeDisplay === 1}>
-                        <Text style={{fontSize: 12}}>{AppLocales.t("GENERAL_TEAM")}</Text>
+                    <Button small onPress={() => this.setState({activeDisplay: 1})}
+                        style={this.state.activeDisplay === 1 ? styles.activeSegment : styles.inActiveSegment}>
+                        <Text style={this.state.activeDisplay === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>
+                            {AppLocales.t("GENERAL_TEAM")}</Text>
                         {this.numRemindTeam > 0 ? (
                         <Badge danger style={styles.notifyBadge}>
                             <Text style={styles.notifyBadgeText}>{this.numRemindTeam}</Text>
@@ -133,7 +135,7 @@ class ReminderReport extends React.Component {
                 </Segment>
             </View>
             
-            <ScrollView style={{height: 290}}>
+            <ScrollView>
                 {(this.state.activeDisplay === 0) ? (
                     privateView
                 ) : (
@@ -184,7 +186,27 @@ const styles = StyleSheet.create({
       flexDirection: "column",
       borderRadius: 7,
       justifyContent: "space-between",
-      marginBottom: 20,
+      marginBottom: 20
+    },
+
+    segmentContainer: {
+        marginRight: 5,
+    },
+    activeSegment: {
+        backgroundColor: AppConstants.COLOR_BUTTON_BG,
+        color:"white",
+    },
+    inActiveSegment: {
+        backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+        color:AppConstants.COLOR_PICKER_TEXT,
+    },
+    activeSegmentText: {
+        color:"white",
+        fontSize: 12
+    },
+    inActiveSegmentText: {
+        color:AppConstants.COLOR_PICKER_TEXT,
+        fontSize: 12
     },
 
 

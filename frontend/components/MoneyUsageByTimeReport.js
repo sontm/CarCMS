@@ -421,7 +421,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             data={arrTotalEachCarsAllCategory}
                             innerRadius={80}
                             radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             labelRadius={({ radius }) => radius + 10 }
                             />
                     </View>
@@ -439,7 +439,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             ]}
                             innerRadius={80}
                             radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + ": " + datum.y/1000 + "K") : ""}
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             labelRadius={({ radius }) => radius+10 }
                             />
                     </View>
@@ -471,6 +471,7 @@ const styles = StyleSheet.create({
       justifyContent: "space-between",
       marginBottom: 20,
       borderRadius: 7,
+      paddingBottom: 20
     },
 
 

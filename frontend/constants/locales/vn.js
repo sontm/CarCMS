@@ -38,7 +38,7 @@ export default {
     CARDETAIL_AVERAGE_ALL: "Trung Bình Tổng Thời Gian",
     CARDETAIL_HISTORY_HEADER: "Lịch Sử Sử Dụng",
 
-    TEAM_HEADER_CAR: "Xe",
+    TEAM_HEADER_CAR: "Danh Sách Xe",
     TEAM_HEADER_REPORT: "Báo Cáo",
     TEAM_HEADER_MEMBER: "Thành Viên",
     TEAM_SORT_LBL:"Sắp Xếp",
