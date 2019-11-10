@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, Label} from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
-
+import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
 import {actSettingSetVehicleDefault} from '../../redux/SettingReducer'
 
@@ -12,15 +12,10 @@ class VehicleSettingScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            //id: 1, // increment
-            kmForOilCar: 10000,
-            kmForOilBike: 2000,
-            monthAuthoBeyond9To7Year: 18,
-            monthAuthoBeyond9From7To12Year: 12,
-            monthAuthoBeyond9Over12Year: 6,
-            monthAuthoOver9: 6,
-            monthAuthoAdvanceTo7Year: 12,
-            monthAuthoAdvanceOver7Year: 6,
+            kmForOilRemind: 50,
+            dayForAuthRemind: 15,
+            dayForInsuranceRemind: 15,
+            dayForRoadFeeRemind: 15,
         };
 
         this.save = this.save.bind(this)
@@ -30,14 +25,10 @@ class VehicleSettingScreen extends React.Component {
         try {
             console.log("WIll Save Vehicle SEtting Default:")
             let newData = {
-                kmForOilBike: Number(this.state.kmForOilBike),
-                kmForOilCar: Number(this.state.kmForOilCar),
-                monthAuthoBeyond9To7Year: Number(this.state.monthAuthoBeyond9To7Year),
-                monthAuthoBeyond9From7To12Year: Number(this.state.monthAuthoBeyond9From7To12Year),
-                monthAuthoBeyond9Over12Year: Number(this.state.monthAuthoBeyond9Over12Year),
-                monthAuthoOver9: Number(this.state.monthAuthoOver9),
-                monthAuthoAdvanceTo7Year: Number(this.state.monthAuthoAdvanceTo7Year),
-                monthAuthoAdvanceOver7Year: Number(this.state.monthAuthoAdvanceOver7Year),
+                kmForOilRemind: Number(this.state.kmForOilRemind),
+                dayForAuthRemind: Number(this.state.dayForAuthRemind),
+                dayForInsuranceRemind: Number(this.state.dayForInsuranceRemind),
+                dayForRoadFeeRemind: Number(this.state.dayForRoadFeeRemind),
             }
             console.log(newData)
             this.props.actSettingSetVehicleDefault(newData)
@@ -63,122 +54,62 @@ class VehicleSettingScreen extends React.Component {
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Thay Dau Xe May:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="Km"
-                            onChangeText={(kmForOilBike) => this.setState({kmForOilBike})}
-                            value={""+this.state.kmForOilBike}
-                        />
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                {AppLocales.t("SETTING_REMIND_OIL_CAR")}{" (" + AppLocales.t("GENERAL_KM")+")"}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(kmForOilRemind) => this.setState({kmForOilRemind})}
+                                value={""+this.state.kmForOilRemind}
+                            />
                         </Item>
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Thay Dau Oto:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="Km"
-                            onChangeText={(kmForOilCar) => this.setState({kmForOilCar})}
-                            value={""+this.state.kmForOilCar}
-                        />
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                {AppLocales.t("SETTING_REMIND_AUTH")}{" (" + AppLocales.t("GENERAL_DAY")+")"}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(dayForAuthRemind) => this.setState({dayForAuthRemind})}
+                                value={""+this.state.dayForAuthRemind}
+                            />
+                        </Item>
+                    </View>
+
+                    <View style={styles.rowContainer}>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                {AppLocales.t("SETTING_REMIND_INSURANCE")}{" (" + AppLocales.t("GENERAL_DAY")+")"}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(dayForInsuranceRemind) => this.setState({dayForInsuranceRemind})}
+                                value={""+this.state.dayForInsuranceRemind}
+                            />
+                        </Item>
+                    </View>
+
+                    <View style={styles.rowContainer}>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                {AppLocales.t("SETTING_REMIND_ROAD_FEE")}{" (" + AppLocales.t("GENERAL_DAY")+")"}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(dayForRoadFeeRemind) => this.setState({dayForRoadFeeRemind})}
+                                value={""+this.state.dayForRoadFeeRemind}
+                            />
                         </Item>
                     </View>
                     
-
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Oto Duoi 9 Cho, Nho Hon 7 Nam:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="So Thang Dang Kiem"
-                            keyboardType="numeric"
-                            onChangeText={(monthAuthoBeyond9To7Year) => this.setState({monthAuthoBeyond9To7Year})}
-                            value={""+this.state.monthAuthoBeyond9To7Year}
-                        />
-                        </Item>
-                    </View>
-
-
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Oto Duoi 9 Cho, 7 Nam - 12 Nam:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="So Thang Dang Kiem"
-                            keyboardType="numeric"
-                            onChangeText={(monthAuthoBeyond9From7To12Year) => this.setState({monthAuthoBeyond9From7To12Year})}
-                            value={""+this.state.monthAuthoBeyond9From7To12Year}
-                        />
-                        </Item>
-                    </View>
-
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Oto Duoi 9 Cho, Tren 12 Nam:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="So Thang Dang Kiem"
-                            keyboardType="numeric"
-                            onChangeText={(monthAuthoBeyond9Over12Year) => this.setState({monthAuthoBeyond9Over12Year})}
-                            value={""+this.state.monthAuthoBeyond9Over12Year}
-                        />
-                        </Item>
-                    </View>
-
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Oto Tren 9 Cho:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="So Thang Dang Kiem"
-                            keyboardType="numeric"
-                            onChangeText={(monthAuthoOver9) => this.setState({monthAuthoOver9})}
-                            value={""+this.state.monthAuthoOver9}
-                        />
-                        </Item>
-                    </View>
-
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Xe Chuyen Dung, Duoi 7 Nam:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="So Thang Dang Kiem"
-                            keyboardType="numeric"
-                            onChangeText={(monthAuthoAdvanceTo7Year) => this.setState({monthAuthoAdvanceTo7Year})}
-                            value={""+this.state.monthAuthoAdvanceTo7Year}
-                        />
-                        </Item>
-                    </View>
-
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Xe Chuyen Dung, Tren 7 Nam:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="So Thang Dang Kiem"
-                            keyboardType="numeric"
-                            onChangeText={(monthAuthoAdvanceOver7Year) => this.setState({monthAuthoAdvanceOver7Year})}
-                            value={""+this.state.monthAuthoAdvanceOver7Year}
-                        />
-                        </Item>
-                    </View>
-
                     <View style={styles.rowButton}>
                     <Button
                         block primary
                         onPress={() => this.save(this.state)}
-                    ><Text>Save Data</Text></Button>
+                    ><Text>{AppLocales.t("SETTING_REMIND_BTN_SAVE")}</Text></Button>
                     </View>
 
                 </View>
@@ -191,15 +122,15 @@ class VehicleSettingScreen extends React.Component {
 VehicleSettingScreen.navigationOptions = ({navigation}) => ({
     header: (
         <Header>
-          <Left>
+          <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
-          <Body>
-            <Title>Default Setting</Title>
+          <Body style={{flex: 4}}>
+            <Title>{AppLocales.t("SETTING_REMIND_HEADER")}</Title>
           </Body>
-          <Right />
+          <Right style={{flex: 1}}/>
         </Header>
     )
 });
@@ -214,18 +145,22 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
-    alignItems: "center", // vertial align
+    alignItems: "flex-end", // vertial align
+    justifyContent: "center",
     height: 50,
-    borderWidth: 1,
-    borderColor:"grey"
+    width: "96%",
+    alignSelf:"center"
   },
   rowLabel: {
-    flex: 2,
+    flex: 5,
     textAlign: "right",
-    paddingRight: 5
+    paddingRight: 5,
+    fontSize: 14
   },
   rowForm: {
-    flex: 1
+    flex: 2,
+    borderBottomColor: "rgb(230, 230, 230)",
+    borderBottomWidth: 0.5
   },
   rowButton: {
     marginTop: 20,

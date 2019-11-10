@@ -13,6 +13,10 @@ export default {
     GENERAL_ALL:"Tất Cả",
     GENERAL_PRIVATE: "Cá Nhân",
     GENERAL_TEAM: "Tổ Chức",
+    GENERAL_TEAM_ROLE: "Chức Vụ",
+    GENERAL_TEAM_CODE_SHORT: "Mã",
+    GENERAL_PREV_MONTH: "Tháng Trước",
+    GENERAL_KM: "Km",
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Xe",
@@ -24,6 +28,9 @@ export default {
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
     HOME_TOTAL_TEAM: "Tổng Chi Phí Tổ Chức",
+    HOME_TOTAL_PRIVATE_THISMONTH: "Chi Phí Cá Nhân Tháng Này",
+    HOME_TOTAL_TEAM_THISMONTH: "Chi Phí Tổ Chức Tháng Này",
+
     HOME_MONEY_SPEND: "Chi Tiêu Các Xe",
     HOME_GAS_USAGE: "Biểu Đồ Xăng Các Xe",
     HOME_REMIND: "Nhắc Nhở",
@@ -67,8 +74,22 @@ export default {
     SETTING_LBL_LOGIN: "Đăng Nhập với Tài Khoản Đã Tạo",
     SETTING_LBL_REGISTER: "Tạo Tài Khoản",
     SETTING_LBL_PROFILE: "Thông Tin Cá Nhân",
-    SETTING_LBL_CONTACT: "Phản Hồi Tới Nhà Sản Xuất",
+    
     SETTING_LBL_LOGOUT: "Đăng Xuất",
+    SETTING_LBL_PRO_UPGRADE: "Nâng Cấp",
+
+    SETTING_H1_SUPPORT: "Trợ Giúp",
+    SETTING_LBL_GUIDE: "Hướng Dẫn Sử Dụng",
+    SETTING_LBL_REVIEW: "Đánh Giá Ứng Dụng",
+    SETTING_LBL_APP_INFO: "Thông Tin Sản Phẩm",
+    SETTING_LBL_CONTACT: "Phản Hồi Tới Nhà Sản Xuất",
+
+    SETTING_REMIND_HEADER: "Cài Đặt Nhắc Nhở",
+    SETTING_REMIND_OIL_CAR: "Khoảng Cách Cho Đến Lần Thay Dầu Tiếp Theo",
+    SETTING_REMIND_AUTH: "Số Ngày Cho Đến Lần Đăng Kiểm Tiếp Theo",
+    SETTING_REMIND_INSURANCE: "Số Ngày Cho Đến Lần Đóng Bảo Hiểm Dân Sự Tiếp Theo",
+    SETTING_REMIND_ROAD_FEE: "Số Ngày Cho Đến Lần Đóng Bảo Trì Đường Bộ Tiếp Theo",
+    SETTING_REMIND_BTN_SAVE: "Lưu Cài Đặt",
 
     NEW_CAR_HEADER:"Thông Tin Xe",
     NEW_CAR_BRAND:"Hãng Xe",

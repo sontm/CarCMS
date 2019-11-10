@@ -12,3 +12,9 @@ export function HeaderText(props) {
     <Text {...props} style={[props.style, { color: 'white' }]} />
   );
 }
+
+export function WhiteText(props) {
+  return (
+    <Text {...props} style={[props.style, { color: 'white' }]} />
+  );
+}

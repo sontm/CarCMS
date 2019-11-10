@@ -10,8 +10,7 @@ const SETTING_VEHICLE_SET_DEFAULT = 'SETTING_VEHICLE_SET_DEFAULT';
     // monthAuthoAdvanceTo7Year: 12,
     // monthAuthoAdvanceOver7Year: 6,
 const initialState = {
-    defaultVehicleSetting: {},
-    customVehicleSettings: []
+    defaultVehicleSetting: {}
 };
 
 export const actSettingSetVehicleDefault = (data) => (dispatch) => {

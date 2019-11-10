@@ -89,30 +89,92 @@ class HomeScreen extends React.Component {
   }
   calculateAllVehicleTotalMoney() {
     let totalMoneyPrivate = 0;
+    let totalMoneyPrivateThisMonth = 0;
+    let totalMoneyPrivatePrevMonth = 0;
+    let today = new Date();
+    var CALCULATE_END_THIS_MONTH = AppUtils.normalizeFillDate(
+      new Date(today.getFullYear(),today.getMonth()+1,0));
+    var CALCULATE_START_THIS_MONTH = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_THIS_MONTH.getFullYear(), 
+      CALCULATE_END_THIS_MONTH.getMonth(), 1));
+    var CALCULATE_START_PREV_MONTH = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_THIS_MONTH.getFullYear(), 
+      CALCULATE_END_THIS_MONTH.getMonth() - 1, 1));
+
+    // TODO Improve Perf this ??
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
-        let {totalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
-
+        let {arrTotalMoneySpend, totalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
+        arrTotalMoneySpend.forEach(item => {
+          let xDate = new Date(item.x);
+          if (xDate >= CALCULATE_START_THIS_MONTH && xDate <= CALCULATE_END_THIS_MONTH) {
+            totalMoneyPrivateThisMonth += item.y;
+          }
+          if (xDate >= CALCULATE_START_PREV_MONTH && xDate < CALCULATE_START_THIS_MONTH) {
+            totalMoneyPrivatePrevMonth += item.y;
+          }
+        })
         totalMoneyPrivate += totalMoneySpend;
       }
     });
-    return totalMoneyPrivate;
+    return {totalMoneyPrivate, totalMoneyPrivateThisMonth, totalMoneyPrivatePrevMonth};
   }
   calculateAllVehicleTotalMoneyTeam() {
     let totalMoneyTeam = 0;
+    let totalMoneyTeamThisMonth = 0;
+    let totalMoneyTeamPrevMonth = 0;
+
+    let today = new Date();
+    var CALCULATE_END_THIS_MONTH = AppUtils.normalizeFillDate(
+      new Date(today.getFullYear(),today.getMonth()+1,0));
+    var CALCULATE_START_THIS_MONTH = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_THIS_MONTH.getFullYear(), 
+      CALCULATE_END_THIS_MONTH.getMonth(), 1));
+    var CALCULATE_START_PREV_MONTH = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_THIS_MONTH.getFullYear(), 
+      CALCULATE_END_THIS_MONTH.getMonth() - 1, 1));
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
-        let {totalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
+        let {arrTotalMoneySpend, totalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
         
+        arrTotalMoneySpend.forEach(item => {
+          let xDate = new Date(item.x);
+          if (xDate >= CALCULATE_START_THIS_MONTH && xDate <= CALCULATE_END_THIS_MONTH) {
+            totalMoneyTeamThisMonth += item.y;
+          }
+          if (xDate >= CALCULATE_START_PREV_MONTH && xDate < CALCULATE_START_THIS_MONTH) {
+            totalMoneyTeamPrevMonth += item.y;
+          }
+        })
+
         totalMoneyTeam += totalMoneySpend;
       }
     });
-    return totalMoneyTeam;
+
+    return {totalMoneyTeam, totalMoneyTeamThisMonth, totalMoneyTeamPrevMonth};
   }
   render() {
     console.log("HOMESCreen Render")
-    let totalMoneyPrivate = this.calculateAllVehicleTotalMoney();
-    let totalMoneyTeam = this.calculateAllVehicleTotalMoneyTeam();
+    let {totalMoneyPrivate, totalMoneyPrivateThisMonth, totalMoneyPrivatePrevMonth} = this.calculateAllVehicleTotalMoney();
+    let {totalMoneyTeam, totalMoneyTeamThisMonth, totalMoneyTeamPrevMonth} = this.calculateAllVehicleTotalMoneyTeam();
+    if (totalMoneyPrivateThisMonth > totalMoneyPrivatePrevMonth) {
+      var iconInfoUsage= (
+        <Icon type="Entypo" name="arrow-up" 
+            style={{color: "#d62728", marginLeft: 5}} />
+      )
+    } else if (totalMoneyPrivateThisMonth < totalMoneyPrivatePrevMonth) {
+      var iconInfoUsage= (
+        <Icon type="Entypo" name="arrow-down" 
+            style={{color: "#2ca02c", marginLeft: 5}} />
+      )
+    }
+    if (totalMoneyTeamThisMonth > totalMoneyTeamPrevMonth) {
+      var iconInfoUsageTeam= (
+        <Icon type="Entypo" name="arrow-up" 
+            style={{color: "#d62728", marginLeft: 5}} />
+      )
+    } else if (totalMoneyTeamThisMonth < totalMoneyTeamPrevMonth) {
+      var iconInfoUsageTeam= (
+        <Icon type="Entypo" name="arrow-down" 
+            style={{color: "#2ca02c", marginLeft: 5}} />
+      )
+    }
     return (
       <Container>
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
@@ -130,6 +192,49 @@ class HomeScreen extends React.Component {
             contentContainerStyle={styles.contentContainer}>
             
             <View style={styles.statRow}>
+              <Card style={styles.equalStartRow}>
+                  <CardItem header>
+                      <View style={{alignItems: "center"}}>
+                      <Body>
+                        <Text style={{alignSelf: "center", fontSize: 12}}>
+                        {AppLocales.t("HOME_TOTAL_PRIVATE_THISMONTH")+":"}
+                        </Text>
+                      </Body>
+                      <View style={{flexDirection: "row", alignItems: "center"}}>
+                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyPrivateThisMonth)}</H2></Text>
+                      {iconInfoUsage}
+                      </View>
+                      <Body>
+                        <Text style={{alignSelf: "center", fontSize: 13}}>
+                        {AppLocales.t("GENERAL_PREV_MONTH")+": " + AppUtils.formatMoneyToK(totalMoneyPrivatePrevMonth)}
+                      </Text>
+                      </Body>
+                  </View>
+                  </CardItem>
+              </Card>
+              <Card style={styles.equalStartRow}>
+                  <CardItem header>
+                      <View style={{alignItems: "center"}}>
+                      <Body>
+                        <Text style={{alignSelf: "center", fontSize: 12}}>
+                        {AppLocales.t("HOME_TOTAL_TEAM_THISMONTH")+":"}
+                        </Text>
+                      </Body>
+                      <View style={{flexDirection: "row", alignItems: "center"}}>
+                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyTeamThisMonth)}</H2></Text>
+                        {iconInfoUsageTeam}
+                      </View>
+
+                      <Body>
+                        <Text style={{alignSelf: "center", fontSize: 13}}>
+                          {AppLocales.t("GENERAL_PREV_MONTH")+": " + AppUtils.formatMoneyToK(totalMoneyTeamPrevMonth)}
+                        </Text>
+                      </Body>
+                  </View>
+                  </CardItem>
+              </Card>
+            </View>
+            <View style={styles.statRowEnd}>
               <Card style={styles.equalStartRow}>
                   <CardItem header>
                       <View style={{alignItems: "center"}}>
@@ -185,15 +290,24 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     flexGrow: 100,
     paddingTop: 10,
-    // paddingBottom: 10,
+    backgroundColor: AppConstants.COLOR_HEADER_BG
+  },
+  statRowEnd: {
+    flexDirection: "row",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    flexGrow: 100,
+    paddingBottom: 5,
     backgroundColor: AppConstants.COLOR_HEADER_BG
   },
   equalStartRow: {
       flex: 1,
-      margin: 12,
+      marginLeft: 2,
+      marginRight: 2,
+      marginTop: 2,
       padding: 0,
       borderWidth: 0.5,
-      borderRadius: 7,
+      borderRadius: 0,
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",

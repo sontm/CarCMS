@@ -54,6 +54,7 @@ export default {
     COLOR_HEADER_BG: "#3b5998",
     COLOR_HEADER_BUTTON: "white",
     COLOR_BUTTON_BG: "#3b5998", // FB color
+    COLOR_D3_LIGHT_BLUE: "#1f77b4"
 };
 
 //https://codepen.io/whitelynx/pen/pbberp

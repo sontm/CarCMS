@@ -171,7 +171,11 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
-                props.navigation.navigate("MyVehicle")
+                if (props.navigation.state.index === 1) {
+                  props.navigation.navigate("MyVehicle")
+                } else {
+                  props.navigation.navigate("MyVehicleStack")
+                }
               }}>
               <Icon type="FontAwesome5" name='car' style={props.navigation.state.index==1?styles.iconActive:styles.iconInActive}/>
               <Text style={props.navigation.state.index==1?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_MY_CAR")}</Text>
@@ -220,7 +224,12 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
-                props.navigation.navigate("Team")
+                
+                if (props.navigation.state.index === 1) {
+                  props.navigation.navigate("Team")
+                } else {
+                  props.navigation.navigate("TeamStack")
+                }
               }}>
               <Icon type="Octicons" name='organization' style={props.navigation.state.index==2?styles.iconActive:styles.iconInActive}/>
               <Text style={props.navigation.state.index==2?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_TEAM")}</Text>
