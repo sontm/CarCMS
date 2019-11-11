@@ -10,6 +10,12 @@ export default {
         { id: 5,name: "Kia", models: [{id:14, name: "Morning"},{id:15, name: "K3"},{id:16, name: "Cerato"},{id:17, name: "Sorento"}]},
         { id: 6,name: "Huyndai", models: [{id:18, name: "i10"},{id:19, name: "New i10"},{id:20, name: "Accent"},{id:21, name: "Elanta"}]},
     ],
+    DATA_AUTH_TYPE: [
+        {id: 1, name: "Đăng Kiểm"},
+        {id: 2, name: "Bảo Hiểm Dân Sự"},
+        {id: 3, name: "Phí Bảo Trì Đường Bộ"},
+    ],
+
     DATA_EXPENSE_TYPE: [
         {id: 1, name: "Tiền Phạt"},
         {id: 2, name: "Cầu Đường"},
@@ -40,7 +46,9 @@ export default {
     FILL_ITEM_SERVICE: "service",
 
     SETTING_KM_NEXT_OILFILL: 1000,
-    SETTING_DAY_NEXT_AUTHORIZE_CAR: 730, // 2year
+    SETTING_DAY_NEXT_AUTHORIZE_CAR: 365, // 2year
+    SETTING_DAY_NEXT_INSURANCE: 365, // 2year
+    SETTING_DAY_NEXT_ROAD_FEE: 365, // 2year
 
     TEMPO_USE_BARCHART_GAS: true,
 
@@ -54,7 +62,10 @@ export default {
     COLOR_HEADER_BG: "#3b5998",
     COLOR_HEADER_BUTTON: "white",
     COLOR_BUTTON_BG: "#3b5998", // FB color
-    COLOR_D3_LIGHT_BLUE: "#1f77b4"
+    COLOR_GOOGLE: "#DB4437",
+    COLOR_D3_LIGHT_BLUE: "#1f77b4",
+    COLOR_D3_DARK_GREEN: "#2ca02c",
+    COLOR_D3_LIGHT_GREEN: "#98df8a",
 };
 
 //https://codepen.io/whitelynx/pen/pbberp

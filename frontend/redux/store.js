@@ -6,7 +6,6 @@ import { persistStore, persistReducer } from 'redux-persist';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger'
 
-import SettingReducer from './SettingReducer';
 import UserReducer from './UserReducer';
 import TeamReducer from './TeamReducer';
 
@@ -16,7 +15,6 @@ const initialState = {};
 const middleware = [thunk];
 
 const reducers = combineReducers({
-  settingData: SettingReducer,
   userData: UserReducer,
   teamData: TeamReducer,
 });
@@ -29,7 +27,7 @@ const persistConfig = {
   storage: AsyncStorage,
   // Whitelist (Save Specific Reducers)
   whitelist: [
-    'settingData','userData','teamData'
+    'userData','teamData'
   ],
   // Blacklist (Don't Save Specific Reducers)
   blacklist: [

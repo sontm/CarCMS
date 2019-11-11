@@ -608,11 +608,13 @@ class AppUtils {
         let lastKmOil = 0;
         let totalMoneyOil = 0;
         let lastDateOil = 0;
+        let lastOilKmValidFor = 0;
         if (fillOilList && fillOilList.length > 0) {
             fillOilList.forEach((item, index) => {
                 if (index == fillOilList.length -1) {
                     lastKmOil = item.currentKm;
                     lastDateOil = new Date(item.fillDate);
+                    lastOilKmValidFor = item.validFor;
                 }
 
                 // For money and Litre, not use the Last Fill date (because that fill is for next)
@@ -620,17 +622,20 @@ class AppUtils {
                     totalMoneyOil += item.price;
                 }
             })
+            if (!lastOilKmValidFor) {
+                lastOilKmValidFor = AppConstants.SETTING_KM_NEXT_OILFILL;
+            }
 
             // 1. Passed Km to Next Fill Oil
             let passedKmFromPreviousOil = lastKm - lastKmOil;
             // 2. Estimate date to Next Fill Oil
-            let daysToNextOil = (AppConstants.SETTING_KM_NEXT_OILFILL -  passedKmFromPreviousOil) / averageKmPerDay;
+            let daysToNextOil = (lastOilKmValidFor -  passedKmFromPreviousOil) / averageKmPerDay;
             let nextEstimateDateForOil = new Date(lastDateOil)
             nextEstimateDateForOil = nextEstimateDateForOil.setDate(nextEstimateDateForOil.getDate() + daysToNextOil);
             
             nextEstimateDateForOil = new Date(nextEstimateDateForOil)
 
-            return {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil};
+            return {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor};
         }
         return {};
     }
@@ -642,27 +647,32 @@ class AppUtils {
 
         let totalMoneyAuthorize = 0;
         let lastDate = null;
+        let lastAuthDaysValidFor = 0;
         if (authorizeList && authorizeList.length > 0) {
             authorizeList.forEach((item, index) => {
                 if (index == authorizeList.length -1) {
                     lastDate = new Date(item.fillDate);
+                    lastAuthDaysValidFor = item.validFor;
                 }
                 //if (index != authorizeList.length -1) {
                     totalMoneyAuthorize += item.price;
                 //}
             })
         }
+        if (!lastAuthDaysValidFor) {
+            lastAuthDaysValidFor = AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR;
+        }
         if (lastDate) {
             let today = new Date();
             let nextAuthorizeDate = new Date(lastDate)
-            nextAuthorizeDate = nextAuthorizeDate.setDate(nextAuthorizeDate.getDate() + AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR);
+            nextAuthorizeDate = nextAuthorizeDate.setDate(nextAuthorizeDate.getDate() + lastAuthDaysValidFor);
 
             const diffTime = Math.abs(today - lastDate); // in ms
             const diffDayFromLastAuthorize = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
             nextAuthorizeDate = new Date(nextAuthorizeDate)
 
-            return {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize};
+            return {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor};
         } else {
             return {}
         }
@@ -1413,10 +1423,10 @@ class AppUtils {
                 = this.getStatForGasUsage(currentVehicle.fillGasList, 
                     options.duration, options.durationType, options.tillDate);
     
-            let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+            let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
                 = this.getInfoForOilUsage(currentVehicle.fillOilList, 
                     lastDate, lastKm, averageKmPerDay);
-            let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
+            let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor} 
                 = this.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
     
             let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend, arrTotalMoneySpend}
@@ -1432,8 +1442,8 @@ class AppUtils {
                 gasReport: {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
                     arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
                     avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly},
-                oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil},
-                authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize},
+                oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor},
+                authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor},
                 moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
                     totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend},
                 expenseReport: {arrExpenseTypeSpend}

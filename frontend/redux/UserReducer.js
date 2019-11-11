@@ -33,6 +33,8 @@ const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 
 const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
 
+const SETTING_VEHICLE_SET_DEFAULT = 'SETTING_VEHICLE_SET_DEFAULT';
+
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
     teamInfo: {},//"code": "bfOdOi7L", "id": "5db0564ed74e760f4a2c3db9","name": "PhuPhuong",
@@ -42,7 +44,17 @@ const initialState = {
     defaultVehicleId: "",
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
     carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
+
+    settings: {}, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
 };
+
+export const actSettingSetVehicleDefault = (data) => (dispatch) => {
+    console.log("actSettingSetVehicleDefault:")
+    dispatch({
+        type: SETTING_VEHICLE_SET_DEFAULT,
+        payload: data
+    })
+}
 
 export const actUserRegisterOK = (data) => (dispatch) => {
     console.log("actUserRegisterOK:")
@@ -511,6 +523,12 @@ export default function(state = initialState, action) {
         newStateCarReport.carReports[""+action.payload.id] = action.payload.data
 
         return newStateCarReport;
+
+    case SETTING_VEHICLE_SET_DEFAULT:
+        return {
+            ...state,
+            settings: action.payload
+        };
     default:
         return state;
     }

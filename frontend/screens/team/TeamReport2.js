@@ -25,23 +25,23 @@ import MoneyUsageReport from '../../components/MoneyUsageReport'
 import VehicleBasicReport from '../../components/VehicleBasicReport'
 import AppLocales from '../../constants/i18n'
 
-class TeamReport extends React.Component {
+class TeamReport2 extends React.Component {
   constructor(props) {
     super(props)
 
   }
 
   render() {
-    console.log("TeamReport Render")
+    console.log("TeamReport2 Render")
   
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-                    
-          <MoneyUsageByTimeReport isTotalReport={true} isTeamDisplay={true}/>
-          <MoneyUsageReport isTotalReport={true} isTeamDisplay={true}/>
+
+          <GasUsageReport isTotalReport={true} isTeamDisplay={true}/>
+          <GasUsageTopReport isTotalReport={true} isTeamDisplay={true}/>
           
         </ScrollView>
       </SafeAreaView>
@@ -76,5 +76,5 @@ const mapActionsToProps = {
 
 export default connect(
   mapStateToProps,mapActionsToProps
-)(TeamReport);
+)(TeamReport2);
 

@@ -105,7 +105,7 @@ class VehicleDetailReport extends React.Component {
                             colorScale={["tomato", "silver"]}
                             data={[
                                 { x: "", y: this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil },
-                                { x: "", y: (AppConstants.SETTING_KM_NEXT_OILFILL - this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil) },
+                                { x: "", y: (this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor - this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil) },
                             ]}
                             height={150}
                             innerRadius={65}
@@ -115,7 +115,8 @@ class VehicleDetailReport extends React.Component {
                         <View style={styles.labelProgress}>
                             <Text>{AppLocales.t("GENERAL_OIL") + ": "}</Text>
                             <Text style={styles.labelProgressText}>
-                                {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL}
+                                {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/
+                                {this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor}
                             </Text>
                             <Text>Km</Text>
                         </View>
@@ -130,7 +131,7 @@ class VehicleDetailReport extends React.Component {
                             colorScale={["tomato", "silver"]}
                             data={[
                                 { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
-                                { x: "", y: (AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR -
+                                { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor -
                                     this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
                             ]}
                             height={150}
@@ -141,7 +142,8 @@ class VehicleDetailReport extends React.Component {
                         <View style={styles.labelProgress}>
                             <Text>{AppLocales.t("GENERAL_AUTHROIZE") + ": "}</Text>
                             <Text style={styles.labelProgressText}>
-                                {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR}
+                                {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
+                                {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor}
                             </Text>
                             <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                         </View>

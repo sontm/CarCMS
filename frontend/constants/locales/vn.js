@@ -10,6 +10,7 @@ export default {
     GENERAL_DEFAULT:"Mặc Định",
     GENERAL_TODAY:"Hôm Nay",
     GENERAL_ADDDATA:"Thêm Dữ Liệu",
+    GENERAL_EDITDATA:"Cập Nhập",
     GENERAL_ALL:"Tất Cả",
     GENERAL_PRIVATE: "Cá Nhân",
     GENERAL_TEAM: "Tổ Chức",
@@ -59,12 +60,18 @@ export default {
     TEAM_REPORT_TOP_CAR_GASUSAGE_MONEY: "Top Chi Tiêu Xăng Nhiều",
     TEAM_REPORT_TOP_CAR_GASUSAGE_MONEYKM: "Top Hiệu Suất Xăng Cao",
 
+    TEAM_REPORT_REPORT_TAB1: "Chi Tiêu",
+    TEAM_REPORT_REPORT_TAB2: "Xăng",
+
     SETTING_H1_PRO_FEATURE: "Phiên Bản PRO",
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",
     SETTING_LBL_CREATE_TEAM: "Tạo Tổ Chức",
     SETTING_LBL_JOIN_TEAM: "Gia Nhập Tổ Chức",
     SETTING_LBL_SYNC_FROM: "Đồng Bộ Từ Máy Chủ",
     SETTING_LBL_SYNC_TO: "Đồng Bộ Lên Máy Chủ",
+    SETTING_LBL_SYNC_FROM_NOTE: "Dữ Liệu Trên Máy Sẽ Bị Thay Thế",
+    SETTING_LBL_SYNC_TO_NOTE: "",
+
     SETTING_H1_SETTING: "Cài Đặt",
     SETTING_LBL_VEHICLE: "Cài Đặt Xe",
     SETTING_LBL_REMIND: "Cài Đặt Nhắc Nhở",
@@ -105,6 +112,10 @@ export default {
     NEW_GAS_REMARK:"Ghi Chú",
 
     NEW_OIL_HEADER:"Thay Dầu",
+    NEW_OIL_VALIDFOR:"Giá Trị Cho(Km)(*)",
+
+    NEW_AUTH_VALIDFOR:"Giá Trị Cho(Ngày)(*)",
+    NEW_AUTH_TYPE:"Loại",
 
     NEW_EXPENSE_HEADER:"Thêm Chi Phí",
     NEW_EXPENSE_TYPE:"Loại Chi Phí",
@@ -113,4 +124,10 @@ export default {
     NEW_SERVICE_TYPE:"Loại Sửa Chữa",
 
     NEW_AUTH_HEADER:"Đăng Kiểm Xe",
+
+
+    NOTE_VALIDFOR_OIL: "Chung Toi De mac dinh la \n 1000KM for Oto. What Are You Thinasd k sdfis my work dsdfnot allasdfk jasdf ",
+    NOTE_VALIDFOR_AUTH: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Oto",
+    NOTE_VALIDFOR_INSURANCE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Bao Hiem Bat Buoc",
+    NOTE_VALIDFOR_ROAD_FEE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Phi Bao Tri Duong Bo",
 };

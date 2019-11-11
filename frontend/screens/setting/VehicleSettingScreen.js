@@ -6,7 +6,7 @@ import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
-import {actSettingSetVehicleDefault} from '../../redux/SettingReducer'
+import {actSettingSetVehicleDefault} from '../../redux/UserReducer'
 
 class VehicleSettingScreen extends React.Component {
     constructor(props) {

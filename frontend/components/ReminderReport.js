@@ -58,18 +58,18 @@ class ReminderReport extends React.Component {
     let resultView = [];
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
-        var {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+        var {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
           = this.props.userData.carReports[element.id].oilReport;
-        var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize}
+        var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor}
             = this.props.userData.carReports[element.id].authReport;
 
         resultView.push(
-            renderRemindItem("Thay Dau", passedKmFromPreviousOil, AppConstants.SETTING_KM_NEXT_OILFILL, 
+            renderRemindItem("Thay Dau", passedKmFromPreviousOil, lastOilKmValidFor, 
                 nextEstimateDateForOil, "Km", element.brand+" " +element.model, element.licensePlate)
         )
 
         resultView.push(
-            renderRemindItem("Dang Kiem", diffDayFromLastAuthorize, AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR, 
+            renderRemindItem("Dang Kiem", diffDayFromLastAuthorize, lastAuthDaysValidFor, 
             nextAuthorizeDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate)
         )
       }
@@ -81,18 +81,18 @@ class ReminderReport extends React.Component {
     let resultView = [];
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
-        var {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
+        var {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
           = this.props.teamData.teamCarReports[element.id].oilReport;
-        var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize}
+        var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor}
             = this.props.teamData.teamCarReports[element.id].authReport;
 
         resultView.push(
-            renderRemindItem("Thay Dau", passedKmFromPreviousOil, AppConstants.SETTING_KM_NEXT_OILFILL, 
+            renderRemindItem("Thay Dau", passedKmFromPreviousOil, lastOilKmValidFor, 
                 nextEstimateDateForOil, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
         )
 
         resultView.push(
-            renderRemindItem("Dang Kiem", diffDayFromLastAuthorize, AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR, 
+            renderRemindItem("Dang Kiem", diffDayFromLastAuthorize, lastAuthDaysValidFor, 
             nextAuthorizeDate, AppLocales.t("GENERAL_DAY"),
             element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
         )

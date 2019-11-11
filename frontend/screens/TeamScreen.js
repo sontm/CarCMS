@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, 
-  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker } from 'native-base';
+  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading } from 'native-base';
 
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
@@ -25,6 +25,7 @@ import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 
 import TeamMembers from './team/TeamMembers'
 import TeamReport from './team/TeamReport'
+import TeamReport2 from './team/TeamReport2'
 
 function getNameOfSortType(type) {
   if (type == "auth") return "Sắp Xếp theo 'Lịch Đăng Kiểm'";
@@ -139,7 +140,7 @@ class TeamScreen extends React.Component {
       )}))
       return viewDisplay;
     } else if(this.state.activePage === 1) {
-      return <TeamReport navigation={this.props.navigation}/>;
+      return null;
     } else {
       return <TeamMembers navigation={this.props.navigation}/>;
     }
@@ -152,7 +153,7 @@ class TeamScreen extends React.Component {
     console.log("TeamScreen Render")
     return (
       <Container>
-        <Header noLeft style={{justifyContent: "space-between", backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header hasTabs noLeft style={{justifyContent: "space-between", backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Segment style={{alignSelf:"center",backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
@@ -181,7 +182,16 @@ class TeamScreen extends React.Component {
             </Button>
           </Right>
         </Header>
-        
+        {this.state.activePage === 1? (
+        <Tabs style={{flex: 1}}>
+          <Tab heading={ <TabHeading><Icon type="MaterialIcons" name="attach-money" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB1")}</Text></TabHeading>}>
+            <TeamReport navigation={this.props.navigation}/>
+          </Tab>
+          <Tab heading={ <TabHeading><Icon type="MaterialCommunityIcons" name="fuel" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB2")}</Text></TabHeading>}>
+            <TeamReport2 navigation={this.props.navigation}/>
+          </Tab>
+        </Tabs>
+        ) : (
         <Content>
           <View style={styles.container}>
             <ScrollView
@@ -193,6 +203,7 @@ class TeamScreen extends React.Component {
             </ScrollView>
           </View>
         </Content>
+        )}
       </Container>
     );
   }

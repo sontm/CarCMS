@@ -177,7 +177,7 @@ class SettingsScreen extends React.Component {
                 <Icon name="arrow-forward" style={styles.iconRight}/>
               </View>
               <Text>{this.props.userData.userProfile.email}</Text>
-              <Text>{this.props.userData.teamInfo.name ? (
+              <Text>{(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
                 AppLocales.t("GENERAL_TEAM")+": " + this.props.userData.teamInfo.name +
                 " ("+ AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code + ")") : null}</Text>
             </View>
@@ -198,7 +198,7 @@ class SettingsScreen extends React.Component {
                   <WhiteText style={styles.textSection}>
                       {AppLocales.t("SETTING_H1_PRO_FEATURE")}
                   </WhiteText>
-                  <Button small block danger onPress={() => {}} style={{marginRight: 10}}>
+                  <Button small block success onPress={() => {}} style={{marginRight: 10}}>
                     <Text>{AppLocales.t("SETTING_LBL_PRO_UPGRADE")}</Text>
                   </Button>
               </View>
@@ -290,23 +290,32 @@ class SettingsScreen extends React.Component {
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity 
-                onPress={() => this.syncDataFromServer()}>
-              <View style={styles.rowContainer}>
-                <View style={styles.rowIcon}>
-                  <Icon name="cloud-download" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_SYNC_FROM")}</Text></View>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-                onPress={() => this.syncDataToServer()}>
-              <View style={styles.rowContainer}>
-                <View style={styles.rowIcon}>
-                  <Icon name="cloud-upload" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_SYNC_TO")} {AppConstants.SERVER_API}</Text></View>
-              </View>
-            </TouchableOpacity>
+            <View style={styles.cloudSyncRow}>
+              <TouchableOpacity 
+                  onPress={() => this.syncDataToServer()}>
+                <Card style={styles.equalStartRow}>
+                  <CardItem>
+                    <Body style={{flexDirection:"column", justifyContent:"flex-start", alignItems:"center"}}>
+                      <Icon name="cloud-upload" style={styles.iconCloudUp} />
+                      <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO")}</Text>
+                      {/* <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO_NOTE")}</Text> */}
+                    </Body>
+                  </CardItem>
+                </Card>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                  onPress={() => this.syncDataFromServer()}>
+                <Card style={styles.equalStartRow}>
+                  <CardItem>
+                    <Body style={{flexDirection:"column", justifyContent:"flex-start", alignItems:"center"}}>
+                      <Icon name="cloud-download" style={styles.iconCloudDown} />
+                      <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_FROM")}</Text>
+                      {/* <Text style={styles.textNormalSmallRed}>{"("+AppLocales.t("SETTING_LBL_SYNC_FROM_NOTE")+")"}</Text> */}
+                    </Body>
+                  </CardItem>
+                </Card>
+              </TouchableOpacity>
+            </View>
 
 
             <View style={styles.textRow}>
@@ -494,13 +503,39 @@ const styles = StyleSheet.create({
     color: "white"
   },
 
+  textNormalSmall: {
+    color: "rgb(80, 80, 80)",
+    fontSize: 13
+  },
+  textNormalSmallRed: {
+    color: "red",
+    fontSize: 12
+  },
   textNormal: {
     color: "rgb(80, 80, 80)"
   },
   textSection: {
     fontSize: 24,
     color: "rgb(100, 100, 100)"
-  }
+  },
+
+  cloudSyncRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    // backgroundColor: "white"
+  },
+  equalStartRow: {
+      width: Layout.window.width*0.45,
+      // height: 120
+  },
+  iconCloudDown: {
+    fontSize: 50,
+    color: AppConstants.COLOR_GOOGLE
+  },
+  iconCloudUp: {
+    fontSize: 50,
+    color: AppConstants.COLOR_D3_DARK_GREEN
+  },
 })
 
 const mapStateToProps = (state) => ({

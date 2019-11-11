@@ -284,15 +284,11 @@ class GasUsageReport extends React.Component {
 
     if (isMergeData) {
         // convert to Array for Chart
-        console.log("objGasKmAllCars-^^^^^^^^^^^^^^^^^^^^^^^")
-        console.log(objGasKmAllCars)
         for (var prop in objGasKmAllCars) {
             if (Object.prototype.hasOwnProperty.call(objGasKmAllCars, prop)) {
                 arrGasKmAllCars.push({x: new Date(prop), y: objGasKmAllCars[""+prop]})
             }
         }
-        console.log("arrGasKmAllCars)))))))))))))))))")
-        console.log(arrGasKmAllCars)
         for (var prop in objGasMoneyAllCars) {
             if (Object.prototype.hasOwnProperty.call(objGasMoneyAllCars, prop)) {
                 arrGasMoneyAllCars.push({x: new Date(prop), y: objGasMoneyAllCars[""+prop]})
@@ -368,11 +364,11 @@ class GasUsageReport extends React.Component {
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>
-                    <Text><H2>
+                    <Text><H3>
                         {this.props.isTotalReport ? 
                             AppLocales.t("HOME_GAS_USAGE") :
                             AppLocales.t("CARDETAIL_H1_GAS_USAGE")}
-                    </H2></Text>
+                    </H3></Text>
                     <Segment small>
                         <Button small first onPress={() => this.setState({activeDisplay: 0})}
                             style={this.state.activeDisplay === 0 ? styles.activeSegment : styles.inActiveSegment}>

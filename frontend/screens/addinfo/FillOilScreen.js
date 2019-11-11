@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, 
-    Label, DatePicker } from 'native-base';
+    Label, DatePicker, Card, CardItem } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
 import AppContants from '../../constants/AppConstants'
@@ -24,6 +24,7 @@ class FillOilScreen extends React.Component {
             amount: "",
             price: "",
             currentKm: "",
+            validFor:"", // i.e Each Fill oil valid in 1000 KM, App will Remind
             type: "oil",
             subType: "",
             remark: "",
@@ -65,7 +66,8 @@ class FillOilScreen extends React.Component {
                 fillDate: this.state.fillDate,
                 amount: Number(this.state.amount),
                 price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm)
+                currentKm: Number(this.state.currentKm),
+                validFor: Number(this.state.validFor)
             }
 
             this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_OIL)
@@ -78,7 +80,8 @@ class FillOilScreen extends React.Component {
                 vehicleId: (this.state.vehicleId),
                 fillDate: this.state.fillDate,
                 price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm)
+                currentKm: Number(this.state.currentKm),
+                validFor: Number(this.state.validFor)
             }
             console.log(newData)
 
@@ -164,6 +167,18 @@ class FillOilScreen extends React.Component {
                         />
                         </Item>
                     </View>
+
+                    <View style={styles.rowContainer}>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_OIL_VALIDFOR")+": "}</Label>
+                        <Input
+                            style={styles.rowForm}
+                            keyboardType="numeric"
+                            onChangeText={(validFor) => this.setState({validFor})}
+                            value={""+this.state.validFor}
+                        />
+                        </Item>
+                    </View>
                     
                     <View style={styles.rowContainer}>
                         <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
@@ -181,6 +196,18 @@ class FillOilScreen extends React.Component {
                         block primary
                         onPress={() => this.save(this.state)}
                     ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+                    </View>
+
+                    <View style={styles.rowNote}>
+                        <Card>
+                            <CardItem>
+                            <Body style={{flexDirection:"row", justifyContent:"center"}}>
+                                <Text>
+                                {AppLocales.t("NOTE_VALIDFOR_OIL")}
+                                </Text>
+                            </Body>
+                            </CardItem>
+                        </Card>
                     </View>
 
                 </View>
@@ -216,26 +243,33 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: "row",
-    alignItems: "center", // vertial align
+    alignItems: "flex-end", // vertial align
     justifyContent: "center",
-    height: 54,
-    width: "90%",
+    height: 50,
+    width: "96%",
     alignSelf:"center"
   },
   rowLabel: {
-    flex: 1,
+    flex: 2,
     textAlign: "right",
     paddingRight: 5,
-    color: "rgb(120, 120, 120)"
+    color: "rgb(120, 120, 120)",
+    fontSize:15
   },
   rowForm: {
-    flex: 2,
+    flex: 3,
     borderBottomColor: "rgb(230, 230, 230)",
     borderBottomWidth: 0.5
   },
   rowButton: {
     marginTop: 20,
     alignSelf: "center",
+  },
+
+  rowNote: {
+    marginTop: 20,
+    alignSelf:"center",
+    width: "96%",
   },
   btnSubmit: {
 

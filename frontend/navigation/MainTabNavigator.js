@@ -78,20 +78,21 @@ const DetailStack = createStackNavigator(
   config
 );
 const BUTTONS = [
-  { text: "Thêm Xe", icon: "american-football", iconColor: "#2c8ef4" },//0
   { text: "Đổ Xăng", icon: "american-football", iconColor: "#2c8ef4" },//1
   { text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
-  { text: "Chi Phí", icon: "analytics", iconColor: "#f42ced" },//3
-  { text: "Sửa Chữa", icon: "analytics", iconColor: "#f42ced" },//4
-  { text: "Đăng Kiểm", icon: "analytics", iconColor: "#f42ced" },//5
+  { text: "Phụ Phí", icon: "analytics", iconColor: "#f42ced" },//3
+  { text: "Sửa Chữa/Bảo Trì", icon: "analytics", iconColor: "#f42ced" },//4
+  { text: "Đăng Kiểm/Bảo Hiểm", icon: "analytics", iconColor: "#f42ced" },//5
+  { text: "Thêm Xe", icon: "american-football", iconColor: "#2c8ef4" },//0
   { text: "Đóng", icon: "close", iconColor: "#25de5b" }//6
 ];
-const NEW_VEHICLE = 0;
-const FILLGAS_INDEX = 1;
-const FILLOIL_INDEX = 2;
-const PAY_EXPENSE_INDEX = 3;
-const PAY_SERVICE_INDEX = 4;
-const CAR_AUTHORIZE_INDEX = 5;
+
+const FILLGAS_INDEX = 0;
+const FILLOIL_INDEX = 1;
+const PAY_EXPENSE_INDEX = 2;
+const PAY_SERVICE_INDEX = 3;
+const CAR_AUTHORIZE_INDEX = 4;
+const NEW_VEHICLE = 5;
 const CANCEL_INDEX = 6;
 
 const SettingsStack = createStackNavigator(

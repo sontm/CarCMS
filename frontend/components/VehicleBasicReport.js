@@ -142,7 +142,8 @@ class VehicleBasicReport extends Component {
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil? 
-                                this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/AppConstants.SETTING_KM_NEXT_OILFILL : 0}
+                                this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/
+                                this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor : 0}
                             progressViewStyle = 'default'
                             progressTintColor = "blue"
                             trackTintColor = "rgba(230, 230, 230, 1)"
@@ -152,11 +153,13 @@ class VehicleBasicReport extends Component {
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil? 
-                                this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/AppConstants.SETTING_KM_NEXT_OILFILL : 0}
+                                this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/
+                                this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor : 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                            {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/{AppConstants.SETTING_KM_NEXT_OILFILL} Km
+                            {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/
+                            {this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor} Km
                             ({AppLocales.t("GENERAL_OIL")})
                         </Text>
                     </View>
@@ -165,10 +168,12 @@ class VehicleBasicReport extends Component {
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
-                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0}
+                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/
+                                this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor: 0}
                             progressViewStyle = 'default'
                             progressTintColor = {(this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
-                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0) 
+                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/
+                                this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor: 0) 
                                     > 0.9 ? "red" : "blue"}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
@@ -177,11 +182,13 @@ class VehicleBasicReport extends Component {
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
-                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR: 0}
+                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/
+                                this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor: 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                        {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/{AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE")})
+                        {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
+                        {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE")})
                         </Text>
                     </View>
 
