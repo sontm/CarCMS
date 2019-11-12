@@ -25,10 +25,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sansan.VehicleCMS"
+      "bundleIdentifier": "com.sansan.VehicleCMS",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-3940256099942544~1458002511"
+      }
     },
     "android": {
-      "package": "com.sansan.VehicleCMS"
+      "package": "com.sansan.VehicleCMS",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-3940256099942544~3347511713"
+      }
     }
   }
 }

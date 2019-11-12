@@ -16,6 +16,11 @@ import axios from 'axios';
 import axiosDefaults from 'axios/lib/defaults';
 import AppConstants from './constants/AppConstants';
 
+import {
+  AdMobBanner,
+  AdMobInterstitial,
+} from 'expo-ads-admob';
+
 axios.defaults.baseURL = AppConstants.SERVER_API;
 
 // import {pushNotification} from './components/pushNotification'
@@ -83,6 +88,14 @@ class App extends React.Component {
             </Root>
           </PersistGate>
           </Provider>
+          <AdMobBanner
+            style={styles.bottomBanner}
+            bannerSize="fullBanner"
+            adUnitID="ca-app-pub-3940256099942544/6300978111"
+            // Test ID, Replace with your-admob-unit-id
+            testDeviceID="EMULATOR"
+            didFailToReceiveAdWithError={this.bannerError}
+          />
         </View>
       );
     }
@@ -129,6 +142,10 @@ const styles = StyleSheet.create({
   // statusBar: {
   //   height: STATUSBAR_HEIGHT,
   // },
+  bottomBanner: {
+    //position: "absolute",
+    bottom: 0
+  },
 });
 
 export default App;
