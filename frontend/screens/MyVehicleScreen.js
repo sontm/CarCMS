@@ -110,7 +110,7 @@ class MyVehicleScreen extends React.Component {
               contentContainerStyle={styles.contentContainer}>
               {this.props.userData.vehicleList && this.props.userData.vehicleList.map(item => (
                 <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
-                  navigation={this.props.navigation} {...this.state}
+                  navigation={this.props.navigation} {...this.state} requestDisplay={"all"} isTeamDisplay={false} isMyVehicle={true}
                 />
               ))}
 

@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, 
-  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading } from 'native-base';
+  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading, Switch } from 'native-base';
 
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppContants from '../constants/AppConstants'
@@ -28,14 +28,11 @@ import TeamReport from './team/TeamReport'
 import TeamReport2 from './team/TeamReport2'
 
 function getNameOfSortType(type) {
-  if (type == "auth") return "Sắp Xếp theo 'Lịch Đăng Kiểm'";
-  if (type == "oil") return "Sắp Xếp theo 'Lịch Thay Dầu'";
-  if (type == "kmLarge") return "Sắp Xếp theo 'Đi Nhiều'";
-  if (type == "kmSmall") return "Sắp Xếp theo 'Đi Ít'";
-  if (type == "gasBest") return "Sắp Xếp theo 'Hiệu Suất Xăng Tốt'";
-  if (type == "gasWorst") return "Sắp Xếp theo 'Hiệu Suất Xăng Kém'";
-  if (type == "moneyMonthlyLarge") return "Sắp Xếp theo 'Số Tiền Hàng Tháng Lớn'";
-  if (type == "moneyMonthlySmall") return "Sắp Xếp theo 'Số Tiền Hàng Tháng Nhỏ'";
+  if (type == "auth") return AppLocales.t("TEAM_VEHICLE_SORT_AUTH");
+  if (type == "oil") return AppLocales.t("TEAM_VEHICLE_SORT_OIL");
+  if (type == "km") return AppLocales.t("TEAM_VEHICLE_SORT_KM");
+  if (type == "gasEffective") return AppLocales.t("TEAM_VEHICLE_SORT_GAS_EFF");
+  if (type == "moneyTotal") return AppLocales.t("TEAM_VEHICLE_SORT_MONEYTOTAL");
   return "Default";
 }
 
@@ -44,7 +41,8 @@ class TeamScreen extends React.Component {
     super(props);
     this.state = {
       activePage:0,
-      sortType: "auth"
+      sortType: "auth",
+      sortAscending: true
     }
 
     this.onSortChange = this.onSortChange.bind(this)
@@ -113,6 +111,7 @@ class TeamScreen extends React.Component {
       let viewDisplay = [];
       viewDisplay.push(
         <View style={styles.sortContainer} key="sorting">
+          {/* <Text style={{fontSize: 15}}>Sắp Xếp: </Text> */}
           <Picker
             mode="dropdown"
             placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
@@ -123,19 +122,58 @@ class TeamScreen extends React.Component {
           >
             <Picker.Item label={getNameOfSortType("auth")} value="auth" />
             <Picker.Item label={getNameOfSortType("oil")} value="oil" />
-            <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
-            <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />
-            <Picker.Item label={getNameOfSortType("gasBest")} value="gasBest" />
-            <Picker.Item label={getNameOfSortType("gasWorst")} value="gasWorst" />
-            <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
-            <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
+            <Picker.Item label={getNameOfSortType("km")} value="km" />
+            <Picker.Item label={getNameOfSortType("gasEffective")} value="gasEffective" />
+            <Picker.Item label={getNameOfSortType("moneyTotal")} value="moneyTotal" />
           </Picker>
+
+          <Segment small>
+              <Button small first onPress={() => this.setState({sortAscending: true})}
+                  style={this.state.sortAscending ? styles.activeSegment2 : styles.inActiveSegment2}>
+                  <Text style={this.state.sortAscending ? styles.activeSegmentText2 : styles.inActiveSegmentText2}>Giảm</Text></Button>
+              <Button small last onPress={() => this.setState({sortAscending: false})}
+                  style={!this.state.sortAscending ? styles.activeSegment2 : styles.inActiveSegment2}>
+                  <Text style={!this.state.sortAscending ? styles.activeSegmentText2 : styles.inActiveSegmentText2}>Tăng</Text></Button>
+          </Segment>
         </View>
       )
+
+      // Sorting List of Vehicles here
+      allVehicles.sort((a, b) => {
+        let aId = a.id;
+        let bId = b.id;
+        if (!this.props.teamData.teamCarReports[bId] || !this.props.teamData.teamCarReports[aId]) {
+          return true;
+        }
+        if (!this.state.sortAscending) {
+          let tmp = aId;
+          aId = bId;
+          bId = tmp;
+        }
+
+        if (this.state.sortType == "auth") {
+          return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorize - 
+            this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorize
+        } else if (this.state.sortType == "oil") {
+          return this.props.teamData.teamCarReports[bId].oilReport.passedKmFromPreviousOil - 
+            this.props.teamData.teamCarReports[aId].oilReport.passedKmFromPreviousOil
+        } else if (this.state.sortType == "km") {
+          return this.props.teamData.teamCarReports[bId].gasReport.avgKmMonthly - 
+            this.props.teamData.teamCarReports[aId].gasReport.avgKmMonthly
+        } else if (this.state.sortType == "gasEffective") {
+          return this.props.teamData.teamCarReports[bId].gasReport.avgMoneyPerKmMonthly - 
+            this.props.teamData.teamCarReports[aId].gasReport.avgMoneyPerKmMonthly
+        } else if (this.state.sortType == "moneyTotal") {
+          return this.props.teamData.teamCarReports[bId].moneyReport.totalMoneySpend - 
+            this.props.teamData.teamCarReports[aId].moneyReport.totalMoneySpend
+        }
+        
+      });
+
       viewDisplay.push(allVehicles.map(item => {
         return (
         <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={() => {}}
-          navigation={this.props.navigation}
+          navigation={this.props.navigation} requestDisplay={this.state.sortType} isTeamDisplay={true}
         />
       )}))
       return viewDisplay;
@@ -276,6 +314,25 @@ const styles = StyleSheet.create({
   },
   inActiveSegmentText: {
       color: "black",
+      fontSize: 12
+  },
+
+
+
+  activeSegment2: {
+    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    color:"white",
+  },
+  inActiveSegment2: {
+      backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+      color:AppConstants.COLOR_PICKER_TEXT,
+  },
+  activeSegmentText2: {
+      color:"white",
+      fontSize: 12
+  },
+  inActiveSegmentText2: {
+      color:AppConstants.COLOR_PICKER_TEXT,
       fontSize: 12
   },
 });

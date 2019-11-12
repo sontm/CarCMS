@@ -121,7 +121,7 @@ class VehicleSettingScreen extends React.Component {
 
 VehicleSettingScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header>
+        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />

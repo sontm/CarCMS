@@ -40,7 +40,7 @@ async function actTempCalculateCarReportAsync(currentVehicle, options) {
         let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend}
             = AppUtils.getInfoMoneySpend(currentVehicle);
         
-        let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
+        let {arrExpenseTypeSpend, arrExpenseTypeByTime} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
 
         let result = {
             gasReport: {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
@@ -50,7 +50,7 @@ async function actTempCalculateCarReportAsync(currentVehicle, options) {
             authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize},
             moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
                 totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend},
-            expenseReport: {arrExpenseTypeSpend}
+            expenseReport: {arrExpenseTypeSpend, arrExpenseTypeByTime}
         }
         resolve(result)
     });

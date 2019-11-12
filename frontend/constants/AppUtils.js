@@ -1254,6 +1254,8 @@ class AppUtils {
     }
 
     // TODO: Calcualte by Months here. Or no Need ?
+    // Result: arrExpenseTypeSpend: [x: "Tien Phat", y: 200(K)]
+    //         arrExpenseTypeByTime: [{"TienPhat": [{x: 2019-03-03, y: 200(K)}, {x: 2019-04-03, y: 100(K)}]}]
     getInfoMoneySpendInExpense(expenseList) {
         if (!expenseList) {
             return {};
@@ -1261,8 +1263,27 @@ class AppUtils {
 
         let objExpenseTypeSpend = {};// Key is subtype
         let arrExpenseTypeSpend = [];
+
+        let objExpenseTypeByTime = {};// {"TienPhat": {"2019-03-30": 200}}
+        let arrExpenseTypeByTime = [];
         if (expenseList && expenseList.length > 0) {
             expenseList.forEach((item, index) => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
+                if (!objExpenseTypeByTime[""+item.subType]) {
+                    objExpenseTypeByTime[""+item.subType] = {};
+                }
+                if (objExpenseTypeByTime[""+item.subType][""+dateKey]) {
+                    // Exist, add more
+                    objExpenseTypeByTime[""+item.subType][""+dateKey].y += item.price;
+                } else {
+                    // Not Exist, create new Month
+                    objExpenseTypeByTime[""+item.subType][""+dateKey] = {
+                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                        y: item.price
+                    }
+                }
+
                 if (objExpenseTypeSpend[""+item.subType]) {
                     // Exist, increase
                     objExpenseTypeSpend[""+item.subType] += item.price;
@@ -1272,6 +1293,22 @@ class AppUtils {
             })
         }
         // convert to Array for Chart
+        for (var prop in objExpenseTypeByTime) {
+            if (Object.prototype.hasOwnProperty.call(objExpenseTypeByTime, prop)) {
+                let newElement = {};
+                newElement[""+prop] = [];
+                
+                for (var propMonth in objExpenseTypeByTime[""+prop]) {
+                    if (Object.prototype.hasOwnProperty.call(objExpenseTypeByTime[""+prop], propMonth)) {
+                        newElement[""+prop].push(objExpenseTypeByTime[""+prop][""+propMonth])
+                    }
+                }
+                arrExpenseTypeByTime.push(newElement)
+            }
+        }
+
+
+        // convert to Array for Chart
         for (var prop in objExpenseTypeSpend) {
             if (Object.prototype.hasOwnProperty.call(objExpenseTypeSpend, prop)) {
                 arrExpenseTypeSpend.push({
@@ -1280,7 +1317,11 @@ class AppUtils {
                 })
             }
         }
-        return {arrExpenseTypeSpend};
+        // console.log("objExpenseTypeByTime)))))))))))))))))")
+        // console.log(objExpenseTypeByTime)
+        // console.log("arrExpenseTypeByTime~~~~~~~~~~~~~~~~~~")
+        // console.log(arrExpenseTypeByTime)
+        return {arrExpenseTypeSpend, arrExpenseTypeByTime};
     }
 
     async syncDataToServer(props) {
@@ -1435,7 +1476,7 @@ class AppUtils {
             let {totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend}
                 = this.getInfoMoneySpend(currentVehicle, options.duration, options.tillDate);
             
-            let {arrExpenseTypeSpend} = this.getInfoMoneySpendInExpense(currentVehicle.expenseList,
+            let {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.getInfoMoneySpendInExpense(currentVehicle.expenseList,
                 options.duration, options.durationType, options.tillDate);
     
             let result = {
@@ -1446,7 +1487,7 @@ class AppUtils {
                 authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor},
                 moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
                     totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend},
-                expenseReport: {arrExpenseTypeSpend}
+                expenseReport: {arrExpenseTypeSpend, arrExpenseTypeByTime}
             }
             resolve(result)
         });

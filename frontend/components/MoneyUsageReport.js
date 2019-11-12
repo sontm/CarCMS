@@ -146,7 +146,99 @@ class MoneyUsageReport extends React.Component {
     return {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
         totalExpenseSpendPrivate, totalServiceSpendPrivate};
   }
+
+
+
+  //arrExpenseTypeByTime: [{"TienPhat": [{x: 2019-03-03, y: 200(K)}, {x: 2019-04-03, y: 100(K)}]}]
+  calculateExpenseTypeFromArr(arrExpenseTypeByTime) {
+    let result = []; // [{x:"tienPhat", y: 200}]
+    if (arrExpenseTypeByTime && arrExpenseTypeByTime.length > 0) {
+  
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+           
+        
+        arrExpenseTypeByTime.forEach(item => {
+            for (var prop in item) {
+                if (Object.prototype.hasOwnProperty.call(item, prop)) {
+                    let arrSub = item[""+prop];
+                    // Only Keep numberOfMonth
+                    let yVal = 0;
+                    if (arrSub && arrSub.length) {
+                        arrSub.forEach(e => {
+                            let xDate = new Date(e.x);
+                            if (xDate > CALCULATE_START_DATE) {
+                                yVal += e.y;
+                            }
+                        })
+                    }
+                    if (yVal) {
+                        result.push({x: prop, y: yVal})
+                    }
+                }
+            }
+        })
+        
+    }
+    return result;
+  }
+
+  //arrExpenseTypeByTime: [{"TienPhat": [{x: 2019-03-03, y: 200(K)}, {x: 2019-04-03, y: 100(K)}]}]
+  calculateExpenseTypeTeam() {
+    let result = []; // [{x:"tienPhat", y: 200}]
+    let objectTemp = {}; // {"TienPhat": 200}
+    this.props.teamData.teamCarList.forEach(element => {
+    if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+        var {arrExpenseTypeSpend, arrExpenseTypeByTime}
+            = this.props.teamData.teamCarReports[element.id].expenseReport;  
+  
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+           
+        
+        arrExpenseTypeByTime.forEach(item => {
+            for (var prop in item) {
+                if (Object.prototype.hasOwnProperty.call(item, prop)) {
+                    let arrSub = item[""+prop];
+                    // Only Keep numberOfMonth
+                    let yVal = 0;
+                    if (arrSub && arrSub.length) {
+                        arrSub.forEach(e => {
+                            let xDate = new Date(e.x);
+                            if (xDate > CALCULATE_START_DATE) {
+                                yVal += e.y;
+                            }
+                        })
+                    }
+                    if (yVal) {
+                        if (objectTemp[""+prop]) {
+                            // Exist, increase
+                            objectTemp[""+prop] += yVal;
+                        } else {
+                            objectTemp[""+prop] = yVal;
+                        }
+                    }
+                }
+            }
+        })
+    }})
+    // convert to Array for Chart
+    for (var prop in objectTemp) {
+        if (Object.prototype.hasOwnProperty.call(objectTemp, prop)) {
+            result.push({
+                y: objectTemp[""+prop],
+                x: prop   
+            })
+        }
+    }
+    return result;
+  }
   render() {
+      // Only Team or Private (Detail)
     if (this.props.currentVehicle || this.props.isTotalReport) {
         if (this.props.isTotalReport) {
             let {totalGasSpendTeam,totalOilSpendTeam,totalAuthSpendTeam,
@@ -158,6 +250,7 @@ class MoneyUsageReport extends React.Component {
             var totalExpenseSpend = totalExpenseSpendTeam;
             var totalServiceSpend = totalServiceSpendTeam;
 
+            var arrSubExpenseSpend = this.calculateExpenseTypeTeam();
         } else {
             var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
                 totalExpenseSpendPrivate, totalServiceSpendPrivate}
@@ -168,8 +261,9 @@ class MoneyUsageReport extends React.Component {
             var totalAuthSpend = totalAuthSpendPrivate;
             var totalExpenseSpend = totalExpenseSpendPrivate;
             var totalServiceSpend = totalServiceSpendPrivate;
-            // TODO calculate by Arr of each Type
-            var {arrExpenseTypeSpend} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
+
+            var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
+            var arrSubExpenseSpend = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
         }
 
         return (
@@ -235,7 +329,6 @@ class MoneyUsageReport extends React.Component {
                     </View>
                 </View>
 
-                {!this.props.isTotalReport ? (
                 <View>
                 <View style={{...styles.textRow, marginTop: 15}}>
                     <Text><H3>
@@ -246,7 +339,7 @@ class MoneyUsageReport extends React.Component {
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
-                            data={arrExpenseTypeSpend}
+                            data={arrSubExpenseSpend}
                             radius={100}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             //labelRadius={({ innerRadius }) => innerRadius + 20 }
@@ -254,7 +347,6 @@ class MoneyUsageReport extends React.Component {
                     </View>
                 </View>
                 </View>
-                ) : null}
 
             </View>
         )
@@ -278,7 +370,8 @@ const styles = StyleSheet.create({
       flexDirection: "column",
       borderRadius: 7,
       justifyContent: "space-between",
-      marginBottom: 20,
+      marginBottom: 10,
+      paddingBottom: 40
     },
 
 

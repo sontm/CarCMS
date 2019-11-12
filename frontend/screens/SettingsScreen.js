@@ -298,6 +298,7 @@ class SettingsScreen extends React.Component {
                     <Body style={{flexDirection:"column", justifyContent:"flex-start", alignItems:"center"}}>
                       <Icon name="cloud-upload" style={styles.iconCloudUp} />
                       <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO")}</Text>
+                      <Text style={styles.textNormalSmall}>{AppConstants.SERVER_API}</Text>
                       {/* <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO_NOTE")}</Text> */}
                     </Body>
                   </CardItem>
@@ -414,12 +415,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
     marginBottom: 10,
+    height: 125,
   },
   avatarContainer: {
     height: 60,
     width: 60,
     fontSize: 60,
-    color: AppConstants.COLOR_HEADER_BG
+    color: AppConstants.COLOR_PICKER_TEXT
   },
 
   proContainer: {

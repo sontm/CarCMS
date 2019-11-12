@@ -63,6 +63,11 @@ class VehicleBasicReport extends Component {
     componentDidUpdate() {
         //console.log("VehicleReport DIDUpdate")
     }
+
+    // there is props "requestDisplay to display some Part of Information only. "all" for display all "
+    //      "all", "auth", "oil", "km", "gasEffective", "moneyTotal"
+    // props: isTeamDisplay:
+    // props: isMyVehicle: is display my vehicle, can Edit/Delete
     render() {
         // console.log("VehicleReport Render")
         if (this.props.vehicle) {
@@ -72,6 +77,11 @@ class VehicleBasicReport extends Component {
         }
         if (currentVehicle) {
             this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
+        }
+        if (this.props.isTeamDisplay) {
+            var currentData = this.props.teamData.teamCarReports[currentVehicle.id];
+        } else {
+            var currentData = this.props.userData.carReports[currentVehicle.id];
         }
         
         // let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, 
@@ -109,7 +119,8 @@ class VehicleBasicReport extends Component {
                                     <Text style={styles.vehicleInfoTextBrand}>
                                         {this.props.vehicle.brand + " " + this.props.vehicle.model}
                                     </Text>
-                                    {this.props.vehicle.isDefault ? <CheckBox checked={true}/> : null}
+                                    {(this.props.isMyVehicle && this.props.vehicle.isDefault) ? 
+                                        <CheckBox checked={true} color={AppConstants.COLOR_D3_DARK_GREEN}/> : null}
                                 </View>
                                 <Text style={styles.vehicleInfoTextPlate}>
                                         {this.props.vehicle.licensePlate}
@@ -117,6 +128,7 @@ class VehicleBasicReport extends Component {
                             </View>
                         </View>
 
+                        {this.props.isMyVehicle ? (
                         <View style={styles.rightVehicleButtonViewContainer}>
                             <TouchableOpacity 
                                     onPress={() => this.handleEditVehicle()}>
@@ -133,17 +145,25 @@ class VehicleBasicReport extends Component {
                                 </View>
                             </TouchableOpacity>
                         </View>
+                        ): null}
+
+                        {this.props.isTeamDisplay ? (
+                            <View style={styles.rightVehicleUserOwner}>
+                                <Text style={styles.txtUserOwner}>
+                                    {"@"+currentVehicle.ownerFullName}
+                                </Text>
+                            </View>
+                        ) : null}
                     </View>
 
-                    {this.props.userData.carReports[currentVehicle.id] ? (
-                    <View>
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="oil") && currentData) ? (
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
-                            progress={this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil? 
-                                this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/
-                                this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor : 0}
+                            progress={currentData.oilReport.passedKmFromPreviousOil? 
+                                currentData.oilReport.passedKmFromPreviousOil/
+                                currentData.oilReport.lastOilKmValidFor : 0}
                             progressViewStyle = 'default'
                             progressTintColor = "blue"
                             trackTintColor = "rgba(230, 230, 230, 1)"
@@ -152,28 +172,32 @@ class VehicleBasicReport extends Component {
                         <ProgressBarAndroid
                             styleAttr="Horizontal"
                             indeterminate={false}
-                            progress={this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil? 
-                                this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil/
-                                this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor : 0}
+                            progress={currentData.oilReport.passedKmFromPreviousOil? 
+                                currentData.oilReport.passedKmFromPreviousOil/
+                                currentData.oilReport.lastOilKmValidFor : 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                            {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/
-                            {this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor} Km
+                            {currentData.oilReport.passedKmFromPreviousOil}/
+                            {currentData.oilReport.lastOilKmValidFor} Km
                             ({AppLocales.t("GENERAL_OIL")})
                         </Text>
                     </View>
+                    ): null }
+
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="auth") && 
+                            currentData) ? (
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
-                            progress={this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
-                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/
-                                this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor: 0}
+                            progress={currentData.authReport.diffDayFromLastAuthorize ?
+                                currentData.authReport.diffDayFromLastAuthorize/
+                                currentData.authReport.lastAuthDaysValidFor: 0}
                             progressViewStyle = 'default'
-                            progressTintColor = {(this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
-                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/
-                                this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor: 0) 
+                            progressTintColor = {(currentData.authReport.diffDayFromLastAuthorize ?
+                                currentData.authReport.diffDayFromLastAuthorize/
+                                currentData.authReport.lastAuthDaysValidFor: 0) 
                                     > 0.9 ? "red" : "blue"}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
@@ -181,52 +205,67 @@ class VehicleBasicReport extends Component {
                         <ProgressBarAndroid
                             styleAttr="Horizontal"
                             indeterminate={false}
-                            progress={this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize ?
-                                this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize/
-                                this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor: 0}
+                            progress={currentData.authReport.diffDayFromLastAuthorize ?
+                                currentData.authReport.diffDayFromLastAuthorize/
+                                currentData.authReport.lastAuthDaysValidFor: 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                        {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
-                        {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE")})
+                        {currentData.authReport.diffDayFromLastAuthorize}/
+                        {currentData.authReport.lastAuthDaysValidFor} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE")})
                         </Text>
                     </View>
+                    ): null }
 
                     <View style={styles.statRow}>
+                        {((this.props.requestDisplay=="all"||this.props.requestDisplay=="km") && 
+                            currentData) ? (
                         <View style={styles.infoStatRow}>
-                        
-                            <Body>
+                            <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
-                                    {this.props.userData.carReports[currentVehicle.id].gasReport.avgKmMonthly ? 
-                                        this.props.userData.carReports[currentVehicle.id].gasReport.avgKmMonthly.toFixed(1) : ""}
+                                    {currentData.gasReport.avgKmMonthly ? 
+                                        currentData.gasReport.avgKmMonthly.toFixed(1) : ""}
                                 </Text>
-                                <Text style={styles.infoCardText}>Km</Text>
+                                <Text style={styles.infoCardText}>{" Km/Tháng "}</Text>
+                                {this.props.isTeamDisplay? (
+                                    <Text style={styles.infoCardText}>{"("+AppLocales.t("TEAM_VEHICLE_SORT_KM_DETAIL")+")"}</Text>
+                                ): null}
                             </Body>
-                      
                         </View>
+                        ): null }
 
+                        {((this.props.requestDisplay=="all"||this.props.requestDisplay=="gasEffective") && 
+                            currentData) ? (
                         <View style={styles.infoStatRow}>
-                            <Body>
+                            <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
-                                    {this.props.userData.carReports[currentVehicle.id].gasReport.avgMoneyPerKmMonthly ? 
-                                    (this.props.userData.carReports[currentVehicle.id].gasReport.avgMoneyPerKmMonthly).toFixed(0): ""}
+                                    {currentData.gasReport.avgMoneyPerKmMonthly ? 
+                                    (currentData.gasReport.avgMoneyPerKmMonthly).toFixed(0): ""}
                                 </Text>
-                                <Text style={styles.infoCardText}>đ/Km</Text>
+                                <Text style={styles.infoCardText}>{" đ/Km Xăng"}</Text>
+                                {this.props.isTeamDisplay? (
+                                    <Text style={styles.infoCardText}>{"("+AppLocales.t("TEAM_VEHICLE_SORT_GAS_EFF_DETAIL")+")"}</Text>
+                                ): null}
                             </Body>
                         </View>
+                        ): null }
 
+                        {((this.props.requestDisplay=="all"||this.props.requestDisplay=="moneyTotal") && 
+                            currentData) ? (
                         <View style={styles.infoStatRow}>
-                            <Body>
+                            <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
-                                    {this.props.userData.carReports[currentVehicle.id].moneyReport.totalExpenseSpend ? 
-                                    (this.props.userData.carReports[currentVehicle.id].moneyReport.totalExpenseSpend).toFixed(0) : ""}
+                                    {currentData.moneyReport.totalMoneySpend ? 
+                                    (currentData.moneyReport.totalMoneySpend/AppConstants.DEFAULT_REPORT_RANGE).toFixed(0) : ""}
                                 </Text>
-                                <Text style={styles.infoCardText}>đ</Text>
+                                <Text style={styles.infoCardText}>{" đ/Tháng "}</Text>
+                                {this.props.isTeamDisplay? (
+                                    <Text style={styles.infoCardText}>{"("+AppLocales.t("TEAM_VEHICLE_SORT_MONEYTOTAL_DETAIL")+")"}</Text>
+                                ): null}
                             </Body>
                         </View>
+                        ): null }
                     </View>
-                    </View>
-                    ): null }
 
                 </View>
             </TouchableOpacity>
@@ -305,14 +344,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginRight: 10,
+        marginLeft: 10,
         marginTop: 5
     },
     rightVehicleButtonIcon: {
-        fontSize: 20,
+        fontSize: 23,
         color: "rgb(70,70,70)"
     },
     rightVehicleButtonIconDelete: {
-        fontSize: 21,
+        fontSize: 22,
         color: "rgb(250, 100, 100)"
     },
     rightVehicleButtonText: {
@@ -353,11 +393,31 @@ const styles = StyleSheet.create({
     infoCardText: {
         fontSize: 14
     },
+    horizontalCard: {
+        flexDirection: "row",
+        justifyContent:"flex-start",
+        alignItems:"flex-end",
+        marginLeft: 10
+    },
+
+    rightVehicleUserOwner: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "flex-start",
+        marginTop: 5,
+        marginRight: 5,
+    },
+    txtUserOwner: {
+        color: AppConstants.COLOR_PICKER_TEXT,
+        fontSize: 14,
+        // textDecorationLine: 'underline'
+    },
     
 })
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    teamData: state.teamData
 });
 const mapActionsToProps = {
     actTempCalculateCarReport

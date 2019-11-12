@@ -179,7 +179,7 @@ class RegisterVehicleScreen extends React.Component {
 
                     <View style={styles.rowContainer}>
                         <View style={styles.rowLabel}>
-                            <CheckBox checked={this.state.isDefault}  color="green"
+                            <CheckBox checked={this.state.isDefault}  color={AppContants.COLOR_D3_DARK_GREEN}
                                 onPress={this.handleToggleCheckDefault}
                                 style={{marginRight: 10}}/>
                         </View>
@@ -205,7 +205,7 @@ class RegisterVehicleScreen extends React.Component {
 
 RegisterVehicleScreen.navigationOptions = ({ navigation }) => ({
     header: (
-        <Header>
+        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />

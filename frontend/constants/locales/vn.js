@@ -2,7 +2,7 @@ export default {
     GENERAL_AUTHROIZE:"Đăng Kiểm",
     GENERAL_MONTH:"Tháng",
     GENERAL_DAY:"Ngày",
-    GENERAL_OIL:"Dầu Nhớt",
+    GENERAL_OIL:"Thay Dầu",
     GENERAL_GAS:"Xăng",
     GENERAL_EXPENSE:"Chi Phí",
     GENERAL_SERVICE:"Sửa Chữa",
@@ -29,8 +29,8 @@ export default {
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
     HOME_TOTAL_TEAM: "Tổng Chi Phí Tổ Chức",
-    HOME_TOTAL_PRIVATE_THISMONTH: "Chi Phí Cá Nhân Tháng Này",
-    HOME_TOTAL_TEAM_THISMONTH: "Chi Phí Tổ Chức Tháng Này",
+    HOME_TOTAL_PRIVATE_THISMONTH: "Chi Tiêu Cá Nhân Tháng",
+    HOME_TOTAL_TEAM_THISMONTH: "Chi Tiêu Tổ Chức Tháng",
 
     HOME_MONEY_SPEND: "Chi Tiêu Các Xe",
     HOME_GAS_USAGE: "Biểu Đồ Xăng Các Xe",
@@ -62,6 +62,16 @@ export default {
 
     TEAM_REPORT_REPORT_TAB1: "Chi Tiêu",
     TEAM_REPORT_REPORT_TAB2: "Xăng",
+
+    TEAM_VEHICLE_SORT_AUTH: "Lịch Đăng Kiểm",
+    TEAM_VEHICLE_SORT_OIL: "Lịch Thay Dầu",
+    TEAM_VEHICLE_SORT_KM: "Di Chuyển Hàng Tháng",
+    TEAM_VEHICLE_SORT_GAS_EFF: "Hiệu Suất Xăng",
+    TEAM_VEHICLE_SORT_MONEYTOTAL: "Tổng Chi Tiêu",
+    TEAM_VEHICLE_SORT_KM_DETAIL: "6 Tháng Gần Đây",
+    TEAM_VEHICLE_SORT_GAS_EFF_DETAIL: "6 Tháng Gần Đây",
+    TEAM_VEHICLE_SORT_MONEYTOTAL_DETAIL: "6 Tháng Gần Đây",
+
 
     SETTING_H1_PRO_FEATURE: "Phiên Bản PRO",
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",

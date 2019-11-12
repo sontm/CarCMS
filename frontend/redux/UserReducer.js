@@ -43,6 +43,7 @@ const initialState = {
     token: "",
     defaultVehicleId: "",
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
+                    // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":
     carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
 
     settings: {}, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind

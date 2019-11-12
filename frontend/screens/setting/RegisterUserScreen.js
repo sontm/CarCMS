@@ -117,7 +117,7 @@ class RegisterUserScreen extends React.Component {
 
 RegisterUserScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header>
+        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />

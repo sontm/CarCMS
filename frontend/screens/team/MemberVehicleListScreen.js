@@ -15,6 +15,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text,
 
 import VehicleBasicReport from '../../components/VehicleBasicReport'
 import AppLocales from '../../constants/i18n'
+import AppConstants from '../../constants/AppConstants'
 
 class MemberVehicleListScreen extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class MemberVehicleListScreen extends React.Component {
               {this.props.navigation.state.params && this.props.navigation.state.params.member &&
                 this.props.navigation.state.params.member.vehicleList.map(item => (
                 <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={() => {}}
-                  navigation={this.props.navigation}
+                  navigation={this.props.navigation} requestDisplay={"all"} isTeamDisplay={false}
                 />
               ))}
 
@@ -41,7 +42,7 @@ class MemberVehicleListScreen extends React.Component {
 
 MemberVehicleListScreen.navigationOptions = ({navigation}) => ({
   header: (
-    <Header>
+    <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
       <Left>
         <Button transparent onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" />

@@ -202,7 +202,7 @@ class FillGasScreen extends React.Component {
 
 FillGasScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />

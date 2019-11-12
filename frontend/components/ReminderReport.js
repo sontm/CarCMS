@@ -112,7 +112,7 @@ class ReminderReport extends React.Component {
                 </H2></Text>
 
                 <Segment small style={styles.segmentContainer}>
-                    <Button small onPress={() => this.setState({activeDisplay: 0})}
+                    <Button small first onPress={() => this.setState({activeDisplay: 0})}
                         style={this.state.activeDisplay === 0 ? styles.activeSegment : styles.inActiveSegment}>
                         <Text style={this.state.activeDisplay === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>
                             {AppLocales.t("GENERAL_PRIVATE")}</Text>
@@ -122,7 +122,7 @@ class ReminderReport extends React.Component {
                         </Badge>
                         ): null}
                     </Button>
-                    <Button small onPress={() => this.setState({activeDisplay: 1})}
+                    <Button small last onPress={() => this.setState({activeDisplay: 1})}
                         style={this.state.activeDisplay === 1 ? styles.activeSegment : styles.inActiveSegment}>
                         <Text style={this.state.activeDisplay === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>
                             {AppLocales.t("GENERAL_TEAM")}</Text>

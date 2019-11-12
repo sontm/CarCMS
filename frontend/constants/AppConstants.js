@@ -50,9 +50,10 @@ export default {
     SETTING_DAY_NEXT_INSURANCE: 365, // 2year
     SETTING_DAY_NEXT_ROAD_FEE: 365, // 2year
 
+    DEFAULT_REPORT_RANGE: 6, // 6 tháng
     TEMPO_USE_BARCHART_GAS: true,
 
-    SERVER_API:"http://52.77.223.247:3000/api",
+    SERVER_API:"http://18.140.121.240:3000/api",
     //SERVER_API:  "http://192.168.1.81:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here not OK
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
@@ -62,6 +63,7 @@ export default {
     COLOR_HEADER_BG: "#3b5998",
     COLOR_HEADER_BUTTON: "white",
     COLOR_BUTTON_BG: "#3b5998", // FB color
+    COLOR_FACEBOOK: "#3b5998", // FB color
     COLOR_GOOGLE: "#DB4437",
     COLOR_D3_LIGHT_BLUE: "#1f77b4",
     COLOR_D3_DARK_GREEN: "#2ca02c",
