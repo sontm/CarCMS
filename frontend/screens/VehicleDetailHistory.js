@@ -4,7 +4,7 @@ import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpac
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, ListItem } from 'native-base';
 import Layout from '../constants/Layout'
-
+import {HeaderText} from '../components/StyledText'
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
@@ -169,14 +169,14 @@ class VehicleDetailHistory extends React.Component {
 
 VehicleDetailHistory.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>{AppLocales.t("CARDETAIL_HISTORY_HEADER")}</Title>
+            <Title><HeaderText>{AppLocales.t("CARDETAIL_HISTORY_HEADER")}</HeaderText></Title>
           </Body>
           <Right>
           </Right>

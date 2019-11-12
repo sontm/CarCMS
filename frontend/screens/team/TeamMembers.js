@@ -13,7 +13,7 @@ import {
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, ListItem, H2, H3, H1 } from 'native-base';
 
-import AppContants from '../../constants/AppConstants'
+import AppConstants from '../../constants/AppConstants'
 import Backend from '../../constants/Backend'
 import AppLocales from '../../constants/i18n'
 

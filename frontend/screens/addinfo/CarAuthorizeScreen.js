@@ -4,8 +4,8 @@ import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item,
     Input,  Label, DatePicker, Card, CardItem } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../../constants/AppConstants'
-
+import AppConstants from '../../constants/AppConstants'
+import {HeaderText} from '../../components/StyledText'
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import apputils from '../../constants/AppUtils';
@@ -33,28 +33,28 @@ class CarAuthorizeScreen extends React.Component {
     }
 
     componentWillMount() {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppContants.CURRENT_VEHICLE_ID);
+            const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             for (let i = 0; i < currentVehicle.authorizeCarList.length; i++) {
-                if (currentVehicle.authorizeCarList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
+                if (currentVehicle.authorizeCarList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
                         ...currentVehicle.authorizeCarList[i],
-                        vehicleId: AppContants.CURRENT_VEHICLE_ID,
-                        id: AppContants.CURRENT_EDIT_FILL_ID,
+                        vehicleId: AppConstants.CURRENT_VEHICLE_ID,
+                        id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.authorizeCarList[i].fillDate.toLocaleString(),
                     })
                 }
             }
         } else {
             this.setState({
-                vehicleId: AppContants.CURRENT_VEHICLE_ID
+                vehicleId: AppConstants.CURRENT_VEHICLE_ID
             })
         }
     }
     
     save = async (newVehicle) => {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit FillOil:")
             let newData = {
                 ...this.state,
@@ -66,7 +66,7 @@ class CarAuthorizeScreen extends React.Component {
                 validFor: Number(this.state.validFor)
             }
 
-            this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_AUTH)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_AUTH)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save Car Authorize:")
@@ -89,7 +89,7 @@ class CarAuthorizeScreen extends React.Component {
             
             console.log(newData)
 
-            this.props.actVehicleAddFillItem(newData, AppContants.FILL_ITEM_AUTH)
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_AUTH)
 
             this.props.navigation.navigate('VehicleDetail')
         }
@@ -162,7 +162,7 @@ class CarAuthorizeScreen extends React.Component {
                                     this.setState({subType: itemValue})
                                 }
                             >
-                                {AppContants.DATA_AUTH_TYPE.map(item => (
+                                {AppConstants.DATA_AUTH_TYPE.map(item => (
                                     <Picker.Item label={item.name} value={item.name} key={item.id}/>
                                 ))}
                             </Picker>
@@ -209,7 +209,7 @@ class CarAuthorizeScreen extends React.Component {
                         block primary
                         onPress={() => this.save(this.state)}
                     ><Text>
-                    {((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) ? 
+                    {((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? 
                         AppLocales.t("GENERAL_EDITDATA") : 
                         AppLocales.t("GENERAL_ADDDATA")}
                     </Text></Button>
@@ -236,14 +236,14 @@ class CarAuthorizeScreen extends React.Component {
 
 CarAuthorizeScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>{AppLocales.t("NEW_AUTH_HEADER")}</Title>
+            <Title><HeaderText>{AppLocales.t("NEW_AUTH_HEADER")}</HeaderText></Title>
           </Body>
           <Right />
         </Header>

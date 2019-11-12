@@ -16,7 +16,6 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body,
   Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading, Switch } from 'native-base';
 
 import VehicleBasicReport from '../components/VehicleBasicReport'
-import AppContants from '../constants/AppConstants'
 import AppConstants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
 import AppLocales from '../constants/i18n'
@@ -118,7 +117,7 @@ class TeamScreen extends React.Component {
             iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: "grey"}}/>}
             selectedValue={this.state.sortType}
             onValueChange={this.onSortChange.bind(this)}
-            textStyle={{ color: AppContants.COLOR_PICKER_TEXT}}
+            textStyle={{ color: AppConstants.COLOR_PICKER_TEXT}}
           >
             <Picker.Item label={getNameOfSortType("auth")} value="auth" />
             <Picker.Item label={getNameOfSortType("oil")} value="oil" />
@@ -191,9 +190,9 @@ class TeamScreen extends React.Component {
     console.log("TeamScreen Render")
     return (
       <Container>
-        <Header hasTabs noLeft style={{justifyContent: "space-between", backgroundColor: AppContants.COLOR_HEADER_BG}}>
-          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppContants.COLOR_HEADER_BG}}>
-          <Segment style={{alignSelf:"center",backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header hasTabs noLeft style={{justifyContent: "space-between", backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+          <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
           <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setState({activePage: 0})}>
             <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_CAR")}</Text>

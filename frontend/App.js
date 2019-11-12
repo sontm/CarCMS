@@ -1,8 +1,9 @@
+import { StatusBar } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View, SafeAreaView } from 'react-native';
+import { Platform, StyleSheet, View, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Root } from "native-base";
 
@@ -20,6 +21,12 @@ axios.defaults.baseURL = AppConstants.SERVER_API;
 // import {pushNotification} from './components/pushNotification'
 
 // pushNotification.configure();
+
+const MyStatusBar = ({backgroundColor, ...props}) => (
+  <View style={[styles.statusBar, { backgroundColor }]}>
+    <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+  </View>
+);
 
 //If you are using react, wrap your root component with PersistGate. 
 //This delays the rendering of your app's UI until your persisted state has been retrieved and saved to redux
@@ -53,6 +60,7 @@ class App extends React.Component {
     // this.setState({ loading: false });
   }
   render() {
+    //StatusBar.setBarStyle('light-content', true);
     //const [isLoadingComplete, setLoadingComplete] = useState(false);
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
@@ -67,10 +75,11 @@ class App extends React.Component {
       // need add margin of status bar
       return (
         <View style={styles.container}>
+          <MyStatusBar backgroundColor="#fff" barStyle="light-content" />
           <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Root>
-            <AppNavigator />
+            <AppNavigator/>
             </Root>
           </PersistGate>
           </Provider>
@@ -108,12 +117,18 @@ function handleFinishLoading(setLoadingComplete) {
   setLoadingComplete(true);
 }
 
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT : StatusBar.currentHeight;
+//const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: StatusBar.currentHeight
-  }
+    //marginTop: StatusBar.currentHeight,
+    marginTop: STATUSBAR_HEIGHT, // in ios, need to margin -20 screen 
+  },
+  // statusBar: {
+  //   height: STATUSBAR_HEIGHT,
+  // },
 });
 
 export default App;

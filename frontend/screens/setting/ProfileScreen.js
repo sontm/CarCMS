@@ -3,7 +3,7 @@ import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../../constants/AppConstants'
+import AppConstants from '../../constants/AppConstants'
 
 import { connect } from 'react-redux';
 
@@ -89,14 +89,14 @@ class ProfileScreen extends React.Component {
 
 ProfileScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>Profile</Title>
+            <Title><HeaderText>Profile</HeaderText></Title>
           </Body>
           <Right />
         </Header>

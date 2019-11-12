@@ -1,3 +1,5 @@
+import { Platform} from 'react-native';
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;
 
 export default {
     // Tempo data which
@@ -51,6 +53,7 @@ export default {
     SETTING_DAY_NEXT_ROAD_FEE: 365, // 2year
 
     DEFAULT_REPORT_RANGE: 6, // 6 tháng
+    DEFAULT_IOS_STATUSBAR_HEIGHT: STATUSBAR_HEIGHT, // in IOS, should set this to 20
     TEMPO_USE_BARCHART_GAS: true,
 
     SERVER_API:"http://18.140.121.240:3000/api",

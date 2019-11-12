@@ -2,8 +2,8 @@ import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker } from 'native-base';
 
-import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../../constants/AppConstants'
+import {HeaderText} from '../../components/StyledText'
+import AppConstants from '../../constants/AppConstants'
 import Layout from '../../constants/Layout';
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
@@ -30,28 +30,28 @@ class PayServiceScreen extends React.Component {
     }
 
     componentWillMount() {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppContants.CURRENT_VEHICLE_ID);
+            const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             for (let i = 0; i < currentVehicle.serviceList.length; i++) {
-                if (currentVehicle.serviceList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
+                if (currentVehicle.serviceList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
                         ...currentVehicle.serviceList[i],
-                        vehicleId: AppContants.CURRENT_VEHICLE_ID,
-                        id: AppContants.CURRENT_EDIT_FILL_ID,
+                        vehicleId: AppConstants.CURRENT_VEHICLE_ID,
+                        id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.serviceList[i].fillDate.toLocaleString(),
                     })
                 }
             }
         } else {
             this.setState({
-                vehicleId: AppContants.CURRENT_VEHICLE_ID
+                vehicleId: AppConstants.CURRENT_VEHICLE_ID
             })
         }
     }
     
     save = async (newVehicle) => {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit FillOil:")
             let newData = {
                 ...this.state,
@@ -63,7 +63,7 @@ class PayServiceScreen extends React.Component {
             }
             console.log(newData)
 
-            this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_SERVICE)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save Car Authorize:")
@@ -84,7 +84,7 @@ class PayServiceScreen extends React.Component {
             newData.id = apputils.uuidv4();
             console.log(newData)
 
-            this.props.actVehicleAddFillItem(newData, AppContants.FILL_ITEM_SERVICE)
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE)
 
             this.props.navigation.navigate('VehicleDetail')
         }
@@ -169,7 +169,7 @@ class PayServiceScreen extends React.Component {
                                     this.setState({subType: itemValue})
                                 }
                             >
-                                {AppContants.DATA_SERVICE_TYPE.map(item => (
+                                {AppConstants.DATA_SERVICE_TYPE.map(item => (
                                     <Picker.Item label={item.name} value={item.name} key={item.id}/>
                                 ))}
                             </Picker>
@@ -203,14 +203,14 @@ class PayServiceScreen extends React.Component {
 
 PayServiceScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>{AppLocales.t("NEW_SERVICE_HEADER")}</Title>
+            <Title><HeaderText>{AppLocales.t("NEW_SERVICE_HEADER")}</HeaderText></Title>
           </Body>
           <Right />
         </Header>

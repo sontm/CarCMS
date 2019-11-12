@@ -2,8 +2,8 @@ import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
 
-import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../../constants/AppConstants'
+import { HeaderText } from '../../components/StyledText';
+import AppConstants from '../../constants/AppConstants'
 
 import { connect } from 'react-redux';
 import {actUserLoginOK} from '../../redux/UserReducer';
@@ -101,14 +101,14 @@ class LoginScreen extends React.Component {
 
 LoginScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>Login</Title>
+            <Title><HeaderText>Login</HeaderText></Title>
           </Body>
           <Right />
         </Header>

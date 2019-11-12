@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../constants/AppConstants'
+import AppConstants from '../constants/AppConstants'
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, 
     Card, CardItem, Picker, Form, Item, CheckBox, Label, Input } from 'native-base';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import {actVehicleAddVehicle, actVehicleEditVehicle} from '../redux/UserReducer'
 import Layout from '../constants/Layout';
 import apputils from '../constants/AppUtils';
 import AppLocales from '../constants/i18n';
+import {HeaderText} from '../components/StyledText'
 
 class RegisterVehicleScreen extends React.Component {
     constructor(props) {
@@ -32,12 +33,12 @@ class RegisterVehicleScreen extends React.Component {
     }
 
     componentWillMount() {
-        console.log("CURRENTVEHICLE:" + AppContants.CURRENT_VEHICLE_ID)
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
+        console.log("CURRENTVEHICLE:" + AppConstants.CURRENT_VEHICLE_ID)
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             for (let i = 0; i < this.props.userData.vehicleList.length; i++) {
-                if (this.props.userData.vehicleList[i].id == AppContants.CURRENT_VEHICLE_ID) {
+                if (this.props.userData.vehicleList[i].id == AppConstants.CURRENT_VEHICLE_ID) {
                     this.setState({
-                        id: AppContants.CURRENT_VEHICLE_ID,
+                        id: AppConstants.CURRENT_VEHICLE_ID,
                         brand:this.props.userData.vehicleList[i].brand,
                         model: this.props.userData.vehicleList[i].model,
                         licensePlate: this.props.userData.vehicleList[i].licensePlate,
@@ -63,7 +64,7 @@ class RegisterVehicleScreen extends React.Component {
         })
     }
     save(newVehicle) {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit:")
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleEditVehicle(newVehicle)
@@ -125,7 +126,7 @@ class RegisterVehicleScreen extends React.Component {
                                     this.setState({brand: itemValue})
                                 }
                             >
-                                {this.getBrandsList(AppContants.DATA_BRAND_MODEL).map(item => (
+                                {this.getBrandsList(AppConstants.DATA_BRAND_MODEL).map(item => (
                                     <Picker.Item label={item.name} value={item.name} key={item.id}/>
                                 ))}
                             </Picker>
@@ -151,7 +152,7 @@ class RegisterVehicleScreen extends React.Component {
                                     this.setState({model: itemValue})
                                 }
                             >
-                                {this.getModelsOfBrand(this.state.brand, AppContants.DATA_BRAND_MODEL).map(item => (
+                                {this.getModelsOfBrand(this.state.brand, AppConstants.DATA_BRAND_MODEL).map(item => (
                                     <Picker.Item label={item.name} value={item.name} key={item.name}/>
                                 ))}
                             </Picker>
@@ -179,7 +180,7 @@ class RegisterVehicleScreen extends React.Component {
 
                     <View style={styles.rowContainer}>
                         <View style={styles.rowLabel}>
-                            <CheckBox checked={this.state.isDefault}  color={AppContants.COLOR_D3_DARK_GREEN}
+                            <CheckBox checked={this.state.isDefault}  color={AppConstants.COLOR_D3_DARK_GREEN}
                                 onPress={this.handleToggleCheckDefault}
                                 style={{marginRight: 10}}/>
                         </View>
@@ -194,7 +195,7 @@ class RegisterVehicleScreen extends React.Component {
                     <Button
                         style={styles.btnSubmit}
                         onPress={() => this.save(this.state)}
-                    ><Text>{((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
+                    ><Text>{((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
                     </View>
                 </View>
                 </Content>
@@ -205,14 +206,14 @@ class RegisterVehicleScreen extends React.Component {
 
 RegisterVehicleScreen.navigationOptions = ({ navigation }) => ({
     header: (
-        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>Thông Tin Xe</Title>
+            <Title><HeaderText>Thông Tin Xe</HeaderText></Title>
           </Body>
           <Right />
         </Header>

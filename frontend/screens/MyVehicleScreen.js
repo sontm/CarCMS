@@ -15,7 +15,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text,
 
 import { HeaderText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
-import AppContants from '../constants/AppConstants'
+import AppConstants from '../constants/AppConstants'
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
 import Layout from '../constants/Layout'
 import AppLocales from '../constants/i18n'
@@ -78,7 +78,7 @@ class MyVehicleScreen extends React.Component {
     console.log("MyVehicleScreen Render")
     return (
       <Container>
-        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Body>
           <Title><HeaderText>{AppLocales.t("MYCAR_HEADER")}</HeaderText></Title>
           </Body>
@@ -90,10 +90,10 @@ class MyVehicleScreen extends React.Component {
               <Picker
                   mode="dropdown"
                   placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
-                  iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: AppContants.COLOR_BUTTON_BG}}/>}
+                  iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: AppConstants.COLOR_BUTTON_BG}}/>}
                   selectedValue={this.state.sortType}
                   onValueChange={this.onSortChange.bind(this)}
-                  textStyle={{ color: AppContants.COLOR_PICKER_TEXT, backgroundColor: "red", textAlign: "center"}}
+                  textStyle={{ color: AppConstants.COLOR_PICKER_TEXT, backgroundColor: "red", textAlign: "center"}}
                   >
                   <Picker.Item label={getNameOfSortType("auth")} value="auth" />
                   <Picker.Item label={getNameOfSortType("oil")} value="oil" />

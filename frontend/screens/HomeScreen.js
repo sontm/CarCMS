@@ -52,10 +52,10 @@ class HomeScreen extends React.Component {
     });
   }
   loadFromStorage = async () => {
-    // const vehicleList = await AsyncStorage.getItem(AppContants.STORAGE_VEHICLE_LIST)
-    // const fillGasList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_GAS_LIST)
-    // const fillOilList = await AsyncStorage.getItem(AppContants.STORAGE_FILL_OIL_LIST)
-    // const authorizeCarList = await AsyncStorage.getItem(AppContants.STORAGE_AUTHORIZE_CAR_LIST)
+    // const vehicleList = await AsyncStorage.getItem(AppConstants.STORAGE_VEHICLE_LIST)
+    // const fillGasList = await AsyncStorage.getItem(AppConstants.STORAGE_FILL_GAS_LIST)
+    // const fillOilList = await AsyncStorage.getItem(AppConstants.STORAGE_FILL_OIL_LIST)
+    // const authorizeCarList = await AsyncStorage.getItem(AppConstants.STORAGE_AUTHORIZE_CAR_LIST)
     // JSON.parse(vehicleList).forEach(item => {
     //   this.props.actVehicleAddVehicle(item)
     // })
@@ -177,7 +177,7 @@ class HomeScreen extends React.Component {
     }
     return (
       <Container>
-        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
           </Left>
           <Body>

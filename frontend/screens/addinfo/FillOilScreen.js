@@ -3,9 +3,7 @@ import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, 
     Label, DatePicker, Card, CardItem } from 'native-base';
 
-import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../../constants/AppConstants'
-
+    import {HeaderText} from '../../components/StyledText'
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import AppConstants from '../../constants/AppConstants';
@@ -36,28 +34,28 @@ class FillOilScreen extends React.Component {
     componentWillMount() {
         console.log("FILL OIL WILL MOUNT:")
         console.log(this.props.navigation.state.params)
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_EDIT_FILL_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             for (let i = 0; i < currentVehicle.fillOilList.length; i++) {
-                if (currentVehicle.fillOilList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
+                if (currentVehicle.fillOilList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
                         ...currentVehicle.fillOilList[i],
-                        vehicleId: AppContants.CURRENT_VEHICLE_ID,
-                        id: AppContants.CURRENT_EDIT_FILL_ID,
+                        vehicleId: AppConstants.CURRENT_VEHICLE_ID,
+                        id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.fillOilList[i].fillDate.toLocaleString(),
                     })
                 }
             }
         } else {
             this.setState({
-                vehicleId: AppContants.CURRENT_VEHICLE_ID
+                vehicleId: AppConstants.CURRENT_VEHICLE_ID
             })
         }
     }
     
     save = async (newVehicle) => {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit FillOil:")
             let newData = {
                 ...this.state,
@@ -70,7 +68,7 @@ class FillOilScreen extends React.Component {
                 validFor: Number(this.state.validFor)
             }
 
-            this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_OIL)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_OIL)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save FillOil:")
@@ -219,14 +217,14 @@ class FillOilScreen extends React.Component {
 
 FillOilScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>{AppLocales.t("NEW_OIL_HEADER")}</Title>
+            <Title><HeaderText>{AppLocales.t("NEW_OIL_HEADER")}</HeaderText></Title>
           </Body>
           <Right />
         </Header>

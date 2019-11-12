@@ -10,7 +10,7 @@ import {
   View,
   AsyncStorage
 } from 'react-native';
-
+import {HeaderText} from '../../components/StyledText'
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker} from 'native-base';
 
 import VehicleBasicReport from '../../components/VehicleBasicReport'
@@ -42,14 +42,14 @@ class MemberVehicleListScreen extends React.Component {
 
 MemberVehicleListScreen.navigationOptions = ({navigation}) => ({
   header: (
-    <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+    <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
       <Left>
         <Button transparent onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" />
         </Button>
       </Left>
       <Body>
-        <Title>{AppLocales.t("TEAM_MEMBER_CAR_HEADER")}</Title>
+        <Title><HeaderText>{AppLocales.t("TEAM_MEMBER_CAR_HEADER")}</HeaderText></Title>
       </Body>
       <Right />
     </Header>

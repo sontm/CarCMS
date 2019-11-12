@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, Label} from 'native-base';
-
-import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../../constants/AppConstants'
+import {HeaderText} from '../../components/StyledText'
+import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
 import {actSettingSetVehicleDefault} from '../../redux/UserReducer'
@@ -41,10 +40,10 @@ class VehicleSettingScreen extends React.Component {
     }
     componentWillMount() {
         console.log("VehicleSEttingScreen WillMount:" + JSON.stringify(this.props.settingData))
-        if (this.props.settingData.defaultVehicleSetting && this.props.settingData.defaultVehicleSetting.kmForOilCar) {
+        if (this.props.userData.settings && this.props.userData.settings.kmForOilRemind) {
             // aready set
             this.setState({
-                ...this.props.settingData.defaultVehicleSetting
+                ...this.props.userData.settings
             })
         }
     }
@@ -121,14 +120,14 @@ class VehicleSettingScreen extends React.Component {
 
 VehicleSettingScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppContants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body style={{flex: 4}}>
-            <Title>{AppLocales.t("SETTING_REMIND_HEADER")}</Title>
+            <Title><HeaderText>{AppLocales.t("SETTING_REMIND_HEADER")}</HeaderText></Title>
           </Body>
           <Right style={{flex: 1}}/>
         </Header>
@@ -172,7 +171,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    settingData: state.settingData
+    userData: state.userData
 });
 const mapActionsToProps = {
     actSettingSetVehicleDefault

@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import AppContants from '../../constants/AppConstants'
+import AppConstants from '../../constants/AppConstants'
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, 
     Label, DatePicker } from 'native-base';
-
+    import {HeaderText} from '../../components/StyledText'
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
-import AppConstants from '../../constants/AppConstants';
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
 import Layout from '../../constants/Layout';
@@ -32,30 +31,30 @@ class FillGasScreen extends React.Component {
     }
     componentWillMount() {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
-                AppContants.CURRENT_EDIT_FILL_ID) {
+                AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
 
             for (let i = 0; i < currentVehicle.fillGasList.length; i++) {
-                if (currentVehicle.fillGasList[i].id == AppContants.CURRENT_EDIT_FILL_ID) {
+                if (currentVehicle.fillGasList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     this.setState({
                         ...currentVehicle.fillGasList[i],
-                        vehicleId: AppContants.CURRENT_VEHICLE_ID,
-                        id: AppContants.CURRENT_EDIT_FILL_ID,
+                        vehicleId: AppConstants.CURRENT_VEHICLE_ID,
+                        id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.fillGasList[i].fillDate.toLocaleString(),
                     })
                 }
             }
         } else {
             this.setState({
-                vehicleId: AppContants.CURRENT_VEHICLE_ID
+                vehicleId: AppConstants.CURRENT_VEHICLE_ID
             })
         }
         
     }
 
     save(newVehicle) {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppContants.CURRENT_VEHICLE_ID) {
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit FillGas:")
             let newData = {
                 ...this.state,
@@ -67,7 +66,7 @@ class FillGasScreen extends React.Component {
                 currentKm: Number(this.state.currentKm)
             }
 
-            this.props.actVehicleEditFillItem(newData, AppContants.FILL_ITEM_GAS)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save Fill Gas:")
@@ -90,7 +89,7 @@ class FillGasScreen extends React.Component {
     }
 
     render() {
-        console.log("FIll Gas State of ID:" + AppContants.CURRENT_VEHICLE_ID)
+        console.log("FIll Gas State of ID:" + AppConstants.CURRENT_VEHICLE_ID)
         console.log(this.state)
         return (
             <Container>
@@ -202,14 +201,14 @@ class FillGasScreen extends React.Component {
 
 FillGasScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
           <Body>
-            <Title>{AppLocales.t("NEW_GAS_HEADER")}</Title>
+            <Title><HeaderText>{AppLocales.t("NEW_GAS_HEADER")}</HeaderText></Title>
           </Body>
           <Right />
         </Header>
