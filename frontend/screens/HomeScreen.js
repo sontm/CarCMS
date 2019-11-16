@@ -262,8 +262,6 @@ class HomeScreen extends React.Component {
             </View>
 
             <ReminderReport/>
-            <MoneyUsageByTimeReport isTotalReport={true} />
-            <GasUsageReport isTotalReport={true} />
 
           </ScrollView>
         </Content>

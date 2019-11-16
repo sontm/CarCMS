@@ -26,6 +26,7 @@ export default {
     NAV_BOT_MORE: "Khác",
 
     MYCAR_HEADER: "Xe Của Tôi",
+    MYCAR_HEADER_REPORT: "Báo Cáo Chung",
     HOME_HEADER: "Quản Lý Xe",
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",

@@ -10,8 +10,9 @@ import {
   View,
   AsyncStorage
 } from 'react-native';
+import {checkAndShowInterestial} from '../components/AdsManager'
 
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Fab } from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Segment } from 'native-base';
 
 import { HeaderText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
@@ -19,6 +20,8 @@ import AppConstants from '../constants/AppConstants'
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
 import Layout from '../constants/Layout'
 import AppLocales from '../constants/i18n'
+import GasUsageReport from '../components/GasUsageReport'
+import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
 
 function getNameOfSortType(type) {
   if (type == "auth") return "Sắp Xếp theo 'Lịch Đăng Kiểm'";
@@ -41,11 +44,13 @@ class MyVehicleScreen extends React.Component {
 
     this.state = {
       sortType: "auth",
-      changedSort: false
+      changedSort: false,
+      activePage: 0
     };
 
     this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this)
     this.onSortChange = this.onSortChange.bind(this)
+    this.changeActivePage = this.changeActivePage.bind(this)
   }
   componentDidMount() {
     console.log("HOMESCreen DidMount")
@@ -73,14 +78,29 @@ class MyVehicleScreen extends React.Component {
       changedSort: true
     })
   }
-  
+
+  changeActivePage(val) {
+    this.setState({activePage: val})
+  }
+
   render() {
     console.log("MyVehicleScreen Render")
     return (
       <Container>
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Body>
-          <Title><HeaderText>{AppLocales.t("MYCAR_HEADER")}</HeaderText></Title>
+          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+            <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+              <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
+                  onPress={() => {this.changeActivePage(0); checkAndShowInterestial()}}>
+                <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>
+                  {AppLocales.t("MYCAR_HEADER")}</Text>
+              </Button>
+              <Button last style={this.state.activePage === 1 ? styles.activeSegment : styles.inActiveSegment}
+                  onPress={() => {this.changeActivePage(1); checkAndShowInterestial()}}>
+                <Text style={this.state.activePage === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>
+                  {AppLocales.t("MYCAR_HEADER_REPORT")}</Text>
+              </Button>
+            </Segment>
           </Body>
         </Header>
         
@@ -108,11 +128,19 @@ class MyVehicleScreen extends React.Component {
             <ScrollView
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
-              {this.props.userData.vehicleList && this.props.userData.vehicleList.map(item => (
-                <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
-                  navigation={this.props.navigation} {...this.state} requestDisplay={"all"} isTeamDisplay={false} isMyVehicle={true}
-                />
-              ))}
+
+              {this.state.activePage == 0 ? (
+                this.props.userData.vehicleList && this.props.userData.vehicleList.map(item => (
+                  <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
+                    navigation={this.props.navigation} {...this.state} requestDisplay={"all"} isTeamDisplay={false} isMyVehicle={true}
+                  />
+                ))
+               ) : (
+                  <View>
+                      <MoneyUsageByTimeReport isTotalReport={true} />
+                      <GasUsageReport isTotalReport={true} />
+                  </View>
+              )}
 
             </ScrollView>
           </View>
@@ -128,11 +156,9 @@ MyVehicleScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+    flex: 1
   },
   contentContainer: {
-
   },
   sortContainer: {
     marginLeft: 10,
@@ -170,7 +196,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
+
+  activeSegment: {
+    //backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    backgroundColor: "white",
+    color:AppConstants.COLOR_BUTTON_BG,
+    borderColor: "white"
+  },
+  inActiveSegment: {
+    backgroundColor: "#aec7e8",
+    color:AppConstants.COLOR_PICKER_TEXT,
+    borderColor: "white"
+  },
+  activeSegmentText: {
+      //color:"white",
+      color:AppConstants.COLOR_PICKER_TEXT,
+      fontSize: 12
+  },
+  inActiveSegmentText: {
+      color: "black",
+      fontSize: 12
+  },
 });
 
 const mapStateToProps = (state) => ({

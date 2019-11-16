@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, 
-  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading, Switch } from 'native-base';
-
+  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading, CheckBox } from 'native-base';
+  import {checkAndShowInterestial} from '../components/AdsManager'
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppConstants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
@@ -46,6 +46,7 @@ class TeamScreen extends React.Component {
 
     this.onSortChange = this.onSortChange.bind(this)
     this.fetchTeamData = this.fetchTeamData.bind(this)
+    this.setActivePage = this.setActivePage.bind(this)
   }
   fetchTeamData() {
     console.log("My Team IDDDDDD")
@@ -87,10 +88,15 @@ class TeamScreen extends React.Component {
       }
     );
   }
+  setActivePage(val) {
+    this.setState({activePage: val})
+    checkAndShowInterestial();
+  }
   onSortChange(value) {
     this.setState({
       sortType: value
     })
+    checkAndShowInterestial();
   }
 
   componentDidMount() {
@@ -110,14 +116,13 @@ class TeamScreen extends React.Component {
       let viewDisplay = [];
       viewDisplay.push(
         <View style={styles.sortContainer} key="sorting">
-          {/* <Text style={{fontSize: 15}}>Sắp Xếp: </Text> */}
+          <Text style={{fontSize: 12, margin: 0, marginRight: -2}}>Sắp Xếp:</Text>
           <Picker
             mode="dropdown"
-            placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
-            iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: "grey"}}/>}
+            iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 14, color: "grey"}}/>}
             selectedValue={this.state.sortType}
             onValueChange={this.onSortChange.bind(this)}
-            textStyle={{ color: AppConstants.COLOR_PICKER_TEXT}}
+            textStyle={{ color: AppConstants.COLOR_PICKER_TEXT, fontSize: 15}}
           >
             <Picker.Item label={getNameOfSortType("auth")} value="auth" />
             <Picker.Item label={getNameOfSortType("oil")} value="oil" />
@@ -126,14 +131,16 @@ class TeamScreen extends React.Component {
             <Picker.Item label={getNameOfSortType("moneyTotal")} value="moneyTotal" />
           </Picker>
 
-          <Segment small>
+          <Text style={{fontSize: 12, margin: 0, marginRight: -2}}>Giảm Dần</Text>
+          <CheckBox checked={this.state.sortAscending==true} onPress={() => this.setState({sortAscending: !this.state.sortAscending})} />
+          {/* <Segment small>
               <Button small first onPress={() => this.setState({sortAscending: true})}
                   style={this.state.sortAscending ? styles.activeSegment2 : styles.inActiveSegment2}>
                   <Text style={this.state.sortAscending ? styles.activeSegmentText2 : styles.inActiveSegmentText2}>Giảm</Text></Button>
               <Button small last onPress={() => this.setState({sortAscending: false})}
                   style={!this.state.sortAscending ? styles.activeSegment2 : styles.inActiveSegment2}>
                   <Text style={!this.state.sortAscending ? styles.activeSegmentText2 : styles.inActiveSegmentText2}>Tăng</Text></Button>
-          </Segment>
+          </Segment> */}
         </View>
       )
 
@@ -182,6 +189,7 @@ class TeamScreen extends React.Component {
       return <TeamMembers navigation={this.props.navigation}/>;
     }
   }
+
   componentDidUpdate() {
     console.log("TeamScreen DidUpdate")
   }
@@ -194,15 +202,15 @@ class TeamScreen extends React.Component {
           <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
           <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
           <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
-              onPress={() => this.setState({activePage: 0})}>
+              onPress={() => this.setActivePage(0)}>
             <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_CAR")}</Text>
           </Button>
           <Button style={this.state.activePage === 1 ? styles.activeSegment : styles.inActiveSegment}
-              onPress={() => this.setState({activePage: 1})}>
+              onPress={() => this.setActivePage(1)}>
             <Text style={this.state.activePage === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_REPORT")}</Text>
           </Button>
           <Button last style={this.state.activePage === 2 ? styles.activeSegment : styles.inActiveSegment}
-              onPress={() => this.setState({activePage: 2})}>
+              onPress={() => this.setActivePage(2)}>
             <Text style={this.state.activePage === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_MEMBER")}</Text>
             {this.props.teamData.joinRequests && this.props.teamData.joinRequests.length > 0 ? (
               <Badge danger style={styles.notifyBadge}>
@@ -321,10 +329,12 @@ const styles = StyleSheet.create({
   activeSegment2: {
     backgroundColor: AppConstants.COLOR_BUTTON_BG,
     color:"white",
+    padding: -5
   },
   inActiveSegment2: {
-      backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
-      color:AppConstants.COLOR_PICKER_TEXT,
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    color:AppConstants.COLOR_PICKER_TEXT,
+    padding: -5
   },
   activeSegmentText2: {
       color:"white",

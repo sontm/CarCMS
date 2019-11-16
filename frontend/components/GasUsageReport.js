@@ -31,7 +31,7 @@ class GasUsageReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        duration: 9,
+        duration: 6,
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),

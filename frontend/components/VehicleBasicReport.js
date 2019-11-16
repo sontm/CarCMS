@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpac
     TouchableWithoutFeedback, ProgressViewIOS, ProgressBarAndroid, Alert, Platform } from 'react-native';
 import {Content, Button, Text, Icon, Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, CheckBox } from 'native-base';
 import Layout from '../constants/Layout'
-
+import {checkAndShowInterestial} from '../components/AdsManager'
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
@@ -98,6 +98,7 @@ class VehicleBasicReport extends Component {
             <TouchableOpacity 
                 onPress={() => {
                     AppConstants.CURRENT_VEHICLE_ID = this.props.vehicle.id;
+                    checkAndShowInterestial();
                     this.props.navigation.navigate("VehicleDetail", 
                           {vehicleId: this.props.vehicle.id, vehicle: currentVehicle})
                     }

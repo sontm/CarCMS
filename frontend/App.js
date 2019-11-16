@@ -15,11 +15,7 @@ import { Provider } from 'react-redux';
 import axios from 'axios';
 import axiosDefaults from 'axios/lib/defaults';
 import AppConstants from './constants/AppConstants';
-
-import {
-  AdMobBanner,
-  AdMobInterstitial,
-} from 'expo-ads-admob';
+import AdsManager from './components/AdsManager';
 
 axios.defaults.baseURL = AppConstants.SERVER_API;
 
@@ -86,16 +82,9 @@ class App extends React.Component {
             <Root>
             <AppNavigator/>
             </Root>
+            <AdsManager />
           </PersistGate>
           </Provider>
-          <AdMobBanner
-            style={styles.bottomBanner}
-            bannerSize="fullBanner"
-            adUnitID="ca-app-pub-3940256099942544/6300978111"
-            // Test ID, Replace with your-admob-unit-id
-            testDeviceID="EMULATOR"
-            didFailToReceiveAdWithError={this.bannerError}
-          />
         </View>
       );
     }
@@ -106,7 +95,7 @@ async function loadResourcesAsync() {
   await Promise.all([
     Asset.loadAsync([
       require('./assets/images/logo/toyota.png'),
-      require('./assets/images/toyota.png')
+      //require('./assets/images/toyota.png')
     ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
@@ -135,7 +124,7 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? AppConstants.DEFAULT_IOS_STATUS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: AppConstants.COLOR_GREY_BG,
     //marginTop: StatusBar.currentHeight,
     marginTop: STATUSBAR_HEIGHT, // in ios, need to margin -20 screen 
   },

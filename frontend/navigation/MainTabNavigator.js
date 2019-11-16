@@ -32,7 +32,7 @@ import JoinTeamScreen from '../screens/setting/JoinTeamScreen'
 
 import TeamScreen from '../screens/TeamScreen';
 import MemberVehicleListScreen from '../screens/team/MemberVehicleListScreen'
-
+import {checkAndShowInterestial} from '../components/AdsManager'
 
 import AppConstants from '../constants/AppConstants';
 import AppLocales from '../constants/i18n'
@@ -160,6 +160,7 @@ const tabNavigator = createBottomTabNavigator({
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 props.navigation.navigate("Home")
+                checkAndShowInterestial();
               }}>
               <Icon name='home' style={props.navigation.state.index==0?styles.iconActive:styles.iconInActive}/>
               <Text style={props.navigation.state.index==0?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_HOME")}</Text>
@@ -172,6 +173,7 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
+                checkAndShowInterestial();
                 if (props.navigation.state.index === 1) {
                   props.navigation.navigate("MyVehicle")
                 } else {
@@ -225,7 +227,7 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
-                
+                checkAndShowInterestial();
                 if (props.navigation.state.index === 1) {
                   props.navigation.navigate("Team")
                 } else {
@@ -243,6 +245,7 @@ const tabNavigator = createBottomTabNavigator({
               onPress={() => {
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
+                checkAndShowInterestial();
                 props.navigation.navigate("Settings")
               }}>
               <Icon name='more' style={props.navigation.state.index==3?styles.iconActive:styles.iconInActive}/>
