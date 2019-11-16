@@ -319,8 +319,7 @@ class MoneyUsageByTimeReport extends React.Component {
                 = this.calculateOneVehicleTotalMoneyPrivate();
         }
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
-        console.log("tickXLabels^^^^^^^^^")
-        console.log(tickXLabels)
+
         return (
             <View style={styles.container}>
                 

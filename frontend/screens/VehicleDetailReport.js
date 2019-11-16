@@ -64,8 +64,10 @@ class VehicleDetailReport extends React.Component {
         //     = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
         //         currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
-        console.log("currentVehicle.brand.toLowerCase():" + currentVehicle.brand.toLowerCase())
-        let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase())
+        
+        let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase(), currentVehicle.type!="car")
+        console.log("this.props.userData.carReports[currentVehicle.id].oilReport")
+        console.log(this.props.userData.carReports[currentVehicle.id].oilReport)
         return (
             <Container>
             <Content>
@@ -123,31 +125,33 @@ class VehicleDetailReport extends React.Component {
                                 this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil): "NA"}</Text>
                         </View>
 
-                        <View style={styles.progressContainer}>
-                        <VictoryPie
-                            colorScale={["tomato", "silver"]}
-                            data={[
-                                { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
-                                { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor -
-                                    this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
-                            ]}
-                            height={150}
-                            innerRadius={65}
-                            radius={70}
-                            labels={() => null}
-                            />
-                        <View style={styles.labelProgress}>
-                            <Text>{AppLocales.t("GENERAL_AUTHROIZE") + ": "}</Text>
-                            <Text style={styles.labelProgressText}>
-                                {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
-                                {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor}
-                            </Text>
-                            <Text>{AppLocales.t("GENERAL_DAY")}</Text>
-                        </View>
-                        <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
-                            AppUtils.formatDateMonthDayYearVNShort(
-                                this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate): "NA"}</Text>
-                        </View>
+                        {currentVehicle.type == "car" ? (
+                            <View style={styles.progressContainer}>
+                            <VictoryPie
+                                colorScale={["tomato", "silver"]}
+                                data={[
+                                    { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
+                                    { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor -
+                                        this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
+                                ]}
+                                height={150}
+                                innerRadius={65}
+                                radius={70}
+                                labels={() => null}
+                                />
+                            <View style={styles.labelProgress}>
+                                <Text>{AppLocales.t("GENERAL_AUTHROIZE") + ": "}</Text>
+                                <Text style={styles.labelProgressText}>
+                                    {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
+                                    {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor}
+                                </Text>
+                                <Text>{AppLocales.t("GENERAL_DAY")}</Text>
+                            </View>
+                            <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
+                                AppUtils.formatDateMonthDayYearVNShort(
+                                    this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate): "NA"}</Text>
+                            </View>
+                        ) : null }
                     </View>
                 </View>
 

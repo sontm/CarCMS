@@ -19,6 +19,7 @@ class RegisterVehicleScreen extends React.Component {
             brand: '',
             model: '',
             licensePlate: '',
+            type: 'car', // car or bike
             //: new Date().toLocaleDateString(),
             isDefault: false,
             fillGasList:[],
@@ -42,6 +43,7 @@ class RegisterVehicleScreen extends React.Component {
                         brand:this.props.userData.vehicleList[i].brand,
                         model: this.props.userData.vehicleList[i].model,
                         licensePlate: this.props.userData.vehicleList[i].licensePlate,
+                        type: this.props.userData.vehicleList[i].type ? this.props.userData.vehicleList[i].type : "car",
                         //checkedDate: this.props.userData.vehicleList[i].checkedDate,
                         isDefault: this.props.userData.vehicleList[i].isDefault
                     })
@@ -71,6 +73,7 @@ class RegisterVehicleScreen extends React.Component {
             this.props.navigation.navigate("MyVehicle")
         } else {
             console.log("WIll Save:")
+            console.log(this.state)
             // let maxId = 0;
             // this.props.userData.vehicleList.forEach(item => {
             //     if (maxId < item.id) {
@@ -88,7 +91,9 @@ class RegisterVehicleScreen extends React.Component {
         //let result = [{ id: 0,name: "-"+AppLocales.t("NEW_CAR_BRAND")+"-"}];
         let result = [];
         for (let i = 0; i < data.length; i++) {
-            result.push({id: data[i].id, name: data[i].name})
+            if (data[i].type==this.state.type) {
+                result.push({id: data[i].id, name: data[i].name})
+            }
         }
         return result;
     }
@@ -103,19 +108,34 @@ class RegisterVehicleScreen extends React.Component {
         return [{ id: 0,name: "N/A"}];
     }
     render() {
-        console.log("this.props.appData.carModels¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥")
-        console.log(this.props.appData.carModels)
         return (
             <Container>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label>{AppLocales.t("NEW_CAR_TYPE")+": "}</Label>
+                            <View style={styles.rowForm}>
+                            <Text>{AppLocales.t("GENERAL_CAR")+""}</Text>
+                            <CheckBox checked={this.state.type == "car"} 
+                                onPress={() =>this.setState({type: "car"})}/>
+                            
+                            <Text>{"         " + AppLocales.t("GENERAL_BIKE")+""}</Text>
+                            <CheckBox checked={this.state.type == "bike"} 
+                                onPress={() =>this.setState({type: "bike"})}/>
+                            </View>
+                        </Item>
+                    </View>
+
+
+                    <View style={styles.rowContainer}>
                         {/* <Text style={styles.rowLabel}>
                             {AppLocales.t("NEW_CAR_BRAND")}:
                         </Text> */}
                         {/* <Item regular> */}
-                        <Item picker>
+                        <Item picker style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label>{AppLocales.t("NEW_CAR_BRAND")+": "}</Label>
+                            <View style={styles.rowForm}>
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
@@ -132,6 +152,7 @@ class RegisterVehicleScreen extends React.Component {
                                     <Picker.Item label={item.name} value={item.name} key={item.id}/>
                                 ))}
                             </Picker>
+                            </View>
                         </Item>
                         {/* </Item> */}
 
@@ -140,8 +161,9 @@ class RegisterVehicleScreen extends React.Component {
                         {/* <Text style={styles.rowLabel}>
                         {AppLocales.t("NEW_CAR_MODEL")}:
                         </Text> */}
-                        <Item picker>
+                        <Item picker style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label>{AppLocales.t("NEW_CAR_MODEL")+": "}</Label>
+                            <View style={styles.rowForm}>
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
@@ -158,12 +180,14 @@ class RegisterVehicleScreen extends React.Component {
                                     <Picker.Item label={item.name} value={item.name} key={item.name}/>
                                 ))}
                             </Picker>
+                            </View>
                         </Item>
                     </View>
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label>{AppLocales.t("NEW_CAR_PLATE")+": "}</Label>
                             <Input 
+                                style={styles.rowForm}
                                 onChangeText={(licensePlate) => this.setState({licensePlate})}
                                 value={this.state.licensePlate}
                             />

@@ -94,7 +94,7 @@ class VehicleBasicReport extends Component {
         // let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
         //     = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
-        let imgSource = AppUtils.loadImageSourceOfBrand(this.props.vehicle.brand.toLowerCase())
+        let imgSource = AppUtils.loadImageSourceOfBrand(this.props.vehicle.brand.toLowerCase(), this.props.vehicle.type!="car")
         return (
             <Content>
             <TouchableOpacity 

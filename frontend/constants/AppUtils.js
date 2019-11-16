@@ -47,19 +47,37 @@ const BRAND_IMAGES = {
     "toyota": require('../assets/images/logo/toyota.png'),
     "vinfast": require('../assets/images/logo/vinfast.png'),
 }
+const BRAND_IMAGES_BIKE = {
+    "honda": require('../assets/images/logo/honda-bike.png'),
+    "piaggio": require('../assets/images/logo/piaggio-bike.png'),
+    "suzuki": require('../assets/images/logo/suzuki-bike.png'),
+    "sym": require('../assets/images/logo/sym-bike.png'),
+    "yamaha": require('../assets/images/logo/yamaha-bike.png'),
+}
 
 class AppUtils {
-    loadImageSourceOfBrand(brand) {
+    loadImageSourceOfBrand(brand, isMotorBike) {
         if (brand && brand.length > 0) {
-            if (typeof(BRAND_IMAGES[""+brand]) !== 'undefined') {
-                return BRAND_IMAGES[""+brand]
+            if (isMotorBike) {
+                if (typeof(BRAND_IMAGES_BIKE[""+brand]) !== 'undefined') {
+                    return BRAND_IMAGES_BIKE[""+brand]
+                } else {
+                    return require('../assets/images/logo/defaultbike.png')
+                }
             } else {
-                console.log("RETURN false 11 of:" + brand)
-                return require('../assets/images/logo/defaultcar.png')
+                if (typeof(BRAND_IMAGES[""+brand]) !== 'undefined') {
+                    return BRAND_IMAGES[""+brand]
+                } else {
+                    return require('../assets/images/logo/defaultcar.png')
+                }
             }
         } else {
-            console.log("RETURN false 22 of:" + brand)
-            return require('../assets/images/logo/defaultcar.png')
+            if (isMotorBike) {
+                return require('../assets/images/logo/defaultbike.png')
+            } else {
+                return require('../assets/images/logo/defaultcar.png')
+            }
+            
         }
     }
     uuidv4() {
@@ -81,8 +99,9 @@ class AppUtils {
         return dateFormat(new Date(t), "d-mmmm-yyyy");
     }
     formatDateMonthDayYearVNShort(t) {
-        if (t)
-        return dateFormat(new Date(t), "d/mm/yyyy");
+        if (t) {
+            return dateFormat(new Date(t), "d/mm/yyyy");
+        }
         
     }
     formatMoneyToK(v) {
@@ -303,6 +322,8 @@ class AppUtils {
     getStatForGasUsage(fillGasList, duration=12, durationType="month", tillDate=new Date()) {
         // Sort by fill Date
         // TODO
+        console.log("$$$$$$$$fillGasList")
+        console.log(fillGasList)
         if (!fillGasList || fillGasList.length < 1) {
             return {};
         }
@@ -333,9 +354,9 @@ class AppUtils {
                     0, 1));
             }
         }
-        // console.log("CALCULATE_START_DATE-CALCULATE_END_DATE")
-        // console.log(CALCULATE_START_DATE)
-        // console.log(CALCULATE_END_DATE)
+        console.log("CALCULATE_START_DATE-CALCULATE_END_DATE")
+        console.log(CALCULATE_START_DATE)
+        console.log(CALCULATE_END_DATE)
         let lastKm = 0;
         let totalMoneyGas = 0;
         let lastDate = 0;
@@ -364,7 +385,8 @@ class AppUtils {
 
             lastKm = fillGasList[fillGasList.length -1].currentKm;
             lastDate = this.normalizeFillDate(new Date(fillGasList[fillGasList.length -1].fillDate))
-
+            console.log("lastKm-----------------")
+            console.log(lastKm)
             let START_IDX=0;
             let END_IDX=fillGasList.length-1;
             for (let l = 0; l < fillGasList.length; l++) {
@@ -378,9 +400,9 @@ class AppUtils {
                     break;
                 }
             }
-            // console.log("START_IDX-END_IDX")
-            // console.log(START_IDX)
-            // console.log(END_IDX)
+            console.log("START_IDX-END_IDX")
+            console.log(START_IDX)
+            console.log(END_IDX)
             // Calculate valid range (first - 1 and last + 1)
             fillGasList.forEach((item, index) => {
                 //Skip Invalid Index
@@ -506,7 +528,8 @@ class AppUtils {
                     } 
                 }
             })
-
+            console.log("objTotalKmMonthly:::::::::::::::")
+            console.log(objTotalKmMonthly)
             let objQuarter = {};
             let objYear = {};
             let objQuarterMoney = {};
@@ -650,7 +673,7 @@ class AppUtils {
             //     }
             // }
         }
-        if (todayLiter) {
+        if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
             // Calculate Passed duration between begin and last date
             const diffTime = Math.abs(lastDate - beginDate); // in ms
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
@@ -1542,7 +1565,9 @@ class AppUtils {
                 avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
                 = this.getStatForGasUsage(currentVehicle.fillGasList, 
                     options.duration, options.durationType, options.tillDate);
-    
+            console.log("Result from GasREport:")
+            console.log({averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm})
+
             let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
                 = this.getInfoForOilUsage(currentVehicle.fillOilList, 
                     lastDate, lastKm, averageKmPerDay);

@@ -21,9 +21,8 @@ import { HeaderText } from '../components/StyledText';
 import {
   LineChart
 } from "react-native-chart-kit";
-import GasUsageReport from '../components/GasUsageReport'
-import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
-import MoneyUsageReport from '../components/MoneyUsageReport'
+import HomeMoneyUsageByTime from '../components/HomeMoneyUsageByTime'
+import HomeMoneyUsageByTimeTeam from '../components/HomeMoneyUsageByTimeTeam'
 import ReminderReport from '../components/ReminderReport'
 
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
@@ -262,6 +261,9 @@ class HomeScreen extends React.Component {
             </View>
 
             <ReminderReport/>
+
+            <HomeMoneyUsageByTime isTotalReport={true} />
+            <HomeMoneyUsageByTimeTeam isTotalReport={true} />
 
           </ScrollView>
         </Content>

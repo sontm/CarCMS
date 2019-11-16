@@ -110,6 +110,13 @@ async function loadResourcesAsync() {
       require('./assets/images/logo/toyota.png'),
       require('./assets/images/logo/vinfast.png'),
       require('./assets/images/logo/defaultcar.png'),
+
+      require('./assets/images/logo/defaultbike.png'),
+      require('./assets/images/logo/honda-bike.png'),
+      require('./assets/images/logo/piaggio-bike.png'),
+      require('./assets/images/logo/suzuki-bike.png'),
+      require('./assets/images/logo/sym-bike.png'),
+      require('./assets/images/logo/yamaha-bike.png'),
       
 
       //require('./assets/images/toyota.png')

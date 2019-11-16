@@ -19,6 +19,8 @@ export default {
     GENERAL_PREV_MONTH: "Tháng Trước",
     GENERAL_KM: "Km",
     GENERAL_OR: "Hoặc",
+    GENERAL_CAR: "Ôtô",
+    GENERAL_BIKE: "Xe Máy",
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Xe",
@@ -37,6 +39,8 @@ export default {
     HOME_MONEY_SPEND: "Chi Tiêu Các Xe",
     HOME_GAS_USAGE: "Biểu Đồ Xăng Các Xe",
     HOME_REMIND: "Nhắc Nhở",
+    HOME_PRIVATE_MONEY_USAGE: "Chi Tiêu Cá Nhân Gần Đây",
+    HOME_TEAM_MONEY_USAGE: "Chi Tiêu Tổ Chức Gần Đây",
     
 
     CARDETAIL_HEADER: "Báo Cáo Chi Tiết",
@@ -118,6 +122,7 @@ export default {
     NEW_CAR_BRAND:"Hãng Xe",
     NEW_CAR_MODEL:"Dòng Xe",
     NEW_CAR_PLATE:"Biển Số",
+    NEW_CAR_TYPE:"Loại Xe",
 
     NEW_GAS_HEADER:"Đổ Xăng",
     NEW_GAS_CAR:"Lựa Chọn Xe",

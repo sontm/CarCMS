@@ -139,7 +139,7 @@ class FillGasScreen extends React.Component {
                     </View>
                     </Item>
                 </View>
-                <View style={styles.rowContainer}>
+                {/* <View style={styles.rowContainer}>
                     <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                     <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_AMOUNT")+": "}</Label>
                     <Input
@@ -149,7 +149,7 @@ class FillGasScreen extends React.Component {
                         value={""+this.state.amount}
                     />
                     </Item>
-                </View>
+                </View> */}
 
                 <View style={styles.rowContainer}>
                     <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
