@@ -151,7 +151,8 @@ class MoneyUsageReport extends React.Component {
 
   //arrExpenseTypeByTime: [{"TienPhat": [{x: 2019-03-03, y: 200(K)}, {x: 2019-04-03, y: 100(K)}]}]
   calculateExpenseTypeFromArr(arrExpenseTypeByTime) {
-    let result = []; // [{x:"tienPhat", y: 200}]
+    let arrSubExpenseSpend = []; // [{x:"tienPhat", y: 200}]
+    let totalSubExpenseSpend = 0;
     if (arrExpenseTypeByTime && arrExpenseTypeByTime.length > 0) {
   
         // End date is ENd of This Month  
@@ -175,19 +176,21 @@ class MoneyUsageReport extends React.Component {
                         })
                     }
                     if (yVal) {
-                        result.push({x: prop, y: yVal})
+                        arrSubExpenseSpend.push({x: prop, y: yVal})
+                        totalSubExpenseSpend += yVal;
                     }
                 }
             }
         })
         
     }
-    return result;
+    return {arrSubExpenseSpend,totalSubExpenseSpend};
   }
 
   //arrExpenseTypeByTime: [{"TienPhat": [{x: 2019-03-03, y: 200(K)}, {x: 2019-04-03, y: 100(K)}]}]
   calculateExpenseTypeTeam() {
-    let result = []; // [{x:"tienPhat", y: 200}]
+    let arrSubExpenseSpend = []; // [{x:"tienPhat", y: 200}]
+    let totalSubExpenseSpend = 0;
     let objectTemp = {}; // {"TienPhat": 200}
     this.props.teamData.teamCarList.forEach(element => {
     if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
@@ -229,13 +232,14 @@ class MoneyUsageReport extends React.Component {
     // convert to Array for Chart
     for (var prop in objectTemp) {
         if (Object.prototype.hasOwnProperty.call(objectTemp, prop)) {
-            result.push({
+            totalSubExpenseSpend += objectTemp[""+prop];
+            arrSubExpenseSpend.push({
                 y: objectTemp[""+prop],
                 x: prop   
             })
         }
     }
-    return result;
+    return {arrSubExpenseSpend};
   }
   render() {
       // Only Team or Private (Detail)
@@ -249,8 +253,9 @@ class MoneyUsageReport extends React.Component {
             var totalAuthSpend = totalAuthSpendTeam;
             var totalExpenseSpend = totalExpenseSpendTeam;
             var totalServiceSpend = totalServiceSpendTeam;
+            var totalAlSpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
 
-            var arrSubExpenseSpend = this.calculateExpenseTypeTeam();
+            var {arrSubExpenseSpend, totalSubExpenseSpend} = this.calculateExpenseTypeTeam();
         } else {
             var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
                 totalExpenseSpendPrivate, totalServiceSpendPrivate}
@@ -261,9 +266,10 @@ class MoneyUsageReport extends React.Component {
             var totalAuthSpend = totalAuthSpendPrivate;
             var totalExpenseSpend = totalExpenseSpendPrivate;
             var totalServiceSpend = totalServiceSpendPrivate;
+            var totalAlSpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
 
             var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
-            var arrSubExpenseSpend = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
+            var {arrSubExpenseSpend, totalSubExpenseSpend} = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
         }
 
         return (
@@ -322,10 +328,18 @@ class MoneyUsageReport extends React.Component {
                                 { x: AppLocales.t("GENERAL_EXPENSE"), y: totalExpenseSpend },
                                 { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpend },
                             ]}
+                            innerRadius={85}
                             radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
-                            labelRadius={({ innerRadius }) => innerRadius + 105 }
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
+                                + AppUtils.formatMoneyToK(datum.y) + ", "
+                                +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
+                            labelRadius={({ radius }) => radius + 10 }
                             />
+                        <View style={styles.labelProgress}>
+                            <Text style={styles.labelProgressText}>
+                                {AppUtils.formatMoneyToK(totalAlSpend)}
+                            </Text>
+                        </View>
                     </View>
                 </View>
 
@@ -340,10 +354,18 @@ class MoneyUsageReport extends React.Component {
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={arrSubExpenseSpend}
+                            innerRadius={85}
                             radius={100}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
-                            //labelRadius={({ innerRadius }) => innerRadius + 20 }
+                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
+                                + AppUtils.formatMoneyToK(datum.y) + ", "
+                                +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
+                            labelRadius={({ radius }) => radius + 15 }
                             />
+                        <View style={styles.labelProgress}>
+                            <Text style={styles.labelProgressText}>
+                                {AppUtils.formatMoneyToK(totalExpenseSpend)}
+                            </Text>
+                        </View>
                     </View>
                 </View>
                 </View>
@@ -433,6 +455,14 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
+    },
+    labelProgress: {
+        position: "absolute",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    labelProgressText: {
+        fontSize: 30
     },
 
 

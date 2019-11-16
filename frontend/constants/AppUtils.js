@@ -41,7 +41,7 @@ class AppUtils {
         if (t)
         return dateFormat(new Date(t), "d/mmm");
     }
-    formatDateMonthYearVN(t) {
+    formatDateMonthYearVN(t,idx, ts) {
         if (t)
         return dateFormat(new Date(t), "yyyy/mm");
     }
@@ -56,6 +56,9 @@ class AppUtils {
     }
     formatMoneyToK(v) {
         return (v/1000).toFixed(0) + "K";
+    }
+    formatToPercent(v, total) {
+        return (v*100/total).toFixed(0) + "%";
     }
     getNameOfFillItemType(type) {
         if (type == AppConstants.FILL_ITEM_GAS) {
@@ -79,6 +82,47 @@ class AppUtils {
       }
       return result;
     }
+    pushInDateLabelsIfNotExist(arr, val) {
+        let isExist = false;
+        for (let i = 0; i < arr.length; i++) {
+            let cur = arr[i];
+            if (cur.getFullYear() == val.getFullYear() && cur.getMonth() == val.getMonth()) {
+                // Different, not exist
+                isExist = true;
+                break;
+            }
+        }
+        if (!isExist)
+            arr.push(val)
+    }
+    reviseTickLabelsToCount(allLabels, expectedCount) {
+        // SOrt first
+        allLabels.sort((a, b) => a.getTime() - b.getTime());
+        let DESIRE_TICK_COUNT = expectedCount; // First and End always included in Labels
+        let gapOfPoint = Math.ceil((allLabels.length)/DESIRE_TICK_COUNT);
+        let localCounter = 0;
+        let labels = [];
+        
+        
+        allLabels.forEach((item, idx) => {
+            // Add first point
+            if (idx == 0) {
+                labels.push(item)
+            } 
+            // else if (idx == allLabels.length - 1) {
+            //     labels.push(item)
+            // } 
+            else {
+                localCounter++;
+                if (localCounter >= gapOfPoint) {
+                    labels.push(item)
+                    localCounter = 0;
+                }
+            }
+        })
+        return labels;
+    }
+    
 
     // Set the Time to End of that day
     normalizeFillDate(input) {
@@ -92,6 +136,12 @@ class AppUtils {
         return new Date(input.getFullYear()
             ,input.getMonth()
             ,input.getDate()
+            ,0,0,1); //23:59:59
+    }
+    normalizeDateMiddleOfMonth(input) {
+        return new Date(input.getFullYear()
+            ,input.getMonth()
+            ,15
             ,0,0,1); //23:59:59
     }
 
@@ -341,11 +391,11 @@ class AppUtils {
                                 // Not exist, create new
                                 objTotalKmMonthly[""+prevMonthKey] = {
                                     y: averageKMPerDay * diffDayPrevToLast,
-                                    x: this.normalizeDateBegin(new Date(prevDate.getFullYear(),prevDate.getMonth()+1,0))
+                                    x: this.normalizeDateMiddleOfMonth(prevDate)
                                 }
                                 objTotalMoneyMonthly[""+prevMonthKey] = {
                                     y: averageMoneyPerDay * diffDayPrevToLast,
-                                    x: this.normalizeDateBegin(new Date(prevDate.getFullYear(),prevDate.getMonth()+1,0))
+                                    x: this.normalizeDateMiddleOfMonth(prevDate)
                                 }
                             } else {
                                 // Exist, increase
@@ -356,11 +406,11 @@ class AppUtils {
                                 // Not exist, create new
                                 objTotalKmMonthly[""+currentMonthKey] = {
                                     y: averageKMPerDay * diffDayCurrentToFirst,
-                                    x: this.normalizeDateBegin(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                                    x: this.normalizeDateMiddleOfMonth(currentDate)
                                 }
                                 objTotalMoneyMonthly[""+currentMonthKey] = {
                                     y: averageMoneyPerDay * diffDayCurrentToFirst,
-                                    x: this.normalizeDateBegin(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                                    x: this.normalizeDateMiddleOfMonth(currentDate)
                                 }
                             } else {
                                 // Exist, increase
@@ -386,13 +436,11 @@ class AppUtils {
                                     // Not exist, create new
                                     objTotalKmMonthly[""+loopMonthKey] = {
                                         y:averageKMPerDay * diffDayPrevLast2FirstCurrent,
-                                        x: this.normalizeDateBegin(new Date(loopFirstDateOfMonth.getFullYear(),
-                                        loopFirstDateOfMonth.getMonth()+1,0))
+                                        x: this.normalizeDateMiddleOfMonth(loopFirstDateOfMonth)
                                     }
                                     objTotalMoneyMonthly[""+loopMonthKey] = {
                                         y:averageMoneyPerDay * diffDayPrevLast2FirstCurrent,
-                                        x: this.normalizeDateBegin(new Date(loopFirstDateOfMonth.getFullYear(),
-                                        loopFirstDateOfMonth.getMonth()+1,0))
+                                        x: this.normalizeDateMiddleOfMonth(loopFirstDateOfMonth)
                                     }
                                 } else {
                                     // Exist, increase
@@ -411,11 +459,11 @@ class AppUtils {
                                 // Not exist, create new
                                 objTotalKmMonthly[""+currentMonthKey] = {
                                     y: averageKMPerDay * diffDays,
-                                    x: this.normalizeFillDate(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                                    x: this.normalizeDateMiddleOfMonth(currentDate)
                                 }
                                 objTotalMoneyMonthly[""+currentMonthKey] = {
                                     y: averageMoneyPerDay * diffDays,
-                                    x: this.normalizeDateBegin(new Date(currentDate.getFullYear(),currentDate.getMonth()+1,0))
+                                    x: this.normalizeDateMiddleOfMonth(currentDate)
                                 }
                             } else {
                                 // Exist, increase
@@ -725,7 +773,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objGasSpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -737,7 +785,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objTotalMoneySpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -818,7 +866,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objOilSpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -830,7 +878,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objTotalMoneySpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -909,7 +957,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objAuthSpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -921,7 +969,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objTotalMoneySpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -1002,7 +1050,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objExpenseSpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -1014,7 +1062,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objTotalMoneySpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -1093,7 +1141,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objServiceSpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -1105,7 +1153,7 @@ class AppUtils {
                     } else {
                         // Not Exist, create new Month
                         objTotalMoneySpend[""+dateKey] = {
-                            x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                            x: this.normalizeDateMiddleOfMonth(itemDate),
                             y: item.price
                         }
                     }
@@ -1279,7 +1327,7 @@ class AppUtils {
                 } else {
                     // Not Exist, create new Month
                     objExpenseTypeByTime[""+item.subType][""+dateKey] = {
-                        x: this.normalizeDateBegin(new Date(itemDate.getFullYear(),itemDate.getMonth()+1,0)),
+                        x: this.normalizeDateMiddleOfMonth(itemDate),
                         y: item.price
                     }
                 }

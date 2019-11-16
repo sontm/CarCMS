@@ -31,7 +31,7 @@ class GasUsageReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        duration: 6,
+        duration: 9,
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),
@@ -75,6 +75,7 @@ class GasUsageReport extends React.Component {
     let arrGasKmThisCar = [];
     let arrGasMoneyThisCar = [];
     let arrGasMoneyPerKmThisCar = [];
+    let tickXLabels = [];
 
     if (this.props.currentVehicle && this.props.currentVehicle.id &&  this.props.userData.carReports[this.props.currentVehicle.id]) {
         var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
@@ -86,11 +87,14 @@ class GasUsageReport extends React.Component {
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
         if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
-            arrTotalKmMonthly.forEach(item => {
+            arrTotalKmMonthly.forEach((item, idx) => {
                 let xDate = new Date(item.x);
                 if (xDate >= CALCULATE_START_DATE) {
+                    //item.x = idx;
+                    //item.xDate = xDate;
                     item.x = xDate;
                     arrGasKmThisCar.push(item)
+                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                 }
             })
         }
@@ -115,7 +119,7 @@ class GasUsageReport extends React.Component {
             })
         }
     }
-    return {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar};
+    return {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar, tickXLabels};
   }
 
 
@@ -123,8 +127,10 @@ class GasUsageReport extends React.Component {
     let arrGasKmAllCars = [];
     let arrGasMoneyAllCars = [];
     let arrGasMoneyPerKmAllCars = [];
+    let tickXLabels = [];
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
+
         var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
           = this.props.userData.carReports[element.id].gasReport;
 
@@ -140,6 +146,7 @@ class GasUsageReport extends React.Component {
                 if (xDate >= CALCULATE_START_DATE) {
                     item.x = xDate;
                     filterArr.push(item)
+                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                 }
             })
             arrGasKmAllCars.push(filterArr)
@@ -170,7 +177,7 @@ class GasUsageReport extends React.Component {
         }
       }
     })
-    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars};
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels};
   }
 
   calculateAllVehicleGasUsageTeam(isMergeData = true) {
@@ -181,6 +188,7 @@ class GasUsageReport extends React.Component {
     let objGasKmAllCars = {};
     let objGasMoneyAllCars = {};
     let objGasMoneyPerKmAllCars = {};
+    let tickXLabels = [];
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         // End date is ENd of This Month  
@@ -205,6 +213,7 @@ class GasUsageReport extends React.Component {
                         } else {
                             objGasKmAllCars[""+item.x] = item.y;
                         }
+                        AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
                     }
                 })
             }
@@ -216,6 +225,7 @@ class GasUsageReport extends React.Component {
                     if (xDate >= CALCULATE_START_DATE) {
                         item.x = xDate;
                         filterArr.push(item)
+                        AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                     }
                 })
 
@@ -300,7 +310,7 @@ class GasUsageReport extends React.Component {
             }
         }
     }
-    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars};
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels};
   }
 
   render() {
@@ -309,9 +319,10 @@ class GasUsageReport extends React.Component {
     if (this.props.currentVehicle || this.props.isTotalReport) { //props
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
-                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsageTeam();
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels} = this.calculateAllVehicleGasUsageTeam();
             } else {
-                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars} = this.calculateAllVehicleGasUsage();
+                // Individual All Cars
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels} = this.calculateAllVehicleGasUsage();
             }
             var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
             var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
@@ -323,9 +334,10 @@ class GasUsageReport extends React.Component {
             } else {
                 var dataToDisplay = arrGasKmAllCars;
             }
+            var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         } else {
             // this is One Vehicle in Detail Report
-            let {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar} =
+            var {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar, tickXLabels} =
                 this.calculateOneVehicleGasUsage();
             if (this.state.activeDisplay == 1) {
                 var dataToDisplay = arrGasMoneyThisCar;
@@ -338,7 +350,9 @@ class GasUsageReport extends React.Component {
             var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmThisCar, 1).avg;
             var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyThisCar, 1).avg;
             var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmThisCar, 1).avg;
+            var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         }
+
         // } else {
         //     if (this.state.activeDisplay == 1) {
         //         var dataToDisplay = this.props.userData.carReports[this.props.currentVehicle.id].gasReport.arrTotalMoneyMonthly;
@@ -433,16 +447,17 @@ class GasUsageReport extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:30,left:50,right:20}}
+                            padding={{top:10,bottom:40,left:30,right:20}}
+                            domainPadding={{y: [0, 0], x: [20, 10]}}
                         >
                         {/* TODO, Date X axis not Match */}
                         <VictoryStack
                             width={Layout.window.width}
-                            domainPadding={{y: [0, 10], x: [10, 0]}}
+                            // domainPadding={{y: [0, 0], x: [0, 0]}}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         >
                         {(this.props.isTotalReport && !this.props.isTeamDisplay) ? (
-                            dataToDisplay.map((item, idx) => (
+                            dataToDisplay.map((item, idx) => ( // Individual All Cars
                                 <VictoryBar
                                 key={idx}
                                 data={item}
@@ -457,9 +472,13 @@ class GasUsageReport extends React.Component {
                         <VictoryAxis
                             crossAxis
                             standalone={false}
-                            tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
+                            // tickFormat={(t,idx) => `${AppUtils.formatDateMonthYearVN(
+                            //     (dataToDisplay[idx]&&dataToDisplay[idx].xDate) ? dataToDisplay[idx].xDate : new Date())}`}
                             tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            tickFormat={(t,idx) => `${AppUtils.formatDateMonthYearVN(t)}`}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            //tickCount={dataToDisplay.length}
+                            tickValues={tickXLabels}
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},

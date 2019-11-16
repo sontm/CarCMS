@@ -18,6 +18,7 @@ export default {
     GENERAL_TEAM_CODE_SHORT: "Mã",
     GENERAL_PREV_MONTH: "Tháng Trước",
     GENERAL_KM: "Km",
+    GENERAL_OR: "Hoặc",
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Xe",
@@ -107,6 +108,10 @@ export default {
     SETTING_REMIND_INSURANCE: "Số Ngày Cho Đến Lần Đóng Bảo Hiểm Dân Sự Tiếp Theo",
     SETTING_REMIND_ROAD_FEE: "Số Ngày Cho Đến Lần Đóng Bảo Trì Đường Bộ Tiếp Theo",
     SETTING_REMIND_BTN_SAVE: "Lưu Cài Đặt",
+
+    USER_FULLNAME: "Tên",
+    USER_EMAIL: "Email",
+    USER_PHONE: "Số Điện Thoại",
 
     NEW_CAR_HEADER:"Thông Tin Xe",
     NEW_CAR_BRAND:"Hãng Xe",

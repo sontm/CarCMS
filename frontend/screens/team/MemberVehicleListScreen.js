@@ -11,7 +11,7 @@ import {
   AsyncStorage
 } from 'react-native';
 import {HeaderText} from '../../components/StyledText'
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker} from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Subtitle} from 'native-base';
 
 import VehicleBasicReport from '../../components/VehicleBasicReport'
 import AppLocales from '../../constants/i18n'
@@ -43,15 +43,17 @@ class MemberVehicleListScreen extends React.Component {
 MemberVehicleListScreen.navigationOptions = ({navigation}) => ({
   header: (
     <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-      <Left>
+      <Left style={{flex: 1}}>
         <Button transparent onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" />
         </Button>
       </Left>
-      <Body>
-        <Title><HeaderText>{AppLocales.t("TEAM_MEMBER_CAR_HEADER")}</HeaderText></Title>
+      <Body  style={{flex: 4}}>
+        <Title><HeaderText>{navigation.state.params.member.fullName}</HeaderText></Title>
+        <Subtitle><HeaderText style={{fontSize: 13}}>
+          {navigation.state.params.member.email ? navigation.state.params.member.email : null}</HeaderText></Subtitle>
       </Body>
-      <Right />
+      <Right  style={{flex: 1}}/>
     </Header>
   )
 });

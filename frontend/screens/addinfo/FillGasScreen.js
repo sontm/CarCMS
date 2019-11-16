@@ -140,7 +140,7 @@ class FillGasScreen extends React.Component {
                     </Item>
                 </View>
                 <View style={styles.rowContainer}>
-                <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                     <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_AMOUNT")+": "}</Label>
                     <Input
                         style={styles.rowForm}

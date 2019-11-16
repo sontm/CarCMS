@@ -161,7 +161,8 @@ class SettingsScreen extends React.Component {
         <Container>
         <Content>
         <View style={styles.container}>
-            {(true || !this.props.userData.isLogined) ? (
+            {(this.props.userData.isLogined) ? (
+            <View>
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("Profile")}>
             <View style={styles.userInfoContainer}>
@@ -182,18 +183,54 @@ class SettingsScreen extends React.Component {
                 " ("+ AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code + ")") : null}</Text>
             </View>
             </TouchableOpacity>
-            ) : null}
-
-            {(true || !this.props.userData.isLogined) ? (
+            {(this.props.userData.isLogined) ? (
             <View style={styles.rowContainer}>
                 <Button small block danger onPress={() => this.handleLogout()} style={{width: "40%"}}>
                   <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
                 </Button>
             </View>
             ) : null}
+            </View>
+            ) : (
+            <View>
+              <View style={{...styles.rowContainerNoBorder, marginTop: 10, paddingTop: 2, paddingBottom: 2}}>
+                <Button rounded onPress={() => this.doLoginGoogle()} 
+                    style={{backgroundColor: AppConstants.COLOR_GOOGLE, color: "white", width: 270, justifyContent:"center"}}>
+                  <Icon type="AntDesign" name="google" style={{fontSize: 20, color: "white", marginRight: 0}} />
+                  <Text style={{...styles.textNormal, color: "white"}}>{AppLocales.t("SETTING_LBL_LOGIN_GOOGLE")+"    "}</Text>
+                </Button>
+              </View>
+              <View style={{...styles.rowContainerNoBorder, margin: 4, paddingTop: 2, paddingBottom: 2}}>
+                <Button rounded onPress={() => this.doLoginFacebook()} 
+                    style={{backgroundColor: AppConstants.COLOR_FACEBOOK, color: "white", width: 270, justifyContent:"center"}}>
+                  <Icon type="Ionicons" name="logo-facebook" style={{fontSize: 20, color: "white", marginRight: 0}} />
+                  <Text style={{...styles.textNormal, color: "white"}}>{AppLocales.t("SETTING_LBL_LOGIN_FB")}</Text>
+                </Button>
+              </View>
+
+              <View style={{...styles.rowContainerNoBorder, margin: 4, paddingTop: 2, paddingBottom: 2}}>
+                <Text>{AppLocales.t("GENERAL_OR")}</Text>
+              </View>
+
+              <View style={{...styles.rowContainerNoBorder, margin: 4, paddingTop: 2, paddingBottom: 2}}>
+                <Button rounded onPress={() => this.props.navigation.navigate("Login")} 
+                    style={{backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG, width: 270, justifyContent:"center"}}>
+                  <Icon type="AntDesign" name="login" style={{color: "rgb(80,80,80)", fontSize: 16, marginRight: -4}} />
+                  <Text style={{...styles.textNormal, fontSize: 14}}>{AppLocales.t("SETTING_LBL_LOGIN")}</Text>
+                </Button>
+              </View>
+              <View style={{...styles.rowContainerNoBorder, marginTop: -5, paddingTop: 0, paddingBottom: 0}}>
+                <Button transparent onPress={() => this.props.navigation.navigate("RegisterUser")} >
+                  <Icon type="AntDesign" name="adduser" style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 16, marginRight: 0}} />
+                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT}}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text>
+                </Button>
+              </View>
 
 
-            <View style={styles.proContainer}>
+            </View>
+            )}
+            
+            {/* <View style={styles.proContainer}>
               <View style={styles.textRowPro}>
                   <WhiteText style={styles.textSection}>
                       {AppLocales.t("SETTING_H1_PRO_FEATURE")}
@@ -212,73 +249,27 @@ class SettingsScreen extends React.Component {
                     <Icon name="arrow-forward" style={styles.iconRightWhite}/></View>
                 </View>
               </TouchableOpacity>
-
-              <TouchableOpacity 
-                  onPress={() => this.props.navigation.navigate("CreateTeam")}>
-                <View style={styles.rowContainerNoBorder}>
-                  <View style={styles.rowIcon}>
-                    <Icon type="MaterialIcons" name="group-add" style={styles.iconLeftWhite} /></View>
-                  <View style={styles.rowText}><WhiteText style={styles.textNormal}>{AppLocales.t("SETTING_LBL_CREATE_TEAM")}</WhiteText></View>
-                  <View style={styles.rowRightIcon}>
-                    <Icon name="arrow-forward" style={styles.iconRightWhite}/></View>
-                </View>
-              </TouchableOpacity>
-            </View>
+            </View> */}
 
             <View style={styles.textRow}>
                 <Text style={styles.textSection}>
                 {AppLocales.t("SETTING_H1_ACCOUNT")}
                 </Text>
             </View>
-
+            {(this.props.userData.isLogined) ? (
             <TouchableOpacity 
-                onPress={() => this.doLoginGoogle()}>
-              <View style={styles.rowContainer}>
-                <View style={styles.rowIcon}>
-                  <Icon type="AntDesign" name="google" style={{...styles.iconLeft, color: "#DB4437"}} /></View>
-                <View style={styles.rowText}>
-                  <Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_LOGIN_GOOGLE")}</Text>
+                  onPress={() => this.props.navigation.navigate("CreateTeam")}>
+                <View style={styles.rowContainerNoBorder}>
+                  <View style={styles.rowIcon}>
+                    <Icon type="MaterialIcons" name="group-add" style={styles.iconLeft} /></View>
+                  <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_CREATE_TEAM")}</Text></View>
+                  <View style={styles.rowRightIcon}>
+                    <Icon name="arrow-forward" style={styles.iconRight}/></View>
                 </View>
-              </View>
             </TouchableOpacity>
+            ) : null }
 
-            <TouchableOpacity 
-                onPress={() => this.doLoginFacebook()}>
-              <View style={styles.rowContainer}>
-                <View style={styles.rowIcon}>
-                  <Icon type="Ionicons" name="logo-facebook" style={{...styles.iconLeft, color:"#3b5998"}} /></View>
-                <View style={styles.rowText}>
-                  <Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_LOGIN_FB")}
-                  </Text></View>
-              </View>
-            </TouchableOpacity>
-
-            {(true || !this.props.userData.isLogined) ? (
-            <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate("Login")}>
-              <View style={styles.rowContainer}>
-                <View style={styles.rowIcon}>
-                  <Icon type="AntDesign" name="login" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_LOGIN")}</Text></View>
-                <View style={styles.rowRightIcon}>
-                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
-              </View>
-            </TouchableOpacity>
-            ) : null}
-
-            {(true || !this.props.userData.isLogined) ? (
-            <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate("RegisterUser")}>
-              <View style={styles.rowContainer}>
-                <View style={styles.rowIcon}>
-                  <Icon type="AntDesign" name="adduser" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text></View>
-                <View style={styles.rowRightIcon}>
-                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
-              </View>
-            </TouchableOpacity>
-            ) : null}
-
+            {(this.props.userData.isLogined) ? (
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("JoinTeam")}>
               <View style={styles.rowContainer}>
@@ -289,6 +280,7 @@ class SettingsScreen extends React.Component {
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
             </TouchableOpacity>
+            ) : null }
 
             <View style={styles.cloudSyncRow}>
               <TouchableOpacity 

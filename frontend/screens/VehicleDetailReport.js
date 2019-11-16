@@ -64,9 +64,6 @@ class VehicleDetailReport extends React.Component {
         //     = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
         //         currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
-        console.log("Typeof~~~~~~~~~~~~~~~~~~")
-        console.log(typeof this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil)
-        console.log(this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil)
         return (
             <Container>
             <Content>
@@ -316,7 +313,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     labelProgressText: {
-        fontSize: 26
+        fontSize: 24
     },
 
 

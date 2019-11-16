@@ -215,10 +215,11 @@ class GasUsageTopReport extends React.Component {
                         width={Layout.window.width}
                         height={300}
                         padding={{top:10,bottom:30,left:50,right:20}}
+                        domainPadding={{y: [0, 0], x: [30, 10]}}
                     >
                     <VictoryStack
                         width={Layout.window.width}
-                        domainPadding={{y: [0, 10], x: [20, 10]}}
+                        //domainPadding={{y: [0, 10], x: [20, 10]}}
                         colorScale={AppConstants.COLOR_SCALE_10}
                     >
                         <VictoryBar
