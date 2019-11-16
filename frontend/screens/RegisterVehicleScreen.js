@@ -103,6 +103,8 @@ class RegisterVehicleScreen extends React.Component {
         return [{ id: 0,name: "N/A"}];
     }
     render() {
+        console.log("this.props.appData.carModels¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥")
+        console.log(this.props.appData.carModels)
         return (
             <Container>
             <Content>
@@ -126,7 +128,7 @@ class RegisterVehicleScreen extends React.Component {
                                     this.setState({brand: itemValue})
                                 }
                             >
-                                {this.getBrandsList(AppConstants.DATA_BRAND_MODEL).map(item => (
+                                {this.getBrandsList(this.props.appData.carModels).map(item => (
                                     <Picker.Item label={item.name} value={item.name} key={item.id}/>
                                 ))}
                             </Picker>
@@ -152,7 +154,7 @@ class RegisterVehicleScreen extends React.Component {
                                     this.setState({model: itemValue})
                                 }
                             >
-                                {this.getModelsOfBrand(this.state.brand, AppConstants.DATA_BRAND_MODEL).map(item => (
+                                {this.getModelsOfBrand(this.state.brand, this.props.appData.carModels).map(item => (
                                     <Picker.Item label={item.name} value={item.name} key={item.name}/>
                                 ))}
                             </Picker>
@@ -264,7 +266,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    appData: state.appData
 });
 const mapActionsToProps = {
     actVehicleAddVehicle, actVehicleEditVehicle

@@ -10,6 +10,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 import AppLocales from '../constants/i18n'
 import { connect } from 'react-redux';
 import {actTempCalculateCarReport} from '../redux/UserReducer'
+import {BRAND_IMAGES} from '../redux/AppDataReducer'
 
 const data = [
     { x: new Date("2018-01-15"), y: 13000 },
@@ -93,6 +94,7 @@ class VehicleBasicReport extends Component {
         // let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
         //     = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
+        let imgSource = AppUtils.loadImageSourceOfBrand(this.props.vehicle.brand.toLowerCase())
         return (
             <Content>
             <TouchableOpacity 
@@ -109,9 +111,7 @@ class VehicleBasicReport extends Component {
                     <View style={styles.vehicleInfoRow}>
                         <View style={{flexDirection: "row"}}>
                             <Image
-                                source={
-                                    require('../assets/images/toyota.png')
-                                }
+                                source={imgSource}
                                 style={styles.vehicleLogo}
                             />
 
@@ -304,8 +304,8 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     vehicleLogo: {
-        width: 56,
-        height: 56,
+        width: 60,
+        height: 60,
         resizeMode: 'contain',
         marginTop: 2,
         marginLeft: 5,

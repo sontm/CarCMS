@@ -94,7 +94,24 @@ class App extends React.Component {
 async function loadResourcesAsync() {
   await Promise.all([
     Asset.loadAsync([
+      require('./assets/images/logo/chevrolet.png'),
+      require('./assets/images/logo/daihatsu.png'),
+      require('./assets/images/logo/ford.png'),
+      require('./assets/images/logo/honda.png'),
+      require('./assets/images/logo/hyundai.png'),
+      require('./assets/images/logo/isuzu.png'),
+      require('./assets/images/logo/kia.png'),
+      require('./assets/images/logo/mazda.png'),
+      require('./assets/images/logo/mercedes.png'),
+      require('./assets/images/logo/mitsubishi.png'),
+      require('./assets/images/logo/nissan.png'),
+      require('./assets/images/logo/subaru.png'),
+      require('./assets/images/logo/suzuki.png'),
       require('./assets/images/logo/toyota.png'),
+      require('./assets/images/logo/vinfast.png'),
+      require('./assets/images/logo/defaultcar.png'),
+      
+
       //require('./assets/images/toyota.png')
     ]),
     Font.loadAsync({

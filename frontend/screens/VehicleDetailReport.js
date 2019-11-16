@@ -64,15 +64,15 @@ class VehicleDetailReport extends React.Component {
         //     = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
         //         currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
+        console.log("currentVehicle.brand.toLowerCase():" + currentVehicle.brand.toLowerCase())
+        let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase())
         return (
             <Container>
             <Content>
             <View style={styles.container}>
                 <View style={styles.vehicleInfoRow}>
                     <Image
-                        source={
-                            require('../assets/images/toyota.png')
-                        }
+                        source={imgSource}
                         style={styles.vehicleLogo}
                     />
 

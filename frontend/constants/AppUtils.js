@@ -30,7 +30,38 @@ dateFormat.i18n = {
     ]
 };
 
+const BRAND_IMAGES = {
+    "chevrolet": require('../assets/images/logo/chevrolet.png'),
+    "daihatsu": require('../assets/images/logo/daihatsu.png'),
+    "ford": require('../assets/images/logo/ford.png'),
+    "honda": require('../assets/images/logo/honda.png'),
+    "hyundai": require('../assets/images/logo/hyundai.png'),
+    "isuzu": require('../assets/images/logo/isuzu.png'),
+    "kia": require('../assets/images/logo/kia.png'),
+    "mazda": require('../assets/images/logo/mazda.png'),
+    "mercedes": require('../assets/images/logo/mercedes.png'),
+    "mitsubishi": require('../assets/images/logo/mitsubishi.png'),
+    "nissan": require('../assets/images/logo/nissan.png'),
+    "subaru": require('../assets/images/logo/subaru.png'),
+    "suzuki": require('../assets/images/logo/suzuki.png'),
+    "toyota": require('../assets/images/logo/toyota.png'),
+    "vinfast": require('../assets/images/logo/vinfast.png'),
+}
+
 class AppUtils {
+    loadImageSourceOfBrand(brand) {
+        if (brand && brand.length > 0) {
+            if (typeof(BRAND_IMAGES[""+brand]) !== 'undefined') {
+                return BRAND_IMAGES[""+brand]
+            } else {
+                console.log("RETURN false 11 of:" + brand)
+                return require('../assets/images/logo/defaultcar.png')
+            }
+        } else {
+            console.log("RETURN false 22 of:" + brand)
+            return require('../assets/images/logo/defaultcar.png')
+        }
+    }
     uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
