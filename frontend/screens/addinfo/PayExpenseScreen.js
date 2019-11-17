@@ -39,7 +39,7 @@ class PayExpenseScreen extends React.Component {
                         ...currentVehicle.expenseList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
                         id: AppConstants.CURRENT_EDIT_FILL_ID,
-                        fillDate:currentVehicle.expenseList[i].fillDate.toLocaleString(),
+                        fillDate:currentVehicle.expenseList[i].fillDate,
                     })
                 }
             }
@@ -88,6 +88,14 @@ class PayExpenseScreen extends React.Component {
     }
 
     render() {
+        let theDate = new Date(this.state.fillDate);
+        let today = new Date();
+        if (today.getFullYear() == theDate.getFullYear && today.getMonth() == theDate.getMonth() &&
+                today.getDate() == theDate.getDate()) {
+            var datePlaceHoder = AppLocales.t("GENERAL_TODAY")+"(" + apputils.formatDateMonthDayYearVNShort(theDate) + ")";
+        } else {
+            var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
+        }
         return (
             <Container>
             <Content>
@@ -118,7 +126,7 @@ class PayExpenseScreen extends React.Component {
                         <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
                         <View style={styles.rowForm}>
                         <DatePicker
-                            defaultDate={new Date()}
+                            defaultDate={theDate}
                             minimumDate={new Date(2010, 1, 1)}
                             maximumDate={new Date(2100, 12, 31)}
                             locale={"vi"}
@@ -126,9 +134,9 @@ class PayExpenseScreen extends React.Component {
                             modalTransparent={false}
                             animationType={"fade"}
                             androidMode={"default"}
-                            placeHolderText={AppLocales.t("GENERAL_TODAY")+"(" + apputils.formatDateMonthDayYearVNShort(new Date()) + ")"}
-                            textStyle={{ color: "#1f77b4" }}
-                            placeHolderTextStyle={{ color: "#1f77b4" }}
+                            placeHolderText={datePlaceHoder}
+                            textStyle={{ color: AppConstants.COLOR_PICKER_TEXT }}
+                            placeHolderTextStyle={{ color: AppConstants.COLOR_PICKER_TEXT }}
                             onDateChange={(fillDate) => this.setState({fillDate})}
                             disabled={false}
                             iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
@@ -166,7 +174,7 @@ class PayExpenseScreen extends React.Component {
                                     this.setState({subType: itemValue})
                                 }
                             >
-                                {AppConstants.DATA_EXPENSE_TYPE.map(item => (
+                                {this.props.appData.typeExpense.map(item => (
                                     <Picker.Item label={item.name} value={item.name} key={item.id}/>
                                 ))}
                             </Picker>
@@ -251,7 +259,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    appData: state.appData
 });
 const mapActionsToProps = {
     actVehicleAddFillItem,

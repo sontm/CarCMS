@@ -31,7 +31,9 @@ async function actTempCalculateCarReportAsync(currentVehicle, options) {
         let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
             = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
                 lastDate, lastKm, averageKmPerDay);
-        let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize} 
+        let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
+            diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
+            diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
             = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
         let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend, arrTotalMoneySpend}

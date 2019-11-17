@@ -66,8 +66,8 @@ class VehicleDetailReport extends React.Component {
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
         
         let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase(), currentVehicle.type!="car")
-        console.log("this.props.userData.carReports[currentVehicle.id].oilReport")
-        console.log(this.props.userData.carReports[currentVehicle.id].oilReport)
+        console.log("currentVehicle Detail report)))))))))))))))))")
+        console.log(currentVehicle)
         return (
             <Container>
             <Content>
@@ -112,7 +112,7 @@ class VehicleDetailReport extends React.Component {
                             labels={() => null}
                             />
                         <View style={styles.labelProgress}>
-                            <Text>{AppLocales.t("GENERAL_OIL") + ": "}</Text>
+                            <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_OIL") + ": "}</Text>
                             <Text style={styles.labelProgressText}>
                                 {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/
                                 {this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor}
@@ -125,8 +125,7 @@ class VehicleDetailReport extends React.Component {
                                 this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil): "NA"}</Text>
                         </View>
 
-                        {currentVehicle.type == "car" ? (
-                            <View style={styles.progressContainer}>
+                        <View style={styles.progressContainer}>
                             <VictoryPie
                                 colorScale={["tomato", "silver"]}
                                 data={[
@@ -140,7 +139,7 @@ class VehicleDetailReport extends React.Component {
                                 labels={() => null}
                                 />
                             <View style={styles.labelProgress}>
-                                <Text>{AppLocales.t("GENERAL_AUTHROIZE") + ": "}</Text>
+                                <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_AUTH") + ": "}</Text>
                                 <Text style={styles.labelProgressText}>
                                     {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
                                     {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor}
@@ -150,8 +149,60 @@ class VehicleDetailReport extends React.Component {
                             <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
                                 AppUtils.formatDateMonthDayYearVNShort(
                                     this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate): "NA"}</Text>
+                        </View>
+
+                        <View style={styles.progressContainer}>
+                            <VictoryPie
+                                colorScale={["tomato", "silver"]}
+                                data={[
+                                    { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance },
+                                    { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance -
+                                        this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance) },
+                                ]}
+                                height={150}
+                                innerRadius={65}
+                                radius={70}
+                                labels={() => null}
+                                />
+                            <View style={styles.labelProgress}>
+                                <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_INSURANCE") + ": "}</Text>
+                                <Text style={styles.labelProgressText}>
+                                    {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance}/
+                                    {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance}
+                                </Text>
+                                <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                             </View>
-                        ) : null }
+                            <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance ? 
+                                AppUtils.formatDateMonthDayYearVNShort(
+                                    this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance): "NA"}</Text>
+                        </View>
+
+                        <View style={styles.progressContainer}>
+                            <VictoryPie
+                                colorScale={["tomato", "silver"]}
+                                data={[
+                                    { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee },
+                                    { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee -
+                                        this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee) },
+                                ]}
+                                height={150}
+                                innerRadius={65}
+                                radius={70}
+                                labels={() => null}
+                                />
+                            <View style={styles.labelProgress}>
+                                <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_ROADFEE") + ": "}</Text>
+                                <Text style={styles.labelProgressText}>
+                                    {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee}/
+                                    {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee}
+                                </Text>
+                                <Text>{AppLocales.t("GENERAL_DAY")}</Text>
+                            </View>
+                            <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee ? 
+                                AppUtils.formatDateMonthDayYearVNShort(
+                                    this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee): "NA"}</Text>
+                        </View>
+
                     </View>
                 </View>
 
@@ -192,7 +243,8 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
             <Title><HeaderText>{AppLocales.t("CARDETAIL_HEADER")}</HeaderText></Title>
           </Body>
           <Right>
-            <TouchableOpacity onPress={() => navigation.navigate("VehicleHistory", {vehicle: navigation.state.params.vehicle})}>
+            <TouchableOpacity onPress={() => navigation.navigate("VehicleHistory", 
+                {vehicle: navigation.state.params.vehicle, isMyVehicle:navigation.state.params.isMyVehicle})}>
                 <View style={styles.rightHistoryView}>
                 <Icon type="MaterialCommunityIcons" name="file-document-outline" style={styles.rightHistoryIcon}/>
                 <Text style={styles.rightHistoryText}>History</Text>
@@ -317,7 +369,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     labelProgressText: {
-        fontSize: 24
+        fontSize: 22
+    },
+    progressTitle: {
+        fontSize: 13
     },
 
 

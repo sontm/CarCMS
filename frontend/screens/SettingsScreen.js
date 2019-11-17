@@ -14,7 +14,7 @@ import AppConstants from '../constants/AppConstants';
 import { connect } from 'react-redux';
 import Backend from '../constants/Backend';
 
-import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer} from '../redux/UserReducer';
+import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer, actVehicleSyncToServerOK} from '../redux/UserReducer';
 import {actUserLogout, actUserLoginOK} from '../redux/UserReducer'
 import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
@@ -291,6 +291,9 @@ class SettingsScreen extends React.Component {
                       <Icon name="cloud-upload" style={styles.iconCloudUp} />
                       <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO")}</Text>
                       <Text style={styles.textNormalSmall}>{AppConstants.SERVER_API}</Text>
+                      <Text style={styles.textNormalSmallDate}>
+                        {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ":\n" + AppUtils.formatDateTimeFullVN(this.props.userData.lastSyncToServerOn)}
+                      </Text>
                       {/* <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO_NOTE")}</Text> */}
                     </Body>
                   </CardItem>
@@ -303,6 +306,9 @@ class SettingsScreen extends React.Component {
                     <Body style={{flexDirection:"column", justifyContent:"flex-start", alignItems:"center"}}>
                       <Icon name="cloud-download" style={styles.iconCloudDown} />
                       <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_FROM")}</Text>
+                      <Text style={styles.textNormalSmallDate}>
+                        {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ":\n" + AppUtils.formatDateTimeFullVN(this.props.userData.lastSyncFromServerOn)}
+                      </Text>
                       {/* <Text style={styles.textNormalSmallRed}>{"("+AppLocales.t("SETTING_LBL_SYNC_FROM_NOTE")+")"}</Text> */}
                     </Body>
                   </CardItem>
@@ -501,6 +507,10 @@ const styles = StyleSheet.create({
     color: "rgb(80, 80, 80)",
     fontSize: 13
   },
+  textNormalSmallDate: {
+    color: AppConstants.COLOR_TEXT_LIGHT_INFO,
+    fontSize: 11
+  },
   textNormalSmallRed: {
     color: "red",
     fontSize: 12
@@ -523,11 +533,11 @@ const styles = StyleSheet.create({
       // height: 120
   },
   iconCloudDown: {
-    fontSize: 50,
+    fontSize: 40,
     color: AppConstants.COLOR_GOOGLE
   },
   iconCloudUp: {
-    fontSize: 50,
+    fontSize: 40,
     color: AppConstants.COLOR_D3_DARK_GREEN
   },
 })
@@ -537,7 +547,7 @@ const mapStateToProps = (state) => ({
 });
 const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
-  actUserLogout, actUserLoginOK
+  actUserLogout, actUserLoginOK,actVehicleSyncToServerOK
 };
   
 export default connect(

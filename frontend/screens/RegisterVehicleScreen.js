@@ -68,6 +68,16 @@ class RegisterVehicleScreen extends React.Component {
     save(newVehicle) {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit:")
+            // Only Set some Information. IFNOT, fillGasList will LOSt
+            newVehicle = {
+                id: this.state.id,
+                brand:this.state.brand,
+                model: this.state.model,
+                licensePlate: this.state.licensePlate,
+                type: this.state.type ? this.state.type : "car",
+                isDefault: this.state.isDefault
+            }
+
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleEditVehicle(newVehicle)
             this.props.navigation.navigate("MyVehicle")
@@ -80,6 +90,7 @@ class RegisterVehicleScreen extends React.Component {
             //         maxId = item.id
             //     }
             // })
+
             newVehicle.id = apputils.uuidv4();
             console.log(JSON.stringify(newVehicle))
             this.props.actVehicleAddVehicle(newVehicle)

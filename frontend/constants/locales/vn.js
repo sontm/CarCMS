@@ -1,10 +1,13 @@
 export default {
-    GENERAL_AUTHROIZE:"Đăng Kiểm",
+    GENERAL_AUTHROIZE:"Pháp Lý",
+    GENERAL_AUTHROIZE_AUTH:"Đăng Kiểm",
+    GENERAL_AUTHROIZE_INSURANCE:"Bảo Hiểm Dân Sự",
+    GENERAL_AUTHROIZE_ROADFEE:"Bảo Trì Đường Bộ",
     GENERAL_MONTH:"Tháng",
     GENERAL_DAY:"Ngày",
     GENERAL_OIL:"Thay Dầu",
     GENERAL_GAS:"Xăng",
-    GENERAL_EXPENSE:"Chi Phí",
+    GENERAL_EXPENSE:"Phụ Chi",
     GENERAL_SERVICE:"Sửa Chữa",
     GENERAL_NEXT:"Lần Tới",
     GENERAL_DEFAULT:"Mặc Định",
@@ -29,7 +32,7 @@ export default {
 
     MYCAR_HEADER: "Xe Của Tôi",
     MYCAR_HEADER_REPORT: "Báo Cáo Chung",
-    HOME_HEADER: "Quản Lý Xe",
+    HOME_HEADER: "Tổng Quan",
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
     HOME_TOTAL_TEAM: "Tổng Chi Phí Tổ Chức",
@@ -87,6 +90,8 @@ export default {
     SETTING_LBL_SYNC_TO: "Đồng Bộ Lên Máy Chủ",
     SETTING_LBL_SYNC_FROM_NOTE: "Dữ Liệu Trên Máy Sẽ Bị Thay Thế",
     SETTING_LBL_SYNC_TO_NOTE: "",
+    SETTING_LBL_SYNC_FROM_LASTSYNC: "Cập Nhập Lần Cuối",
+
 
     SETTING_H1_SETTING: "Cài Đặt",
     SETTING_LBL_VEHICLE: "Cài Đặt Xe",
@@ -144,7 +149,7 @@ export default {
     NEW_SERVICE_HEADER:"Sửa Chữa",
     NEW_SERVICE_TYPE:"Loại Sửa Chữa",
 
-    NEW_AUTH_HEADER:"Đăng Kiểm Xe",
+    NEW_AUTH_HEADER:"Pháp Lý",
 
 
     NOTE_VALIDFOR_OIL: "Chung Toi De mac dinh la \n 1000KM for Oto. What Are You Thinasd k sdfis my work dsdfnot allasdfk jasdf ",

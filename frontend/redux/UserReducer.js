@@ -3,6 +3,7 @@ import AppConstants from '../constants/AppConstants'
 import AppUtils from '../constants/AppUtils'
 
 const VEHICLE_SYNC_FROMSERVER = 'VEHICLE_SYNC_FROMSERVER';
+const VEHICLE_SYNC_TOSERVER = 'VEHICLE_SYNC_TOSERVER';
 
 const VEHICLE_ADD = 'VEHICLE_ADD';
 const VEHICLE_EDIT = 'VEHICLE_EDIT';
@@ -47,6 +48,8 @@ const initialState = {
     carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
 
     settings: {}, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
+    lastSyncFromServerOn: null, // date of last sync
+    lastSyncToServerOn: null,
 };
 
 export const actSettingSetVehicleDefault = (data) => (dispatch) => {
@@ -260,6 +263,15 @@ export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
 
     // TODO for when SYnc, need re-calcualte Report
 }
+export const actVehicleSyncToServerOK = (data) => (dispatch) => {
+    console.log("actVehicleSyncToServerOK:")
+    dispatch({
+        type: VEHICLE_SYNC_TOSERVER
+    })
+
+    // TODO for when SYnc, need re-calcualte Report
+}
+
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
     switch (action.type) {
@@ -294,7 +306,13 @@ export default function(state = initialState, action) {
         return {
             ...state,
             vehicleList: action.payload,
-            carReports: {}
+            carReports: {},
+            lastSyncFromServerOn: new Date()
+        }
+    case VEHICLE_SYNC_TOSERVER:
+        return {
+            ...state,
+            lastSyncToServerOn: new Date()
         }
     case VEHICLE_ADD:
         var newStateVehicleAdd = {
@@ -319,7 +337,7 @@ export default function(state = initialState, action) {
         let newStateVehicle = {...state}
         for (let i = 0; i < newStateVehicle.vehicleList.length; i++) {
             if (newStateVehicle.vehicleList[i].id == action.payload.id) {
-                newStateVehicle.vehicleList[i] = {...action.payload}
+                newStateVehicle.vehicleList[i] = {...newStateVehicle.vehicleList[i], ...action.payload}
                 break;
             }
         }

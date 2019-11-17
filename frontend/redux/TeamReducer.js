@@ -10,7 +10,8 @@ const initialState = {
     members: [],
     joinRequests: [],
     teamCarList:[], // will have new "ownerFullName" as fullname of user
-    teamCarReports: {}
+    teamCarReports: {},
+    lastSyncFromServerOn: null
 };
 
 
@@ -87,7 +88,8 @@ export default function(state = initialState, action) {
             members: action.payload,
             carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
             teamCarList:teamCarList,
-            teamCarReports: {}
+            teamCarReports: {},
+            lastSyncFromServerOn: new Date()
         };
     case TEMP_CALCULATE_TEAMCARREPORT:
         let newStateTeam = {

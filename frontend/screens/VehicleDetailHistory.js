@@ -39,17 +39,19 @@ class VehicleDetailHistory extends React.Component {
     console.log("DetailReport WillReceiveProps")
   }
   handleEditItem(id, type) {
-    AppConstants.CURRENT_EDIT_FILL_ID = id;
-    if (type == AppConstants.FILL_ITEM_GAS) {
-        this.props.navigation.navigate("FillGas");
-    } else if (type == AppConstants.FILL_ITEM_OIL) {
-        this.props.navigation.navigate("FillOil");
-    } else if (type == AppConstants.FILL_ITEM_AUTH) {
-        this.props.navigation.navigate("CarAuthorize");
-    } else if (type == AppConstants.FILL_ITEM_EXPENSE) {
-        this.props.navigation.navigate("PayExpense");
-    } else if (type == AppConstants.FILL_ITEM_SERVICE) {
-        this.props.navigation.navigate("PayService");
+    if (this.props.navigation.state.params.isMyVehicle) {
+        AppConstants.CURRENT_EDIT_FILL_ID = id;
+        if (type == AppConstants.FILL_ITEM_GAS) {
+            this.props.navigation.navigate("FillGas");
+        } else if (type == AppConstants.FILL_ITEM_OIL) {
+            this.props.navigation.navigate("FillOil");
+        } else if (type == AppConstants.FILL_ITEM_AUTH) {
+            this.props.navigation.navigate("CarAuthorize");
+        } else if (type == AppConstants.FILL_ITEM_EXPENSE) {
+            this.props.navigation.navigate("PayExpense");
+        } else if (type == AppConstants.FILL_ITEM_SERVICE) {
+            this.props.navigation.navigate("PayService");
+        }
     }
     
   }
@@ -127,9 +129,11 @@ class VehicleDetailHistory extends React.Component {
                     </TouchableOpacity>
                     </Body>
                     <Right>
+                        {this.props.navigation.state.params.isMyVehicle ? (
                         <TouchableOpacity 
                             onPress={() => this.handleDeleteItem(item.id, item.type)}>
                             <Icon type="MaterialIcons" name="delete" style={styles.listItemDeleteIcon}/></TouchableOpacity>
+                        ) : null }
                     </Right>
                 </ListItem>
                 )

@@ -12,7 +12,7 @@ const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTER
 export default {
     ADS_BANNERID: BANNER_ID,
     ADS_INTERESTIALID: INTERESTIAL_ID,
-    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 10, // after every x click, show Interestial
+    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 20, // after every x click, show Interestial
     ADS_COUNT_CLICK_INTERACTIVE: 0,
 
     // Tempo data which
@@ -55,6 +55,7 @@ export default {
     COLOR_D3_LIGHT_BLUE: "#1f77b4",
     COLOR_D3_DARK_GREEN: "#2ca02c",
     COLOR_D3_LIGHT_GREEN: "#98df8a",
+    COLOR_TEXT_LIGHT_INFO: "rgb(150,150,150)",
 };
 
 //https://codepen.io/whitelynx/pen/pbberp

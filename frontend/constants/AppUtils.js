@@ -102,7 +102,10 @@ class AppUtils {
         if (t) {
             return dateFormat(new Date(t), "d/mm/yyyy");
         }
-        
+    }
+    formatDateTimeFullVN(t) {
+        if (t)
+        return dateFormat(new Date(t), "d/mm/yyyy H:MM:ss");
     }
     formatMoneyToK(v) {
         return (v/1000).toFixed(0) + "K";
@@ -735,7 +738,9 @@ class AppUtils {
             let nextEstimateDateForOil = new Date(lastDateOil)
             nextEstimateDateForOil = nextEstimateDateForOil.setDate(nextEstimateDateForOil.getDate() + daysToNextOil);
             
-            nextEstimateDateForOil = new Date(nextEstimateDateForOil)
+            if (nextEstimateDateForOil) {
+                nextEstimateDateForOil = new Date(nextEstimateDateForOil)
+            }
 
             return {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor};
         }
@@ -748,36 +753,72 @@ class AppUtils {
         }
 
         let totalMoneyAuthorize = 0;
-        let lastDate = null;
+        let lastDate = null; // Dang Kiem
         let lastAuthDaysValidFor = 0;
+        let maxAuthIdx = -1;
+
+        let lastDateInsurance = null; // Bao Hiem Dan Su
+        let lastAuthDaysValidForInsurance = 0;
+        let maxInsuranceIdx = -1;
+
+        let lastDateRoadFee = null; // Phi Duong Bo
+        let lastAuthDaysValidForRoadFee = 0;
+        let maxRoadFeeIdx = -1;
+
         if (authorizeList && authorizeList.length > 0) {
             authorizeList.forEach((item, index) => {
-                if (index == authorizeList.length -1) {
-                    lastDate = new Date(item.fillDate);
-                    lastAuthDaysValidFor = item.validFor;
-                }
-                //if (index != authorizeList.length -1) {
+                if (item.subType == "Đăng Kiểm") {
+                    if (maxAuthIdx < index) maxAuthIdx = index;
                     totalMoneyAuthorize += item.price;
-                //}
+                } else if (item.subType == "Bảo Hiểm Dân Sự") {
+                    if (maxInsuranceIdx < index) maxInsuranceIdx = index;
+                    totalMoneyAuthorize += item.price;
+                } else if (item.subType == "Phí Bảo Trì Đường Bộ") {
+                    if (maxRoadFeeIdx < index) maxRoadFeeIdx = index;
+                    totalMoneyAuthorize += item.price;
+                }
             })
         }
-        if (!lastAuthDaysValidFor) {
-            lastAuthDaysValidFor = AppConstants.SETTING_DAY_NEXT_AUTHORIZE_CAR;
+        if (maxAuthIdx >= 0) {
+            lastDate = new Date(authorizeList[maxAuthIdx].fillDate);
+            lastAuthDaysValidFor = authorizeList[maxAuthIdx].validFor;
         }
+        if (maxInsuranceIdx >= 0) {
+            lastDateInsurance = new Date(authorizeList[maxInsuranceIdx].fillDate);
+            lastAuthDaysValidForInsurance = authorizeList[maxInsuranceIdx].validFor;
+        }
+        if (maxRoadFeeIdx >= 0) {
+            lastDateRoadFee = new Date(authorizeList[maxRoadFeeIdx].fillDate);
+            lastAuthDaysValidForRoadFee = authorizeList[maxRoadFeeIdx].validFor;
+        }
+        let today = new Date();
         if (lastDate) {
-            let today = new Date();
-            let nextAuthorizeDate = new Date(lastDate)
+            var nextAuthorizeDate = new Date(lastDate)
             nextAuthorizeDate = nextAuthorizeDate.setDate(nextAuthorizeDate.getDate() + lastAuthDaysValidFor);
-
             const diffTime = Math.abs(today - lastDate); // in ms
-            const diffDayFromLastAuthorize = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-
+            var diffDayFromLastAuthorize = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
             nextAuthorizeDate = new Date(nextAuthorizeDate)
-
-            return {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor};
-        } else {
-            return {}
         }
+        if (lastDateInsurance) {
+            var nextAuthorizeDateInsurance = new Date(lastDateInsurance)
+            nextAuthorizeDateInsurance = nextAuthorizeDateInsurance.setDate(
+                nextAuthorizeDateInsurance.getDate() + lastAuthDaysValidForInsurance);
+            const diffTime = Math.abs(today - lastDateInsurance); // in ms
+            var diffDayFromLastAuthorizeInsurance = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            nextAuthorizeDateInsurance = new Date(nextAuthorizeDateInsurance)
+        }
+        if (lastDateRoadFee) {
+            var nextAuthorizeDateRoadFee = new Date(lastDateRoadFee)
+            nextAuthorizeDateRoadFee = nextAuthorizeDateRoadFee.setDate(
+                nextAuthorizeDateRoadFee.getDate() + lastAuthDaysValidForRoadFee);
+            const diffTime = Math.abs(today - lastDateRoadFee)
+            var diffDayFromLastAuthorizeRoadFee = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            nextAuthorizeDateRoadFee = new Date(nextAuthorizeDateRoadFee)
+        }
+        
+        return {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
+            diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
+            diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee};
     }
 
     getInfoMoneySpendByTime(theVehicle, duration=12, durationType="month", tillDate=new Date()) {
@@ -1430,7 +1471,10 @@ class AppUtils {
         console.log("LengVehicleList:" + props.userData.vehicleList.length)
       if (props.userData.vehicleList && props.userData.vehicleList.length > 0) {
         Backend.postFillItemList(props.userData.vehicleList, props.userData.token ,"vehicle",
-          response => {console.log("Sync Post Vehicle OK")},
+          response => {
+            console.log("Sync Post Vehicle OK")
+            props.actVehicleSyncToServerOK()
+        },
           error => {console.log(error)}
         );
       }
@@ -1565,15 +1609,20 @@ class AppUtils {
                 avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
                 = this.getStatForGasUsage(currentVehicle.fillGasList, 
                     options.duration, options.durationType, options.tillDate);
-            console.log("Result from GasREport:")
-            console.log({averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm})
 
             let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
                 = this.getInfoForOilUsage(currentVehicle.fillOilList, 
                     lastDate, lastKm, averageKmPerDay);
-            let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor} 
+            let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
+                diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
+                diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
                 = this.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
-    
+                console.log("Result from Auth Report------------------------:")
+                console.log(
+                    {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
+                        diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
+                        diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee})
+
             let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend, arrTotalMoneySpend}
                 = this.getInfoMoneySpendByTime(currentVehicle, options.duration, options.durationType, options.tillDate);
     
@@ -1588,7 +1637,9 @@ class AppUtils {
                     arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
                     avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly},
                 oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor},
-                authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor},
+                authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
+                    diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
+                    diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee},
                 moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
                     totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend},
                 expenseReport: {arrExpenseTypeSpend, arrExpenseTypeByTime}

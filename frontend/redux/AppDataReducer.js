@@ -76,7 +76,7 @@ const DATA_BRAND_MODEL = [
         models: [{"id":1,"name":"Attrage"},{"id":2,"name":"Mirage"},{"id":3,"name":"Outlander"},{"id":4,"name":"Pajero"},{"id":5,"name":"Triton"},{"id":6,"name":"Xpander"}]},
     
     { id: 8,name: "Nissan",  type:"car",
-        models: [{"id":1,"name":"Juke"},{"id":2,"name":"Livina"},{"id":3,"name":"Murano"},{"id":4,"name":"Navara"},{"id":5,"name":"Nismo"},{"id":6,"name":"Sunny"},{"id":7,"name":"Teana"},{"id":8,"name":"Terra"},{"id":9,"name":"Urvan"},{"id":10,"name":"X-Trail"}]},
+        models: [{"id":1,"name":"Juke"},{"id":2,"name":"Livina"},{"id":3,"name":"Murano"},{"id":4,"name":"Navara"},{"id":5,"name":"Nismo"},{"id":6,"name":"Sunny"},{"id":7,"name":"Teana"},{"id":8,"name":"Terra"},{"id":9,"name":"Tida"},{"id":10,"name":"Urvan"},{"id":11,"name":"X-Trail"}]},
     { id: 9,name: "Suzuki",  type:"car",
         models: [{"id":1,"name":"Blind"},{"id":2,"name":"Carry"},{"id":3,"name":"CarryPro"},{"id":4,"name":"Celerio"},{"id":5,"name":"Ciaz"},{"id":6,"name":"Ertiga"},{"id":7,"name":"Swift"},{"id":8,"name":"Vitara"}]},
     { id: 10,name: "Subaru",  type:"car",

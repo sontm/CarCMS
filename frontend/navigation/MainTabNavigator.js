@@ -80,9 +80,9 @@ const DetailStack = createStackNavigator(
 const BUTTONS = [
   { text: "Đổ Xăng", icon: "american-football", iconColor: "#2c8ef4" },//1
   { text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
-  { text: "Phụ Phí", icon: "analytics", iconColor: "#f42ced" },//3
+  { text: "Phụ Chi", icon: "analytics", iconColor: "#f42ced" },//3
   { text: "Sửa Chữa/Bảo Trì", icon: "analytics", iconColor: "#f42ced" },//4
-  { text: "Đăng Kiểm/Bảo Hiểm", icon: "analytics", iconColor: "#f42ced" },//5
+  { text: "Pháp Lý/Đăng Kiểm/Bảo Hiểm", icon: "analytics", iconColor: "#f42ced" },//5
   { text: "Thêm Xe", icon: "american-football", iconColor: "#2c8ef4" },//0
   { text: "Đóng", icon: "close", iconColor: "#25de5b" }//6
 ];

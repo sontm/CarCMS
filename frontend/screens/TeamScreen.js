@@ -19,6 +19,7 @@ import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppConstants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
 import AppLocales from '../constants/i18n'
+import AppUtils from '../constants/AppUtils'
 
 import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 
@@ -115,6 +116,14 @@ class TeamScreen extends React.Component {
       })
       let viewDisplay = [];
       viewDisplay.push(
+        <View key={"lastSyncTeam"} style={{flexDirection:"row", justifyContent: "center", marginTop: 3, marginBottom: -3}}>
+          <Text style={styles.textNormalSmallDate}>
+          {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ": " + 
+            AppUtils.formatDateTimeFullVN(this.props.teamData.lastSyncFromServerOn)}
+          </Text>
+        </View>
+      )
+      viewDisplay.push(
         <View style={styles.sortContainer} key="sorting">
           <Text style={{fontSize: 12, margin: 0, marginRight: -2}}>Sắp Xếp:</Text>
           <Picker
@@ -186,7 +195,17 @@ class TeamScreen extends React.Component {
     } else if(this.state.activePage === 1) {
       return null;
     } else {
-      return <TeamMembers navigation={this.props.navigation}/>;
+      return (
+        <View>
+          <View key={"lastSyncTeam"} style={{flexDirection:"row", justifyContent: "center", marginTop: 3, marginBottom: 0}}>
+            <Text style={styles.textNormalSmallDate}>
+            {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ": " + 
+              AppUtils.formatDateTimeFullVN(this.props.teamData.lastSyncFromServerOn)}
+            </Text>
+          </View>
+          <TeamMembers navigation={this.props.navigation}/>
+        </View>
+      )
     }
   }
 
@@ -343,6 +362,11 @@ const styles = StyleSheet.create({
   inActiveSegmentText2: {
       color:AppConstants.COLOR_PICKER_TEXT,
       fontSize: 12
+  },
+
+  textNormalSmallDate: {
+    color: AppConstants.COLOR_TEXT_LIGHT_INFO,
+    fontSize: 12
   },
 });
 

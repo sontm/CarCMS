@@ -102,7 +102,7 @@ class VehicleBasicReport extends Component {
                     AppConstants.CURRENT_VEHICLE_ID = this.props.vehicle.id;
                     checkAndShowInterestial();
                     this.props.navigation.navigate("VehicleDetail", 
-                          {vehicleId: this.props.vehicle.id, vehicle: currentVehicle})
+                          {vehicleId: this.props.vehicle.id, vehicle: currentVehicle, isMyVehicle:this.props.isMyVehicle})
                     }
                 }
             >
@@ -213,7 +213,71 @@ class VehicleBasicReport extends Component {
                         )}
                         <Text style={styles.textRemind}>
                         {currentData.authReport.diffDayFromLastAuthorize}/
-                        {currentData.authReport.lastAuthDaysValidFor} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE")})
+                        {currentData.authReport.lastAuthDaysValidFor} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_AUTH")})
+                        </Text>
+                    </View>
+                    ): null }
+
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="auth") && 
+                            currentData) ? (
+                    <View style={styles.statRowRemind}>
+                        {Platform.OS === 'ios' ? (
+                        <ProgressViewIOS 
+                            style={styles.progressBarRemind}
+                            progress={currentData.authReport.diffDayFromLastAuthorizeInsurance ?
+                                currentData.authReport.diffDayFromLastAuthorizeInsurance/
+                                currentData.authReport.lastAuthDaysValidForInsurance: 0}
+                            progressViewStyle = 'default'
+                            progressTintColor = {(currentData.authReport.diffDayFromLastAuthorizeInsurance ?
+                                currentData.authReport.diffDayFromLastAuthorizeInsurance/
+                                currentData.authReport.lastAuthDaysValidForInsurance: 0) 
+                                    > 0.9 ? "red" : "blue"}
+                            trackTintColor = "rgba(230, 230, 230, 1)"
+                            />
+                        ) : (
+                        <ProgressBarAndroid
+                            styleAttr="Horizontal"
+                            indeterminate={false}
+                            progress={currentData.authReport.diffDayFromLastAuthorizeInsurance ?
+                                currentData.authReport.diffDayFromLastAuthorizeInsurance/
+                                currentData.authReport.lastAuthDaysValidForInsurance: 0}
+                            />
+                        )}
+                        <Text style={styles.textRemind}>
+                        {currentData.authReport.diffDayFromLastAuthorizeInsurance}/
+                        {currentData.authReport.lastAuthDaysValidForInsurance} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_INSURANCE")})
+                        </Text>
+                    </View>
+                    ): null }
+
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="auth") && 
+                            currentData) ? (
+                    <View style={styles.statRowRemind}>
+                        {Platform.OS === 'ios' ? (
+                        <ProgressViewIOS 
+                            style={styles.progressBarRemind}
+                            progress={currentData.authReport.diffDayFromLastAuthorizeRoadFee ?
+                                currentData.authReport.diffDayFromLastAuthorizeRoadFee/
+                                currentData.authReport.lastAuthDaysValidForRoadFee: 0}
+                            progressViewStyle = 'default'
+                            progressTintColor = {(currentData.authReport.diffDayFromLastAuthorizeRoadFee ?
+                                currentData.authReport.diffDayFromLastAuthorizeRoadFee/
+                                currentData.authReport.lastAuthDaysValidForRoadFee: 0) 
+                                    > 0.9 ? "red" : "blue"}
+                            trackTintColor = "rgba(230, 230, 230, 1)"
+                            />
+                        ) : (
+                        <ProgressBarAndroid
+                            styleAttr="Horizontal"
+                            indeterminate={false}
+                            progress={currentData.authReport.diffDayFromLastAuthorizeRoadFee ?
+                                currentData.authReport.diffDayFromLastAuthorizeRoadFee/
+                                currentData.authReport.lastAuthDaysValidForRoadFee: 0}
+                            />
+                        )}
+                        <Text style={styles.textRemind}>
+                        {currentData.authReport.diffDayFromLastAuthorizeRoadFee}/
+                        {currentData.authReport.lastAuthDaysValidForRoadFee} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_ROADFEE")})
                         </Text>
                     </View>
                     ): null }

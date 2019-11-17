@@ -41,7 +41,7 @@ class FillGasScreen extends React.Component {
                         ...currentVehicle.fillGasList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
                         id: AppConstants.CURRENT_EDIT_FILL_ID,
-                        fillDate:currentVehicle.fillGasList[i].fillDate.toLocaleString(),
+                        fillDate:currentVehicle.fillGasList[i].fillDate,
                     })
                 }
             }
@@ -90,7 +90,14 @@ class FillGasScreen extends React.Component {
 
     render() {
         console.log("FIll Gas State of ID:" + AppConstants.CURRENT_VEHICLE_ID)
-        console.log(this.state)
+        let theDate = new Date(this.state.fillDate);
+        let today = new Date();
+        if (today.getFullYear() == theDate.getFullYear && today.getMonth() == theDate.getMonth() &&
+                today.getDate() == theDate.getDate()) {
+            var datePlaceHoder = AppLocales.t("GENERAL_TODAY")+"(" + apputils.formatDateMonthDayYearVNShort(theDate) + ")";
+        } else {
+            var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
+        }
         return (
             <Container>
             <Content>
@@ -121,7 +128,7 @@ class FillGasScreen extends React.Component {
                     <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
                     <View style={styles.rowForm}>
                     <DatePicker
-                        defaultDate={new Date()}
+                        defaultDate={theDate}
                         minimumDate={new Date(2010, 1, 1)}
                         maximumDate={new Date(2100, 12, 31)}
                         locale={"vi"}
@@ -129,9 +136,9 @@ class FillGasScreen extends React.Component {
                         modalTransparent={false}
                         animationType={"fade"}
                         androidMode={"default"}
-                        placeHolderText={AppLocales.t("GENERAL_TODAY")+"(" + apputils.formatDateMonthDayYearVNShort(new Date()) + ")"}
-                        textStyle={{ color: "#1f77b4" }}
-                        placeHolderTextStyle={{ color: "#1f77b4" }}
+                        placeHolderText={datePlaceHoder}
+                        textStyle={{ color: AppConstants.COLOR_PICKER_TEXT }}
+                        placeHolderTextStyle={{ color: AppConstants.COLOR_PICKER_TEXT }}
                         onDateChange={(fillDate) => this.setState({fillDate})}
                         disabled={false}
                         iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
