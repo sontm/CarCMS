@@ -16,6 +16,7 @@ import axios from 'axios';
 import axiosDefaults from 'axios/lib/defaults';
 import AppConstants from './constants/AppConstants';
 import AdsManager from './components/AdsManager';
+import NotificationManager from './components/NotificationManager';
 
 axios.defaults.baseURL = AppConstants.SERVER_API;
 
@@ -44,7 +45,7 @@ class App extends React.Component {
       isLoadingComplete: param
     })
   }
-
+  
   // These will be called Apter Redux-Load, so can connect to Server
   // componentWillMount() {
   //   console.log("App componentWillMount*********************")
@@ -76,13 +77,16 @@ class App extends React.Component {
       // need add margin of status bar
       return (
         <View style={styles.container}>
-          <MyStatusBar backgroundColor="#fff" barStyle="light-content" />
+          {Platform.OS == "ios" ? 
+            <MyStatusBar backgroundColor="#fff" barStyle="light-content" /> : 
+            <StatusBar barStyle="default"/>}
           <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Root>
             <AppNavigator/>
             </Root>
             <AdsManager />
+            <NotificationManager />
           </PersistGate>
           </Provider>
         </View>

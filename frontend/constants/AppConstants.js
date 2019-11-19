@@ -10,6 +10,8 @@ const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROI
 const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTERESTIALID_ANDROID;
 
 export default {
+    IS_DEBUG_MODE: true,
+    
     ADS_BANNERID: BANNER_ID,
     ADS_INTERESTIALID: INTERESTIAL_ID,
     ADS_COUNT_CLICK_SHOW_INTERESTIAL: 20, // after every x click, show Interestial

@@ -1,6 +1,7 @@
 import { REHYDRATE } from 'redux-persist';
 import AppConstants from '../constants/AppConstants'
 import AppUtils from '../constants/AppUtils'
+import apputils from '../constants/AppUtils';
 
 const VEHICLE_SYNC_FROMSERVER = 'VEHICLE_SYNC_FROMSERVER';
 const VEHICLE_SYNC_TOSERVER = 'VEHICLE_SYNC_TOSERVER';
@@ -45,7 +46,7 @@ const initialState = {
     defaultVehicleId: "",
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
                     // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":
-    carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
+    carReports:{}, // {vehicleid: {gasReport,oilReport,authReport,moneyReport, scheduledNotification}}
 
     settings: {}, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
     lastSyncFromServerOn: null, // date of last sync
@@ -218,13 +219,18 @@ export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
 
 
 
-export const actTempCalculateCarReport = (currentVehicle, options, prevTempData, theDispatch) => (dispatch) => {
+export const actTempCalculateCarReport = (currentVehicle, options, prevUserData, theDispatch) => (dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
     console.log("actTempCalculateCarReport calleddddddddddd")
-    if (!prevTempData || !prevTempData.carReports || !prevTempData.carReports[currentVehicle.id] || 
+    if (!prevUserData || !prevUserData.carReports || !prevUserData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
         console.log(">>>actTempCalculateCarReport:")
+        if (!prevUserData || !prevUserData.carReports) {
+            // Maybe from Sync from Server, clear all Notifications
+            apputils.cancelAllAppLocalNotification();
+        }
         let theIdx = AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id);
+        AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.splice(theIdx, 1);
         // For calcualte All Time data
         options = {
             durationType: "month",
@@ -232,10 +238,9 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevTempData,
             duration: 300,
         }
 
-        AppUtils.actTempCalculateCarReportAsync(currentVehicle, options)
+        AppUtils.actTempCalculateCarReportAsyncWrapper(currentVehicle, options, prevUserData.settings, prevUserData.carReports)
         .then (result => {
-            console.log("<<<actTempCalculateCarReport FINISH")
-            AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.splice(theIdx, 1);
+            console.log("<<<<<<<actTempCalculateCarReport FINISH")
             if (theDispatch) {
                 theDispatch({
                     type: TEMP_CALCULATE_CARREPORT,

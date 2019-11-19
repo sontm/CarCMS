@@ -59,13 +59,17 @@ class AdsManager extends React.Component {
   componentDidMount() {
     console.log("||||Ads Manager|||| DidMount, count:" + this.props.appData.countOpen)
     this.props.actAppIncreaseOpenCount()
-    canShowInterestial = !this.props.appData.isNoAds;
+    if (this.props.appData.countOpen < 10) {
+        canShowInterestial = false;
+    } else {
+        canShowInterestial = !this.props.appData.isNoAds;
+    }
   }
 
   
   render() {
     console.log("||||Ads Manager|||| Render, count:" + this.props.appData.countOpen)
-    if (this.props.appData.isNoAds) {
+    if (this.props.appData.isNoAds || this.props.appData.countOpen < 10) {
         return null
     } else {
         return (

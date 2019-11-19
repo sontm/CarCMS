@@ -14,7 +14,6 @@ import AppLocales from '../constants/i18n'
 
 function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, licensePlate, owner) {
     if (target > 0 && passed> 0 && nextDate) {
-    console.log("text:" + text + ",passed:" + passed)
     return (
         <View style={styles.reminderItemContainer} key={text+""+passed+"/"+target+licensePlate+isTeam}>
             <View style={styles.reminderProgress}>
@@ -100,10 +99,7 @@ class ReminderReport extends React.Component {
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
                 diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
             = this.props.teamData.teamCarReports[element.id].authReport;
-            console.log("REminderrrrrrrrrrrrrr:")
-            console.log({diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
-                diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
-                diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee})
+
         resultView.push(
             renderRemindItem(true, AppLocales.t("GENERAL_OIL"), passedKmFromPreviousOil, lastOilKmValidFor, 
                 nextEstimateDateForOil, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)

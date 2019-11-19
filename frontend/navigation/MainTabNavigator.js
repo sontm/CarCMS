@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { withNavigation } from 'react-navigation';
 
@@ -29,6 +29,7 @@ import ProfileScreen from '../screens/setting/ProfileScreen';
 import RegisterUserScreen from '../screens/setting/RegisterUserScreen';
 import CreateTeamScreen from '../screens/setting/CreateTeamScreen'
 import JoinTeamScreen from '../screens/setting/JoinTeamScreen'
+import DebugScreen from '../screens/setting/DebugScreen'
 
 import TeamScreen from '../screens/TeamScreen';
 import MemberVehicleListScreen from '../screens/team/MemberVehicleListScreen'
@@ -104,6 +105,7 @@ const SettingsStack = createStackNavigator(
     RegisterUser: RegisterUserScreen,
     CreateTeam: CreateTeamScreen,
     JoinTeam: JoinTeamScreen,
+    DebugScreen: DebugScreen
   },
   config
 );
@@ -180,14 +182,12 @@ const tabNavigator = createBottomTabNavigator({
                   props.navigation.navigate("MyVehicleStack")
                 }
               }}>
-              <Icon type="FontAwesome5" name='car' style={props.navigation.state.index==1?styles.iconActive:styles.iconInActive}/>
+              <Icon type="FontAwesome" name='user' style={props.navigation.state.index==1?styles.iconActive:styles.iconInActive}/>
               <Text style={props.navigation.state.index==1?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_MY_CAR")}</Text>
             </Button>
             
             
-            <Button
-              vertical
-              //active={props.navigation.state.index === 0}
+            <TouchableOpacity 
               onPress={() =>
                 ActionSheet.show(
                 {
@@ -217,8 +217,8 @@ const tabNavigator = createBottomTabNavigator({
                   }
                 })
               }>
-              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: -10, color: AppConstants.COLOR_PICKER_TEXT}}/>
-            </Button>
+              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: 5, marginLeft: 3, marginRight: 3, color: AppConstants.COLOR_PICKER_TEXT}}/>
+            </TouchableOpacity>
             
             <Button
               vertical
@@ -279,11 +279,11 @@ const styles = StyleSheet.create({
     color: "grey"
   },
   textActive: {
-    fontSize: 9,
+    fontSize: 7,
     color: "white"
   },
   textInActive: {
-    fontSize: 9,
+    fontSize: 7,
     color: "grey"
   }
 })

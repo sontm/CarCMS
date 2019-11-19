@@ -22,6 +22,7 @@ import Layout from '../constants/Layout'
 import AppLocales from '../constants/i18n'
 import GasUsageReport from '../components/GasUsageReport'
 import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
+import apputils from '../constants/AppUtils';
 
 function getNameOfSortType(type) {
   if (type == "auth") return "Sắp Xếp theo 'Lịch Đăng Kiểm'";
@@ -60,6 +61,31 @@ class MyVehicleScreen extends React.Component {
     AsyncStorage.clear();
   }
   handleDeleteVehicle(vehicleId, licensePlate) {
+    // Clear all Notifications of this Car
+    if (this.props.userData.carReports[vehicleId]) {
+      let report = this.props.userData.carReports[vehicleId];
+      if (report.scheduledNotification) {
+        if (report.scheduledNotification.authNotify) {
+            let notObj = report.scheduledNotification.authNotify;
+            if (notObj.notificationId != null && notObj.notificationId != undefined) {
+              apputils.cancelAppLocalNotification(notObj.notificationId)
+            }
+        }
+        if (report.scheduledNotification.insuranceNotify) {
+            let notObj = report.scheduledNotification.insuranceNotify;
+            if (notObj.notificationId != null && notObj.notificationId != undefined) {
+              apputils.cancelAppLocalNotification(notObj.notificationId)
+            }
+        }
+        if (report.scheduledNotification.roadFeeNotify) {
+            let notObj = report.scheduledNotification.roadFeeNotify;
+            if (notObj.notificationId != null && notObj.notificationId != undefined) {
+              apputils.cancelAppLocalNotification(notObj.notificationId)
+            }
+        }
+      }
+    }
+    //
     this.props.actVehicleDeleteVehicle(vehicleId, licensePlate)
   }
 
@@ -87,7 +113,7 @@ class MyVehicleScreen extends React.Component {
     console.log("MyVehicleScreen Render")
     return (
       <Container>
-        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+        <Header noLeft style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
             <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
               <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}

@@ -26,7 +26,7 @@ export default {
     GENERAL_BIKE: "Xe Máy",
 
     NAV_BOT_HOME: "Home",
-    NAV_BOT_MY_CAR: "Xe",
+    NAV_BOT_MY_CAR: "Cá Nhân",
     NAV_BOT_TEAM: "Tổ Chức",
     NAV_BOT_MORE: "Khác",
 
@@ -151,6 +151,9 @@ export default {
 
     NEW_AUTH_HEADER:"Pháp Lý",
 
+    NOTIFICATION_AUTH: "Sắp Đến Ngày Đăng Kiểm",
+    NOTIFICATION_INSURANCE: "Sắp Đến Ngày Đóng Bảo Hiểm Dân Sự",
+    NOTIFICATION_ROADFEE: "Sắp Đến Ngày Phí Bảo Trì Đường Bộ",
 
     NOTE_VALIDFOR_OIL: "Chung Toi De mac dinh la \n 1000KM for Oto. What Are You Thinasd k sdfis my work dsdfnot allasdfk jasdf ",
     NOTE_VALIDFOR_AUTH: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Oto",

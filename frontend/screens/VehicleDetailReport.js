@@ -50,7 +50,7 @@ class VehicleDetailReport extends React.Component {
     }
 
     if (currentVehicle) {
-        console.log("CALL actTempCalculateCarReport:")
+        console.log("CALL actTempCalculateCarReport from Detail Report:")
         this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
         console.log("END actTempCalculateCarReport:")
         // let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
@@ -66,8 +66,7 @@ class VehicleDetailReport extends React.Component {
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
         
         let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase(), currentVehicle.type!="car")
-        console.log("currentVehicle Detail report)))))))))))))))))")
-        console.log(currentVehicle)
+
         return (
             <Container>
             <Content>

@@ -41,7 +41,6 @@ class HomeScreen extends React.Component {
       authorizeCarList:[],
     };
 
-    this.handleDeleteVehicle = this.handleDeleteVehicle.bind(this)
   }
   componentDidMount() {
     console.log("HOMESCreen DidMount")
@@ -72,9 +71,6 @@ class HomeScreen extends React.Component {
   }
   clearAsyncStorage = async() => {
     AsyncStorage.clear();
-  }
-  handleDeleteVehicle(vehicleId, licensePlate) {
-    this.props.actVehicleDeleteVehicle(vehicleId, licensePlate)
   }
 
   componentDidUpdate() {

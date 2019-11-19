@@ -27,12 +27,14 @@ export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
 
     AppUtils.actTempCalculateCarReportAsync(currentVehicle, options)
     .then (result => {
+        console.log("  OK Team Calculate Report")
         dispatch({
             type: TEMP_CALCULATE_TEAMCARREPORT,
             payload: {id: currentVehicle.id, data: result}
         })
     })
     .catch (error => {
+        console.log("  Error Team Calculate Report")
         console.log(error)
     })
 
