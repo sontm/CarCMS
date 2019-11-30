@@ -297,8 +297,15 @@ class MoneyUsageByTimeReport extends React.Component {
     return {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
         arrTotalExpenseEachCars, arrTotalServiceEachCars}
   }
+  componentWillMount(){
+    console.log("~~~~~~~~~~~~~~~~MoneyUsageByTimeReport WILL MOUNT")
+  }
+  componentDidUpdate(){
+    console.log("~~~~~~~~~~~~~~~~MoneyUsageByTimeReport DID UPDATE")
+  }
   render() {
     if (this.props.currentVehicle || this.props.isTotalReport) {
+        console.log("~~~~~~~~~~~~~~~~MoneyUsageByTimeReport RENDER")
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
                 var {arrTotalAllCars, tickXLabels} = this.calculateAllVehicleTotalMoneyTeam(6);

@@ -228,7 +228,7 @@ class VehicleDetailReport extends React.Component {
 
 VehicleDetailReport.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+        <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />

@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {checkAndShowInterestial} from '../components/AdsManager'
 
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Picker, Segment } from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Tabs, Tab, TabHeading, Segment } from 'native-base';
 
 import { HeaderText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
@@ -111,6 +111,46 @@ class MyVehicleScreen extends React.Component {
 
   render() {
     console.log("MyVehicleScreen Render")
+    if (this.state.activePage==1) {
+      var viewPage1 = (
+          <Tabs style={{flex: 1}}>
+            <Tab heading={ <TabHeading><Icon type="MaterialIcons" name="attach-money" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB1")}</Text></TabHeading>}>
+              <Content><View style={styles.container}><ScrollView
+                style={styles.container}
+                contentContainerStyle={styles.contentContainer}>
+                <MoneyUsageByTimeReport isTotalReport={true} key={"MoneyUsageByTimeReportPrivate"}/>
+              </ScrollView></View></Content>
+            </Tab>
+            <Tab heading={ <TabHeading><Icon type="MaterialCommunityIcons" name="fuel" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB2")}</Text></TabHeading>}>
+            <Content><View style={styles.container}><ScrollView
+                style={styles.container}
+                contentContainerStyle={styles.contentContainer}>
+                <GasUsageReport isTotalReport={true} />
+              </ScrollView></View></Content>
+            </Tab>
+          </Tabs>
+      )
+    } else {
+      var viewPage0 = (
+        <Content>
+          <View style={styles.container}>
+            <ScrollView
+              style={styles.container}
+              contentContainerStyle={styles.contentContainer}>
+
+              {this.state.activePage == 0 ? (
+                this.props.userData.vehicleList && this.props.userData.vehicleList.map(item => (
+                  <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
+                    navigation={this.props.navigation} {...this.state} requestDisplay={"all"} isTeamDisplay={false} isMyVehicle={true}
+                  />
+                ))
+               ) : null}
+
+            </ScrollView>
+          </View>
+        </Content>
+      )
+    }
     return (
       <Container>
         <Header noLeft style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
@@ -129,48 +169,12 @@ class MyVehicleScreen extends React.Component {
             </Segment>
           </Body>
         </Header>
-        
-        <Content>
-          <View style={styles.container}>
-            {/* <View style={styles.sortContainer}>
-              <Picker
-                  mode="dropdown"
-                  placeholder={<Icon type="MaterialCommunityIcons" name="sort" style={{fontSize: 24, color: "blue"}}/>}
-                  iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 16, color: AppConstants.COLOR_BUTTON_BG}}/>}
-                  selectedValue={this.state.sortType}
-                  onValueChange={this.onSortChange.bind(this)}
-                  textStyle={{ color: AppConstants.COLOR_PICKER_TEXT, backgroundColor: "red", textAlign: "center"}}
-                  >
-                  <Picker.Item label={getNameOfSortType("auth")} value="auth" />
-                  <Picker.Item label={getNameOfSortType("oil")} value="oil" />
-                  <Picker.Item label={getNameOfSortType("kmLarge")} value="kmLarge" />
-                  <Picker.Item label={getNameOfSortType("kmSmall")} value="kmSmall" />
-                  <Picker.Item label={getNameOfSortType("gasBest")} value="gasBest" />
-                  <Picker.Item label={getNameOfSortType("gasWorst")} value="gasWorst" />
-                  <Picker.Item label={getNameOfSortType("moneyMonthlyLarge")} value="moneyMonthlyLarge" />
-                  <Picker.Item label={getNameOfSortType("moneyMonthlySmall")} value="moneyMonthlySmall" />
-              </Picker>
-            </View> */}
-            <ScrollView
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}>
 
-              {this.state.activePage == 0 ? (
-                this.props.userData.vehicleList && this.props.userData.vehicleList.map(item => (
-                  <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
-                    navigation={this.props.navigation} {...this.state} requestDisplay={"all"} isTeamDisplay={false} isMyVehicle={true}
-                  />
-                ))
-               ) : (
-                  <View>
-                      <MoneyUsageByTimeReport isTotalReport={true} />
-                      <GasUsageReport isTotalReport={true} />
-                  </View>
-              )}
-
-            </ScrollView>
-          </View>
-        </Content>
+        {this.state.activePage==1? (
+          viewPage1
+        ): (
+          viewPage0
+        ) }
       </Container>
     );
   }

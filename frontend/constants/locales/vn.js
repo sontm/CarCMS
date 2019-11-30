@@ -48,7 +48,7 @@ export default {
     HOME_TOTAL_TEAM_THISMONTH: "Chi Tiêu Tổ Chức Tháng",
 
     HOME_MONEY_SPEND: "Chi Tiêu Các Xe",
-    HOME_GAS_USAGE: "Biểu Đồ Xăng Các Xe",
+    HOME_GAS_USAGE: "Biểu Đồ Xăng",
     HOME_REMIND: "Nhắc Nhở",
     HOME_PRIVATE_MONEY_USAGE: "Chi Tiêu Cá Nhân Gần Đây",
     HOME_TEAM_MONEY_USAGE: "Chi Tiêu Tổ Chức Gần Đây",
