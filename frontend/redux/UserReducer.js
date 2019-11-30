@@ -37,6 +37,10 @@ const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
 
 const SETTING_VEHICLE_SET_DEFAULT = 'SETTING_VEHICLE_SET_DEFAULT';
 
+const DEFAULT_SETTING_SERVICE = {
+    Km: [5000, 10000, 20000, 40000, 80000],
+    Month: [3, 6, 9, 12]
+}
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
     teamInfo: {},//"code": "bfOdOi7L", "id": "5db0564ed74e760f4a2c3db9","name": "PhuPhuong",
@@ -49,6 +53,7 @@ const initialState = {
     carReports:{}, // {vehicleid: {gasReport,oilReport,authReport,moneyReport, scheduledNotification}}
 
     settings: {}, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
+    settingService: DEFAULT_SETTING_SERVICE,
     lastSyncFromServerOn: null, // date of last sync
     lastSyncToServerOn: null,
 };
@@ -221,7 +226,6 @@ export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
 
 export const actTempCalculateCarReport = (currentVehicle, options, prevUserData, theDispatch) => (dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
-    console.log("actTempCalculateCarReport calleddddddddddd")
     if (!prevUserData || !prevUserData.carReports || !prevUserData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
         console.log(">>>actTempCalculateCarReport:")
@@ -308,12 +312,16 @@ export default function(state = initialState, action) {
         };
 
     case VEHICLE_SYNC_FROMSERVER:
-        return {
+        let newStateSyncFrom = {
             ...state,
             vehicleList: action.payload,
             carReports: {},
             lastSyncFromServerOn: new Date()
         }
+        if (!newStateSyncFrom.settingService) {
+            newStateSyncFrom.settingService = DEFAULT_SETTING_SERVICE;
+        }
+        return newStateSyncFrom;
     case VEHICLE_SYNC_TOSERVER:
         return {
             ...state,

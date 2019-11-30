@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker } from 'native-base';
+import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker, CheckBox, ListItem } from 'native-base';
 
 import {HeaderText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
@@ -9,6 +9,15 @@ import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
+
+function renderMaintainModuleItem(item, onRemove) {
+    return (
+    <View style={{flexDirection:"row", backgroundColor: "cyan"}} key={item}>
+        <Text>{item}</Text>
+        <Icon type="FontAwesome" name="remove" style={{fontSize: 12}}/>
+    </View>
+    )
+}
 
 class PayServiceScreen extends React.Component {
     constructor(props) {
@@ -22,19 +31,29 @@ class PayServiceScreen extends React.Component {
             currentKm: "",
             amount: "",
             type: "service",
-            subType: "",
+            subType: "", // not used
             remark: "",
+            validFor: 5000, // km or Month
+            validForType: "Km", // Km or Month
+            serviceModule: {}, // Bo Phan cua Xe Sua Chua
+            isConstantFix: false // when FIx sudden a problem of Car, not Maintainance 
         };
 
         this.save = this.save.bind(this)
+        this.setMaintainType = this.setMaintainType.bind(this)
+        this.onUpdateMaintainModules = this.onUpdateMaintainModules.bind(this)
+        this.removeMaintainModule = this.removeMaintainModule.bind(this)
     }
 
     componentWillMount() {
+        console.log("            PayService Screen WillMount")
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             for (let i = 0; i < currentVehicle.serviceList.length; i++) {
                 if (currentVehicle.serviceList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
+                    AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES = currentVehicle.serviceList[i].serviceModule;
+
                     this.setState({
                         ...currentVehicle.serviceList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
@@ -44,6 +63,8 @@ class PayServiceScreen extends React.Component {
                 }
             }
         } else {
+           
+            AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES = {};
             this.setState({
                 vehicleId: AppConstants.CURRENT_VEHICLE_ID
             })
@@ -51,6 +72,8 @@ class PayServiceScreen extends React.Component {
     }
     
     save = async (newVehicle) => {
+        console.log(this.state)
+
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit FillOil:")
             let newData = {
@@ -90,6 +113,48 @@ class PayServiceScreen extends React.Component {
         }
     }
 
+    setMaintainType(value) {
+        let validForType = "Tháng";
+        if (value > 100) {
+            validForType = "Km";
+        }
+        this.setState({
+            validForType: validForType,
+            validFor: value
+        })
+    }
+    combineMaintainType(settingService) {
+        let result = [];
+        console.log(" combine MainTain Type:")
+        if (settingService) {
+            if (settingService.Km && settingService.Km.length > 0) {
+                result.push(...settingService.Km)
+            }
+            if (settingService.Month && settingService.Month.length > 0) {
+                result.push(...settingService.Month)
+            }
+        }
+        return result;
+    }
+
+    // called by ServiceScreenModules to re-render after go Back
+    onUpdateMaintainModules(values) {
+        console.log("OK from CHILD calleddddddddddddddddddddddddddd")
+        console.log(values)
+        this.setState({
+            serviceModule: values
+        })
+    }
+    removeMaintainModule(value) {
+        let idx = this.state.serviceModule.indexOf(value)
+        if (idx >= 0) {
+            let prevList = this.state.serviceModule;
+            prevList.splice(idx, 1)
+            this.setState({
+                serviceModule: prevList
+            })
+        }
+    }
     render() {
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
@@ -99,6 +164,29 @@ class PayServiceScreen extends React.Component {
         } else {
             var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
         }
+        let maintainTypeArr = this.combineMaintainType(this.props.userData.settingService)
+        console.log("            PayServiceScreen render")
+        console.log(AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES)
+
+        let viewServiceModule = [];
+        for (let prop in this.state.serviceModule) {
+            // Because these two Obj share same prop, so set in 1 for loop
+            if (Object.prototype.hasOwnProperty.call(this.state.serviceModule, prop) && 
+                    Object.prototype.hasOwnProperty.call(this.state.serviceModule, prop)) {
+
+                let item = this.state.serviceModule[""+prop];
+                viewServiceModule.push(
+                    <ListItem key={prop+""+item} style={{flexDirection:"row", justifyContent: "space-between"}}>
+                        <Text>{prop+":" + item}</Text>
+                        <TouchableOpacity 
+                                onPress={() => this.removeMaintainModule(item)}>
+                            <Icon type="FontAwesome" name="remove" style={{fontSize: 17, color: "grey"}} />
+                        </TouchableOpacity>
+                    </ListItem>
+                )
+            }
+        }
+
         return (
             <Container>
             <Content>
@@ -147,7 +235,48 @@ class PayServiceScreen extends React.Component {
                         </View>
                         </Item>
                     </View>
+
+                    <View style={styles.rowContainer}>
+                    <View style={styles.rowForm}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label>{AppLocales.t("NEW_SERVICE_TYPE")+": "}</Label>
+                            <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
+                            <Text style={styles.smallerText}>{AppLocales.t("NEW_SERVICE_MAINTAIN")+""}</Text>
+                            <CheckBox checked={this.state.isConstantFix != true} 
+                                onPress={() =>this.setState({isConstantFix: false})}/>
+                            
+                            <Text style={styles.smallerText}>{"          " + AppLocales.t("NEW_SERVICE_CONSANTFIX")+""}</Text>
+                            <CheckBox checked={this.state.isConstantFix == true} 
+                                onPress={() =>this.setState({isConstantFix: true})}/>
+                            </View>
+                        </Item>
+                        </View>
+                    </View>
                     
+                    <View style={styles.rowContainer}>
+                        <View style={styles.rowForm}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label>{AppLocales.t("NEW_SERVICE_MAINTAIN_TYPE")}</Label>
+                            <Picker
+                                mode="dropdown"
+                                iosIcon={<Icon name="arrow-down" />}
+                                style={{width: (Layout.window.width-40)*0.9,
+                                    alignSelf:"center"}}
+                                placeholderStyle={{ color: "#bfc6ea" }}
+                                placeholderIconColor="#007aff"
+                                selectedValue={this.state.validFor}
+                                onValueChange={(itemValue, itemIndex) =>
+                                   this.setMaintainType(itemValue)
+                                }
+                            >
+                                { maintainTypeArr.map((item, idx) => (
+                                    <Picker.Item label={""+item} value={item} key={idx}/>
+                                ))}
+                            </Picker>
+                        </Item>
+                        </View>
+                    </View>
+
                     <View style={styles.rowContainer}>
                         <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                         <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")+": "}</Label>
@@ -161,26 +290,31 @@ class PayServiceScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                        {AppLocales.t("NEW_SERVICE_TYPE")+":"}
-                        </Text>
+                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_CURRENTKM")+": "}</Label>
+                        <Input
+                            style={styles.rowForm}
+                            keyboardType="numeric"
+                            onChangeText={(currentKm) => this.setState({currentKm})}
+                            value={""+this.state.currentKm}
+                        />
+                        </Item>
+                    </View>
+
+                    <View style={styles.rowContainer}>
                         <View style={styles.rowForm}>
-                            <Picker
-                                mode="dropdown"
-                                iosIcon={<Icon name="arrow-down" />}
-                                style={{width: (Layout.window.width-40)*0.6,
-                                    alignSelf:"center"}}
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                                selectedValue={this.state.subType}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    this.setState({subType: itemValue})
-                                }
-                            >
-                                {this.props.appData.typeService.map(item => (
-                                    <Picker.Item label={item.name} value={item.name} key={item.id}/>
-                                ))}
-                            </Picker>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label>{AppLocales.t("NEW_SERVICE_MODULES")}</Label>
+                            <View style={{flexDirection:"row"}}>
+                                <Text
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ServiceModules", {onOk: this.onUpdateMaintainModules})
+                                    }}> Add Module </Text>
+                            </View>
+                            <View style={{width: (Layout.window.width-40)*0.6}}>
+                                {viewServiceModule}
+                            </View>
+                        </Item>
                         </View>
                     </View>
 
@@ -237,7 +371,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center", // vertial align
     justifyContent: "center",
-    height: 54,
+    //height: 54,
     width: "90%",
     alignSelf:"center"
     
@@ -259,6 +393,9 @@ const styles = StyleSheet.create({
   },
   btnSubmit: {
 
+  },
+  smallerText: {
+      fontSize: 13
   }
 });
 

@@ -16,6 +16,7 @@ import FillOilScreen from '../screens/addinfo/FillOilScreen';
 import CarAuthorizeScreen from '../screens/addinfo/CarAuthorizeScreen';
 import PayServiceScreen from '../screens/addinfo/PayServiceScreen';
 import PayExpenseScreen from '../screens/addinfo/PayExpenseScreen';
+import ServiceScreenModules from '../screens/addinfo/ServiceScreenModules';
 
 import MyVehicleScreen from '../screens/MyVehicleScreen'
 
@@ -60,7 +61,8 @@ const MyVehicleStack = createStackNavigator(
     FillOil: FillOilScreen,
     CarAuthorize: CarAuthorizeScreen,
     PayExpense: PayExpenseScreen,
-    PayService: PayServiceScreen
+    PayService: PayServiceScreen,
+    ServiceModules: ServiceScreenModules
   },
   config
 );

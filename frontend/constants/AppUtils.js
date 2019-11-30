@@ -98,6 +98,33 @@ class AppUtils {
             return v.toString(16);
         });
     }
+
+    // if more than 100 character, + ...
+    objNameToStringSequence(arr) {
+        if (arr) {
+            let result = "";
+            let idx = 0;
+            for (let prop in arr) {
+                // Because these two Obj share same prop, so set in 1 for loop
+                if (Object.prototype.hasOwnProperty.call(arr, prop) && 
+                        Object.prototype.hasOwnProperty.call(arr, prop)) {
+
+                    if (idx == 0) {
+                        result += prop;
+                    } else {
+                        result += ", " + prop;
+                    }
+                    if (result.length > 25) {
+                        result += "...";
+                        return result;
+                    }
+                    idx++;
+                }
+            }
+            return result;
+        }
+        return "";
+    }
     formatDateMonthDayVN(t) {
         if (t)
         return dateFormat(new Date(t), "d/mmm");
@@ -115,6 +142,11 @@ class AppUtils {
             return dateFormat(new Date(t), "d/mm/yyyy");
         }
     }
+    formatDateMonthDayYearVNShortShort(t) {
+        if (t) {
+            return dateFormat(new Date(t), "d/mm/yy");
+        }
+    }
     formatDateTimeFullVN(t) {
         if (t)
         return dateFormat(new Date(t), "d/mm/yyyy H:MM:ss");
@@ -125,7 +157,9 @@ class AppUtils {
     formatToPercent(v, total) {
         return (v*100/total).toFixed(0) + "%";
     }
-    getNameOfFillItemType(type) {
+
+    getNameOfFillItemType(type, isContantFix, item) {
+        console.log(item)
         if (type == AppConstants.FILL_ITEM_GAS) {
             return AppLocales.t("GENERAL_GAS");
         } else if (type == AppConstants.FILL_ITEM_OIL) {
@@ -135,9 +169,14 @@ class AppUtils {
         } else if (type == AppConstants.FILL_ITEM_EXPENSE) {
             return AppLocales.t("GENERAL_EXPENSE");
         } else if (type == AppConstants.FILL_ITEM_SERVICE) {
-            return AppLocales.t("GENERAL_SERVICE");
+            if ( isContantFix ) {
+                return AppLocales.t("GENERAL_SERVICE_INSTANTFIX");
+            } else {
+                return AppLocales.t("GENERAL_SERVICE");
+            }
         }
     }
+
     makeRandomAlphaNumeric(length) {
       var result           = '';
       var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -1476,6 +1515,8 @@ class AppUtils {
         // console.log(arrExpenseTypeByTime)
         return {arrExpenseTypeSpend, arrExpenseTypeByTime};
     }
+
+    
 
     async syncDataToServer(props) {
         console.log("LengVehicleList:" + props.userData.vehicleList.length)

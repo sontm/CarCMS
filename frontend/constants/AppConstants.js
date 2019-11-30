@@ -11,6 +11,8 @@ const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTER
 
 export default {
     IS_DEBUG_MODE: true,
+
+    DEFAULT_BOTTOM_NAV_HEIGHT: 50,
     
     ADS_BANNERID: BANNER_ID,
     ADS_INTERESTIALID: INTERESTIAL_ID,
@@ -19,6 +21,7 @@ export default {
 
     // Tempo data which
     BUFFER_NEED_RECALCULATE_VEHICLE_ID: [],
+    TEMPDATA_SERVICE_MAINTAIN_MODULES: {},
 
     CURRENT_VEHICLE_ID: "0",
     CURRENT_EDIT_FILL_ID: "0",

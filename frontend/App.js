@@ -85,7 +85,9 @@ class App extends React.Component {
             <Root>
             <AppNavigator/>
             </Root>
-            <AdsManager />
+            <View style={{position: "absolute", bottom: AppConstants.DEFAULT_BOTTOM_NAV_HEIGHT, left: 0, right: 0}}>
+              <AdsManager />
+            </View>
             <NotificationManager />
           </PersistGate>
           </Provider>

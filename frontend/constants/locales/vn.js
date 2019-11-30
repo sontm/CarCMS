@@ -8,7 +8,8 @@ export default {
     GENERAL_OIL:"Thay Dầu",
     GENERAL_GAS:"Xăng",
     GENERAL_EXPENSE:"Phụ Chi",
-    GENERAL_SERVICE:"Sửa Chữa",
+    GENERAL_SERVICE:"Bảo Dưỡng",
+    GENERAL_SERVICE_INSTANTFIX:"Sửa Chữa",
     GENERAL_NEXT:"Lần Tới",
     GENERAL_DEFAULT:"Mặc Định",
     GENERAL_TODAY:"Hôm Nay",
@@ -19,11 +20,17 @@ export default {
     GENERAL_TEAM: "Tổ Chức",
     GENERAL_TEAM_ROLE: "Chức Vụ",
     GENERAL_TEAM_CODE_SHORT: "Mã",
+    GENERAL_MONEYUSAGE: "Chi Tiêu",
     GENERAL_PREV_MONTH: "Tháng Trước",
     GENERAL_KM: "Km",
     GENERAL_OR: "Hoặc",
     GENERAL_CAR: "Ôtô",
     GENERAL_BIKE: "Xe Máy",
+
+    GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
+    GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",
+    GENERAL_MAINTAIN_KIEMTRA: "Kiểm Tra",
+    GENERAL_MAINTAIN_MODULE: "Bộ Phận",
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Cá Nhân",
@@ -33,6 +40,7 @@ export default {
     MYCAR_HEADER: "Xe Của Tôi",
     MYCAR_HEADER_REPORT: "Báo Cáo Chung",
     HOME_HEADER: "Tổng Quan",
+    MYCAR_SERVICEREPORT:"Lịch Bảo Dưỡng",
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
     HOME_TOTAL_TEAM: "Tổng Chi Phí Tổ Chức",
@@ -92,7 +100,6 @@ export default {
     SETTING_LBL_SYNC_TO_NOTE: "",
     SETTING_LBL_SYNC_FROM_LASTSYNC: "Cập Nhập Lần Cuối",
 
-
     SETTING_H1_SETTING: "Cài Đặt",
     SETTING_LBL_VEHICLE: "Cài Đặt Xe",
     SETTING_LBL_REMIND: "Cài Đặt Nhắc Nhở",
@@ -148,6 +155,11 @@ export default {
 
     NEW_SERVICE_HEADER:"Sửa Chữa",
     NEW_SERVICE_TYPE:"Loại Sửa Chữa",
+    NEW_SERVICE_MAINTAIN_TYPE:"Loại Bảo Dưỡng",
+    NEW_SERVICE_CONSANTFIX:"Sửa Chữa Phát Sinh",
+    NEW_SERVICE_MAINTAIN:"Bảo Dưỡng",
+    NEW_SERVICE_MODULES:"Bộ Phận",
+    
 
     NEW_AUTH_HEADER:"Pháp Lý",
 

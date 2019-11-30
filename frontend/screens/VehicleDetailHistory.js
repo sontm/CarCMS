@@ -96,25 +96,25 @@ class VehicleDetailHistory extends React.Component {
                     <Left>
                         {item.type == AppConstants.FILL_ITEM_GAS ? (
                             <Button style={{ backgroundColor: "#FF9501" }}>
-                                <Icon active type="MaterialCommunityIcons" name="fuel" />
+                                <Icon active type="MaterialCommunityIcons" name="fuel" style={{fontSize: 15}}/>
                             </Button>
                         ) :
                         (item.type == AppConstants.FILL_ITEM_OIL) ? (
                             <Button style={{ backgroundColor: "#007AFF" }}>
-                                <Icon active type="MaterialCommunityIcons" name="oil" />
+                                <Icon active type="MaterialCommunityIcons" name="oil" style={{fontSize: 15}} />
                             </Button>
                         ) :
                         (item.type == AppConstants.FILL_ITEM_AUTH) ? (
                             <Button style={{ backgroundColor: "#3cc97b" }}>
-                                <Icon active type="Octicons" name="verified" />
+                                <Icon active type="Octicons" name="verified" style={{fontSize: 15}} />
                             </Button>
                         ) : (item.type == AppConstants.FILL_ITEM_EXPENSE) ? (
                             <Button style={{ backgroundColor: "gold" }}>
-                                <Icon active type="MaterialIcons" name="attach-money" />
+                                <Icon active type="MaterialIcons" name="attach-money" style={{fontSize: 15}}/>
                             </Button>
                         ) : (item.type == AppConstants.FILL_ITEM_SERVICE) ? (
                             <Button style={{ backgroundColor: "#df43fa" }}>
-                                <Icon active type="Octicons" name="tools" />
+                                <Icon active type="Octicons" name="tools" style={{fontSize: 15}}/>
                             </Button>
                         ) :null
                         }
@@ -122,10 +122,13 @@ class VehicleDetailHistory extends React.Component {
                     
                     <Body>
                     <TouchableOpacity onPress={() => this.handleEditItem(item.id, item.type)} key={item.id}>
-                        <Text style={styles.listMainText}>{AppUtils.getNameOfFillItemType(item.type)}
+                        <Text style={styles.listMainText}>{AppUtils.getNameOfFillItemType(item.type, item.isConstantFix, item)}
                         {". " + AppUtils.formatDateMonthDayYearVN(item.fillDate)}</Text>
-                        <Text style={styles.listSubText}>{item.price + " đ, " + 
-                            (item.currentKm ? (item.currentKm + "Km, ") : (item.subType ? item.subType : ""))}</Text>
+                        <Text style={styles.listSubText}>{item.price + " đ. " + 
+                            ((item.serviceModule) ? AppUtils.objNameToStringSequence(item.serviceModule) 
+                                : (item.currentKm ? (item.currentKm + "Km, ")
+                                : ((item.subType && item.subType.length>0) ? item.subType : ""
+                                )))}</Text>
                     </TouchableOpacity>
                     </Body>
                     <Right>

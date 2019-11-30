@@ -129,13 +129,15 @@ const DATA_EXPENSE_TYPE = [
     {id: 4, name: "Rửa Xe"}
 ]
 const DATA_SERVICE_TYPE = [
-    {id: 1, name: "Lốp"}, // Lop Xe
-    {id: 2, name: "Săm"},// Sam Xe
-    {id: 3, name: "Pin"},//
-    {id: 4, name: "Nước"},
-    {id: 3, name: "Phanh"},
-    {id: 3, name: "Đèn"},
-    {id: 3, name: "Bơm Lốp"},
+    {id: 1, name: "Dầu Máy"}, // Dầu Máy
+    {id: 2, name: "Lốp"}, // Lop Xe
+    {id: 3, name: "Săm"},// Sam Xe
+    {id: 4, name: "Pin"},//
+    {id: 5, name: "Nước"},
+    {id: 6, name: "Phanh"},
+    {id: 7, name: "Đèn"},
+    {id: 8, name: "Bơm Lốp"},
+    {id: 9, name: "Lọc Gió Điều Hòa cho O to Camry Đời Mới"},
 ]
 
 const initialState = {
