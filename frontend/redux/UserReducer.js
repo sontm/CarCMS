@@ -39,7 +39,7 @@ const SETTING_VEHICLE_SET_DEFAULT = 'SETTING_VEHICLE_SET_DEFAULT';
 
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
-    Month: [3, 6, 9, 12]
+    Month: [6, 12, 24, 48, 96]
 }
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
@@ -50,7 +50,7 @@ const initialState = {
     defaultVehicleId: "",
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
                     // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":
-    carReports:{}, // {vehicleid: {gasReport,oilReport,authReport,moneyReport, scheduledNotification}}
+    carReports:{}, // {vehicleid: {gasReport,authReport,moneyReport,maintainRemind, scheduledNotification}}
 
     settings: {}, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
     settingService: DEFAULT_SETTING_SERVICE,
@@ -242,7 +242,8 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
             duration: 300,
         }
 
-        AppUtils.actTempCalculateCarReportAsyncWrapper(currentVehicle, options, prevUserData.settings, prevUserData.carReports)
+        AppUtils.actTempCalculateCarReportAsyncWrapper(currentVehicle, options, 
+            prevUserData.settings, prevUserData.carReports, prevUserData.settingService)
         .then (result => {
             console.log("<<<<<<<actTempCalculateCarReport FINISH")
             if (theDispatch) {

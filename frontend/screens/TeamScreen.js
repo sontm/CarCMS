@@ -29,7 +29,7 @@ import TeamReport2 from './team/TeamReport2'
 
 function getNameOfSortType(type) {
   if (type == "auth") return AppLocales.t("TEAM_VEHICLE_SORT_AUTH");
-  if (type == "oil") return AppLocales.t("TEAM_VEHICLE_SORT_OIL");
+  if (type == "service") return AppLocales.t("TEAM_VEHICLE_SORT_OIL");
   if (type == "km") return AppLocales.t("TEAM_VEHICLE_SORT_KM");
   if (type == "gasEffective") return AppLocales.t("TEAM_VEHICLE_SORT_GAS_EFF");
   if (type == "moneyTotal") return AppLocales.t("TEAM_VEHICLE_SORT_MONEYTOTAL");
@@ -134,7 +134,7 @@ class TeamScreen extends React.Component {
             textStyle={{ color: AppConstants.COLOR_PICKER_TEXT, fontSize: 15}}
           >
             <Picker.Item label={getNameOfSortType("auth")} value="auth" />
-            <Picker.Item label={getNameOfSortType("oil")} value="oil" />
+            <Picker.Item label={getNameOfSortType("service")} value="service" />
             <Picker.Item label={getNameOfSortType("km")} value="km" />
             <Picker.Item label={getNameOfSortType("gasEffective")} value="gasEffective" />
             <Picker.Item label={getNameOfSortType("moneyTotal")} value="moneyTotal" />
@@ -169,9 +169,13 @@ class TeamScreen extends React.Component {
         if (this.state.sortType == "auth") {
           return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorize - 
             this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorize
-        } else if (this.state.sortType == "oil") {
-          return this.props.teamData.teamCarReports[bId].oilReport.passedKmFromPreviousOil - 
-            this.props.teamData.teamCarReports[aId].oilReport.passedKmFromPreviousOil
+        } else if (this.state.sortType == "service") {
+          if (this.props.teamData.teamCarReports[bId].maintainRemind) {
+          return this.props.teamData.teamCarReports[bId].maintainRemind.passedKmFromPreviousMaintain - 
+            this.props.teamData.teamCarReports[aId].maintainRemind.passedKmFromPreviousMaintain
+          } else {
+            return true;
+          }
         } else if (this.state.sortType == "km") {
           return this.props.teamData.teamCarReports[bId].gasReport.avgKmMonthly - 
             this.props.teamData.teamCarReports[aId].gasReport.avgKmMonthly

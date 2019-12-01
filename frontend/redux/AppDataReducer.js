@@ -130,14 +130,62 @@ const DATA_EXPENSE_TYPE = [
 ]
 const DATA_SERVICE_TYPE = [
     {id: 1, name: "Dầu Máy"}, // Dầu Máy
-    {id: 2, name: "Lốp"}, // Lop Xe
-    {id: 3, name: "Săm"},// Sam Xe
-    {id: 4, name: "Pin"},//
-    {id: 5, name: "Nước"},
-    {id: 6, name: "Phanh"},
-    {id: 7, name: "Đèn"},
-    {id: 8, name: "Bơm Lốp"},
-    {id: 9, name: "Lọc Gió Điều Hòa cho O to Camry Đời Mới"},
+    {id: 2, name: "Dầu Phanh"}, // Lop Xe
+    {id: 3, name: "Dầu Trợ Lực Lái"},// Sam Xe
+    {id: 4, name: "Dầu Li Hơp"},//
+    {id: 5, name: "Dầu Vi Sai"},
+    {id: 6, name: "Dầu Hộp Số Thường"},
+    {id: 7, name: "Dầu Hộp Số Tự Động"},
+    {id: 8, name: "Dầu Hộp Số Phụ"},
+
+    {id: 9, name: "Lọc Nhiên Liệu"},
+    {id: 10, name: "Loc Dầu Máy"},
+    {id: 11, name: "Lọc Điều Hòa"},
+    {id: 12, name: "Lọc Gió Động Cơ"},
+
+    {id: 13, name: "Gas Điều Hoà"},
+    {id: 14, name: "Nước Làm Mát"},
+    {id: 15, name: "Đường Ống Làm Mát"},
+
+    {id: 16, name: "Phanh: Bàn Đạp"},
+    {id: 17, name: "Phanh: Phanh Tay"},
+    {id: 18, name: "Phanh: Trống, Guốc"},
+    {id: 19, name: "Phanh: Ống Dẫn"},
+    {id: 20, name: "Phanh: Đĩa, Má"},
+    {id: 21, name: "Phanh: Tuyô"},
+
+    {id: 22, name: "Lốp: Áp Suất"},
+    {id: 23, name: "Lốp: Đảo Lốp"},
+
+    {id: 24, name: "VôLăng, Dẫn Động"},
+    {id: 25, name: "Đai Dẫn Động"},
+    {id: 26, name: "Ống Xả & Giá Đỡ"},
+    {id: 27, name: "Dây Curoa"},
+    {id: 28, name: "Mỡ Trục CácĐăng"},
+    {id: 29, name: "BuLông Trục CácĐăng"},
+    {id: 30, name: "Cao Su Bán Trục"},
+    {id: 31, name: "Khớp Cầu"},
+    {id: 32, name: "Rotuyn"},
+
+    {id: 33, name: "Đánh Lửa, Bugi"},
+    {id: 34, name: "Ắc Quy"},
+    {id: 35, name: "Xupap"},
+    {id: 36, name: "Bộ Lọc Than Hoạt Tính"},
+    {id: 37, name: "Bình Xăng & Ống Dẫn"},
+
+    {id: 38, name: "Nước Rửa Kính"},
+    {id: 39, name: "Vòi Nước Rửa Kính"},
+    {id: 40, name: "Cơ Cấu Gạt Nước"},
+    
+    {id: 41, name: "Hệ thống Còi"},
+    {id: 42, name: "Hệ thống Cửa & Cốp"},
+    {id: 43, name: "Hệ thống Đèn"},
+    {id: 44, name: "Đèn trên Đồng Hồ"},
+    {id: 45, name: "Hệ thống Điện"},
+    {id: 46, name: "Hệ thống Ghế"},
+    {id: 47, name: "Hệ thống Đai an toàn"},
+    {id: 48, name: "Hệ thống Kính, Gương"},
+    {id: 49, name: "Hệ thống Treo"},
 ]
 
 const initialState = {
@@ -164,7 +212,7 @@ export default function(state = initialState, action) {
     // case REHYDRATE:
     //     console.log("HVE JUST LOAD STATE--------------")
     //     let newAA = {...state}; // THis code will Lose all
-    //     if (!state.vehicleList) state.vehicleList= [];
+    //     // if (!state.vehicleList) state.vehicleList= [];
     //     return newAA;
     case APPDATA_OPEN_COUNT:
         return {

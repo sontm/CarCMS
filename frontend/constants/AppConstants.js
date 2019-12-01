@@ -61,6 +61,12 @@ export default {
     COLOR_D3_DARK_GREEN: "#2ca02c",
     COLOR_D3_LIGHT_GREEN: "#98df8a",
     COLOR_TEXT_LIGHT_INFO: "rgb(150,150,150)",
+
+    COLOR_FILL_FUEL: "#FF9501",
+    COLOR_FILL_AUTH: "#3cc97b",
+    COLOR_FILL_EXPENSE: "gold",
+    COLOR_FILL_SERVICE: "#df43fa",
+    COLOR_FILL_CAR: "#2c8ef4"
 };
 
 //https://codepen.io/whitelynx/pen/pbberp

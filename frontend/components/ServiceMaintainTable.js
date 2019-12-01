@@ -16,10 +16,6 @@ import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-ta
 class ServiceMaintainTable extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-        tableHead: ['Head', 'Head2', 'Head3', 'Head4', 'Head5', 'Head6', 'Head7', 'Head8', 'Head9'],
-        widthArr: [40, 60, 80, 100, 120, 140, 160, 180, 200]
-    }
   }
 
   parseMaintainTableData(theVehicle) {
@@ -126,7 +122,7 @@ class ServiceMaintainTable extends React.Component {
                 </View>
 
                 <View style={{flexDirection: "row"}}>
-                <View style={{width: 60}}>
+                <View style={{width: 80}}>
                     <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                         <Row data={["Loại Bảo Dưỡng"]} style={styles.headerFirst} textStyle={styles.textHeader}/>
                         <Row data={["Tại Km,Ngày"]} style={styles.headerFirst} textStyle={styles.textHeader}/>
@@ -140,7 +136,7 @@ class ServiceMaintainTable extends React.Component {
                             key={index}
                             data={rowData}
                             style={[styles.row, index%2 && {backgroundColor: '#F7F6E7'}]}
-                            textStyle={styles.text}
+                            textStyle={styles.textSmall}
                             />
                         ))
                         }
@@ -235,6 +231,7 @@ const styles = StyleSheet.create({
     headerHighFirst: {height: 40, backgroundColor: '#5377A1'},
 
     text: { textAlign: 'center', fontWeight: '100' },
+    textSmall: { textAlign: 'center', fontSize: 12, },
     textHeader: {textAlign: 'center', fontSize: 13, color: "white"},
     textHeaderMedium: {textAlign: 'center', fontSize: 12, color: "white"},
     textHeaderSmall: {textAlign: 'center', fontSize: 11, color: "white"},

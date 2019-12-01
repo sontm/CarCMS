@@ -13,7 +13,7 @@ import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
 
 function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, licensePlate, owner) {
-    if (target > 0 && passed> 0 && nextDate) {
+    if (target > 0 && passed> 0) {
     return (
         <View style={styles.reminderItemContainer} key={text+""+passed+"/"+target+licensePlate+isTeam}>
             <View style={styles.reminderProgress}>
@@ -37,9 +37,11 @@ function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, lic
             <View style={styles.reminderInfo}>
                 <Text style={{color: "tomato"}}>{text}{" "}{passed}/{target} ({unit})</Text>
                 <Text style={{fontSize: 13}}>{car}{" "}{licensePlate}{" "}{owner}</Text>
+                {nextDate ?
                 <Text style={{fontSize: 13}}>
                     {AppLocales.t("GENERAL_NEXT") + ": "}
                     {AppUtils.formatDateMonthDayYearVNShort(nextDate)}</Text>
+                    : null}
             </View>
         </View>
     )
@@ -59,16 +61,20 @@ class ReminderReport extends React.Component {
     let resultView = [];
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
-        var {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
-          = this.props.userData.carReports[element.id].oilReport;
+        if (this.props.userData.carReports[element.id].maintainRemind) {
+            var {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+                = this.props.userData.carReports[element.id].maintainRemind;
+            resultView.push(
+                renderRemindItem(false, AppLocales.t("GENERAL_SERVICE"), passedKmFromPreviousMaintain, lastMaintainKmValidFor, 
+                    null, "Km", element.brand+" " +element.model, element.licensePlate)
+            )
+        }
         var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
                 diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
             = this.props.userData.carReports[element.id].authReport;
-        resultView.push(
-            renderRemindItem(false, AppLocales.t("GENERAL_OIL"), passedKmFromPreviousOil, lastOilKmValidFor, 
-                nextEstimateDateForOil, "Km", element.brand+" " +element.model, element.licensePlate)
-        )
+        
 
         resultView.push(
             renderRemindItem(false, AppLocales.t("GENERAL_AUTHROIZE_AUTH"), diffDayFromLastAuthorize, lastAuthDaysValidFor, 
@@ -93,17 +99,21 @@ class ReminderReport extends React.Component {
     let resultView = [];
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
-        var {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
-          = this.props.teamData.teamCarReports[element.id].oilReport;
+        if (this.props.teamData.teamCarReports[element.id].maintainRemind) {
+            var {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+                = this.props.teamData.teamCarReports[element.id].maintainRemind;
+            resultView.push(
+                renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), passedKmFromPreviousMaintain, lastMaintainKmValidFor, 
+                    null, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
+            )
+        }
         var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
                 diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
             = this.props.teamData.teamCarReports[element.id].authReport;
 
-        resultView.push(
-            renderRemindItem(true, AppLocales.t("GENERAL_OIL"), passedKmFromPreviousOil, lastOilKmValidFor, 
-                nextEstimateDateForOil, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-        )
+        
 
         resultView.push(
             renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_AUTH"), diffDayFromLastAuthorize, lastAuthDaysValidFor, 

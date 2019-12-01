@@ -751,6 +751,7 @@ class AppUtils {
 
     }
 
+    // Deprecate. Now User in Maintain Reminds
     // input: [{vehicleId: 1, fillDate: "10/15/2018, 11:02:58 PM", price: 50000, currentKm: 90, id: 1}]
     getInfoForOilUsage(fillOilList, lastDate, lastKm, averageKmPerDay) {
         // Sort by fill Date
@@ -794,6 +795,53 @@ class AppUtils {
             return {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor};
         }
         return {};
+    }
+    // input: [{vehicleId: 1, fillDate: "10/15/2018, 11:02:58 PM", price: 50000, currentKm: 90, id: 1}]
+    getRemindForMaintain(serviceList, settingService, lastKm) {
+        
+        if (!serviceList) {
+            return {};
+        }
+
+        // Sort by Fill Date
+        serviceList.sort(function(a, b) { 
+            return new Date(b.fillDate) - new Date(a.fillDate);
+        })
+
+        let lastKmMaintain = 0;
+        let lastDateMaintain = 0;
+        let lastMaintainKmValidFor = 0;
+
+        let nextEstimatedKmForMaintain = 0;
+        let nextEstimatedDateForMaintain = 0;
+        let passedKmFromPreviousMaintain = 0;
+        if (serviceList && serviceList.length > 0) {
+            for (let index = serviceList.length -1; index >= 0; index--) {
+                let item = serviceList[index];
+                if (!item.isContantFix) {
+                    console.log("5555555555 The Index:" + index)
+                    lastKmMaintain = item.currentKm;
+                    lastDateMaintain = this.normalizeFillDate(new Date(item.fillDate));
+
+                    nextEstimatedKmForMaintain = item.currentKm + settingService.Km[0];
+                    lastMaintainKmValidFor = settingService.Km[0];
+                    
+                    // Plus Month of Bao DUong Nho
+                    nextEstimatedDateForMaintain = this.normalizeFillDate(
+                        new Date(lastDateMaintain.getFullYear(),
+                            lastDateMaintain.getMonth()+settingService.Month[0],
+                            lastDateMaintain.getDate()))
+
+                    passedKmFromPreviousMaintain = lastKm - lastKmMaintain;
+                }
+            }
+            console.log("55555555555555555555555 Result Maintain Reminds*" + lastKm)
+            console.log({lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain})
+            return {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+        }
+        return {}
     }
 
     getInfoCarAuthorizeDate(authorizeList) {
@@ -1516,6 +1564,72 @@ class AppUtils {
         return {arrExpenseTypeSpend, arrExpenseTypeByTime};
     }
 
+
+    // settingService = {
+    //     Km: [5000, 10000, 20000, 40000, 80000],
+    //     Month: [6, 12, 24, 48, 96]
+    // }
+
+    // reminds {
+    //     level1: {
+    //         currentKm: 100,
+    //         nextEstimatedKm: 200,
+    //         nextEsimatedDate: date, 
+    //     }
+    // ]
+
+    // TBD this function. This is Complicated but not Sure Effective
+    getRemindInfoForServiceMaintain(serviceList, settingService, prevMaintainReminds) {
+        if (!serviceList) {
+            return {};
+        }
+
+        // TODO, Sort By Time
+
+        let nextEstimateDateForService = null;
+        let lastEstimateKmForService = 0;
+        let serviceReminds = {}
+
+        if (serviceList && serviceList.length > 0) {
+            for (let index = serviceList.length -1; index >= 0; index--) {
+                let item = serviceList[index];
+                if (!item.isContantFix) {
+                    // this is the Latest bao Duong
+                    let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                    
+                    // If Maintain Level1, no need to Remind
+                    if (item.validFor == settingService.Km[1]) {
+                        // Bao DUong Trung Binh -> Create Remind L1, L2(TrungBinh)
+                        serviceReminds.level1 = {
+                            description: AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " " + AppLocales.t("MAINTAIN_LEVEL1"),
+                            currentKm: item.currentKm,
+                            nextEstimatedKm: item.currentKm + settingService.Km[0]
+                        }
+                        serviceReminds.level2 = {
+                            description: AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " " + AppLocales.t("MAINTAIN_LEVEL2"),
+                            currentKm: item.currentKm,
+                            nextEstimatedKm: item.currentKm + item.validFor
+                        }
+                    } else if (item.validFor == settingService.Km[2]) { // Trung Binh Lon
+                        // Bao DUong Trung Binh -> Create Remind L1, L2(TrungBinh), L4|L4
+                        serviceReminds.level1 = {
+                            description: AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " " + AppLocales.t("MAINTAIN_LEVEL1"),
+                            currentKm: item.currentKm,
+                            nextEstimatedKm: item.currentKm + settingService.Km[0]
+                        }
+                        serviceReminds.level2 = {
+                            description: AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " " + AppLocales.t("MAINTAIN_LEVEL2"),
+                            currentKm: item.currentKm,
+                            nextEstimatedKm: item.currentKm + settingService.Km[1]
+                        }
+
+                        // calculate 
+                    }
+                }
+            }
+        }
+    }
+
     
 
     async syncDataToServer(props) {
@@ -1645,7 +1759,7 @@ class AppUtils {
     }
 
     // remindSetting: kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
-    async actTempCalculateCarReportAsyncWrapper(currentVehicle, options, remindSetting, prevCarReports) {
+    async actTempCalculateCarReportAsyncWrapper(currentVehicle, options, remindSetting, prevCarReports, settingService) {
         return new Promise((resolve, reject) => {
             try {
                 console.log("~~~~~~~~~~~~~~~~ Calling actTempCalculateCarReportAsync:" + currentVehicle.licensePlate)
@@ -1655,7 +1769,7 @@ class AppUtils {
                 // } else {
                 //     reject({msg: "null result"})
                 // }
-                this.actTempCalculateCarReportAsync(currentVehicle, options, remindSetting, prevCarReports)
+                this.actTempCalculateCarReportAsync(currentVehicle, options, remindSetting, prevCarReports, settingService)
                 .then (result => {
                     console.log("  ^^^ Result")
                     resolve(result)
@@ -1669,7 +1783,7 @@ class AppUtils {
             }
         })
     }
-    async actTempCalculateCarReportAsync(currentVehicle, options, remindSetting, prevCarReports) {
+    async actTempCalculateCarReportAsync(currentVehicle, options, remindSetting, prevCarReports, settingService) {
         //return new Promise((resolve, reject) => {
             if ( !options ) {
                 // Default
@@ -1737,9 +1851,14 @@ class AppUtils {
                 = this.getStatForGasUsage(currentVehicle.fillGasList, 
                     options.duration, options.durationType, options.tillDate);
 
-            let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
-                = this.getInfoForOilUsage(currentVehicle.fillOilList, 
-                    lastDate, lastKm, averageKmPerDay);
+            // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor}
+            //     = this.getInfoForOilUsage(currentVehicle.fillOilList, 
+            //         lastDate, lastKm, averageKmPerDay);
+
+            let {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+                = this.getRemindForMaintain(currentVehicle.serviceList, settingService, lastKm)
+
             let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
                 diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
@@ -1847,13 +1966,15 @@ class AppUtils {
                 gasReport: {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
                     arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
                     avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly},
-                oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor},
+                //oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor},
                 authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                     diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
                     diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee},
                 moneyReport: {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend,arrTotalMoneySpend,
                     totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend},
                 expenseReport: {arrExpenseTypeSpend, arrExpenseTypeByTime},
+                maintainRemind: {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+                    nextEstimatedDateForMaintain, passedKmFromPreviousMaintain},
                 scheduledNotification: scheduledNotification
             }
             

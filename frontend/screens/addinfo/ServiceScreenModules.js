@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
   activeSegmentText2: {
       //color:"white",
       color:AppConstants.COLOR_GOOGLE,
-      fontSize: 14,
+      fontSize: 12,
       textDecorationLine: "underline",
       fontWeight: "bold",
       marginLeft: 3,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
   },
   inActiveSegmentText2: {
         color:AppConstants.COLOR_PICKER_TEXT,
-      fontSize: 13,
+      fontSize: 11,
       padding: 0,
       margin: 0,
       marginLeft: 3,

@@ -146,10 +146,13 @@ class PayServiceScreen extends React.Component {
         })
     }
     removeMaintainModule(value) {
-        let idx = this.state.serviceModule.indexOf(value)
-        if (idx >= 0) {
+        console.log(" remove Maintain Module calledddd")
+        console.log(value)
+        console.log(this.state.serviceModule[""+value])
+        if (this.state.serviceModule[""+value]) {
             let prevList = this.state.serviceModule;
-            prevList.splice(idx, 1)
+            delete prevList[""+value];
+
             this.setState({
                 serviceModule: prevList
             })
@@ -179,7 +182,7 @@ class PayServiceScreen extends React.Component {
                     <ListItem key={prop+""+item} style={{flexDirection:"row", justifyContent: "space-between"}}>
                         <Text>{prop+":" + item}</Text>
                         <TouchableOpacity 
-                                onPress={() => this.removeMaintainModule(item)}>
+                                onPress={() => this.removeMaintainModule(prop)}>
                             <Icon type="FontAwesome" name="remove" style={{fontSize: 17, color: "grey"}} />
                         </TouchableOpacity>
                     </ListItem>
@@ -304,12 +307,14 @@ class PayServiceScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <View style={styles.rowForm}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                            <Label>{AppLocales.t("NEW_SERVICE_MODULES")}</Label>
                             <View style={{flexDirection:"row"}}>
-                                <Text
-                                    onPress={() => {
-                                        this.props.navigation.navigate("ServiceModules", {onOk: this.onUpdateMaintainModules})
-                                    }}> Add Module </Text>
+                                <Label>{AppLocales.t("NEW_SERVICE_MODULES")}</Label>
+                                <Button transparent small
+                                    onPress={() => {this.props.navigation.navigate("ServiceModules", {onOk: this.onUpdateMaintainModules})
+                                }}>
+                                    <Text>{AppLocales.t("MAINTAIN_ADD_MODULE")}</Text>
+                                    <Icon type="Entypo" name="plus" style={{fontSize: 14}}/>
+                                </Button>
                             </View>
                             <View style={{width: (Layout.window.width-40)*0.6}}>
                                 {viewServiceModule}

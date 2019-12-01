@@ -95,7 +95,7 @@ class VehicleDetailHistory extends React.Component {
                     
                     <Left>
                         {item.type == AppConstants.FILL_ITEM_GAS ? (
-                            <Button style={{ backgroundColor: "#FF9501" }}>
+                            <Button style={{ backgroundColor: AppConstants.COLOR_FILL_FUEL }}>
                                 <Icon active type="MaterialCommunityIcons" name="fuel" style={{fontSize: 15}}/>
                             </Button>
                         ) :

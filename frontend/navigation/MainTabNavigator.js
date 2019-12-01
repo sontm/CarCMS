@@ -58,7 +58,7 @@ const MyVehicleStack = createStackNavigator(
     VehicleDetail: VehicleDetailReport,
     VehicleHistory: VehicleDetailHistory,
     FillGas: FillGasScreen,
-    FillOil: FillOilScreen,
+    //FillOil: FillOilScreen,
     CarAuthorize: CarAuthorizeScreen,
     PayExpense: PayExpenseScreen,
     PayService: PayServiceScreen,
@@ -73,7 +73,7 @@ const DetailStack = createStackNavigator(
     VehicleHistory: VehicleDetailHistory,
     NewVehicle: RegisterVehicleScreen,
     FillGas: FillGasScreen,
-    FillOil: FillOilScreen,
+    //FillOil: FillOilScreen,
     CarAuthorize: CarAuthorizeScreen,
     PayExpense: PayExpenseScreen,
     PayService: PayServiceScreen
@@ -81,22 +81,22 @@ const DetailStack = createStackNavigator(
   config
 );
 const BUTTONS = [
-  { text: "Đổ Xăng", icon: "american-football", iconColor: "#2c8ef4" },//1
-  { text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
-  { text: "Phụ Chi", icon: "analytics", iconColor: "#f42ced" },//3
-  { text: "Sửa Chữa/Bảo Trì", icon: "analytics", iconColor: "#f42ced" },//4
-  { text: "Pháp Lý/Đăng Kiểm/Bảo Hiểm", icon: "analytics", iconColor: "#f42ced" },//5
-  { text: "Thêm Xe", icon: "american-football", iconColor: "#2c8ef4" },//0
-  { text: "Đóng", icon: "close", iconColor: "#25de5b" }//6
+  { text: "Đổ Xăng", icon: "color-fill", iconColor: AppConstants.COLOR_FILL_FUEL },//1
+  //{ text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
+  { text: "Phụ Chi", icon: "ios-more", iconColor: "#007AFF" },//3
+  { text: "Sửa Chữa/Bảo Trì", icon: "hammer", iconColor: AppConstants.COLOR_FILL_SERVICE },//4
+  { text: "Pháp Lý/Đăng Kiểm/Bảo Hiểm", icon: "paper", iconColor: AppConstants.COLOR_FILL_AUTH },//5
+  { text: "Thêm Xe", icon: "car", iconColor: AppConstants.COLOR_FILL_CAR },//0
+  { text: "Đóng", icon: "close", iconColor: AppConstants.COLOR_GOOGLE }//6
 ];
 
 const FILLGAS_INDEX = 0;
-const FILLOIL_INDEX = 1;
-const PAY_EXPENSE_INDEX = 2;
-const PAY_SERVICE_INDEX = 3;
-const CAR_AUTHORIZE_INDEX = 4;
-const NEW_VEHICLE = 5;
-const CANCEL_INDEX = 6;
+//const FILLOIL_INDEX = 1;
+const PAY_EXPENSE_INDEX = 1;
+const PAY_SERVICE_INDEX = 2;
+const CAR_AUTHORIZE_INDEX = 3;
+const NEW_VEHICLE = 4;
+const CANCEL_INDEX = 5;
 
 const SettingsStack = createStackNavigator(
   {
@@ -204,10 +204,12 @@ const tabNavigator = createBottomTabNavigator({
                   } else if (btnIndex == FILLGAS_INDEX) {
                       props.navigation.navigate("FillGas", 
                           {createNew: true})
-                  } else if (btnIndex == FILLOIL_INDEX) {
-                      props.navigation.navigate("FillOil", 
-                          {createNew: true})
-                  } else if (btnIndex == CAR_AUTHORIZE_INDEX) {
+                  } 
+                  // else if (btnIndex == FILLOIL_INDEX) {
+                  //     props.navigation.navigate("FillOil", 
+                  //         {createNew: true})
+                  // } 
+                  else if (btnIndex == CAR_AUTHORIZE_INDEX) {
                       props.navigation.navigate("CarAuthorize", 
                           {createNew: true})
                   } else if (btnIndex == PAY_EXPENSE_INDEX) {

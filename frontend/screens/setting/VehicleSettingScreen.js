@@ -53,7 +53,7 @@ class VehicleSettingScreen extends React.Component {
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
                                 {AppLocales.t("SETTING_REMIND_OIL_CAR")}{" (" + AppLocales.t("GENERAL_KM")+")"}</Label>
                             <Input
@@ -66,7 +66,7 @@ class VehicleSettingScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
                                 {AppLocales.t("SETTING_REMIND_AUTH")}{" (" + AppLocales.t("GENERAL_DAY")+")"}</Label>
                             <Input
@@ -79,7 +79,7 @@ class VehicleSettingScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
                                 {AppLocales.t("SETTING_REMIND_INSURANCE")}{" (" + AppLocales.t("GENERAL_DAY")+")"}</Label>
                             <Input
@@ -92,7 +92,7 @@ class VehicleSettingScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
                                 {AppLocales.t("SETTING_REMIND_ROAD_FEE")}{" (" + AppLocales.t("GENERAL_DAY")+")"}</Label>
                             <Input
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingTop: 15,
-    paddingHorizontal: 15,
+    paddingHorizontal: "6%",
     backgroundColor: '#fff',
     flexDirection: "column"
   },
@@ -146,13 +146,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end", // vertial align
     justifyContent: "center",
-    height: 50,
-    width: "96%",
+    //height: 50,
+    width: "86%",
     alignSelf:"center"
   },
   rowLabel: {
     flex: 5,
-    textAlign: "right",
+    textAlign: "left",
     paddingRight: 5,
     fontSize: 14
   },

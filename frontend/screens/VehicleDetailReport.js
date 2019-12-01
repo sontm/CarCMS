@@ -83,12 +83,14 @@ class VehicleDetailReport extends React.Component {
                         </View>
                         
                         <View style={styles.statRow}>
+                            {this.props.userData.carReports[currentVehicle.id].maintainRemind ? (
                             <View style={styles.progressContainer}>
                             <VictoryPie
                                 colorScale={["tomato", "silver"]}
                                 data={[
-                                    { x: "", y: this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil },
-                                    { x: "", y: (this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor - this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil) },
+                                    { x: "", y: this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain },
+                                    { x: "", y: (this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor - 
+                                        this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain) },
                                 ]}
                                 height={150}
                                 innerRadius={65}
@@ -96,18 +98,15 @@ class VehicleDetailReport extends React.Component {
                                 labels={() => null}
                                 />
                             <View style={styles.labelProgress}>
-                                <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_OIL") + ": "}</Text>
+                                <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_SERVICE") + ": "}</Text>
                                 <Text style={styles.labelProgressText}>
-                                    {this.props.userData.carReports[currentVehicle.id].oilReport.passedKmFromPreviousOil}/
-                                    {this.props.userData.carReports[currentVehicle.id].oilReport.lastOilKmValidFor}
+                                    {this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain}/
+                                    {this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor}
                                 </Text>
                                 <Text>Km</Text>
                             </View>
-                            <Text>{AppLocales.t("GENERAL_NEXT") + ": "}
-                                {this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil ? 
-                                AppUtils.formatDateMonthDayYearVNShort(
-                                    this.props.userData.carReports[currentVehicle.id].oilReport.nextEstimateDateForOil): "NA"}</Text>
                             </View>
+                            ) : null }
 
                             <View style={styles.progressContainer}>
                                 <VictoryPie

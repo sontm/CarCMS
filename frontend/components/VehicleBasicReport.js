@@ -165,14 +165,14 @@ class VehicleBasicReport extends Component {
                         ) : null}
                     </View>
 
-                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="oil") && currentData) ? (
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="oil") && currentData && currentData.maintainRemind) ? (
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
-                            progress={currentData.oilReport.passedKmFromPreviousOil? 
-                                currentData.oilReport.passedKmFromPreviousOil/
-                                currentData.oilReport.lastOilKmValidFor : 0}
+                            progress={currentData.maintainRemind.passedKmFromPreviousMaintain? 
+                                currentData.maintainRemind.passedKmFromPreviousMaintain/
+                                currentData.maintainRemind.lastMaintainKmValidFor : 0}
                             progressViewStyle = 'default'
                             progressTintColor = "blue"
                             trackTintColor = "rgba(230, 230, 230, 1)"
@@ -181,15 +181,15 @@ class VehicleBasicReport extends Component {
                         <ProgressBarAndroid
                             styleAttr="Horizontal"
                             indeterminate={false}
-                            progress={currentData.oilReport.passedKmFromPreviousOil? 
-                                currentData.oilReport.passedKmFromPreviousOil/
-                                currentData.oilReport.lastOilKmValidFor : 0}
+                            progress={currentData.maintainRemind.passedKmFromPreviousMaintain? 
+                                currentData.maintainRemind.passedKmFromPreviousMaintain/
+                                currentData.maintainRemind.lastMaintainKmValidFor : 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                            {currentData.oilReport.passedKmFromPreviousOil}/
-                            {currentData.oilReport.lastOilKmValidFor} Km
-                            ({AppLocales.t("GENERAL_OIL")})
+                            {currentData.maintainRemind.passedKmFromPreviousMaintain}/
+                            {currentData.maintainRemind.lastMaintainKmValidFor} Km
+                            ({AppLocales.t("GENERAL_SERVICE")})
                         </Text>
                     </View>
                     ): null }

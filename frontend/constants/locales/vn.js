@@ -32,6 +32,8 @@ export default {
     GENERAL_MAINTAIN_KIEMTRA: "Kiểm Tra",
     GENERAL_MAINTAIN_MODULE: "Bộ Phận",
 
+    MAINTAIN_ADD_MODULE: "Thêm Bộ Phận",
+
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Cá Nhân",
     NAV_BOT_TEAM: "Tổ Chức",
