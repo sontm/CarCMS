@@ -388,12 +388,14 @@ class MoneyUsageReport extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: "white",
-      flexDirection: "column",
-      borderRadius: 7,
-      justifyContent: "space-between",
-      marginBottom: 10,
-      paddingBottom: 40
+        backgroundColor: "white",
+        flexDirection: "column",
+        borderWidth: 0.5,
+        borderColor: "grey",
+        justifyContent: "space-between",
+        marginBottom: 20,
+        borderRadius: 7,
+        paddingBottom: 20
     },
 
 

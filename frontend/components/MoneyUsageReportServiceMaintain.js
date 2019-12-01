@@ -98,15 +98,18 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                 var theTotal = totalPrivateServiceSpend;
             }
         } else {
-            var {arrServiceTypeSpend, totalServiceSpend2} = 
-                this.props.userData.carReports[this.props.currentVehicle.id].serviceReport;
+            if (this.props.userData.carReports[this.props.currentVehicle.id].serviceReport) {
+                var {arrServiceTypeSpend, totalServiceSpend2} = 
+                    this.props.userData.carReports[this.props.currentVehicle.id].serviceReport;
 
-            var theArr = arrServiceTypeSpend;
-            var theTotal = totalServiceSpend2;
+                var theArr = arrServiceTypeSpend;
+                var theTotal = totalServiceSpend2;
+            }
         }
 
         return (
             <View style={styles.container}>
+                {theArr ? (
                 <View>
                 <View style={{...styles.textRow, marginTop: 15}}>
                     <Text><H3>
@@ -133,7 +136,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                     </View>
                 </View>
                 </View>
-
+                ) : null }
             </View>
         )
     } else {

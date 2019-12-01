@@ -5,7 +5,10 @@ import AppLocales from '../constants/i18n'
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
-
+const DEFAULT_SETTING_SERVICE = {
+    Km: [5000, 10000, 20000, 40000, 80000],
+    Month: [6, 12, 24, 48, 96]
+}
 const dateFormat = require('dateformat');
 // dateFormat.i18n = {
 //     dayNames: [
@@ -803,6 +806,11 @@ class AppUtils {
             return {};
         }
 
+        // TODO, will remove when finish Development
+        if (!settingService || !settingService.Km) {
+            settingService = DEFAULT_SETTING_SERVICE;
+        }
+
         // Sort by Fill Date
         serviceList.sort(function(a, b) { 
             return new Date(b.fillDate) - new Date(a.fillDate);
@@ -1577,7 +1585,7 @@ class AppUtils {
             serviceList.forEach((item, index) => {
                 let itemDate = this.normalizeFillDate(new Date(item.fillDate));
                 let theType = "";
-                if (item.isContantFix) {
+                if (item.isConstantFix) {
                     theType = AppLocales.t("NEW_SERVICE_CONSANTFIX");
                 } else {
                     if (item.validForIndex == 0) {

@@ -93,9 +93,9 @@ class VehicleDetailReport extends React.Component {
                                     { x: "", y: (this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor - 
                                         this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain) },
                                 ]}
-                                height={150}
-                                innerRadius={65}
-                                radius={70}
+                                height={140}
+                                innerRadius={58}
+                                radius={65}
                                 labels={() => null}
                                 />
                             <View style={styles.labelProgress}>
@@ -117,9 +117,9 @@ class VehicleDetailReport extends React.Component {
                                         { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor -
                                             this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
                                     ]}
-                                    height={150}
-                                    innerRadius={65}
-                                    radius={70}
+                                    height={140}
+                                    innerRadius={58}
+                                    radius={65}
                                     labels={() => null}
                                     />
                                 <View style={styles.labelProgress}>
@@ -143,9 +143,9 @@ class VehicleDetailReport extends React.Component {
                                         { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance -
                                             this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance) },
                                     ]}
-                                    height={150}
-                                    innerRadius={65}
-                                    radius={70}
+                                    height={140}
+                                    innerRadius={58}
+                                    radius={65}
                                     labels={() => null}
                                     />
                                 <View style={styles.labelProgress}>
@@ -169,9 +169,9 @@ class VehicleDetailReport extends React.Component {
                                         { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee -
                                             this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee) },
                                     ]}
-                                    height={150}
-                                    innerRadius={65}
-                                    radius={70}
+                                    height={140}
+                                    innerRadius={58}
+                                    radius={65}
                                     labels={() => null}
                                     />
                                 <View style={styles.labelProgress}>
@@ -201,11 +201,11 @@ class VehicleDetailReport extends React.Component {
                     <Content>
                     <MoneyUsageByTimeReport currentVehicle={currentVehicle}/>
                     <MoneyUsageReport currentVehicle={currentVehicle}/>
+                    <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle}/>
                     </Content>
                 </Tab>
                 <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_SERVICE")}</Text></TabHeading>}>
                     <Content>
-                    <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle}/>
                     <ServiceMaintainTable  currentVehicle={currentVehicle}/>
                     </Content>
                 </Tab>
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         flexGrow: 100,
         borderRadius: 7,
-        // backgroundColor: "white"
+        backgroundColor: "white"
     },
     equalStartRow: {
         flex: 1,
@@ -353,11 +353,12 @@ const styles = StyleSheet.create({
     },
 
     progressContainer: {
-        width: 180,
-        height: 180,
+        width: 150,
+        height: 150,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
+        marginBottom: 5,
     },
     labelProgress: {
         position: "absolute",
