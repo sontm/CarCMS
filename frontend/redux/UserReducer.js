@@ -35,7 +35,8 @@ const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 
 const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
 
-const SETTING_VEHICLE_SET_DEFAULT = 'SETTING_VEHICLE_SET_DEFAULT';
+const SETTING_MAINTAIN_TYPE = 'SETTING_MAINTAIN_TYPE';
+const SETTING_REMIND = 'SETTING_REMIND';
 
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
@@ -58,10 +59,18 @@ const initialState = {
     lastSyncToServerOn: null,
 };
 
-export const actSettingSetVehicleDefault = (data) => (dispatch) => {
-    console.log("actSettingSetVehicleDefault:")
+
+export const actSettingSetMaintainType = (data) => (dispatch) => {
+    console.log("actSettingSetMaintainType:")
     dispatch({
-        type: SETTING_VEHICLE_SET_DEFAULT,
+        type: SETTING_MAINTAIN_TYPE,
+        payload: data
+    })
+}
+export const actSettingSetRemind = (data) => (dispatch) => {
+    console.log("actSettingSetRemind:")
+    dispatch({
+        type: SETTING_REMIND,
         payload: data
     })
 }
@@ -557,10 +566,15 @@ export default function(state = initialState, action) {
 
         return newStateCarReport;
 
-    case SETTING_VEHICLE_SET_DEFAULT:
+    case SETTING_REMIND:
         return {
             ...state,
             settings: action.payload
+        };
+    case SETTING_MAINTAIN_TYPE:
+        return {
+            ...state,
+            settingService: action.payload
         };
     default:
         return state;

@@ -25,6 +25,8 @@ import VehicleDetailHistory from '../screens/VehicleDetailHistory';
 
 import SettingsScreen from '../screens/SettingsScreen';
 import VehicleSettingScreen from '../screens/setting/VehicleSettingScreen';
+import ServiceMaintainSettingScreen from '../screens/setting/ServiceMaintainSettingScreen';
+
 import LoginScreen from '../screens/setting/LoginScreen';
 import ProfileScreen from '../screens/setting/ProfileScreen';
 import RegisterUserScreen from '../screens/setting/RegisterUserScreen';
@@ -84,7 +86,7 @@ const BUTTONS = [
   { text: "Đổ Xăng", icon: "color-fill", iconColor: AppConstants.COLOR_FILL_FUEL },//1
   //{ text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
   { text: "Phụ Chi", icon: "ios-more", iconColor: "#007AFF" },//3
-  { text: "Sửa Chữa/Bảo Trì", icon: "hammer", iconColor: AppConstants.COLOR_FILL_SERVICE },//4
+  { text: "Sửa Chữa/Bảo Trì", icon: "construct", iconColor: AppConstants.COLOR_FILL_SERVICE },//4
   { text: "Pháp Lý/Đăng Kiểm/Bảo Hiểm", icon: "paper", iconColor: AppConstants.COLOR_FILL_AUTH },//5
   { text: "Thêm Xe", icon: "car", iconColor: AppConstants.COLOR_FILL_CAR },//0
   { text: "Đóng", icon: "close", iconColor: AppConstants.COLOR_GOOGLE }//6
@@ -107,6 +109,7 @@ const SettingsStack = createStackNavigator(
     RegisterUser: RegisterUserScreen,
     CreateTeam: CreateTeamScreen,
     JoinTeam: JoinTeamScreen,
+    ServiceMaintainSetting: ServiceMaintainSettingScreen,
     DebugScreen: DebugScreen
   },
   config

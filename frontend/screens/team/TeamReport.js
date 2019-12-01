@@ -21,6 +21,7 @@ import GasUsageReport from '../../components/GasUsageReport'
 import GasUsageTopReport from '../../components/GasUsageTopReport'
 import MoneyUsageByTimeReport from '../../components/MoneyUsageByTimeReport'
 import MoneyUsageReport from '../../components/MoneyUsageReport'
+import MoneyUsageReportServiceMaintain from '../../components/MoneyUsageReportServiceMaintain'
 
 import VehicleBasicReport from '../../components/VehicleBasicReport'
 import AppLocales from '../../constants/i18n'
@@ -42,7 +43,8 @@ class TeamReport extends React.Component {
                     
           <MoneyUsageByTimeReport isTotalReport={true} isTeamDisplay={true}/>
           <MoneyUsageReport isTotalReport={true} isTeamDisplay={true}/>
-          
+          <MoneyUsageReportServiceMaintain isTotalReport={true} isTeamDisplay={true} 
+                  key={"MoneyUsageReportServiceMaintain"}/>
         </ScrollView>
       </SafeAreaView>
     );

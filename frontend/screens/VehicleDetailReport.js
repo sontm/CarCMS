@@ -13,6 +13,7 @@ import GasUsageReport from '../components/GasUsageReport'
 import MoneyUsageReport from '../components/MoneyUsageReport'
 import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
 import ServiceMaintainTable from '../components/ServiceMaintainTable';
+import MoneyUsageReportServiceMaintain from '../components/MoneyUsageReportServiceMaintain';
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
@@ -204,6 +205,7 @@ class VehicleDetailReport extends React.Component {
                 </Tab>
                 <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_SERVICE")}</Text></TabHeading>}>
                     <Content>
+                    <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle}/>
                     <ServiceMaintainTable  currentVehicle={currentVehicle}/>
                     </Content>
                 </Tab>

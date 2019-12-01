@@ -34,7 +34,7 @@ class PayServiceScreen extends React.Component {
             subType: "", // not used
             remark: "",
             validFor: 5000, // km or Month
-            validForType: "Km", // Km or Month
+            validForIndex: 0, // index in array of maintain type
             serviceModule: {}, // Bo Phan cua Xe Sua Chua
             isConstantFix: false // when FIx sudden a problem of Car, not Maintainance 
         };
@@ -113,13 +113,10 @@ class PayServiceScreen extends React.Component {
         }
     }
 
-    setMaintainType(value) {
-        let validForType = "Tháng";
-        if (value > 100) {
-            validForType = "Km";
-        }
+    setMaintainType(value, index) {
+        console.log("setMaintainType validForIndex:" + index)
         this.setState({
-            validForType: validForType,
+            validForIndex: index,
             validFor: value
         })
     }
@@ -127,14 +124,21 @@ class PayServiceScreen extends React.Component {
         let result = [];
         console.log(" combine MainTain Type:")
         if (settingService) {
-            if (settingService.Km && settingService.Km.length > 0) {
-                result.push(...settingService.Km)
+            if (settingService.Km && settingService.Km.length > 0 &&
+                    settingService.Month && settingService.Month.length > 0) {
+                settingService.Km.forEach((item, idx) => {
+                    result.push({
+                        text: settingService.Km[idx]+"Km ("+AppLocales.t("GENERAL_OR")+" "+
+                         settingService.Month[idx]+" "+AppLocales.t("GENERAL_MONTH") +")",
+                        kmValue: settingService.Km[idx],
+                        index: idx
+                    })
+                })
+                
             }
-            if (settingService.Month && settingService.Month.length > 0) {
-                result.push(...settingService.Month)
-            }
+            
         }
-        return result;
+        return result; 
     }
 
     // called by ServiceScreenModules to re-render after go Back
@@ -269,11 +273,11 @@ class PayServiceScreen extends React.Component {
                                 placeholderIconColor="#007aff"
                                 selectedValue={this.state.validFor}
                                 onValueChange={(itemValue, itemIndex) =>
-                                   this.setMaintainType(itemValue)
+                                   this.setMaintainType(itemValue, itemIndex)
                                 }
                             >
                                 { maintainTypeArr.map((item, idx) => (
-                                    <Picker.Item label={""+item} value={item} key={idx}/>
+                                    <Picker.Item label={""+item.text} value={item.kmValue} key={idx}/>
                                 ))}
                             </Picker>
                         </Item>

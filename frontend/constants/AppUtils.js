@@ -1564,6 +1564,60 @@ class AppUtils {
         return {arrExpenseTypeSpend, arrExpenseTypeByTime};
     }
 
+    getInfoMoneySpendInService(serviceList) {
+        if (!serviceList) {
+            return {};
+        }
+
+        let objExpenseTypeSpend = {};// Key is subtype
+        let arrServiceTypeSpend = [];
+        let totalServiceSpend2 = 0;
+
+        if (serviceList && serviceList.length > 0) {
+            serviceList.forEach((item, index) => {
+                let itemDate = this.normalizeFillDate(new Date(item.fillDate));
+                let theType = "";
+                if (item.isContantFix) {
+                    theType = AppLocales.t("NEW_SERVICE_CONSANTFIX");
+                } else {
+                    if (item.validForIndex == 0) {
+                        theType = AppLocales.t("SETTING_MAINTAIN_L1");
+                    } else if (item.validForIndex == 1) {
+                        theType = AppLocales.t("SETTING_MAINTAIN_L2");
+                    } else if (item.validForIndex == 2) {
+                        theType = AppLocales.t("SETTING_MAINTAIN_L3");
+                    } else if (item.validForIndex == 3) {
+                        theType = AppLocales.t("SETTING_MAINTAIN_L4");
+                    } else if (item.validForIndex == 4) {
+                        theType = AppLocales.t("SETTING_MAINTAIN_L5");
+                    }
+                }
+
+                if (objExpenseTypeSpend[""+theType]) {
+                    // Exist, increase
+                    objExpenseTypeSpend[""+theType] += item.price;
+                } else {
+                    objExpenseTypeSpend[""+theType] = item.price;
+                }
+                totalServiceSpend2 += item.price;
+            })
+        }
+
+        // convert to Array for Chart
+        for (var prop in objExpenseTypeSpend) {
+            if (Object.prototype.hasOwnProperty.call(objExpenseTypeSpend, prop)) {
+                arrServiceTypeSpend.push({
+                    y: objExpenseTypeSpend[""+prop],
+                    x: prop
+                })
+            }
+        }
+        // console.log("objExpenseTypeByTime)))))))))))))))))")
+        // console.log(objExpenseTypeByTime)
+        // console.log("arrExpenseTypeByTime~~~~~~~~~~~~~~~~~~")
+        // console.log(arrExpenseTypeByTime)
+        return {arrServiceTypeSpend, totalServiceSpend2};
+    }
 
     // settingService = {
     //     Km: [5000, 10000, 20000, 40000, 80000],
@@ -1872,7 +1926,9 @@ class AppUtils {
             
             let {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.getInfoMoneySpendInExpense(currentVehicle.expenseList,
                 options.duration, options.durationType, options.tillDate);
-                
+
+            let {arrServiceTypeSpend, totalServiceSpend2} = this.getInfoMoneySpendInService(currentVehicle.serviceList);
+
             // Create Notification Scheduler
             // Only process if UserData (not Team)
             let scheduledNotification = {};
@@ -1975,6 +2031,7 @@ class AppUtils {
                 expenseReport: {arrExpenseTypeSpend, arrExpenseTypeByTime},
                 maintainRemind: {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
                     nextEstimatedDateForMaintain, passedKmFromPreviousMaintain},
+                serviceReport: {arrServiceTypeSpend, totalServiceSpend2},
                 scheduledNotification: scheduledNotification
             }
             

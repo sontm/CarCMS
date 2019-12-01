@@ -5,7 +5,7 @@ import {HeaderText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
-import {actSettingSetVehicleDefault} from '../../redux/UserReducer'
+import {actSettingSetRemind} from '../../redux/UserReducer'
 
 class VehicleSettingScreen extends React.Component {
     constructor(props) {
@@ -30,7 +30,7 @@ class VehicleSettingScreen extends React.Component {
                 dayForRoadFeeRemind: Number(this.state.dayForRoadFeeRemind),
             }
             console.log(newData)
-            this.props.actSettingSetVehicleDefault(newData)
+            this.props.actSettingSetRemind(newData)
 
             this.props.navigation.navigate('Settings')
         } catch (e) {
@@ -174,7 +174,7 @@ const mapStateToProps = (state) => ({
     userData: state.userData
 });
 const mapActionsToProps = {
-    actSettingSetVehicleDefault
+    actSettingSetRemind
 };
   
 export default connect(

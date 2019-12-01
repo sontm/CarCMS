@@ -22,6 +22,8 @@ import Layout from '../constants/Layout'
 import AppLocales from '../constants/i18n'
 import GasUsageReport from '../components/GasUsageReport'
 import MoneyUsageByTimeReport from '../components/MoneyUsageByTimeReport'
+import MoneyUsageReportServiceMaintain from '../components/MoneyUsageReportServiceMaintain'
+
 import apputils from '../constants/AppUtils';
 
 function getNameOfSortType(type) {
@@ -118,7 +120,11 @@ class MyVehicleScreen extends React.Component {
               <Content><View style={styles.container}><ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}>
+
                 <MoneyUsageByTimeReport isTotalReport={true} key={"MoneyUsageByTimeReportPrivate"}/>
+                <MoneyUsageReportServiceMaintain isTotalReport={true} isTeamDisplay={false} 
+                  key={"MoneyUsageReportServiceMaintain"}/>
+
               </ScrollView></View></Content>
             </Tab>
             <Tab heading={ <TabHeading><Icon type="MaterialCommunityIcons" name="fuel" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB2")}</Text></TabHeading>}>
