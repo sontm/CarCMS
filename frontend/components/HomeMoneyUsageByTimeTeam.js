@@ -11,6 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
+import {NoDataText} from '../components/StyledText';
 
 class HomeMoneyUsageByTimeTeam extends React.Component {
   constructor(props) {
@@ -97,13 +98,15 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
     if (this.props.currentVehicle || this.props.isTotalReport) {
         var {arrTotalMerge, tickXLabels} = this.calculateAllVehicleTotalMoneyTeam(true);
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
+
+        if (arrTotalMerge && arrTotalMerge.length > 0) {
         return (
             <View style={styles.container}>
                 
                 <View style={styles.textRow}>
-                    <Text><H2>
+                    <Text><H3>
                     {AppLocales.t("HOME_TEAM_MONEY_USAGE")}
-                    </H2></Text>
+                    </H3></Text>
                     
                 </View>
 
@@ -154,15 +157,30 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
                 </View>
             </View>
         )
+        } else {
+            return (
+                <View style={styles.container}>
+                    <View style={styles.textRow}>
+                        <Text><H3>
+                            {AppLocales.t("HOME_TEAM_MONEY_USAGE")}
+                        </H3></Text>
+                        
+                    </View>
+                    <NoDataText />
+                </View>
+            )
+        }
     } else {
         return (
-            <Container>
-            <Content>
             <View style={styles.container}>
-
+                <View style={styles.textRow}>
+                    <Text><H3>
+                        {AppLocales.t("HOME_TEAM_MONEY_USAGE")}
+                    </H3></Text>
+                    
+                </View>
+                <NoDataText />
             </View>
-            </Content>
-            </Container>
         )
     }
     }
@@ -172,11 +190,11 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       flexDirection: "column",
-      borderWidth: 0.5,
-      borderColor: "grey",
+      //borderWidth: 0.5,
+      //borderColor: "grey",
       justifyContent: "space-between",
       marginBottom: 20,
-      borderRadius: 7,
+      //borderRadius: 7,
       paddingBottom: 20
     },
 

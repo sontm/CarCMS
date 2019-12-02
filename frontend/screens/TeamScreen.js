@@ -26,6 +26,7 @@ import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 import TeamMembers from './team/TeamMembers'
 import TeamReport from './team/TeamReport'
 import TeamReport2 from './team/TeamReport2'
+import { NoDataText } from '../components/StyledText';
 
 function getNameOfSortType(type) {
   if (type == "auth") return AppLocales.t("TEAM_VEHICLE_SORT_AUTH");
@@ -195,19 +196,29 @@ class TeamScreen extends React.Component {
           navigation={this.props.navigation} requestDisplay={this.state.sortType} isTeamDisplay={true}
         />
       )}))
-      return viewDisplay;
+      if (allVehicles.length > 0) {
+        return viewDisplay;
+      } else {
+        return (
+          <NoDataText />
+        )
+      }
     } else if(this.state.activePage === 1) {
       return null;
     } else {
       return (
         <View>
+          {this.props.teamData.lastSyncFromServerOn ? (
           <View key={"lastSyncTeam"} style={{flexDirection:"row", justifyContent: "center", marginTop: 3, marginBottom: 0}}>
             <Text style={styles.textNormalSmallDate}>
             {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ": " + 
               AppUtils.formatDateTimeFullVN(this.props.teamData.lastSyncFromServerOn)}
             </Text>
           </View>
+          ) : null }
+
           <TeamMembers navigation={this.props.navigation}/>
+
         </View>
       )
     }

@@ -15,6 +15,7 @@ import AppLocales from '../constants/i18n'
 import {
     LineChart
   } from "react-native-chart-kit";
+import { NoDataText } from './StyledText';
 
 const MYDATA = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
 
@@ -442,7 +443,7 @@ class GasUsageReport extends React.Component {
                     />
                 </View>
 
-                {AppConstants.TEMPO_USE_BARCHART_GAS ? (
+                {dataToDisplay.length > 0 ? (
                     <View style={styles.gasUsageContainer}>
                         <VictoryChart
                             width={Layout.window.width}
@@ -498,8 +499,10 @@ class GasUsageReport extends React.Component {
 
                         </VictoryChart>
                     </View>
-                ): (
-                <View style={styles.gasUsageContainer}>
+                ) : <NoDataText />}
+
+                {dataToDisplay.length > 0 ? (
+                {/* <View style={styles.gasUsageContainer}>
                     {dataChartKitLine.labels.length > 0 ? (
                     <LineChart
                         data={dataChartKitLine}
@@ -525,8 +528,8 @@ class GasUsageReport extends React.Component {
                         }}
                     />) : (null)
                     }
-                </View>
-                )}
+                </View> */}
+                ) : <NoDataText />}
 
                 {this.state.duration != AppLocales.t("GENERAL_ALL") ? (
                 <View>
@@ -539,7 +542,7 @@ class GasUsageReport extends React.Component {
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
                             <Text><H2>{avgKmMonthly ? 
-                                avgKmMonthly.toFixed(1) : ""}</H2></Text>
+                                avgKmMonthly.toFixed(1) : "-"}</H2></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
@@ -553,7 +556,7 @@ class GasUsageReport extends React.Component {
                     <Card style={styles.equalStartRow}>
                         <CardItem header>
                             <Text><H2>{avgMoneyMonthly ?
-                             (avgMoneyMonthly).toFixed(0): ""}</H2></Text>
+                             (avgMoneyMonthly).toFixed(0): "-"}</H2></Text>
                         </CardItem>
                         <CardItem>
                         <Body>
@@ -565,7 +568,7 @@ class GasUsageReport extends React.Component {
                     <Card style={styles.equalStartRow}>
                         <CardItem header  style={{flexDirection: "row", alignItems: "center"}}>
                             <Text><H2>{avgMoneyPerKmMonthly ?
-                             (avgMoneyPerKmMonthly).toFixed(0) : ""}</H2></Text>
+                             (avgMoneyPerKmMonthly).toFixed(0) : "-"}</H2></Text>
                         </CardItem>
                         <CardItem>
                         <Body>

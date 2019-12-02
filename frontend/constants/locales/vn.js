@@ -26,6 +26,7 @@ export default {
     GENERAL_OR: "Hoặc",
     GENERAL_CAR: "Ôtô",
     GENERAL_BIKE: "Xe Máy",
+    GENERAL_NODATA: "Chưa Có Dữ Liệu",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",

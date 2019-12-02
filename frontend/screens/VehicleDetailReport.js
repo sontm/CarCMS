@@ -53,7 +53,7 @@ class VehicleDetailReport extends React.Component {
 
     if (currentVehicle) {
         console.log("CALL actTempCalculateCarReport from Detail Report:")
-        this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
+        //this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
         console.log("END actTempCalculateCarReport:")
         // let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
         // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
@@ -254,7 +254,7 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: AppConstants.COLOR_GREY_BG,
+      backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
       flexDirection: "column",
       borderWidth: 0.5,
       borderColor: "grey",

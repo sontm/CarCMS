@@ -154,7 +154,7 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? AppConstants.DEFAULT_IOS_STATUS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppConstants.COLOR_GREY_BG,
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
     //marginTop: StatusBar.currentHeight,
     marginTop: STATUSBAR_HEIGHT, // in ios, need to margin -20 screen 
   },

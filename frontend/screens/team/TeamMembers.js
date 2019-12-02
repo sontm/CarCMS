@@ -18,6 +18,7 @@ import Backend from '../../constants/Backend'
 import AppLocales from '../../constants/i18n'
 
 import {actTeamGetJoinRequestOK} from '../../redux/TeamReducer'
+import { NoDataText } from '../../components/StyledText';
 
 // navigation is passed from Parent
 class JoinRequestScreen extends React.Component {
@@ -71,14 +72,13 @@ class JoinRequestScreen extends React.Component {
 //     "teamCode": "W4QKeBSl",
 //     "userId": "5daf30722a799e12423b976a",
   render() {
-    console.log("JoinRequestScreen Render:"+(this.props.userData && this.props.userData.teamInfo) ? 
-        this.props.userData.teamInfo.code: "")
+    console.log("JoinRequestScreen Render:")
     return (
         <View style={styles.container}>
           <View style={styles.textRow}>
             <H3>{AppLocales.t("TEAM_MEM_JOIN_REQUEST")}</H3>
           </View>
-          {this.props.teamData.joinRequests.map(item => (
+          {this.props.teamData.joinRequests.length > 0 ? this.props.teamData.joinRequests.map(item => (
               <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
                   <Left>
                   </Left>
@@ -98,12 +98,14 @@ class JoinRequestScreen extends React.Component {
                           <Icon type="MaterialIcons" name="block" style={styles.listItemBlockIcon}/></TouchableOpacity>
                   </Right>
               </ListItem>
-          ))}
+          )) : (
+            <NoDataText />
+          )}
 
           <View style={styles.textRow}>
             <H3>{AppLocales.t("TEAM_MEM_LIST")}</H3>
           </View>
-          {this.props.teamData.members.map(item => (
+          {this.props.teamData.members.length > 0 ? this.props.teamData.members.map(item => (
             <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
                 <Left>
                 </Left>
@@ -117,7 +119,9 @@ class JoinRequestScreen extends React.Component {
                   <Icon name="arrow-forward" style={styles.iconRight}/>
                 </Right>
             </ListItem>
-          ))}
+          )): (
+            <NoDataText />
+          )}
         </View>
     );
   }

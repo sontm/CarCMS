@@ -14,8 +14,10 @@ import AppConstants from '../constants/AppConstants';
 import { connect } from 'react-redux';
 import Backend from '../constants/Backend';
 
-import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer, actVehicleSyncToServerOK} from '../redux/UserReducer';
+import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer, 
+  actVehicleSyncToServerOK} from '../redux/UserReducer';
 import {actUserLogout, actUserLoginOK} from '../redux/UserReducer'
+import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout} from '../redux/TeamReducer'
 import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
 
@@ -49,7 +51,7 @@ class SettingsScreen extends React.Component {
             style: 'cancel',
           },
           {text: 'Sign-out', style: 'destructive' , 
-              onPress: () => this.props.actUserLogout()},
+              onPress: () => {this.props.actUserLogout(); this.props.actTeamUserWillLogout()}},
       ],
       {cancelable: true}
   )
@@ -576,7 +578,8 @@ const mapStateToProps = (state) => ({
 });
 const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
-  actUserLogout, actUserLoginOK,actVehicleSyncToServerOK
+  actUserLogout, actUserLoginOK,actVehicleSyncToServerOK,
+  actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout
 };
   
 export default connect(

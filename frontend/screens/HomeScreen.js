@@ -46,7 +46,7 @@ class HomeScreen extends React.Component {
     console.log("HOMESCreen DidMount")
     //this.loadFromStorage()
     this.props.userData.vehicleList.forEach(element => {
-      this.props.actTempCalculateCarReport(element, null, this.props.userData)
+      //this.props.actTempCalculateCarReport(element, null, this.props.userData)
     });
   }
   loadFromStorage = async () => {
@@ -275,7 +275,7 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppConstants.COLOR_GREY_BG
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
   contentContainer: {
 

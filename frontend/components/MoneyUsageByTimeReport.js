@@ -11,6 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
+import { NoDataText } from './StyledText';
 
 class MoneyUsageByTimeReport extends React.Component {
   constructor(props) {
@@ -297,15 +298,9 @@ class MoneyUsageByTimeReport extends React.Component {
     return {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
         arrTotalExpenseEachCars, arrTotalServiceEachCars}
   }
-  componentWillMount(){
-    console.log("~~~~~~~~~~~~~~~~MoneyUsageByTimeReport WILL MOUNT")
-  }
-  componentDidUpdate(){
-    console.log("~~~~~~~~~~~~~~~~MoneyUsageByTimeReport DID UPDATE")
-  }
+
   render() {
     if (this.props.currentVehicle || this.props.isTotalReport) {
-        console.log("~~~~~~~~~~~~~~~~MoneyUsageByTimeReport RENDER")
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
                 var {arrTotalAllCars, tickXLabels} = this.calculateAllVehicleTotalMoneyTeam(6);
@@ -557,6 +552,7 @@ class MoneyUsageByTimeReport extends React.Component {
 
                 {(this.props.isTotalReport && !this.props.isTeamDisplay) ? (
                 <View>
+                {(arrTotalEachCarsAllCategory&&arrTotalEachCarsAllCategory.length>0) ? (
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
@@ -575,8 +571,10 @@ class MoneyUsageByTimeReport extends React.Component {
                             </Text>
                         </View>
                     </View>
-                    
                 </View>
+                ) : <NoDataText /> }
+
+                {(totalAllSpendPrivate>0) ? (
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
@@ -602,6 +600,7 @@ class MoneyUsageByTimeReport extends React.Component {
                         </View>
                     </View>
                 </View>
+                ) : <NoDataText /> }
                 </View>
                 ) : null}
             </View>

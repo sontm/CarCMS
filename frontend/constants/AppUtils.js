@@ -827,7 +827,6 @@ class AppUtils {
             for (let index = serviceList.length -1; index >= 0; index--) {
                 let item = serviceList[index];
                 if (!item.isContantFix) {
-                    console.log("5555555555 The Index:" + index)
                     lastKmMaintain = item.currentKm;
                     lastDateMaintain = this.normalizeFillDate(new Date(item.fillDate));
 
@@ -843,9 +842,7 @@ class AppUtils {
                     passedKmFromPreviousMaintain = lastKm - lastKmMaintain;
                 }
             }
-            console.log("55555555555555555555555 Result Maintain Reminds*" + lastKm)
-            console.log({lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
-                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain})
+
             return {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
                 nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
         }
@@ -1747,6 +1744,37 @@ class AppUtils {
             error => {console.log("Sync Vehicle From Server Error");console.log(error);}
         );
         this.cancelAllAppLocalNotification();
+
+        Backend.getAllUserOfTeam({teamId: props.userData.userProfile.teamId}, props.userData.token, 
+            response => {
+                console.log("GEt all Member in Team OK")
+                // console.log(response.data)
+                //this.props.actUserLoginOK(response.data)
+                //this.props.navigation.navigate("Settings")
+                // this.setState({
+                //   members: response.data
+                // })
+                props.actTeamGetDataOK(response.data)
+            },
+            error => {
+                console.log("GEt all Member in Team ERROR")
+                console.log(JSON.stringify(error))
+            }
+        );
+      
+        Backend.getAllJoinTeamRequest(props.userData.token, 
+            response => {
+                console.log("GEt all JoinRequest OK")
+                // console.log(response.data)
+                //this.props.actUserLoginOK(response.data)
+                //this.props.navigation.navigate("Settings")
+                props.actTeamGetJoinRequestOK(response.data)
+            },
+            error => {
+                console.log("GEt all JoinRequest ERROR")
+                console.log(JSON.stringify(error))
+            }
+        );
     
         // if (!isFailedInOneStep) {
         //   await new Promise((resolve, reject) => {

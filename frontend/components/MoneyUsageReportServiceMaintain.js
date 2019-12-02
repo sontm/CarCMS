@@ -11,6 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
+import { NoDataText } from './StyledText';
 
 class MoneyUsageReportServiceMaintain extends React.Component {
   constructor(props) {
@@ -116,6 +117,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                     {AppLocales.t("CARDETAIL_H1_SERVICE_USAGE")}
                     </H3></Text>
                 </View>
+                {theTotal > 0 ? (
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
@@ -135,6 +137,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                         </View>
                     </View>
                 </View>
+                ) : <NoDataText /> }
                 </View>
                 ) : null }
             </View>
@@ -144,7 +147,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
             <Container>
             <Content>
             <View style={styles.container}>
-
+                <NoDataText />
             </View>
             </Content>
             </Container>
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
         borderColor: "grey",
         justifyContent: "space-between",
         marginBottom: 20,
-        borderRadius: 7,
+        //borderRadius: 7,
         paddingBottom: 20
     },
 

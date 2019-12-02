@@ -11,6 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
+import {NoDataText} from '../components/StyledText';
 
 function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, licensePlate, owner) {
     if (target > 0 && passed> 0) {
@@ -93,7 +94,14 @@ class ReminderReport extends React.Component {
       }
     })
     this.numRemindPrivate=resultView.length;
-    return resultView;
+    if (resultView.length > 0) {
+        return resultView;
+    } else {
+        return (
+            <NoDataText />
+        )
+    }
+    
   }
   renderTabTeam() {
     let resultView = [];
@@ -133,17 +141,24 @@ class ReminderReport extends React.Component {
       }
     })
     this.numRemindTeam=resultView.length;
-    return resultView;
+
+    if (resultView.length > 0) {
+        return resultView;
+    } else {
+        return (
+            <NoDataText />
+        )
+    }
   }
   render() {
-      let privateView = this.renderTabPrivate();
-      let teamView = this.renderTabTeam();
+    let privateView = this.renderTabPrivate();
+    let teamView = this.renderTabTeam();
     return (
         <View style={styles.container}>
             <View style={styles.textRow}>
-                <Text><H2>
+                <Text><H3>
                 {AppLocales.t("HOME_REMIND")}
-                </H2></Text>
+                </H3></Text>
 
                 <Segment small style={styles.segmentContainer}>
                     <Button small first onPress={() => this.setState({activeDisplay: 0})}
@@ -176,39 +191,6 @@ class ReminderReport extends React.Component {
                     teamView
                 )}
             </ScrollView>
-            {/* <Tabs>
-                <Tab heading={
-                    <TabHeading>
-                        <Text>{AppLocales.t("GENERAL_PRIVATE")}</Text>
-                        {this.numRemindPrivate > 0 ? (
-                        <Badge danger style={styles.notifyBadge}>
-                            <Text style={styles.notifyBadgeText}>{this.numRemindPrivate}</Text>
-                        </Badge>
-                        ): null}
-                    </TabHeading>
-                }>
-                    <ScrollView
-                        style={{height: 220}}>
-                    {privateView}
-                    </ScrollView>
-                </Tab>
-                <Tab heading={
-                    <TabHeading>
-                        <Text>{AppLocales.t("GENERAL_TEAM")}</Text>
-                        {this.numRemindTeam > 0 ? (
-                        <Badge danger style={styles.notifyBadge}>
-                            <Text style={styles.notifyBadgeText}>{this.numRemindTeam}</Text>
-                        </Badge>
-                        ): null}
-                    </TabHeading>
-                }>
-                    <ScrollView
-                        style={{height: 220}}>
-                    {teamView}
-                </ScrollView>
-                </Tab>
-            </Tabs> */}
-            
         </View>
     )
     }
@@ -218,7 +200,7 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       flexDirection: "column",
-      borderRadius: 7,
+      //borderRadius: 7,
       justifyContent: "space-between",
       marginBottom: 20
     },

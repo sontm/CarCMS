@@ -34,10 +34,17 @@ const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 
 const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
+const TEMP_CALCULATE_CARREPORT_ALL = 'TEMP_CALCULATE_CARREPORT_ALL';
 
 const SETTING_MAINTAIN_TYPE = 'SETTING_MAINTAIN_TYPE';
 const SETTING_REMIND = 'SETTING_REMIND';
 
+const DEFAULT_SETTING_REMIND = {
+    kmForOilRemind: 50,
+    dayForAuthRemind: 15,
+    dayForInsuranceRemind: 15,
+    dayForRoadFeeRemind: 15,
+}
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
     Month: [6, 12, 24, 48, 96]
@@ -53,7 +60,7 @@ const initialState = {
                     // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":
     carReports:{}, // {vehicleid: {gasReport,authReport,moneyReport,maintainRemind, scheduledNotification}}
 
-    settings: {}, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
+    settings: DEFAULT_SETTING_REMIND, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
     settingService: DEFAULT_SETTING_SERVICE,
     lastSyncFromServerOn: null, // date of last sync
     lastSyncToServerOn: null,
@@ -237,7 +244,7 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
     if (!prevUserData || !prevUserData.carReports || !prevUserData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
-        console.log(">>>actTempCalculateCarReport:")
+        console.log(">>>actTempCalculateCarReport in User:")
         if (!prevUserData || !prevUserData.carReports) {
             // Maybe from Sync from Server, clear all Notifications
             apputils.cancelAllAppLocalNotification();
@@ -281,6 +288,32 @@ export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
     })
 
     // TODO for when SYnc, need re-calcualte Report
+    let options = {
+        durationType: "month",
+        tillDate: new Date(),
+        duration: 300,
+    }
+    let allCarReports = {};
+    data.forEach ((vehicle, index) => {
+        AppUtils.actTempCalculateCarReportAsyncWrapper(vehicle, options)
+        .then (result => {
+            console.log("  OK User Calculate Report:" + vehicle.licensePlate)
+            allCarReports[""+vehicle.id] = result
+
+            if (index == data.length - 1) {
+                console.log("======================= Final Dispatch User Reports")
+                dispatch({
+                    type: TEMP_CALCULATE_CARREPORT_ALL,
+                    payload: allCarReports
+                })
+            }
+        })
+        .catch (error => {
+            console.log("  Error User Calculate Report:" + vehicle.licensePlate)
+            console.log(error)
+        })
+    })
+    
 }
 export const actVehicleSyncToServerOK = (data) => (dispatch) => {
     console.log("actVehicleSyncToServerOK:")
@@ -318,7 +351,14 @@ export default function(state = initialState, action) {
             userProfile: {},
             isLogined: false,
             token: "",
-            teamInfo: {}
+            teamInfo: {},
+            defaultVehicleId: "",
+            vehicleList:[],
+            carReports:{},
+            settings: DEFAULT_SETTING_REMIND,
+            settingService: DEFAULT_SETTING_SERVICE,
+            lastSyncFromServerOn: null, // date of last sync
+            lastSyncToServerOn: null,
         };
 
     case VEHICLE_SYNC_FROMSERVER:
@@ -565,6 +605,13 @@ export default function(state = initialState, action) {
         newStateCarReport.carReports[""+action.payload.id] = action.payload.data
 
         return newStateCarReport;
+    case TEMP_CALCULATE_CARREPORT_ALL:
+        let newStateCarReportAll = {
+            ...state,
+        };
+        newStateCarReportAll.carReports = action.payload
+
+        return newStateCarReportAll;
 
     case SETTING_REMIND:
         return {

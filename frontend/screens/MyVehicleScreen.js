@@ -14,7 +14,7 @@ import {checkAndShowInterestial} from '../components/AdsManager'
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Tabs, Tab, TabHeading, Segment } from 'native-base';
 
-import { HeaderText } from '../components/StyledText';
+import { HeaderText, NoDataText } from '../components/StyledText';
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import AppConstants from '../constants/AppConstants'
 import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
@@ -131,7 +131,9 @@ class MyVehicleScreen extends React.Component {
             <Content><View style={styles.container}><ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}>
+
                 <GasUsageReport isTotalReport={true} />
+
               </ScrollView></View></Content>
             </Tab>
           </Tabs>
@@ -144,13 +146,13 @@ class MyVehicleScreen extends React.Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer}>
 
-              {this.state.activePage == 0 ? (
+              {(this.state.activePage == 0 && this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) ? (
                 this.props.userData.vehicleList && this.props.userData.vehicleList.map(item => (
                   <VehicleBasicReport vehicle={item} key={item.id} handleDeleteVehicle={this.handleDeleteVehicle}
                     navigation={this.props.navigation} {...this.state} requestDisplay={"all"} isTeamDisplay={false} isMyVehicle={true}
                   />
                 ))
-               ) : null}
+               ) : <NoDataText />}
 
             </ScrollView>
           </View>
@@ -159,8 +161,9 @@ class MyVehicleScreen extends React.Component {
     }
     return (
       <Container>
-        <Header noLeft style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+          <Left style={{flex:0}}/>
+          <Body style={{flex:5, flexDirection: "row", justifyContent:"center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
             <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
               <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
                   onPress={() => {this.changeActivePage(0); checkAndShowInterestial()}}>
@@ -174,6 +177,7 @@ class MyVehicleScreen extends React.Component {
               </Button>
             </Segment>
           </Body>
+          <Right style={{flex:1}}/>
         </Header>
 
         {this.state.activePage==1? (
@@ -192,7 +196,7 @@ MyVehicleScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   contentContainer: {
   },
