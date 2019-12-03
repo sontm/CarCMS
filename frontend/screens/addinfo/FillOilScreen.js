@@ -68,7 +68,7 @@ class FillOilScreen extends React.Component {
                 validFor: Number(this.state.validFor)
             }
 
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_OIL)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_OIL, this.props.userData)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save FillOil:")
@@ -85,7 +85,7 @@ class FillOilScreen extends React.Component {
 
             newData.id = apputils.uuidv4();
 
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_OIL)
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_OIL, this.props.userData)
 
             this.props.navigation.push('VehicleDetail')
         }

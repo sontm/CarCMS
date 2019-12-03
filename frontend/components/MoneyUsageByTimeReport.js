@@ -52,17 +52,24 @@ class MoneyUsageByTimeReport extends React.Component {
     let arrTotalExpenseOneCar = [];
     let arrTotalServiceOneCar = [];
     let tickXLabels = [];
-
-    this.props.teamData.teamCarList.forEach((element, carIdx) => {
-      if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+    // TODO for Testing and with Time selected
+    
+    // this.props.teamData.teamCarList.forEach((element, carIdx) => {
+    //   if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+    //this.props.userData.vehicleList.forEach((element, carIdx) => {
+    if (this.props.currentVehicle && this.props.currentVehicle.id &&  
+            this.props.userData.carReports[this.props.currentVehicle.id]) {
         let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend} 
-            = this.props.teamData.teamCarReports[element.id].moneyReport;
-        let xValue = carIdx + 1;
+            //= this.props.teamData.teamCarReports[element.id].moneyReport;
+            = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
+        //let xValue = carIdx + 1;
+        let xValue = 1;
 
         let thisCarGasItem = {x: xValue, y: 0};
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
                 thisCarGasItem.y += item.y;
+                thisCarGasItem.x = item.x;
                 AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
             })
             arrTotalGasOneCar.push(thisCarGasItem);
@@ -71,6 +78,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrOilSpend && arrOilSpend.length) {
             arrOilSpend.forEach(item => {
                 thisCarOilItem.y += item.y;
+                thisCarOilItem.x = item.x;
                 AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
             })
             arrTotalOilOneCar.push(thisCarOilItem);
@@ -79,6 +87,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
                 thisCarAuthItem.y += item.y;
+                thisCarAuthItem.x = item.x;
                 AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
             })
             arrTotalAuthOneCar.push(thisCarAuthItem);
@@ -87,6 +96,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 thisCarExpenseItem.y += item.y;
+                thisCarExpenseItem.x = item.x;
                 AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
             })
             arrTotalExpenseOneCar.push(thisCarExpenseItem);
@@ -95,12 +105,13 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 thisCarServiceItem.y += item.y;
+                thisCarServiceItem.x = item.x;
                 AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
             })
             arrTotalServiceOneCar.push(thisCarServiceItem);
         }
-      }
-    });
+    }
+    //});
     return {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
         arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}
   }
@@ -319,9 +330,22 @@ class MoneyUsageByTimeReport extends React.Component {
             var {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
                 arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}
                 = this.calculateOneVehicleTotalMoneyPrivate();
+            console.log("{arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}")
+            console.log({arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
+                arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels})
         }
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
-
+        let isHasData = true;
+        if ((this.props.isTotalReport && arrTotalAllCars.length <= 0) || 
+        (!this.props.isTotalReport && !arrTotalGasOneCar.length && !arrTotalOilOneCar.length && !arrTotalAuthOneCar.length
+        && !arrTotalExpenseOneCar.length && !arrTotalServiceOneCar.length) ) {
+            //isHasData = false;
+        }
+        let isHasTeamData = true;
+        if (this.props.isTotalReport && this.props.isTeamDisplay && !arrTotalGasEachCars.length && !arrTotalOilEachCars.length && !arrTotalAuthEachCars.length &&
+            !arrTotalExpenseEachCars.length && !arrTotalServiceEachCars.length) {
+            //isHasTeamData = false;
+        }
         return (
             <View style={styles.container}>
                 
@@ -381,6 +405,7 @@ class MoneyUsageByTimeReport extends React.Component {
                 </View>
 
                 <View style={styles.statRow}>
+                    {isHasData ? (
                     <View style={styles.moneyUsageStackContainer}>
                         <VictoryChart
                             width={Layout.window.width}
@@ -465,7 +490,7 @@ class MoneyUsageByTimeReport extends React.Component {
                         />
 
                         </VictoryChart>
-                    </View>
+                    </View> ) : <NoDataText /> }
                 </View>
 
                 {(this.props.isTotalReport && this.props.isTeamDisplay) ? (
@@ -477,6 +502,7 @@ class MoneyUsageByTimeReport extends React.Component {
                 </View>
 
                 <View style={styles.statRow}>
+                    {isHasTeamData ? (
                     <View style={styles.moneyUsageStackContainerEachCar}>
                         <VictoryChart
                             width={Layout.window.width}
@@ -545,7 +571,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             }}
                         />
                         </VictoryChart>
-                    </View>
+                    </View> ) : <NoDataText />}
                 </View>
                 </View>
                 ) : null }

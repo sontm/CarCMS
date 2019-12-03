@@ -79,7 +79,7 @@ class RegisterVehicleScreen extends React.Component {
             }
 
             console.log(JSON.stringify(newVehicle))
-            this.props.actVehicleEditVehicle(newVehicle)
+            this.props.actVehicleEditVehicle(newVehicle, this.props.userData)
             this.props.navigation.navigate("MyVehicle")
         } else {
             console.log("WIll Save:")
@@ -93,7 +93,7 @@ class RegisterVehicleScreen extends React.Component {
 
             newVehicle.id = apputils.uuidv4();
             console.log(JSON.stringify(newVehicle))
-            this.props.actVehicleAddVehicle(newVehicle)
+            this.props.actVehicleAddVehicle(newVehicle, this.props.userData)
             this.props.navigation.navigate("MyVehicle")
         }
     }

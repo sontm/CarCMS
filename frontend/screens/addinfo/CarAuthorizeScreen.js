@@ -39,11 +39,17 @@ class CarAuthorizeScreen extends React.Component {
             for (let i = 0; i < currentVehicle.authorizeCarList.length; i++) {
                 if (currentVehicle.authorizeCarList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     console.log("WIllMOUNTTTTTTTTTTTTTTT:" +  currentVehicle.authorizeCarList[i].fillDate.toLocaleString())
+                    let theSubType = currentVehicle.authorizeCarList[i].subType;
+                    if (!theSubType || theSubType.length<= 0) {
+                        theSubType = this.props.appData.typeAuth[0].name;
+                    }
+                    console.log("   theSubType:" + theSubType)
                     this.setState({
                         ...currentVehicle.authorizeCarList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
                         id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.authorizeCarList[i].fillDate,
+                        subType: theSubType
                     })
                     break;
                 }
@@ -68,7 +74,7 @@ class CarAuthorizeScreen extends React.Component {
                 validFor: Number(this.state.validFor)
             }
 
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_AUTH)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save Car Authorize:")
@@ -91,7 +97,7 @@ class CarAuthorizeScreen extends React.Component {
             
             console.log(newData)
 
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_AUTH)
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
 
             this.props.navigation.navigate('VehicleDetail')
         }

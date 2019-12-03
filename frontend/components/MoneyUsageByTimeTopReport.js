@@ -11,6 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
+import { NoDataText } from './StyledText';
 
 class MoneyUsageByTimeTopReport extends React.Component {
   constructor(props) {
@@ -301,7 +302,13 @@ class MoneyUsageByTimeTopReport extends React.Component {
                 arrTotalExpenseOneCar, arrTotalServiceOneCar}
                 = this.calculateOneVehicleTotalMoneyPrivate();
         }
-
+        let isHasData = true;
+        if ((this.props.isTotalReport && arrTotalAllCars.length <= 0) || 
+            (!arrTotalGasOneCar.length && !arrTotalOilOneCar.length && !arrTotalAuthOneCar.length 
+                && !arrTotalExpenseOneCar.length && !arrTotalServiceEachCars.length)) {
+            isHasData = false;
+        }
+        console.log("*********** isHasData:" + isHasData)
         return (
             <View style={styles.container}>
                 
@@ -361,6 +368,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
                 </View>
 
                 <View style={styles.statRow}>
+                    {isHasData ? (
                     <View style={styles.moneyUsageStackContainer}>
                         <VictoryChart
                             width={Layout.window.width}
@@ -445,6 +453,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
 
                         </VictoryChart>
                     </View>
+                    ) : <NoDataText />}
                 </View>
 
                 {(this.props.isTotalReport && this.props.isTeamDisplay) ? (

@@ -15,6 +15,7 @@ import AppLocales from '../constants/i18n'
 import {
     LineChart
   } from "react-native-chart-kit";
+import { NoDataText } from './StyledText';
 
 const MYDATA = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
 
@@ -151,14 +152,15 @@ class GasUsageTopReport extends React.Component {
                             AppLocales.t("TEAM_REPORT_TOP_CAR_GASUSAGE_MONEYKM") :
                             AppLocales.t("TEAM_REPORT_TOP_CAR_GASUSAGE_KM"))}
                     </H3></Text>
-                    <Segment small>
+                    <Segment small style={{backgroundColor:"rgba(0,0,0,0)"}}>
                         <Button small first onPress={() => this.setState({activeDisplay: 0})}
                             style={this.state.activeDisplay === 0 ? styles.activeSegment : styles.inActiveSegment}>
                             <Text style={this.state.activeDisplay === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>Km</Text></Button>
-                        <Button small  onPress={() => this.setState({activeDisplay: 1})}
+                        <Button small onPress={() => this.setState({activeDisplay: 1})}
                             style={this.state.activeDisplay === 1 ? styles.activeSegment : styles.inActiveSegment}>
-                            <Text style={this.state.activeDisplay === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ</Text></Button>
-                        <Button small last  onPress={() => this.setState({activeDisplay: 2})}
+                            <Text style={this.state.activeDisplay === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ</Text>
+                        </Button>
+                        <Button small last onPress={() => this.setState({activeDisplay: 2})}
                             style={this.state.activeDisplay === 2 ? styles.activeSegment : styles.inActiveSegment}>
                             <Text style={this.state.activeDisplay === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ/Km</Text></Button>
                     </Segment>
@@ -210,6 +212,7 @@ class GasUsageTopReport extends React.Component {
                     />
                 </View>
                     
+                {dataTopToDisplay.length > 0 ? (
                 <View style={styles.gasUsageContainer}>
                     <VictoryChart
                         width={Layout.window.width}
@@ -250,7 +253,7 @@ class GasUsageTopReport extends React.Component {
                     />
 
                     </VictoryChart>
-                </View>
+                </View> ) : <NoDataText />}
             </View>
         )}
         } else {
@@ -294,7 +297,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         flexWrap: "wrap",
-        flexGrow: 100
+        flexGrow: 100,
     },
     textRowOption: {
         flexDirection: "row",

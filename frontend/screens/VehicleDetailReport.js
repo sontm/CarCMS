@@ -45,6 +45,7 @@ class VehicleDetailReport extends React.Component {
 
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
+    
     if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
         var currentVehicle = this.props.navigation.state.params.vehicle;
     } else {
@@ -52,9 +53,9 @@ class VehicleDetailReport extends React.Component {
     }
 
     if (currentVehicle) {
-        console.log("CALL actTempCalculateCarReport from Detail Report:")
+        //console.log("CALL actTempCalculateCarReport from Detail Report:")
         //this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
-        console.log("END actTempCalculateCarReport:")
+        //console.log("END actTempCalculateCarReport:")
         // let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
         // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
         //     = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
@@ -254,7 +255,7 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+      //backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
       flexDirection: "column",
       borderWidth: 0.5,
       borderColor: "grey",
@@ -306,10 +307,10 @@ const styles = StyleSheet.create({
 
     reminderContainer: {
         backgroundColor: "white",
-        borderWidth: 0.5,
-        borderColor: "grey",
+        //borderWidth: 0.5,
+        //borderColor: "grey",
         marginBottom: 20,
-        borderRadius: 7,
+        //borderRadius: 7,
        
     },
 

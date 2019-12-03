@@ -61,7 +61,7 @@ class PayExpenseScreen extends React.Component {
                 price: Number(this.state.price)
             }
 
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_EXPENSE)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save Expense:")
@@ -81,7 +81,7 @@ class PayExpenseScreen extends React.Component {
             // })
             newData.id = apputils.uuidv4();
             console.log(newData)
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE)
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
 
             this.props.navigation.navigate('VehicleDetail')
         }

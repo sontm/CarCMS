@@ -67,7 +67,7 @@ class VehicleDetailHistory extends React.Component {
             },
             {text: 'Delete', style: 'destructive' , onPress: () => {
                 console.log('Delete Pressed')
-                this.props.actVehicleDeleteFillItem(itemId, type)
+                this.props.actVehicleDeleteFillItem(itemId, type, this.props.userData)
             }},
         ],
         {cancelable: true}

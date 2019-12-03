@@ -869,14 +869,15 @@ class AppUtils {
 
         if (authorizeList && authorizeList.length > 0) {
             authorizeList.forEach((item, index) => {
-                if (item.subType == "Đăng Kiểm") {
-                    if (maxAuthIdx < index) maxAuthIdx = index;
-                    totalMoneyAuthorize += item.price;
-                } else if (item.subType == "Bảo Hiểm Dân Sự") {
+                console.log("   ??????????? Type AUTH:" + item.subType)
+                if (item.subType == "Bảo Hiểm Dân Sự") {
                     if (maxInsuranceIdx < index) maxInsuranceIdx = index;
                     totalMoneyAuthorize += item.price;
                 } else if (item.subType == "Phí Bảo Trì Đường Bộ") {
                     if (maxRoadFeeIdx < index) maxRoadFeeIdx = index;
+                    totalMoneyAuthorize += item.price;
+                } else {
+                    if (maxAuthIdx < index) maxAuthIdx = index;
                     totalMoneyAuthorize += item.price;
                 }
             })
@@ -1949,6 +1950,7 @@ class AppUtils {
                 nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
                 = this.getRemindForMaintain(currentVehicle.serviceList, settingService, lastKm)
 
+            console.log("?????????????????? Will call getInfoCarAuthorizeDate")
             let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
                 diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}

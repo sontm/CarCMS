@@ -11,6 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
+import { NoDataText } from './StyledText';
 
 class MoneyUsageReport extends React.Component {
   constructor(props) {
@@ -318,6 +319,7 @@ class MoneyUsageReport extends React.Component {
                 </View>
 
                 <View style={styles.statRow}>
+                    {totalAlSpend > 0 ? (
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
@@ -340,7 +342,7 @@ class MoneyUsageReport extends React.Component {
                                 {AppUtils.formatMoneyToK(totalAlSpend)}
                             </Text>
                         </View>
-                    </View>
+                    </View>) : <NoDataText />}
                 </View>
 
                 <View>
@@ -350,6 +352,7 @@ class MoneyUsageReport extends React.Component {
                     </H3></Text>
                 </View>
                 <View style={styles.statRow}>
+                    {totalExpenseSpend > 0 ? (
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
@@ -366,7 +369,7 @@ class MoneyUsageReport extends React.Component {
                                 {AppUtils.formatMoneyToK(totalExpenseSpend)}
                             </Text>
                         </View>
-                    </View>
+                    </View> ) : <NoDataText />}
                 </View>
                 </View>
 

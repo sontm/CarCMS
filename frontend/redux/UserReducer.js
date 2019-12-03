@@ -66,6 +66,46 @@ const initialState = {
     lastSyncToServerOn: null,
 };
 
+export const reCalculateCarReports = (currentVehicle, prevUserData, theDispatch, vehicleId) => {
+    // For calcualte All Time data
+    let options = {
+        durationType: "month",
+        tillDate: new Date(),
+        duration: 300,
+    }
+
+    // If currentVehicle is NULL, need get by vehicleId
+    if (!currentVehicle) {
+        console.log("=====vehicleNull, id:" + vehicleId + "ml:" + prevUserData.vehicleList.length)
+        for (let l = 0; l < prevUserData.vehicleList.length; l++ ) {
+            console.log("   list id:" + prevUserData.vehicleList[l].id)
+            if (prevUserData.vehicleList[l].id == vehicleId) {
+                currentVehicle = prevUserData.vehicleList[l];
+            }
+        }
+    }
+    if (currentVehicle) {
+        AppUtils.actTempCalculateCarReportAsyncWrapper(currentVehicle, options, 
+            prevUserData.settings, prevUserData.carReports, prevUserData.settingService)
+        .then (result => {
+            console.log("<<<<<<<reCalculateCarReports FINISH")
+            if (theDispatch) {
+                theDispatch({
+                    type: TEMP_CALCULATE_CARREPORT,
+                    payload: {id: currentVehicle.id, data: result}
+                })
+            } else {
+                dispatch({
+                    type: TEMP_CALCULATE_CARREPORT,
+                    payload: {id: currentVehicle.id, data: result}
+                })
+            }
+        })
+        .catch (error => {
+            console.log(error)
+        })
+    }
+}
 
 export const actSettingSetMaintainType = (data) => (dispatch) => {
     console.log("actSettingSetMaintainType:")
@@ -116,19 +156,23 @@ export const actUserLogout = () => (dispatch) => {
 
 
 
-export const actVehicleAddVehicle = (vehicle) => (dispatch) => {
+export const actVehicleAddVehicle = (vehicle, prevUserData) => (dispatch, getState) => {
     console.log("actVehicleAddVehicle:")
     dispatch({
         type: VEHICLE_ADD,
         payload: vehicle
     })
+    let {userData} = getState();
+    reCalculateCarReports(vehicle, userData, dispatch)
 }
-export const actVehicleEditVehicle = (vehicle) => (dispatch) => {
+export const actVehicleEditVehicle = (vehicle, prevUserData) => (dispatch, getState) => {
     console.log("actVehicleEditVehicle:")
     dispatch({
         type: VEHICLE_EDIT,
         payload: vehicle
     })
+    let {userData} = getState();
+    reCalculateCarReports(vehicle, userData, dispatch)
 }
 export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) => {
     console.log("actVehicleDeleteVehicle:"+vehicleId+",licensePlate:" + licensePlate)
@@ -138,9 +182,9 @@ export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) =
     })
 }
 
-export const actVehicleAddFillItem = (data, type) => (dispatch) => {
+export const actVehicleAddFillItem = (data, type, prevUserData) => (dispatch, getState) => {
     console.log("actVehicleAddFillItem:")
-    AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(data.vehicleId)
+    //AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(data.vehicleId)
 
     if (type == AppConstants.FILL_ITEM_GAS) {
         dispatch({
@@ -168,10 +212,12 @@ export const actVehicleAddFillItem = (data, type) => (dispatch) => {
             payload: data
         })
     }
+    let {userData} = getState();
+    reCalculateCarReports(null, userData, dispatch, data.vehicleId)
 }
 
 // type: gas, oil, auth, 
-export const actVehicleDeleteFillItem = (itemId, type) => (dispatch) => {
+export const actVehicleDeleteFillItem = (itemId, type, prevUserData) => (dispatch, getState) => {
     console.log("actVehicleDeleteFillItem:"+itemId+",type:" + type)
     //AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(itemId.vehicleId)
 
@@ -201,11 +247,15 @@ export const actVehicleDeleteFillItem = (itemId, type) => (dispatch) => {
             payload: itemId
         })
     }
+
+    let {userData} = getState();
+    reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
 }
 
 // type: gas, oil, auth, 
-export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
-    console.log("actVehicleEditFillItem:"+itemId+",type:" + type)
+export const actVehicleEditFillItem = (itemId, type, prevUserData) => (dispatch, getState) => {
+    console.log(">>>>>>>>>>>>> Start Dispatch actVehicleEditFillItem:"+itemId+",type:" + type)
+    console.log(itemId)
     AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(itemId.vehicleId)
 
     if (type == AppConstants.FILL_ITEM_GAS) {
@@ -234,6 +284,14 @@ export const actVehicleEditFillItem = (itemId, type) => (dispatch) => {
             payload: itemId
         })
     }
+
+    console.log("<<<<<<<<<<<< END Dispatch actVehicleEditFillItem:"+itemId+",type:" + type)
+    let {userData} = getState();
+    // console.log(prevUserData.vehicleList[0].authorizeCarList)
+    // console.log("  >>>>>>>>>>>> Start reCalculateCarReports")
+    // console.log(userData.vehicleList[0].authorizeCarList)
+
+    reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
 }
 
 
@@ -424,6 +482,11 @@ export default function(state = initialState, action) {
                 break;
             }
         }
+        // Remove from carReports
+        if (newState.carReports[""+action.payload.id]) {
+            delete newState.carReports[""+action.payload.id];
+        }
+
         return newState;
     case VEHICLE_FILL_GAS_ADD:
         // add to Vehicle 
@@ -550,6 +613,7 @@ export default function(state = initialState, action) {
                 }
             }
         }
+        console.log("================= End EDIT VEHICLE_CAR_AUTH_EDIT")
         return newStateVehicleAuthEdit;
     
     case VEHICLE_EXPENSE_DEL:

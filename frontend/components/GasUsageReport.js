@@ -384,7 +384,7 @@ class GasUsageReport extends React.Component {
                             AppLocales.t("HOME_GAS_USAGE") :
                             AppLocales.t("CARDETAIL_H1_GAS_USAGE")}
                     </H3></Text>
-                    <Segment small>
+                    <Segment small style={{backgroundColor:"rgba(0,0,0,0)"}}>
                         <Button small first onPress={() => this.setState({activeDisplay: 0})}
                             style={this.state.activeDisplay === 0 ? styles.activeSegment : styles.inActiveSegment}>
                             <Text style={this.state.activeDisplay === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>Km</Text></Button>
@@ -501,7 +501,7 @@ class GasUsageReport extends React.Component {
                     </View>
                 ) : <NoDataText />}
 
-                {dataToDisplay.length > 0 ? (
+                {/* {dataToDisplay.length > 0 ? ( */}
                 {/* <View style={styles.gasUsageContainer}>
                     {dataChartKitLine.labels.length > 0 ? (
                     <LineChart
@@ -529,7 +529,7 @@ class GasUsageReport extends React.Component {
                     />) : (null)
                     }
                 </View> */}
-                ) : <NoDataText />}
+                {/* ) : <NoDataText />} */}
 
                 {this.state.duration != AppLocales.t("GENERAL_ALL") ? (
                 <View>

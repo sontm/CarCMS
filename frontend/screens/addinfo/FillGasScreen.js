@@ -66,7 +66,7 @@ class FillGasScreen extends React.Component {
                 currentKm: Number(this.state.currentKm)
             }
 
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save Fill Gas:")
@@ -82,7 +82,7 @@ class FillGasScreen extends React.Component {
 
             newData.id = apputils.uuidv4();
             console.log(JSON.stringify(newData))
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS)
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
 
             this.props.navigation.navigate('VehicleDetail')
         }

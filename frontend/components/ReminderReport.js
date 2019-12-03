@@ -46,6 +46,8 @@ function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, lic
             </View>
         </View>
     )
+    } else {
+        return null;
     }
 }
 class ReminderReport extends React.Component {
@@ -93,6 +95,14 @@ class ReminderReport extends React.Component {
         )
       }
     })
+    resultView = resultView.filter(item => {
+        if (item) {
+            return true;
+        } else {
+            return false;
+        }
+    })
+
     this.numRemindPrivate=resultView.length;
     if (resultView.length > 0) {
         return resultView;
@@ -140,6 +150,13 @@ class ReminderReport extends React.Component {
         )
       }
     })
+    resultView = resultView.filter(item => {
+        if (item) {
+            return true;
+        } else {
+            return false;
+        }
+    })
     this.numRemindTeam=resultView.length;
 
     if (resultView.length > 0) {
@@ -151,6 +168,8 @@ class ReminderReport extends React.Component {
     }
   }
   render() {
+    this.numRemindPrivate = 0;
+    this.numRemindTeam = 0;
     let privateView = this.renderTabPrivate();
     let teamView = this.renderTabTeam();
     return (

@@ -86,7 +86,7 @@ class PayServiceScreen extends React.Component {
             }
             console.log(newData)
 
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE)
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
             this.props.navigation.goBack()
         } else {
             console.log("WIll Save Car Authorize:")
@@ -107,7 +107,7 @@ class PayServiceScreen extends React.Component {
             newData.id = apputils.uuidv4();
             console.log(newData)
 
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE)
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
 
             this.props.navigation.navigate('VehicleDetail')
         }
