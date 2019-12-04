@@ -17,7 +17,7 @@ export default {
     GENERAL_EDITDATA:"Cập Nhập",
     GENERAL_ALL:"Tất Cả",
     GENERAL_PRIVATE: "Cá Nhân",
-    GENERAL_TEAM: "Tổ Chức",
+    GENERAL_TEAM: "Nhóm",
     GENERAL_TEAM_ROLE: "Chức Vụ",
     GENERAL_TEAM_CODE_SHORT: "Mã",
     GENERAL_MONEYUSAGE: "Chi Tiêu",
@@ -37,7 +37,7 @@ export default {
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Cá Nhân",
-    NAV_BOT_TEAM: "Tổ Chức",
+    NAV_BOT_TEAM: "Nhóm",
     NAV_BOT_MORE: "Khác",
 
     MYCAR_HEADER: "Xe Của Tôi",
@@ -46,22 +46,23 @@ export default {
     MYCAR_SERVICEREPORT:"Lịch Bảo Dưỡng",
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
-    HOME_TOTAL_TEAM: "Tổng Chi Phí Tổ Chức",
+    HOME_TOTAL_TEAM: "Tổng Chi Phí Nhóm",
     HOME_TOTAL_PRIVATE_THISMONTH: "Chi Tiêu Cá Nhân Tháng",
-    HOME_TOTAL_TEAM_THISMONTH: "Chi Tiêu Tổ Chức Tháng",
+    HOME_TOTAL_TEAM_THISMONTH: "Chi Tiêu Nhóm Tháng",
 
     HOME_MONEY_SPEND: "Chi Tiêu Các Xe",
     HOME_GAS_USAGE: "Biểu Đồ Xăng",
     HOME_REMIND: "Nhắc Nhở",
     HOME_PRIVATE_MONEY_USAGE: "Chi Tiêu Cá Nhân Gần Đây",
-    HOME_TEAM_MONEY_USAGE: "Chi Tiêu Tổ Chức Gần Đây",
+    HOME_TEAM_MONEY_USAGE: "Chi Tiêu Nhóm Gần Đây",
     
 
     CARDETAIL_HEADER: "Báo Cáo Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",
     CARDETAIL_H1_GAS_USAGE: "Biểu Đồ Xăng",
     CARDETAIL_H1_MONEY_USAGE_BYTIME: "Chi Tiêu Theo Thời Gian",
-    CARDETAIL_H1_MONEY_USAGE: "Phân Bố Chi Tiêu",
+    CARDETAIL_H1_MONEY_USAGE_CARs: "Phân Bố Chi Tiêu Các Xe",
+    CARDETAIL_H1_MONEY_USAGE: "Phân Bố Chi Tiêu Các Khoản",
     CARDETAIL_H1_EXPENSE_USAGE: "Chi Tiêu Phụ Phí",
     CARDETAIL_H1_SERVICE_USAGE: "Chi Tiêu Bảo Dưỡng/Sửa Chữa",
     CARDETAIL_AVERAGE_IN: "Trung Bình ",
@@ -96,8 +97,8 @@ export default {
 
     SETTING_H1_PRO_FEATURE: "Phiên Bản PRO",
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",
-    SETTING_LBL_CREATE_TEAM: "Tạo Tổ Chức",
-    SETTING_LBL_JOIN_TEAM: "Gia Nhập Tổ Chức",
+    SETTING_LBL_CREATE_TEAM: "Tạo Nhóm",
+    SETTING_LBL_JOIN_TEAM: "Gia Nhập Nhóm",
     SETTING_LBL_SYNC_FROM: "Đồng Bộ Từ Máy Chủ",
     SETTING_LBL_SYNC_TO: "Đồng Bộ Lên Máy Chủ",
     SETTING_LBL_SYNC_FROM_NOTE: "Dữ Liệu Trên Máy Sẽ Bị Thay Thế",
@@ -117,6 +118,7 @@ export default {
     
     SETTING_LBL_LOGOUT: "Đăng Xuất",
     SETTING_LBL_PRO_UPGRADE: "Nâng Cấp",
+    SETTING_LBL_NOTJOINT_TEAM: "Chưa Gia Nhập Nhóm",
 
     SETTING_H1_SUPPORT: "Trợ Giúp",
     SETTING_LBL_GUIDE: "Hướng Dẫn Sử Dụng",

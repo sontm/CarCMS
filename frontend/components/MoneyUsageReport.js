@@ -290,16 +290,16 @@ class MoneyUsageReport extends React.Component {
                         textStyle={{ color: "#1f77b4", fontSize: 16 }}
                         style={{width: 80}}
                         >
-                        <Picker.Item label="3" value={3} />
-                        <Picker.Item label="6" value={6} />
-                        <Picker.Item label="9" value={9} />
-                        <Picker.Item label="12" value={12} />
-                        <Picker.Item label="18" value={18} />
-                        <Picker.Item label="24" value={24} />
+                        <Picker.Item label="3 Tháng" value={3} />
+                        <Picker.Item label="6 Tháng" value={6} />
+                        <Picker.Item label="9 Tháng" value={9} />
+                        <Picker.Item label="12 Tháng" value={12} />
+                        <Picker.Item label="18 Tháng" value={18} />
+                        <Picker.Item label="24 Tháng" value={24} />
                         <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
                     </Picker>
 
-                    <Text style={{fontSize: 15, marginLeft: 10}}>Tháng Gần Nhất Đến</Text>
+                    <Text style={{fontSize: 15, marginLeft: 10}}>Gần Nhất Đến</Text>
                     <DatePicker
                         defaultDate={new Date()}
                         minimumDate={new Date(2010, 1, 1)}
@@ -330,12 +330,13 @@ class MoneyUsageReport extends React.Component {
                                 { x: AppLocales.t("GENERAL_EXPENSE"), y: totalExpenseSpend },
                                 { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpend },
                             ]}
-                            innerRadius={85}
-                            radius={100}
+                            innerRadius={80}
+                            radius={90}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
                                 +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
@@ -357,12 +358,13 @@ class MoneyUsageReport extends React.Component {
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={arrSubExpenseSpend}
-                            innerRadius={85}
-                            radius={100}
+                            innerRadius={80}
+                            radius={90}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
                                 +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 15 }
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>

@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-around"
     },
     vehicleInfoTextBrand: {
-        fontSize: 22
+        fontSize: 19
     },
     vehicleInfoTextPlate: {
         fontSize: 18,

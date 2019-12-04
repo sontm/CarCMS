@@ -98,6 +98,7 @@ class VehicleDetailReport extends React.Component {
                                 innerRadius={58}
                                 radius={65}
                                 labels={() => null}
+                                labelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                                 />
                             <View style={styles.labelProgress}>
                                 <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_SERVICE") + ": "}</Text>

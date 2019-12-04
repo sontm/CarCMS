@@ -544,9 +544,10 @@ class MoneyUsageByTimeTopReport extends React.Component {
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={arrTotalEachCarsAllCategory}
                             innerRadius={80}
-                            radius={100}
+                            radius={90}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             labelRadius={({ radius }) => radius + 10 }
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
                             />
                     </View>
                 </View>
@@ -562,9 +563,10 @@ class MoneyUsageByTimeTopReport extends React.Component {
                                 { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpendPrivate },
                             ]}
                             innerRadius={80}
-                            radius={100}
+                            radius={90}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             labelRadius={({ radius }) => radius+10 }
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
                             />
                     </View>
                 </View>

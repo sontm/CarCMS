@@ -64,51 +64,87 @@ class MoneyUsageByTimeReport extends React.Component {
             = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
         //let xValue = carIdx + 1;
         let xValue = 1;
-
-        let thisCarGasItem = {x: xValue, y: 0};
+        // End date is ENd of This Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+           
+        
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
-                thisCarGasItem.y += item.y;
-                thisCarGasItem.x = item.x;
-                AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
+                let thisCarGasItem = {x: xValue, y: 0};
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    thisCarGasItem.y += item.y;
+                    thisCarGasItem.x = xDate;
+                    console.log("    XGas:" + item.x)
+                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    arrTotalGasOneCar.push(thisCarGasItem);
+                }
             })
-            arrTotalGasOneCar.push(thisCarGasItem);
+           
         }
-        let thisCarOilItem = {x: xValue, y: 0};
+        
         if (arrOilSpend && arrOilSpend.length) {
             arrOilSpend.forEach(item => {
-                thisCarOilItem.y += item.y;
-                thisCarOilItem.x = item.x;
-                AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    let thisCarOilItem = {x: xValue, y: 0};
+                    thisCarOilItem.y += item.y;
+                    thisCarOilItem.x = xDate;
+                    console.log("    X Oil:" + item.x)
+                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+
+                    arrTotalOilOneCar.push(thisCarOilItem);
+                }
             })
-            arrTotalOilOneCar.push(thisCarOilItem);
+            
         }
-        let thisCarAuthItem = {x: xValue, y: 0};
+        
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
-                thisCarAuthItem.y += item.y;
-                thisCarAuthItem.x = item.x;
-                AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    let thisCarAuthItem = {x: xValue, y: 0};
+                    thisCarAuthItem.y += item.y;
+                    thisCarAuthItem.x = xDate;
+                    console.log("    X Auth:" + item.x)
+                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    arrTotalAuthOneCar.push(thisCarAuthItem);
+                }
             })
-            arrTotalAuthOneCar.push(thisCarAuthItem);
+            
         }
-        let thisCarExpenseItem = {x: xValue, y: 0};
+        
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
-                thisCarExpenseItem.y += item.y;
-                thisCarExpenseItem.x = item.x;
-                AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    let thisCarExpenseItem = {x: xValue, y: 0};
+
+                    thisCarExpenseItem.y += item.y;
+                    thisCarExpenseItem.x = xDate;
+                    console.log("    X Exp:" + item.x)
+                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    arrTotalExpenseOneCar.push(thisCarExpenseItem);
+                }
             })
-            arrTotalExpenseOneCar.push(thisCarExpenseItem);
+            
         }
-        let thisCarServiceItem = {x: xValue, y: 0};
+        
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
-                thisCarServiceItem.y += item.y;
-                thisCarServiceItem.x = item.x;
-                AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    let thisCarServiceItem = {x: xValue, y: 0};
+                    thisCarServiceItem.y += item.y;
+                    thisCarServiceItem.x = xDate;
+                    console.log("    X Service:" + item.x)
+                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    arrTotalServiceOneCar.push(thisCarServiceItem);
+                }
             })
-            arrTotalServiceOneCar.push(thisCarServiceItem);
+            
         }
     }
     //});
@@ -330,21 +366,18 @@ class MoneyUsageByTimeReport extends React.Component {
             var {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
                 arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}
                 = this.calculateOneVehicleTotalMoneyPrivate();
-            console.log("{arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}")
-            console.log({arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
-                arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels})
         }
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         let isHasData = true;
         if ((this.props.isTotalReport && arrTotalAllCars.length <= 0) || 
         (!this.props.isTotalReport && !arrTotalGasOneCar.length && !arrTotalOilOneCar.length && !arrTotalAuthOneCar.length
         && !arrTotalExpenseOneCar.length && !arrTotalServiceOneCar.length) ) {
-            //isHasData = false;
+            isHasData = false;
         }
         let isHasTeamData = true;
         if (this.props.isTotalReport && this.props.isTeamDisplay && !arrTotalGasEachCars.length && !arrTotalOilEachCars.length && !arrTotalAuthEachCars.length &&
             !arrTotalExpenseEachCars.length && !arrTotalServiceEachCars.length) {
-            //isHasTeamData = false;
+            isHasTeamData = false;
         }
         return (
             <View style={styles.container}>
@@ -366,14 +399,15 @@ class MoneyUsageByTimeReport extends React.Component {
                         textStyle={{ color: "#1f77b4", fontSize: 14 }}
                         style={{width: 75}}
                         >
-                        <Picker.Item label="6" value={6} />
-                        <Picker.Item label="9" value={9} />
-                        <Picker.Item label="12" value={12} />
-                        <Picker.Item label="18" value={18} />
-                        <Picker.Item label="24" value={24} />
-                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
+                        <Picker.Item label="6 Tháng" value={6} />
+                        <Picker.Item label="9 Tháng" value={9} />
+                        <Picker.Item label="12 Tháng" value={12} />
+                        <Picker.Item label="18 Tháng" value={18} />
+                        <Picker.Item label="24 Tháng" value={24} />
+                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} 
+                            value={AppLocales.t("GENERAL_ALL")} />
                     </Picker>
-                    <Picker
+                    {/* <Picker
                         mode="dropdown"
                         iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
                         selectedValue={this.state.durationType}
@@ -384,8 +418,8 @@ class MoneyUsageByTimeReport extends React.Component {
                         <Picker.Item label="Tháng" value="month" />
                         <Picker.Item label="Quý" value="quarter" />
                         <Picker.Item label="Năm" value="year" />
-                    </Picker>
-                    <Text style={{fontSize: 13, marginLeft: 10}}>Gần Nhất Đến</Text>
+                    </Picker> */}
+                    <Text style={{fontSize: 13, marginLeft: 5}}>Gần Nhất Đến</Text>
                     <DatePicker
                         defaultDate={new Date()}
                         minimumDate={new Date(2010, 1, 1)}
@@ -410,8 +444,8 @@ class MoneyUsageByTimeReport extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:30,left:50,right:20}}
-                            domainPadding={{y: [0, 10], x: [20, 10]}}
+                            padding={{top:10,bottom:30,left:3,right:10}}
+                            domainPadding={{y: [0, 10], x: [40, 10]}}
                         >
                         {/* TODO, Date X axis not Match */}
                         {this.props.isTotalReport ? (
@@ -469,13 +503,13 @@ class MoneyUsageByTimeReport extends React.Component {
                             crossAxis
                             standalone={false}
                             tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             tickValues={tickXLabels}
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 5, angle: 30}
+                                tickLabels: {fontSize: 10, padding: 5, angle: 30}
                             }}
                         />
                         <VictoryAxis
@@ -483,9 +517,10 @@ class MoneyUsageByTimeReport extends React.Component {
                             standalone={false}
                             tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            //offSetX={400}
                             style={{
-                                ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
+                                ticks: {stroke: "grey", size: 3},
+                                tickLabels: {fontSize: 10, padding: -28}
                             }}
                         />
 
@@ -557,7 +592,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 5, angle: 30}
+                                tickLabels: {fontSize: 11, padding: 5, angle: 30}
                             }}
                         />
                         <VictoryAxis
@@ -567,7 +602,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0},
+                                tickLabels: {fontSize: 11, padding: 0},
                             }}
                         />
                         </VictoryChart>
@@ -578,18 +613,24 @@ class MoneyUsageByTimeReport extends React.Component {
 
                 {(this.props.isTotalReport && !this.props.isTeamDisplay) ? (
                 <View>
+                    <View style={{...styles.textRow, marginTop: 5}}>
+                    <Text><H3>
+                    {AppLocales.t("CARDETAIL_H1_MONEY_USAGE_CARs")}
+                    </H3></Text>
+                </View>
                 {(arrTotalEachCarsAllCategory&&arrTotalEachCarsAllCategory.length>0) ? (
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={arrTotalEachCarsAllCategory}
-                            innerRadius={85}
-                            radius={100}
+                            innerRadius={80}
+                            radius={90}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
-                                + AppUtils.formatMoneyToK(datum.y) + ", "
+                                + AppUtils.formatMoneyToK(datum.y) + ", \n"
                                 +AppUtils.formatToPercent(datum.y, totalAllCarsAllCategory)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
@@ -600,6 +641,11 @@ class MoneyUsageByTimeReport extends React.Component {
                 </View>
                 ) : <NoDataText /> }
 
+                <View style={{...styles.textRow, marginTop: 5}}>
+                    <Text><H3>
+                    {AppLocales.t("CARDETAIL_H1_MONEY_USAGE")}
+                    </H3></Text>
+                </View>
                 {(totalAllSpendPrivate>0) ? (
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsagePieContainer}>
@@ -612,12 +658,13 @@ class MoneyUsageByTimeReport extends React.Component {
                                 { x: AppLocales.t("GENERAL_EXPENSE"), y: totalExpenseSpendPrivate },
                                 { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpendPrivate },
                             ]}
-                            innerRadius={85}
-                            radius={100}
+                            innerRadius={80}
+                            radius={90}
                             labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
-                                + AppUtils.formatMoneyToK(datum.y) + ", "
+                                + AppUtils.formatMoneyToK(datum.y) + ", \n"
                                 +AppUtils.formatToPercent(datum.y, totalAllSpendPrivate)+")") : ""}
                             labelRadius={({ radius }) => radius+10 }
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
                         />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
@@ -722,6 +769,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
+        marginBottom: 30
     },
 
     labelProgress: {

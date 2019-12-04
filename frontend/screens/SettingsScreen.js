@@ -22,6 +22,7 @@ import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
 
 import AppLocales from '../constants/i18n'
+import { italic } from 'ansi-colors';
 
 class SettingsScreen extends React.Component {
   constructor(props) {
@@ -173,20 +174,26 @@ class SettingsScreen extends React.Component {
               ): (
                 <Icon type="FontAwesome" name="user-circle-o" style={styles.avatarContainer}/>
               )}
-              <View style={{flexDirection: "row"}}>
+              <View style={{flexDirection: "row", marginTop: 5}}>
                 <Text>{"  "}</Text>
-                <Text><H3 style={{color: AppConstants.COLOR_PICKER_TEXT}}>{this.props.userData.userProfile.fullName}</H3></Text>
+                <Text><H3>{this.props.userData.userProfile.fullName}</H3></Text>
                 <Text>{"  "}</Text>
                 <Icon name="arrow-forward" style={styles.iconRight}/>
               </View>
-              <Text>{this.props.userData.userProfile.email}</Text>
-              <Text>{(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
-                AppLocales.t("GENERAL_TEAM")+": " + this.props.userData.teamInfo.name +
-                " ("+ AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code + ")") : null}</Text>
+              <Text  style={{color: AppConstants.COLOR_PICKER_TEXT}}>{this.props.userData.userProfile.email}</Text>
+              {(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
+                <Text>
+                {AppLocales.t("GENERAL_TEAM")+": " + this.props.userData.teamInfo.name +
+                " ("+ AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code + ")"}
+                </Text>) : 
+                <Text style={{fontSize: 13, fontStyle: "italic"}}>{AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
+                  </Text>
+              }
+
             </View>
             </TouchableOpacity>
             {(this.props.userData.isLogined) ? (
-            <View style={styles.rowContainer}>
+            <View style={styles.rowContainerNoMargin}>
                 <Button small block danger onPress={() => this.handleLogout()} style={{width: "40%"}}>
                   <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
                 </Button>
@@ -439,18 +446,20 @@ const styles = StyleSheet.create({
   },
 
   userInfoContainer: {
+    //backgroundColor: "#1f77b4",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 30,
     marginBottom: 10,
-    height: 125,
+    minHeight: 125,
   },
   avatarContainer: {
     height: 60,
     width: 60,
     fontSize: 60,
-    color: AppConstants.COLOR_PICKER_TEXT
+    color: AppConstants.COLOR_PICKER_TEXT,
+    //color: "white"
   },
 
   proContainer: {
@@ -460,7 +469,8 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     marginLeft: -5,
-    marginRight: -5
+    marginRight: -5,
+    minHeight: 125,
   },
 
   textRowPro: {
@@ -485,6 +495,12 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 5,
     backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
+  },
+  rowContainerNoMargin: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center", // vertial align
+    paddingBottom: 2,
   },
   rowContainer: {
     flexDirection: "row",
