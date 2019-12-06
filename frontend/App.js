@@ -17,6 +17,7 @@ import axiosDefaults from 'axios/lib/defaults';
 import AppConstants from './constants/AppConstants';
 import AdsManager from './components/AdsManager';
 import NotificationManager from './components/NotificationManager';
+import CheckLatestAppDataManager from './components/CheckLatestAppDataManager';
 
 axios.defaults.baseURL = AppConstants.SERVER_API;
 
@@ -89,6 +90,7 @@ class App extends React.Component {
               <AdsManager />
             </View>
             <NotificationManager />
+            <CheckLatestAppDataManager />
           </PersistGate>
           </Provider>
         </View>

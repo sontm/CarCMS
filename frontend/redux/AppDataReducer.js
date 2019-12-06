@@ -1,5 +1,7 @@
 import { REHYDRATE } from 'redux-persist';
+import backend from '../constants/Backend';
 const APPDATA_OPEN_COUNT = 'APPDATA_OPEN_COUNT';
+const APPDATA_SYNC_LATEST = 'APPDATA_SYNC_LATEST';
 
 // ### Toyota OK
 // Alphard Altis Avanza Camry Fortuner Hiace Hilux Innova LandPrado LandCruiser Prado Rush Vios Wigo Yaris
@@ -117,6 +119,8 @@ const DATA_BRAND_MODEL = [
         {"id":13,"name":"Passing"},{"id":14,"name":"Shark"},{"id":15,"name":"StarSR"},
         {"id":16,"name":"StarX"},{"id":17,"name":"Venus"},{"id":18,"name":"VF3i"}]},
 ]
+
+// This is Fixed in App, not in Server
 const DATA_AUTH_TYPE = [
     {id: 1, name: "Đăng Kiểm"},
     {id: 2, name: "Bảo Hiểm Dân Sự"},
@@ -193,6 +197,7 @@ const initialState = {
     typeAuth: DATA_AUTH_TYPE,
     typeExpense: DATA_EXPENSE_TYPE,
     typeService: DATA_SERVICE_TYPE,
+    appDataLatestOn: null,
 
     countOpen: 0,
     isNoAds: false,
@@ -205,6 +210,36 @@ export const actAppIncreaseOpenCount = () => (dispatch) => {
     })
 }
 
+export const actAppSyncLatestDataIfNeeded = (prevAppData) => (dispatch) => {
+    console.log("actAppSyncLatestDataIfNeeded:")
+    backend.getLatestAppDataOn(
+    response => {
+        console.log(response.data.updatedOn + " vs " + prevAppData.appDataLatestOn)
+        if (response.data.updatedOn && prevAppData.appDataLatestOn != response.data.updatedOn) {
+            console.log("-----Need Update App Data ")
+            // Need Update latest AppData here
+            backend.getLatestAppData(
+            response2 => {
+                //console.log(response.data)
+                dispatch({
+                    type: APPDATA_SYNC_LATEST,
+                    payload: {data: response2.data, updatedOn: response.data.updatedOn}
+
+                })
+            },
+            err2 => {
+        
+            })
+        }
+        
+    },
+    err => {
+
+    })
+
+    
+
+}
 
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
@@ -218,6 +253,14 @@ export default function(state = initialState, action) {
         return {
             ...state,
             countOpen: state.countOpen+1
+        };
+    case APPDATA_SYNC_LATEST:
+        return {
+            ...state,
+            appDataLatestOn: action.payload.updatedOn,
+            carModels: action.payload.data.vehicles,
+            typeExpense: action.payload.data.expenses,
+            typeService: action.payload.data.services,
         };
     default:
         return state;

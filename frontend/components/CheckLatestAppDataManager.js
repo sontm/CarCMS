@@ -1,0 +1,37 @@
+import * as WebBrowser from 'expo-web-browser';
+import React from 'react';
+import { Platform, View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity, ScrollView } from 'react-native';
+import { connect } from 'react-redux';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
+import AppConstants from '../constants/AppConstants';
+import apputils from '../constants/AppUtils';
+import {actAppSyncLatestDataIfNeeded} from '../redux/AppDataReducer'
+
+class CheckLatestAppDataManager extends React.Component {
+  constructor(props) {
+    super(props);
+
+  }
+  
+  componentWillMount() {
+    console.log("CheckLatestAppDataManager will Mount")
+    this.props.actAppSyncLatestDataIfNeeded(this.props.appData);
+  }
+
+  render() {
+    return null;
+  }
+}
+
+const mapStateToProps = (state) => ({
+  appData: state.appData
+});
+const mapActionsToProps = {
+  actAppSyncLatestDataIfNeeded
+};
+  
+export default connect(
+    mapStateToProps,mapActionsToProps
+)(CheckLatestAppDataManager);

@@ -129,6 +129,20 @@ class Backend {
     //         .catch((error) => {onError(error);});
     // }
 
+    getLatestAppDataOn(onOK, onError) {
+        axios.get("/app/lateston",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    getLatestAppData(onOK, onError) {
+        axios.get("/app/appdata",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
 
 }
 

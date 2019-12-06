@@ -1,3 +1,14 @@
+# Commands
+
+DB
+	mongoexport --db=vehiclecmsdev  --collection=dbteams  --out=dbteams.json
+	mongoexport --db=vehiclecmsdev  --collection=dbjointeams  --out=dbjointeams.json
+	mongoexport --db=vehiclecmsdev  --collection=dbusers  --out=dbusers.json
+
+	mongoimport --db=vehiclecmsdev --collection=dbteams --type=json --file=dbteams.json
+	mongoimport --db=vehiclecmsdev --collection=dbjointeams --type=json --file=dbjointeams.json
+	mongoimport --db=vehiclecmsdev --collection=dbusers --type=json --file=dbusers.json
+    
 # eCMS
 Idea:
   Track Don Hang, Shipper will Report Status

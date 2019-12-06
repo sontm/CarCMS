@@ -2,6 +2,7 @@ const passport = require('passport');
 
 import user from './UserCtrl'
 import team from './TeamCtrl';
+import appData from './AppDataCtrl';
 
 module.exports = (app) => {
 app.get('/api', (req, res) => res.status(200).send({
@@ -27,6 +28,13 @@ app.get('/api/team/join', passport.authenticate('jwt', {session: false}), team.g
 app.post('/api/team/join/action', passport.authenticate('jwt', {session: false}), team.approveOrRejectJoinRequest);
 app.post('/api/team/users', passport.authenticate('jwt', {session: false}), team.getAllUserOfTeam);
 
+//app.get('/api/app/services', passport.authenticate('jwt', {session: false}), appData.getDataServiceTypes);
+app.get('/api/app/services', appData.getDataServiceTypes);
+app.get('/api/app/expenses', appData.getDataExpenseTypes);
+app.get('/api/app/vehicles', appData.getDataVehicleModels);
+
+app.get('/api/app/lateston', appData.getLatestDataDateOn);
+app.get('/api/app/appdata', appData.getLatestAppData);
 
 // app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
 // app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);
