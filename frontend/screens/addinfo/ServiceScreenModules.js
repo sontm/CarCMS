@@ -24,6 +24,12 @@ class ServiceScreenModules extends React.Component {
     }
 
     componentWillMount() {
+        if (this.props.navigation.state.params.isBike == true) {
+            AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE = true;
+        } else {
+            AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE = false;
+        }
+        
         this.setState({
             serviceModule: AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES
         })
@@ -65,13 +71,59 @@ class ServiceScreenModules extends React.Component {
         let B = AppLocales.t("GENERAL_MAINTAIN_BAODUONG");
         let K = AppLocales.t("GENERAL_MAINTAIN_KIEMTRA");
         console.log("---------------------Render of service module")
-        console.log(this.state.serviceModule)
+        //console.log(this.state.serviceModule)
+        console.log(this.props.userData.customServiceModules)
+        console.log(this.props.userData.customServiceModulesBike)
+
+        let serviceArr = this.props.appData.typeService;
+        let customArr = this.props.userData.customServiceModules;
+        if (this.props.navigation.state.params.isBike == true) {
+            serviceArr = this.props.appData.typeServiceBike;
+            customArr = this.props.userData.customServiceModulesBike;
+        }
+        let customView = [];
+        if (customArr&& customArr.length >0) {
+            customArr.forEach((item,idx) => {
+                customView.push(
+                    <ListItem key={item.name+idx}
+                            style={{marginLeft: 5}}>
+                        
+                        <CheckBox checked={this.state.serviceModule[""+item.name] ? true : false}
+                            onPress={() => {this.toggleItemCheck(item.name)}}/>
+
+                        <Body style={{flexDirection:"row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", flexGrow: 100}}>
+                        <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
+                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2}}>{item.name}</Text>
+                        </TouchableOpacity>
+                        {this.state.serviceModule[""+item.name] ? (
+                        <View style={{flexDirection:"row", alignItems: "center", justifyContent:"flex-end", marginRight: -15}}>
+                                <Text style={this.state.serviceModule[""+item.name]==T ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                        onPress={() => this.onSetFixType(item, T)}>
+                                    Thay Thế
+                                </Text>
+                                <Text style={this.state.serviceModule[""+item.name]==K ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                        onPress={() => this.onSetFixType(item, K)}>
+                                    Kiểm Tra
+                                </Text>
+                                <Text style={this.state.serviceModule[""+item.name]==B ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                        onPress={() => this.onSetFixType(item, B)}>
+                                    Bảo Dưỡng
+                                </Text>
+                        </View>
+                        ) : null }
+                        </Body>
+
+                        <Right style={{flex: 0}}></Right>
+                    </ListItem>
+                )
+            })
+        }
         return (
             <Container>
             <Content>
                 <View style={styles.formContainer}>
-                  
-                {this.props.appData.typeService.map(item => (
+                {customView}
+                {serviceArr.map(item => (
                     <ListItem key={item.name}
                             style={{marginLeft: 5}}>
                         
@@ -118,18 +170,27 @@ class ServiceScreenModules extends React.Component {
     }
 }
 
-ServiceScreenModules.navigationOptions = ({navigation}) => ({
+ServiceScreenModules.navigationOptions = ({ navigation}) => ({
     header: (
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
-            <Button transparent onPress={(navigation) => {navigation.goBack()}}>
+          <Left style={{flex: 1}}>
+            <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
-          <Body>
-            <Title><HeaderText>{AppLocales.t("NEW_SERVICE_MODULES")}</HeaderText></Title>
+          <Body  style={{flex: 4}}>
+            <Title><HeaderText>{AppLocales.t("NEW_SERVICE_MODULES") + " " + 
+                (navigation.state.params.isBike ? 
+                (AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " " + AppLocales.t("GENERAL_BIKE"))
+                : (AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " " + AppLocales.t("GENERAL_CAR")))}</HeaderText></Title>
           </Body>
-          <Right />
+          <Right style={{flex: 1}}>
+            <Button transparent onPress={() => {
+                navigation.navigate("ServiceModuleCreate")
+            }}>
+              <Icon type="AntDesign" name="plus" />
+            </Button>
+          </Right>
         </Header>
     )
 });

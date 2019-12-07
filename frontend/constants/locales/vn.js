@@ -21,6 +21,7 @@ export default {
     GENERAL_TEAM_ROLE: "Chức Vụ",
     GENERAL_TEAM_CODE_SHORT: "Mã",
     GENERAL_MONEYUSAGE: "Chi Tiêu",
+    GENERAL_NAME: "Tên",
     GENERAL_PREV_MONTH: "Tháng Trước",
     GENERAL_KM: "Km",
     GENERAL_OR: "Hoặc",
@@ -140,7 +141,13 @@ export default {
     SETTING_MAINTAIN_L3: "Bảo Dưỡng Trung Bình Lớn",
     SETTING_MAINTAIN_L4: "Bảo Dưỡng Lớn",
     SETTING_MAINTAIN_L5: "Bảo Dưỡng Lớn Nhất",
+    
+    SETTING_MAINTAIN_L1_BIKE: "Bảo Dưỡng Cấp 1",
+    SETTING_MAINTAIN_L2_BIKE: "Bảo Dưỡng Cấp 2",
+    SETTING_MAINTAIN_L3_BIKE: "Bảo Dưỡng Cấp 3",
+    SETTING_MAINTAIN_L4_BIKE: "Bảo Dưỡng Cấp 4",
 
+    SETTING_CREATE_SERVICEMODULE: "Tên Bộ Phận Bảo Dưỡng", 
     USER_FULLNAME: "Tên",
     USER_EMAIL: "Email",
     USER_PHONE: "Số Điện Thoại",

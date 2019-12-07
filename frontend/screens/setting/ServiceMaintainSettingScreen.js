@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, Label, H2} from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
+    Item, Picker, Button, Text, Input, Label, H2, Tabs, Tab, TabHeading} from 'native-base';
 import {HeaderText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
@@ -12,7 +13,9 @@ class ServiceMaintainSettingScreen extends React.Component {
         super(props);
         this.state = {
             Km: [5000, 10000, 20000, 40000, 80000],
-            Month: [6, 12, 24, 48, 96]
+            Month: [6, 12, 24, 48, 96],
+            KmBike: [4000, 8000, 12000, 16000, 20000],
+            MonthBike: [4, 8, 12, 18, 24],
         };
         this.save = this.save.bind(this)
         this.onSetValue = this.onSetValue.bind(this)
@@ -30,17 +33,31 @@ class ServiceMaintainSettingScreen extends React.Component {
             console.log(e)
         }
     }
-    onSetValue(value, level, isMonth) {
-        if (!isMonth) {
-            let prevState = this.state;
-            prevState.Km[level-1] = Number(value);
+    onSetValue(value, level, isMonth, isBike) {
+        if (isBike) {
+            if (!isMonth) {
+                let prevState = this.state;
+                prevState.KmBike[level-1] = Number(value);
 
-            this.setState(prevState)
+                this.setState(prevState)
+            } else {
+                let prevState = this.state;
+                prevState.MonthBike[level-1] = Number(value);
+
+                this.setState(prevState)
+            }
         } else {
-            let prevState = this.state;
-            prevState.Month[level-1] = Number(value);
+            if (!isMonth) {
+                let prevState = this.state;
+                prevState.Km[level-1] = Number(value);
 
-            this.setState(prevState)
+                this.setState(prevState)
+            } else {
+                let prevState = this.state;
+                prevState.Month[level-1] = Number(value);
+
+                this.setState(prevState)
+            }
         }
     }
     componentWillMount() {
@@ -55,7 +72,9 @@ class ServiceMaintainSettingScreen extends React.Component {
     render() {
         return (
             <Container>
-            <Content>
+            <Tabs style={{flex: 1}}>
+            <Tab heading={ <TabHeading><Text>{AppLocales.t("GENERAL_CAR")}</Text></TabHeading>}>
+                <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
@@ -170,15 +189,109 @@ class ServiceMaintainSettingScreen extends React.Component {
                     </View>
 
                 </View>
-            </Content>
-            </Container>
+                    </Content>
+                </Tab>
+
+
+
+                <Tab heading={ <TabHeading><Text>{AppLocales.t("GENERAL_BIKE")}</Text></TabHeading>}>
+                <Content>
+                <View style={styles.formContainer}>
+                <View style={styles.rowContainer}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                <H2>{AppLocales.t("SETTING_MAINTAIN_L1_BIKE")}</H2></Label>
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 1, false, true)}
+                                value={""+this.state.KmBike[0]}
+                            />
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_TIME")}</Label>
+                                <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 1, true, true)}
+                                value={""+this.state.MonthBike[0]}
+                            />
+                        </Item>
+                    </View>
+
+                    <View style={styles.rowContainer}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                <H2>{AppLocales.t("SETTING_MAINTAIN_L2_BIKE")}</H2></Label>
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 2, false, true)}
+                                value={""+this.state.KmBike[1]}
+                            />
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_TIME")}</Label>
+                                <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 2, true, true)}
+                                value={""+this.state.MonthBike[1]}
+                            />
+                        </Item>
+                    </View>
+
+                    <View style={styles.rowContainer}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                <H2>{AppLocales.t("SETTING_MAINTAIN_L3_BIKE")}</H2></Label>
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 3, false, true)}
+                                value={""+this.state.KmBike[2]}
+                            />
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_TIME")}</Label>
+                                <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 3, true, true)}
+                                value={""+this.state.MonthBike[2]}
+                            />
+                        </Item>
+                    </View>
+
+                    <View style={styles.rowContainer}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label style={styles.rowLabel}>
+                                <H2>{AppLocales.t("SETTING_MAINTAIN_L4_BIKE")}</H2></Label>
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
+                            <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 4, false, true)}
+                                value={""+this.state.KmBike[3]}
+                            />
+                            <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_TIME")}</Label>
+                                <Input
+                                style={styles.rowForm}
+                                keyboardType="numeric"
+                                onChangeText={(val) => this.onSetValue(val, 4, true, true)}
+                                value={""+this.state.MonthBike[3]}
+                            />
+                        </Item>
+                    </View>
+                </View>
+                </Content>
+                </Tab>
+            </Tabs>
+        </Container>
         );
     }
 }
 
 ServiceMaintainSettingScreen.navigationOptions = ({navigation}) => ({
     header: (
-        <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+        <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />

@@ -32,8 +32,11 @@ class ServiceMaintainTable extends React.Component {
 
     let prevKm = 0;
     let prevDate = 0;
-
-    this.props.appData.typeService.forEach(item => {
+    let serviceArr = this.props.appData.typeService;
+    if (theVehicle.type != "car") {
+        serviceArr = this.props.appData.typeServiceBike;
+    }
+    serviceArr.forEach(item => {
         objTableData[""+item.name] = [];
         firstCol.push([item.name]);
     })

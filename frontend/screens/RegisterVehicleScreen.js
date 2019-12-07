@@ -110,10 +110,18 @@ class RegisterVehicleScreen extends React.Component {
     }
     getModelsOfBrand(brandNameOrId, data) {
         for (let i = 0; i < data.length; i++) {
-            if (data[i].id == brandNameOrId || data[i].name == brandNameOrId) {
-                let result = [...data[i].models];
-                //result.unshift({ id: 0,name: "-"+AppLocales.t("NEW_CAR_MODEL")+"-"});
-                return result;
+            if ( this.state.type == "bike" ) {
+                if (data[i].type == "bike" && (data[i].id == brandNameOrId || data[i].name == brandNameOrId)) {
+                    let result = [...data[i].models];
+                    //result.unshift({ id: 0,name: "-"+AppLocales.t("NEW_CAR_MODEL")+"-"});
+                    return result;
+                }
+            } else {
+                if (data[i].type == "car" && (data[i].id == brandNameOrId || data[i].name == brandNameOrId)) {
+                    let result = [...data[i].models];
+                    //result.unshift({ id: 0,name: "-"+AppLocales.t("NEW_CAR_MODEL")+"-"});
+                    return result;
+                }
             }
         }
         return [{ id: 0,name: "N/A"}];

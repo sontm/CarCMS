@@ -43,6 +43,8 @@ class PayServiceScreen extends React.Component {
         this.setMaintainType = this.setMaintainType.bind(this)
         this.onUpdateMaintainModules = this.onUpdateMaintainModules.bind(this)
         this.removeMaintainModule = this.removeMaintainModule.bind(this)
+
+        this.currentVehileIsBike = false;
     }
 
     componentWillMount() {
@@ -162,6 +164,21 @@ class PayServiceScreen extends React.Component {
             })
         }
     }
+
+    //this.state.vehicleId}
+    checkCurrentVehicleIsBikeFromSelected() {
+        
+        if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
+            this.currentVehileIsBike = false;
+            for (let l = 0; l < this.props.userData.vehicleList.length; l++) {
+                if (this.props.userData.vehicleList[l].id == this.state.vehicleId) {
+                    if (this.props.userData.vehicleList[l].type != "car") {
+                        this.currentVehileIsBike = true;
+                    }
+                }
+            }
+        }
+    }
     render() {
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
@@ -193,7 +210,7 @@ class PayServiceScreen extends React.Component {
                 )
             }
         }
-
+        this.checkCurrentVehicleIsBikeFromSelected();
         return (
             <Container>
             <Content>
@@ -314,7 +331,10 @@ class PayServiceScreen extends React.Component {
                             <View style={{flexDirection:"row"}}>
                                 <Label>{AppLocales.t("NEW_SERVICE_MODULES")}</Label>
                                 <Button transparent small
-                                    onPress={() => {this.props.navigation.navigate("ServiceModules", {onOk: this.onUpdateMaintainModules})
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ServiceModules", 
+                                        {onOk: this.onUpdateMaintainModules,
+                                        isBike: this.currentVehileIsBike})
                                 }}>
                                     <Text>{AppLocales.t("MAINTAIN_ADD_MODULE")}</Text>
                                     <Icon type="Entypo" name="plus" style={{fontSize: 14}}/>

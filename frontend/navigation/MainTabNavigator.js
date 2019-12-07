@@ -17,7 +17,7 @@ import CarAuthorizeScreen from '../screens/addinfo/CarAuthorizeScreen';
 import PayServiceScreen from '../screens/addinfo/PayServiceScreen';
 import PayExpenseScreen from '../screens/addinfo/PayExpenseScreen';
 import ServiceScreenModules from '../screens/addinfo/ServiceScreenModules';
-
+import ServiceModuleCreateScreen from '../screens/addinfo/ServiceModuleCreateScreen';
 import MyVehicleScreen from '../screens/MyVehicleScreen'
 
 import VehicleDetailReport from '../screens/VehicleDetailReport';
@@ -64,7 +64,8 @@ const MyVehicleStack = createStackNavigator(
     CarAuthorize: CarAuthorizeScreen,
     PayExpense: PayExpenseScreen,
     PayService: PayServiceScreen,
-    ServiceModules: ServiceScreenModules
+    ServiceModules: ServiceScreenModules,
+    ServiceModuleCreate: ServiceModuleCreateScreen
   },
   config
 );

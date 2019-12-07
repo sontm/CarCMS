@@ -39,6 +39,9 @@ const TEMP_CALCULATE_CARREPORT_ALL = 'TEMP_CALCULATE_CARREPORT_ALL';
 const SETTING_MAINTAIN_TYPE = 'SETTING_MAINTAIN_TYPE';
 const SETTING_REMIND = 'SETTING_REMIND';
 
+const CUSTOM_ADD_SERVICEMODULE = 'CUSTOM_ADD_SERVICEMODULE';
+const CUSTOM_ADD_SERVICEMODULE_BIKE = 'CUSTOM_ADD_SERVICEMODULE_BIKE';
+
 const DEFAULT_SETTING_REMIND = {
     kmForOilRemind: 50,
     dayForAuthRemind: 15,
@@ -47,7 +50,9 @@ const DEFAULT_SETTING_REMIND = {
 }
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
-    Month: [6, 12, 24, 48, 96]
+    Month: [6, 12, 24, 48, 96],
+    KmBike: [4000, 8000, 12000, 16000, 20000],
+    MonthBike: [4, 8, 12, 18, 24],
 }
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
@@ -59,6 +64,9 @@ const initialState = {
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
                     // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":
     carReports:{}, // {vehicleid: {gasReport,authReport,moneyReport,maintainRemind, scheduledNotification}}
+
+    customServiceModules: [],
+    customServiceModulesBike: [],
 
     settings: DEFAULT_SETTING_REMIND, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
     settingService: DEFAULT_SETTING_SERVICE,
@@ -378,8 +386,22 @@ export const actVehicleSyncToServerOK = (data) => (dispatch) => {
     dispatch({
         type: VEHICLE_SYNC_TOSERVER
     })
+}
 
-    // TODO for when SYnc, need re-calcualte Report
+
+export const actCustomAddServiceModule = (data) => (dispatch) => {
+    console.log("actCustomAddServiceModule:")
+    dispatch({
+        type: CUSTOM_ADD_SERVICEMODULE,
+        payload: data
+    })
+}
+export const actCustomAddServiceModuleBike = (data) => (dispatch) => {
+    console.log("actCustomAddServiceModuleBike:")
+    dispatch({
+        type: CUSTOM_ADD_SERVICEMODULE_BIKE,
+        payload: data
+    })
 }
 
 // Note, in this Reducer, cannot Access state.user
@@ -687,6 +709,31 @@ export default function(state = initialState, action) {
             ...state,
             settingService: action.payload
         };
+
+    case CUSTOM_ADD_SERVICEMODULE:
+        let prevStateService = {...state};
+        if ( !prevStateService.customServiceModules ) {
+            prevStateService.customServiceModules = [];
+        }
+        if ( prevStateService.customServiceModules && 
+                prevStateService.customServiceModules.indexOf(action.payload.name) < 0) {
+            // when not exist, add
+            prevStateService.customServiceModules.push(action.payload)
+        }
+
+        return prevStateService;
+    case CUSTOM_ADD_SERVICEMODULE_BIKE:
+        let prevStateServiceBike = {...state};
+        if ( !prevStateServiceBike.customServiceModulesBike ) {
+            prevStateServiceBike.customServiceModulesBike = [];
+        }
+        if ( prevStateServiceBike.customServiceModulesBike && 
+                prevStateServiceBike.customServiceModulesBike.indexOf(action.payload.name) < 0) {
+            // when not exist, add
+            prevStateServiceBike.customServiceModulesBike.push(action.payload)
+        }
+
+        return prevStateServiceBike;
     default:
         return state;
     }
