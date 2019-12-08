@@ -14,8 +14,8 @@ app.post('/api/login/google', user.loginGoogle);
 app.post('/api/login/facebook', user.loginFacebook);
 
 app.post('/api/users', user.registerLocalUser);
-app.get('/api/users', user.getAll);
-app.get('/api/usersById/:id', user.getByEmailOrObjectId);
+//app.get('/api/users', user.getAll);
+//app.get('/api/usersById/:id', user.getByEmailOrObjectId);
 // this request is Protected by JWT Authentication
 app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), user.getUserProfile);
 app.post('/api/users/update', passport.authenticate('jwt', {session: false}), 

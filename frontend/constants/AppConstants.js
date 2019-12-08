@@ -46,8 +46,8 @@ export default {
     DEFAULT_IOS_STATUSBAR_HEIGHT: STATUSBAR_HEIGHT, // in IOS, should set this to 20
     TEMPO_USE_BARCHART_GAS: true,
 
-    //SERVER_API:"http://18.140.121.240:3000/api",
-    SERVER_API:  "http://192.168.1.51:3000/api",
+    SERVER_API:"http://18.140.121.240:3000/api",
+    //SERVER_API:  "http://192.168.1.51:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here (not OK when on LAN setting of Expo)
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
     COLOR_PICKER_TEXT: "#1f77b4",

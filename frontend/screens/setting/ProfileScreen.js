@@ -90,14 +90,14 @@ class ProfileScreen extends React.Component {
             <Container>
             <Content>
                 <View style={styles.formContainer}>
-                    <View style={styles.userInfoContainer}>
+                    {/* <View style={styles.userInfoContainer}>
                         {this.state.pictureUrl ? (
                             <Thumbnail source={{uri: uri}} style={styles.avatarContainer}/>
                         ): (
                             null
                         )}
                     </View>
-                    
+                     */}
                     <View style={styles.rowContainer}>
                     <Item stackedLabel>
                         <Label style={styles.rowLabel}>{AppLocales.t("USER_FULLNAME")}</Label>
@@ -109,12 +109,13 @@ class ProfileScreen extends React.Component {
                     </Item>
                     </View>
 
-                    <View style={styles.rowContainer}>
+                    <View style={styles.rowContainerDisabled}>
                         <Item stackedLabel>
                         <Label style={styles.rowLabel}>{AppLocales.t("USER_EMAIL")}</Label>
                         <Input
+                            disabled
                             style={styles.rowForm}
-                            onChangeText={(email) => this.setState({email})}
+                            //onChangeText={(email) => this.setState({email})}
                             value={this.state.email}
                         />
                         </Item>
@@ -236,6 +237,15 @@ const styles = StyleSheet.create({
     //height: 60,
     //width: "90%",
     alignSelf:"center"
+  },
+  rowContainerDisabled: {
+    flexDirection: "row",
+    alignItems: "center", // vertial align
+    justifyContent: "center",
+    //height: 60,
+    //width: "90%",
+    alignSelf:"center",
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
   rowLabel: {
     //flex: 1,
