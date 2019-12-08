@@ -41,6 +41,8 @@ const SETTING_REMIND = 'SETTING_REMIND';
 
 const CUSTOM_ADD_SERVICEMODULE = 'CUSTOM_ADD_SERVICEMODULE';
 const CUSTOM_ADD_SERVICEMODULE_BIKE = 'CUSTOM_ADD_SERVICEMODULE_BIKE';
+const CUSTOM_DEL_SERVICEMODULE = 'CUSTOM_DEL_SERVICEMODULE';
+const CUSTOM_DEL_SERVICEMODULE_BIKE = 'CUSTOM_DEL_SERVICEMODULE_BIKE';
 
 const DEFAULT_SETTING_REMIND = {
     kmForOilRemind: 50,
@@ -403,7 +405,32 @@ export const actCustomAddServiceModuleBike = (data) => (dispatch) => {
         payload: data
     })
 }
+export const actCustomDelServiceModule = (data) => (dispatch) => {
+    console.log("actCustomDelServiceModule:")
+    dispatch({
+        type: CUSTOM_DEL_SERVICEMODULE,
+        payload: data
+    })
+}
+export const actCustomDelServiceModuleBike = (data) => (dispatch) => {
+    console.log("actCustomDelServiceModuleBike:")
+    dispatch({
+        type: CUSTOM_DEL_SERVICEMODULE_BIKE,
+        payload: data
+    })
+}
 
+
+function checkNameExistInServiceModule(arr, value) {
+    if (arr && arr.length > 0) {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].name == value) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
 // Note, in this Reducer, cannot Access state.user
 export default function(state = initialState, action) {
     switch (action.type) {
@@ -715,8 +742,9 @@ export default function(state = initialState, action) {
         if ( !prevStateService.customServiceModules ) {
             prevStateService.customServiceModules = [];
         }
-        if ( prevStateService.customServiceModules && 
-                prevStateService.customServiceModules.indexOf(action.payload.name) < 0) {
+        let idxa0 = checkNameExistInServiceModule(prevStateService.customServiceModules, 
+            action.payload.name);
+        if ( idxa0 < 0) {
             // when not exist, add
             prevStateService.customServiceModules.push(action.payload)
         }
@@ -727,13 +755,38 @@ export default function(state = initialState, action) {
         if ( !prevStateServiceBike.customServiceModulesBike ) {
             prevStateServiceBike.customServiceModulesBike = [];
         }
-        if ( prevStateServiceBike.customServiceModulesBike && 
-                prevStateServiceBike.customServiceModulesBike.indexOf(action.payload.name) < 0) {
+        let idxa1 = checkNameExistInServiceModule(prevStateServiceBike.customServiceModulesBike, 
+            action.payload.name);
+        if ( idxa1 < 0) {
             // when not exist, add
             prevStateServiceBike.customServiceModulesBike.push(action.payload)
         }
 
         return prevStateServiceBike;
+    case CUSTOM_DEL_SERVICEMODULE:
+        let prevStateServiceDel = {...state};
+        if ( !prevStateServiceDel.customServiceModules ) {
+            prevStateServiceDel.customServiceModules = [];
+        }
+        let idx = checkNameExistInServiceModule(prevStateService.customServiceModules, 
+            action.payload.name);
+        if ( idx >= 0) {
+            prevStateServiceDel.customServiceModules.splice(idx, 1);
+        }
+
+        return prevStateServiceDel;
+    case CUSTOM_DEL_SERVICEMODULE_BIKE:
+        let prevStateServiceDelBike = {...state};
+        if ( !prevStateServiceDelBike.customServiceModulesBike ) {
+            prevStateServiceDelBike.customServiceModulesBike = [];
+        }
+        let idx2 = checkNameExistInServiceModule(prevStateServiceDelBike.customServiceModulesBike, 
+            action.payload.name);
+        if ( idx2 >= 0) {
+            prevStateServiceDelBike.customServiceModulesBike.splice(idx2, 1);
+        }
+
+        return prevStateServiceDelBike;
     default:
         return state;
     }

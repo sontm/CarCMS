@@ -82,7 +82,13 @@ ServiceModuleCreateScreen.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title><HeaderText>Create Module</HeaderText></Title>
+            <Title><HeaderText>
+                {AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE ? (
+                    AppLocales.t("GENERAL_BIKE")
+                ): (
+                    AppLocales.t("GENERAL_CAR")
+                )}
+            </HeaderText></Title>
           </Body>
           <Right style={{flex: 0}}/>
         </Header>

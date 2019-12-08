@@ -52,6 +52,7 @@ export default {
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
     COLOR_PICKER_TEXT: "#1f77b4",
 
+    COLOR_GREY_DARK: "rgb(80, 80, 80)",
     COLOR_GREY_BG: "rgb(200, 200, 200)",
     COLOR_GREY_LIGHT_BG: "rgb(230, 230, 230)",
 

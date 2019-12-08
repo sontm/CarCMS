@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
+    Item, Picker, Button, Text, Input,Label } from 'native-base';
 
 import AppConstants from '../../constants/AppConstants'
 import { HeaderText } from '../../components/StyledText';
@@ -8,6 +9,7 @@ import { connect } from 'react-redux';
 import {actUserCreateTeamOK} from '../../redux/UserReducer'
 import Backend from '../../constants/Backend'
 import apputils from '../../constants/AppUtils';
+import AppLocales from '../../constants/i18n';
 
 class CreateTeamScreen extends React.Component {
     constructor(props) {
@@ -15,62 +17,100 @@ class CreateTeamScreen extends React.Component {
         this.state = {
             name: "",
             code: "",
+            id: 0
         };
 
         this.handleCreate = this.handleCreate.bind(this)
     }
 
     componentWillMount() {
-        this.setState({
-            code: apputils.makeRandomAlphaNumeric(8)
-        })
-    }
-    handleCreate() {
-        Backend.createTeam({
-            name: this.state.name,
-            code: this.state.code
-            }, this.props.userData.token, 
-            response => {
-                console.log("REgister Team OK")
-                console.log(response.data)
-                this.props.actUserCreateTeamOK(response.data)
-                this.props.navigation.navigate("Settings")
-            },
-            error => {
-                console.log("Register Team ERROR")
-                console.log((error))
+        if (this.props.navigation.state.params.isEdit) {
+            // Edit mode
+            if (this.props.userData.teamInfo && this.props.userData.teamInfo.name) {
                 this.setState({
-                    message: "Register Error!"
+                    name: this.props.userData.teamInfo.name,
+                    code: this.props.userData.teamInfo.code,
+                    id: this.props.userData.teamInfo.id,
                 })
             }
-        );
+        } else {
+            this.setState({
+                code: apputils.makeRandomAlphaNumeric(8)
+            })
+        }
+    }
+    handleCreate() {
+        if (this.props.navigation.state.params.isEdit) {
+            Backend.createTeam({
+                id: this.state.id,
+                name: this.state.name,
+                code: this.state.code
+                }, this.props.userData.token, 
+                response => {
+                    console.log("Edit Team OK")
+                    console.log(response.data)
+                    this.props.actUserCreateTeamOK(response.data)
+                    this.props.navigation.navigate("Settings")
+                },
+                error => {
+                    console.log("Edit Team ERROR")
+                    console.log((error))
+                    // TODO: Toast
+                    this.setState({
+                        message: "Edit Error!"
+                    })
+                }
+            );
+        } else {
+            Backend.createTeam({
+                name: this.state.name,
+                code: this.state.code
+                }, this.props.userData.token, 
+                response => {
+                    console.log("REgister Team OK")
+                    console.log(response.data)
+                    this.props.actUserCreateTeamOK(response.data)
+                    this.props.navigation.navigate("Settings")
+                },
+                error => {
+                    console.log("Register Team ERROR")
+                    console.log((error))
+                    // TODO: Toast
+                    this.setState({
+                        message: "Register Error!"
+                    })
+                }
+            );
+        }
        
     }
     render() {
+        console.log("******TEam info")
+        console.log(this.state)
         return (
             <Container>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Name:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
+                        <Item floatingLabel>
+                        <Label>{AppLocales.t("GENERAL_NAME")+" "+AppLocales.t("GENERAL_TEAM")}
+                        </Label>
                         <Input
-                            placeholder="Name"
+                            style={styles.rowForm}
                             onChangeText={(name) => this.setState({name})}
                             value={this.state.name}
                         />
                         </Item>
                     </View>
-                    
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Code:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
+
+                    <View style={styles.rowContainerDisable}>
+                        <Item floatingLabel>
+                        <Label>{AppLocales.t("GENERAL_TEAM_CODE_SHORT")+" ("+
+                            AppLocales.t("GENERAL_RANDOM")+")"}
+                        </Label>
                         <Input
-                            placeholder="Auto Created"
+                            disabled
+                            style={styles.rowForm}
                             value={this.state.code}
                         />
                         </Item>
@@ -80,7 +120,14 @@ class CreateTeamScreen extends React.Component {
                     <Button
                         block primary
                         onPress={() => this.handleCreate()}
-                    ><Text>OK</Text></Button>
+                    >
+                        <Text>
+                        {this.props.navigation.state.params.isEdit ? (
+                            AppLocales.t("GENERAL_EDITDATA")
+                        ): (
+                            AppLocales.t("GENERAL_ADD")
+                        )}
+                        </Text></Button>
                     </View>
 
                 </View>
@@ -99,7 +146,13 @@ CreateTeamScreen.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title><HeaderText>Create Team</HeaderText></Title>
+            <Title><HeaderText>
+                {navigation.state.params.isEdit ? (
+                    AppLocales.t("SETTING_LBL_EDIT_TEAM")
+                ): (
+                    AppLocales.t("SETTING_LBL_CREATE_TEAM")
+                )}
+            </HeaderText></Title>
           </Body>
           <Right />
         </Header>
@@ -117,9 +170,13 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
     alignItems: "center", // vertial align
-    height: 50,
-    borderWidth: 1,
-    borderColor:"grey"
+  },
+  rowContainerDisable: {
+    marginTop: 7,
+    paddingTop: 12,
+    flexDirection: "row",
+    alignItems: "center", // vertial align
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
   rowLabel: {
     flex: 1,

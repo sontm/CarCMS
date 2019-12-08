@@ -14,6 +14,8 @@ export default {
     GENERAL_DEFAULT:"Mặc Định",
     GENERAL_TODAY:"Hôm Nay",
     GENERAL_ADDDATA:"Thêm Dữ Liệu",
+    GENERAL_ADD:"Thêm",
+    GENERAL_NAME:"Tên",
     GENERAL_EDITDATA:"Cập Nhập",
     GENERAL_ALL:"Tất Cả",
     GENERAL_PRIVATE: "Cá Nhân",
@@ -28,6 +30,7 @@ export default {
     GENERAL_CAR: "Ôtô",
     GENERAL_BIKE: "Xe Máy",
     GENERAL_NODATA: "Chưa Có Dữ Liệu",
+    GENERAL_RANDOM: "Ngẫu Nhiên",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",
@@ -100,6 +103,7 @@ export default {
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",
     SETTING_LBL_CREATE_TEAM: "Tạo Nhóm",
     SETTING_LBL_JOIN_TEAM: "Gia Nhập Nhóm",
+    SETTING_LBL_EDIT_TEAM: "Sửa Tên Nhóm",
     SETTING_LBL_SYNC_FROM: "Đồng Bộ Từ Máy Chủ",
     SETTING_LBL_SYNC_TO: "Đồng Bộ Lên Máy Chủ",
     SETTING_LBL_SYNC_FROM_NOTE: "Dữ Liệu Trên Máy Sẽ Bị Thay Thế",
@@ -109,7 +113,9 @@ export default {
     SETTING_H1_SETTING: "Cài Đặt",
     SETTING_LBL_VEHICLE: "Cài Đặt Xe",
     SETTING_LBL_REMIND: "Cài Đặt Nhắc Nhở",
-    SETTING_LBL_MAINTAIN: "Cài Đặt Loại Bảo Dưỡng",
+    SETTING_LBL_MAINTAIN: "Cài Đặt Mức Bảo Dưỡng",
+    SETTING_LBL_MAINTAIN_MODULES: "Cài Đặt Các Bộ Phận Bảo Dưỡng",
+
     SETTING_H1_ACCOUNT: "Tài Khoản",
     SETTING_LBL_LOGIN_GOOGLE: "Đăng Nhập Với Google",
     SETTING_LBL_LOGIN_FB: "Đăng Nhập Với Facebook",
@@ -148,6 +154,9 @@ export default {
     SETTING_MAINTAIN_L4_BIKE: "Bảo Dưỡng Cấp 4",
 
     SETTING_CREATE_SERVICEMODULE: "Tên Bộ Phận Bảo Dưỡng", 
+    SETTING_SERVICEMODULEHEAD_USERDEFINED: "Người Dùng Tạo Mới",
+    SETTING_SERVICEMODULEHEAD_SYSTEMDEFINED: "Mặc Định Hệ Thống", 
+
     USER_FULLNAME: "Tên",
     USER_EMAIL: "Email",
     USER_PHONE: "Số Điện Thoại",
@@ -193,4 +202,6 @@ export default {
     NOTE_VALIDFOR_AUTH: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Oto",
     NOTE_VALIDFOR_INSURANCE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Bao Hiem Bat Buoc",
     NOTE_VALIDFOR_ROAD_FEE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Phi Bao Tri Duong Bo",
+
+    TOAST_SUCCESS_COPIED: "Đã Sao Chép Mã Nhóm",
 };

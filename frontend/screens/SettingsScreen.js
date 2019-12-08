@@ -1,9 +1,9 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, Clipboard } from 'react-native';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
-    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Thumbnail } from 'native-base';
+    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Thumbnail, Toast } from 'native-base';
 import Layout from '../constants/Layout'
 
 import {HeaderText, WhiteText} from '../components/StyledText'
@@ -166,35 +166,58 @@ class SettingsScreen extends React.Component {
         <View style={styles.container}>
             {(this.props.userData.isLogined) ? (
             <View>
+            <View style={styles.userInfoContainer}>
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("Profile")}>
-            <View style={styles.userInfoContainer}>
-              {this.props.userData.userProfile.pictureUrl ? (
-                <Thumbnail source={{uri: uri}} style={styles.avatarContainer}/>
-              ): (
-                <Icon type="FontAwesome" name="user-circle-o" style={styles.avatarContainer}/>
-              )}
-              <View style={{flexDirection: "row", marginTop: 5}}>
-                <Text>{"  "}</Text>
-                <Text><H3>{this.props.userData.userProfile.fullName}</H3></Text>
-                <Text>{"  "}</Text>
-                <Icon name="arrow-forward" style={styles.iconRight}/>
+              <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
+                <View style={{width: "90%",paddingRight: -50, flexDirection: "column",justifyContent: "center",alignItems: "center",}}>
+                  {this.props.userData.userProfile.pictureUrl ? (
+                    <Thumbnail source={{uri: uri}} style={styles.avatarContainer}/>
+                  ): (
+                    <Icon type="FontAwesome" name="user-circle-o" style={styles.avatarContainer}/>
+                  )}
+                  <View style={{flexDirection: "row", marginTop: 5}}>
+                    <Text><H3>{this.props.userData.userProfile.fullName}</H3></Text>
+                  </View>
+                  <Text  style={{color: AppConstants.COLOR_PICKER_TEXT}}>{this.props.userData.userProfile.email}</Text>
+                </View>
+                <View>
+                  <Icon name="arrow-forward" style={styles.iconRight}/>
+                </View>
               </View>
-              <Text  style={{color: AppConstants.COLOR_PICKER_TEXT}}>{this.props.userData.userProfile.email}</Text>
+            </TouchableOpacity>
+
               {(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
-                <Text>
-                {AppLocales.t("GENERAL_TEAM")+": " + this.props.userData.teamInfo.name +
-                " ("+ AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code + ")"}
-                </Text>) : 
-                <Text style={{fontSize: 13, fontStyle: "italic"}}>{AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
+                <View>
+                <Text style={{marginTop: 10}}>
+                {AppLocales.t("GENERAL_TEAM")+": " + this.props.userData.teamInfo.name }
+                </Text>
+                <View  style={{marginTop: 5, flexDirection:"row", alignItems:"center"}}>
+                  <Text>
+                    {AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code}
+                  </Text>
+                  <TouchableOpacity 
+                      onPress={() => {
+                        Toast.show({
+                          text: AppLocales.t("TOAST_SUCCESS_COPIED"),
+                          //buttonText: "Okay",
+                          type: "success"
+                        })
+                        Clipboard.setString(this.props.userData.teamInfo.code)
+                      }}>
+                    <Icon type="FontAwesome5" name="copy" 
+                      style={{fontSize: 20, color: "grey", marginLeft: 10}}/>
+                  </TouchableOpacity>
+                </View>
+                </View>) : 
+                <Text style={{fontSize: 13, fontStyle: "italic",marginTop: 5}}>{AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
                   </Text>
               }
-
             </View>
-            </TouchableOpacity>
+            
             {(this.props.userData.isLogined) ? (
             <View style={styles.rowContainerNoMargin}>
-                <Button small block danger onPress={() => this.handleLogout()} style={{width: "40%"}}>
+                <Button small block danger onPress={() => this.handleLogout()} style={{width: 200}}>
                   <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
                 </Button>
             </View>
@@ -265,9 +288,9 @@ class SettingsScreen extends React.Component {
                 {AppLocales.t("SETTING_H1_ACCOUNT")}
                 </Text>
             </View>
-            {(this.props.userData.isLogined) ? (
+            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.name)) ? (
             <TouchableOpacity 
-                  onPress={() => this.props.navigation.navigate("CreateTeam")}>
+                  onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})}>
                 <View style={styles.rowContainerNoBorder}>
                   <View style={styles.rowIcon}>
                     <Icon type="MaterialIcons" name="group-add" style={styles.iconLeft} /></View>
@@ -278,7 +301,7 @@ class SettingsScreen extends React.Component {
             </TouchableOpacity>
             ) : null }
 
-            {(this.props.userData.isLogined) ? (
+            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.name)) ? (
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("JoinTeam")}>
               <View style={styles.rowContainer}>
@@ -288,6 +311,19 @@ class SettingsScreen extends React.Component {
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
+            </TouchableOpacity>
+            ) : null }
+
+            {(this.props.userData.isLogined && this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
+            <TouchableOpacity 
+                  onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: true})}>
+                <View style={styles.rowContainerNoBorder}>
+                  <View style={styles.rowIcon}>
+                    <Icon type="MaterialCommunityIcons" name="square-edit-outline" style={styles.iconLeft} /></View>
+                  <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_EDIT_TEAM")}</Text></View>
+                  <View style={styles.rowRightIcon}>
+                    <Icon name="arrow-forward" style={styles.iconRight}/></View>
+                </View>
             </TouchableOpacity>
             ) : null }
 
@@ -345,8 +381,18 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("ServiceMaintainSetting")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon name="construct" style={styles.iconLeft} /></View>
+                  <Icon type="MaterialCommunityIcons" name="timeline-text" style={styles.iconLeft} /></View>
                 <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_MAINTAIN")}</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("ServiceModulesSetting")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon name="construct" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_MAINTAIN_MODULES")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
@@ -571,6 +617,7 @@ const styles = StyleSheet.create({
   },
 
   cloudSyncRow: {
+    marginTop: 7,
     flexDirection: "row",
     justifyContent: "space-around",
     // backgroundColor: "white"

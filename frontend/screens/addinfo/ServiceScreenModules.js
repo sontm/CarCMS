@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Segment,Label, ListItem, CheckBox } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Segment,Label, ListItem, CheckBox, H3 } from 'native-base';
 
-import {HeaderText} from '../../components/StyledText'
+import {HeaderText, WhiteText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
 import Layout from '../../constants/Layout';
 import { connect } from 'react-redux';
@@ -83,6 +83,11 @@ class ServiceScreenModules extends React.Component {
         }
         let customView = [];
         if (customArr&& customArr.length >0) {
+            customView.push(
+                <Text style={styles.textHeadingRow} key="userdefined">
+                    {AppLocales.t("SETTING_SERVICEMODULEHEAD_USERDEFINED")}</Text>
+            )
+
             customArr.forEach((item,idx) => {
                 customView.push(
                     <ListItem key={item.name+idx}
@@ -117,6 +122,11 @@ class ServiceScreenModules extends React.Component {
                     </ListItem>
                 )
             })
+
+            customView.push(
+                <Text style={styles.textHeadingRow} key="systemdefined">
+                    {AppLocales.t("SETTING_SERVICEMODULEHEAD_SYSTEMDEFINED")}</Text>
+            )
         }
         return (
             <Container>
@@ -185,10 +195,11 @@ ServiceScreenModules.navigationOptions = ({ navigation}) => ({
                 : (AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " " + AppLocales.t("GENERAL_CAR")))}</HeaderText></Title>
           </Body>
           <Right style={{flex: 1}}>
-            <Button transparent onPress={() => {
+            <Button transparent vertical onPress={() => {
                 navigation.navigate("ServiceModuleCreate")
             }}>
               <Icon type="AntDesign" name="plus" />
+              <WhiteText style={styles.smallerText}>{AppLocales.t("GENERAL_ADD")}</WhiteText>
             </Button>
           </Right>
         </Header>
@@ -198,7 +209,7 @@ ServiceScreenModules.navigationOptions = ({ navigation}) => ({
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
-    paddingTop: 15,
+    //paddingTop: 15,
     paddingHorizontal: 3,
     backgroundColor: '#fff',
     flexDirection: "column"
@@ -230,6 +241,19 @@ const styles = StyleSheet.create({
   btnSubmit: {
 
   },
+  textHeadingRow: {
+    flexDirection: "row",
+    paddingTop: 10,
+    paddingBottom: 5,
+    justifyContent: "flex-start",
+    flexWrap: "wrap",
+    flexGrow: 100,
+    marginLeft: 0,
+    paddingLeft: 5,
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    fontSize: 20
+  },
+
   smallerText: {
       fontSize: 11
   },

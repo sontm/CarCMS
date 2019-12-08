@@ -22,6 +22,7 @@ app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), us
 app.post('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.addVehicles);
 app.get('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.getAllVehiclesOfUser);
 
+// upsert
 app.post('/api/team', passport.authenticate('jwt', {session: false}), team.createTeamOfUser);
 app.post('/api/team/join', passport.authenticate('jwt', {session: false}), team.joinTeam);
 app.get('/api/team/join', passport.authenticate('jwt', {session: false}), team.getAllJoinRequestWhichUserIsManager);
@@ -29,9 +30,9 @@ app.post('/api/team/join/action', passport.authenticate('jwt', {session: false})
 app.post('/api/team/users', passport.authenticate('jwt', {session: false}), team.getAllUserOfTeam);
 
 //app.get('/api/app/services', passport.authenticate('jwt', {session: false}), appData.getDataServiceTypes);
-app.get('/api/app/services', appData.getDataServiceTypes);
-app.get('/api/app/expenses', appData.getDataExpenseTypes);
-app.get('/api/app/vehicles', appData.getDataVehicleModels);
+// app.get('/api/app/services', appData.getDataServiceTypes);
+// app.get('/api/app/expenses', appData.getDataExpenseTypes);
+// app.get('/api/app/vehicles', appData.getDataVehicleModels);
 
 app.get('/api/app/lateston', appData.getLatestDataDateOn);
 app.get('/api/app/appdata', appData.getLatestAppData);

@@ -28,9 +28,18 @@ module.exports = {
   // TODO. Need return new JWT token contain teamId and TeamCode of this User
   async createTeamOfUser(req, res) {
     console.log("Team Create of USERID:" + req.user.id)    
-    let item = new dbteam({
-      ...req.body
-    });
+    var ObjectId = require('mongoose').Types.ObjectId;
+    if (req.user.id) {
+      var item = new dbteam({
+        ...req.body,
+        _id: new ObjectId(req.body.id)
+      });
+    } else {
+      var item = new dbteam({
+        ...req.body
+      });
+    }
+    console.log(item)
     try {
       // Find the User with this ID. Create new Team, assign teamId of User to this new ID
       const thisUser = await new Promise((resolve, reject) => {
@@ -41,11 +50,18 @@ module.exports = {
 
       if (thisUser) {
         const newTeam = await new Promise((resolve, reject) => {
-          item.save(function(err, doc){
-            err ? reject(err) : resolve(doc);
-          });
+          // item.save(function(err, doc){
+          //   err ? reject(err) : resolve(doc);
+          // });
+          //Insert or Update
+          dbteam.findOneAndUpdate({ _id: item._id }, item, 
+            {upsert:true, useFindAndModify: false, new:true}, function(err, doc){
+          err ? reject(err) : resolve(doc);
         });
-        console.log("Created Team ID:" + newTeam._id)
+
+        });
+        console.log("Created Team ID:")
+        console.log(newTeam)
         thisUser.teamId = newTeam._id;
         thisUser.teamCode = newTeam.code;
         thisUser.roleInTeam = "manager";

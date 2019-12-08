@@ -33,6 +33,7 @@ import RegisterUserScreen from '../screens/setting/RegisterUserScreen';
 import CreateTeamScreen from '../screens/setting/CreateTeamScreen'
 import JoinTeamScreen from '../screens/setting/JoinTeamScreen'
 import DebugScreen from '../screens/setting/DebugScreen'
+import SettingServiceScreenModules from '../screens/setting/SettingServiceScreenModules';
 
 import TeamScreen from '../screens/TeamScreen';
 import MemberVehicleListScreen from '../screens/team/MemberVehicleListScreen'
@@ -111,6 +112,8 @@ const SettingsStack = createStackNavigator(
     CreateTeam: CreateTeamScreen,
     JoinTeam: JoinTeamScreen,
     ServiceMaintainSetting: ServiceMaintainSettingScreen,
+    ServiceModulesSetting: SettingServiceScreenModules,
+    ServiceModuleCreate: ServiceModuleCreateScreen,
     DebugScreen: DebugScreen
   },
   config
