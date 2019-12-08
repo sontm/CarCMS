@@ -29,6 +29,7 @@ const VEHICLE_EXPENSE_EDIT = 'VEHICLE_EXPENSE_EDIT';
 const VEHICLE_SERVICE_EDIT = 'VEHICLE_SERVICE_EDIT';
 
 const USER_LOGIN_OK = 'USER_LOGIN_OK';
+const USER_UPDATEPROFILE_OK = 'USER_UPDATEPROFILE_OK';
 const USER_REGISTER_OK = 'USER_REGISTER_OK';
 const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
@@ -148,6 +149,14 @@ export const actUserCreateTeamOK = (data) => (dispatch) => {
     })
 }
 
+// data will have fullname, phone and token if needed
+export const actUserUpdateProfileOK = (data) => (dispatch) => {
+    console.log("actUserUpdateProfileOK:")
+    dispatch({
+        type: USER_UPDATEPROFILE_OK,
+        payload: data
+    })
+}
 export const actUserLoginOK = (data) => (dispatch) => {
     console.log("actUserLoginOK:")
     dispatch({
@@ -467,7 +476,18 @@ export default function(state = initialState, action) {
             lastSyncFromServerOn: null, // date of last sync
             lastSyncToServerOn: null,
         };
-
+    case USER_UPDATEPROFILE_OK:
+        let prevStateUpdateProfile = {...state};
+        if (action.payload.fullName) {
+            prevStateUpdateProfile.userProfile.fullName = action.payload.fullName;
+        }
+        if (action.payload.phone) {
+            prevStateUpdateProfile.userProfile.phone = action.payload.phone;
+        }
+        if (action.payload.token) {
+            prevStateUpdateProfile.token = action.payload.token;
+        }
+        return prevStateUpdateProfile;
     case VEHICLE_SYNC_FROMSERVER:
         let newStateSyncFrom = {
             ...state,

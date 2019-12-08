@@ -160,6 +160,10 @@ export default {
     USER_FULLNAME: "Tên",
     USER_EMAIL: "Email",
     USER_PHONE: "Số Điện Thoại",
+    USER_CHANGEPWD: "Đổi Mật Khẩu ?",
+    USER_OLDPWD: "Mật Khẩu Cũ",
+    USER_NEWPWD1: "Mật Khẩu Mới",
+    USER_NEWPWD2: "Xác Nhận Mật Khẩu Mới",
 
     NEW_CAR_HEADER:"Thông Tin Xe",
     NEW_CAR_BRAND:"Hãng Xe",
@@ -204,4 +208,6 @@ export default {
     NOTE_VALIDFOR_ROAD_FEE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Phi Bao Tri Duong Bo",
 
     TOAST_SUCCESS_COPIED: "Đã Sao Chép Mã Nhóm",
+    TOAST_NEED_OLDPWD: "Hãy Điền Mật Khẩu Cũ",
+    TOAST_NEWPWD_NOTMATCHED: "Mật Khẩu Mới Không Khớp!",
 };

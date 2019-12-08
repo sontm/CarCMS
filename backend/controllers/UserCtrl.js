@@ -75,6 +75,49 @@ module.exports = {
         });
     })(req, res);
   },
+  //body 
+  async updateUserProfile(req, res) {
+    console.log("updateUserProfile of USERID:" + req.user.id)
+    console.log(req.body)
+    // Find current User record contain Vehicle data
+    const currentUser = await new Promise((resolve, reject) => {
+      dbuser.findById(req.user.id, function(err, doc){
+        err ? reject(err) : resolve(doc);
+      });
+    });
+    
+    //console.log(currentUser)
+    if (currentUser) {
+      if (req.body.oldPwd) {
+        if (req.body.oldPwd != currentUser.passwordR) {
+          // Old password not matched
+          res.status(500).send({msg: "Mật Khẩu Cũ không đúng!"})
+          return;
+        }
+        const newHashed = await bcrypt.hash(req.body.newPwd, 10)
+        console.log("   UNewHashed:" + newHashed)
+        currentUser.passwordR = req.body.newPwd;
+        currentUser.password = newHashed;
+      }
+      currentUser.fullName = req.body.fullName;
+      currentUser.phone = req.body.phone;
+      // todo email 
+      const result = await new Promise((resolve, reject) => {
+        currentUser.save(function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      let user = apputil.createUserFromRecordForJWT(result)
+      const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
+      console.log("      New Token:" + token)
+
+      res.status(200).send({
+        fullName: result.fullName,
+        phone: result.phone,
+        token: token
+      })
+    }
+  },
 
   async loginGoogle(req, res, next) {
     try {

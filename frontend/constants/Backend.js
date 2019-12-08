@@ -58,6 +58,15 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+    updateUserProfile(data, token, onOK, onError) {
+        axios.post("/users/update",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
     loginGoogle(data, onOK, onError) {
         console.log("Backend, send data")
         console.log((data))

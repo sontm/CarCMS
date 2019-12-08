@@ -170,7 +170,7 @@ class SettingsScreen extends React.Component {
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("Profile")}>
               <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
-                <View style={{width: "90%",paddingRight: -50, flexDirection: "column",justifyContent: "center",alignItems: "center",}}>
+                <View style={{width: "100%",flexDirection: "column",justifyContent: "center",alignItems: "center",}}>
                   {this.props.userData.userProfile.pictureUrl ? (
                     <Thumbnail source={{uri: uri}} style={styles.avatarContainer}/>
                   ): (
@@ -181,7 +181,7 @@ class SettingsScreen extends React.Component {
                   </View>
                   <Text  style={{color: AppConstants.COLOR_PICKER_TEXT}}>{this.props.userData.userProfile.email}</Text>
                 </View>
-                <View>
+                <View style={{position:"absolute", left: Layout.window.width*0.9}}>
                   <Icon name="arrow-forward" style={styles.iconRight}/>
                 </View>
               </View>
@@ -189,9 +189,14 @@ class SettingsScreen extends React.Component {
 
               {(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
                 <View>
-                <Text style={{marginTop: 10}}>
-                {AppLocales.t("GENERAL_TEAM")+": " + this.props.userData.teamInfo.name }
-                </Text>
+                <View  style={{marginTop: 10, flexDirection:"row", alignItems:"center"}}>
+                  <Text>
+                    {AppLocales.t("GENERAL_TEAM")+": "}
+                  </Text>
+                  <Text style={{fontWeight: "bold"}}>
+                    {this.props.userData.teamInfo.name }
+                  </Text>
+                </View>
                 <View  style={{marginTop: 5, flexDirection:"row", alignItems:"center"}}>
                   <Text>
                     {AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code}
@@ -217,7 +222,7 @@ class SettingsScreen extends React.Component {
             
             {(this.props.userData.isLogined) ? (
             <View style={styles.rowContainerNoMargin}>
-                <Button small block danger onPress={() => this.handleLogout()} style={{width: 200}}>
+                <Button small block danger onPress={() => this.handleLogout()} style={{width: 150}}>
                   <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
                 </Button>
             </View>

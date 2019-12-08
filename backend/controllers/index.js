@@ -18,6 +18,9 @@ app.get('/api/users', user.getAll);
 app.get('/api/usersById/:id', user.getByEmailOrObjectId);
 // this request is Protected by JWT Authentication
 app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), user.getUserProfile);
+app.post('/api/users/update', passport.authenticate('jwt', {session: false}), 
+  user.updateUserProfile);
+
 
 app.post('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.addVehicles);
 app.get('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.getAllVehiclesOfUser);
