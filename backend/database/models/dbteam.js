@@ -15,7 +15,15 @@ const TeamSchema = new Schema({
     code: {
         type: String,
         required: false
-    }
+    },
+    createdUserId: {
+        type: String,
+        required: false
+    },
+    canMemberViewReport: {
+        type:Boolean,
+        required: false
+    },
 });
 
 TeamSchema.set('toJSON', {

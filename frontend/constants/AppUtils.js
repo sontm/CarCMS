@@ -1739,14 +1739,20 @@ class AppUtils {
             response => {
                 console.log("Sync Vehicle From Server OK");
                 //this.props.actVehicleAddVehicle(response.data, true)
-                console.log(response.data)
+                //console.log(response.data)
                 props.actVehicleSyncAllFromServer(response.data)
             },
             error => {console.log("Sync Vehicle From Server Error");console.log(error);}
         );
         this.cancelAllAppLocalNotification();
 
-        Backend.getAllUserOfTeam({teamId: props.userData.userProfile.teamId}, props.userData.token, 
+        // If User is Member and TEam have setting of cannot view report
+        console.log(props.userData.userProfile.roleInTeam)
+        console.log(props.userData.teamInfo.canMemberViewReport)
+        if (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport) {
+            // no team data
+        } else {
+            Backend.getAllUserOfTeam({teamId: props.userData.userProfile.teamId}, props.userData.token, 
             response => {
                 console.log("GEt all Member in Team OK")
                 // console.log(response.data)
@@ -1761,9 +1767,9 @@ class AppUtils {
                 console.log("GEt all Member in Team ERROR")
                 console.log(JSON.stringify(error))
             }
-        );
+            );
       
-        Backend.getAllJoinTeamRequest(props.userData.token, 
+            Backend.getAllJoinTeamRequest(props.userData.token, 
             response => {
                 console.log("GEt all JoinRequest OK")
                 // console.log(response.data)
@@ -1775,7 +1781,8 @@ class AppUtils {
                 console.log("GEt all JoinRequest ERROR")
                 console.log(JSON.stringify(error))
             }
-        );
+            );
+        }
     
         // if (!isFailedInOneStep) {
         //   await new Promise((resolve, reject) => {

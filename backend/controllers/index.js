@@ -29,8 +29,13 @@ app.get('/api/users/vehicle', passport.authenticate('jwt', {session: false}), us
 app.post('/api/team', passport.authenticate('jwt', {session: false}), team.createTeamOfUser);
 app.post('/api/team/join', passport.authenticate('jwt', {session: false}), team.joinTeam);
 app.get('/api/team/join', passport.authenticate('jwt', {session: false}), team.getAllJoinRequestWhichUserIsManager);
+app.get('/api/team/leave', passport.authenticate('jwt', {session: false}), team.leaveTeam);
 app.post('/api/team/join/action', passport.authenticate('jwt', {session: false}), team.approveOrRejectJoinRequest);
 app.post('/api/team/users', passport.authenticate('jwt', {session: false}), team.getAllUserOfTeam);
+app.get('/api/team/createdbyme', passport.authenticate('jwt', {session: false}), 
+  team.getAllTeamCreatedByUser);
+app.post('/api/team/rejointeam', passport.authenticate('jwt', {session: false}), 
+  team.rejoinTeamCreatedByMe);
 
 //app.get('/api/app/services', passport.authenticate('jwt', {session: false}), appData.getDataServiceTypes);
 // app.get('/api/app/services', appData.getDataServiceTypes);

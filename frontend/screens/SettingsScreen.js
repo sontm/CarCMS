@@ -16,7 +16,7 @@ import Backend from '../constants/Backend';
 
 import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer, 
   actVehicleSyncToServerOK} from '../redux/UserReducer';
-import {actUserLogout, actUserLoginOK} from '../redux/UserReducer'
+import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK} from '../redux/UserReducer'
 import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout} from '../redux/TeamReducer'
 import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
@@ -43,19 +43,42 @@ class SettingsScreen extends React.Component {
   }
   handleLogout() {
     Alert.alert(
-      'Do You Want to Sign out?',
+      AppLocales.t("MSG_LOGOUT"),
       null,
       [
           {
-            text: 'Cancel',
+            text: 'Huỷ',
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
-          {text: 'Sign-out', style: 'destructive' , 
+          {text: 'OK', style: 'destructive' , 
               onPress: () => {this.props.actUserLogout(); this.props.actTeamUserWillLogout()}},
       ],
       {cancelable: true}
   )
+  }
+  onClickLeaveTeam() {
+    Alert.alert(
+      AppLocales.t("MSG_LEAVE_TEAM"),
+      "",
+      [
+          {
+            text: 'Huỷ',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {text: 'OK', style: 'destructive' , onPress: () => {
+              console.log('Delete Pressed')
+              Backend.leaveTeam(this.props.userData.token,
+                response => {
+                  this.props.actUserLeaveTeamOK()
+                }, error => {
+                  console.log("User LEave team Error")
+                })
+              
+          }},
+      ],
+      {cancelable: true})
   }
   //Reponse Object:
   // "accessToken": "CNyi5FoAg0AGniBwVr__RiKV9_i8Qdqy8Y3hxydYcW-M63g",
@@ -190,16 +213,28 @@ class SettingsScreen extends React.Component {
               {(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
                 <View>
                 <View  style={{marginTop: 10, flexDirection:"row", alignItems:"center"}}>
-                  <Text>
+                  <Text style={{color: AppConstants.COLOR_GREY_MIDDLE}}>
                     {AppLocales.t("GENERAL_TEAM")+": "}
                   </Text>
                   <Text style={{fontWeight: "bold"}}>
                     {this.props.userData.teamInfo.name }
                   </Text>
                 </View>
+                <View  style={{marginTop: 10, flexDirection:"row", alignItems:"center"}}>
+                  <Text style={{color: AppConstants.COLOR_GREY_MIDDLE}}>
+                    {AppLocales.t("GENERAL_ROLE")+": "}
+                  </Text>
+                  <Text style={{fontStyle: "italic"}}>
+                    {this.props.userData.userProfile.roleInTeam == "manager" ?  
+                      AppLocales.t("GENERAL_ROLE_MANAGER") : AppLocales.t("GENERAL_ROLE_MEMBER")}
+                  </Text>
+                </View>
                 <View  style={{marginTop: 5, flexDirection:"row", alignItems:"center"}}>
+                  <Text style={{color: AppConstants.COLOR_GREY_MIDDLE}}>
+                    {AppLocales.t("GENERAL_TEAM_CODE_SHORT")+" "+AppLocales.t("GENERAL_TEAM")+": "}
+                  </Text>
                   <Text>
-                    {AppLocales.t("GENERAL_TEAM_CODE_SHORT")+": " + this.props.userData.teamInfo.code}
+                    {this.props.userData.teamInfo.code}
                   </Text>
                   <TouchableOpacity 
                       onPress={() => {
@@ -319,7 +354,8 @@ class SettingsScreen extends React.Component {
             </TouchableOpacity>
             ) : null }
 
-            {(this.props.userData.isLogined && this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
+            {(this.props.userData.isLogined && this.props.userData.teamInfo && 
+                this.props.userData.teamInfo.name && this.props.userData.userProfile.roleInTeam=="manager") ? (
             <TouchableOpacity 
                   onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: true})}>
                 <View style={styles.rowContainerNoBorder}>
@@ -331,6 +367,17 @@ class SettingsScreen extends React.Component {
                 </View>
             </TouchableOpacity>
             ) : null }
+            {(this.props.userData.isLogined && this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
+            <TouchableOpacity 
+                  onPress={() => this.onClickLeaveTeam()}>
+                <View style={styles.rowContainerNoBorder}>
+                  <View style={styles.rowIcon}>
+                    <Icon type="AntDesign" name="logout" style={styles.iconLeft} /></View>
+                  <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_LEAVE_TEAM")}</Text></View>
+                </View>
+            </TouchableOpacity>
+            ) : null }
+
 
             <View style={styles.cloudSyncRow}>
               <TouchableOpacity 
@@ -647,7 +694,8 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
   actUserLogout, actUserLoginOK,actVehicleSyncToServerOK,
-  actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout
+  actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout,
+  actUserLeaveTeamOK
 };
   
 export default connect(

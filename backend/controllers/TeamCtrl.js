@@ -5,7 +5,8 @@ import dbjointeam from "../database/models/dbjointeam";
 module.exports = {
   // req.body: teamId
   async getAllUserOfTeam(req, res) {
-    console.log("getAllUserOfTeam:" + req.body.teamId)    
+    console.log("getAllUserOfTeam:" + req.body.teamId)  
+    console.log(req.user)  
     if (req.body.teamId) {
       try {
         // Find the User with this ID. Create new Team, assign teamId of User to this new ID
@@ -24,22 +25,79 @@ module.exports = {
       res.status(500).send({msg: "Wrong ID "})
     }
   },
+  // An User want to Join a team
+  async rejoinTeamCreatedByMe(req, res) {
+    console.log("rejoinTeamCreatedByMe USERID:" + req.user.id + ",code:" + req.body.code)
+    try {
+      //Find the User informationi of Request
+      const requestUser = await new Promise((resolve, reject) => {
+        dbuser.findById(req.user.id, function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
 
+      if (requestUser && req.body.code && req.body.code.length > 0) {
+        const result = await dbteam.findOne({code: req.body.code});
+        console.log("    getTeam with Code OK:" + req.body.code)
+        // object of all the users
+        console.log(result);
+        // If the TEam is same with User ID
+        if (result.createdUserId == req.user.id) {
+          requestUser.teamId = result._id;
+          requestUser.teamCode = result.code;
+          requestUser.roleInTeam = "manager";
+
+          // Create new Request. If Found, Update status to requested
+          await new Promise((resolve, reject) => {
+            requestUser.save(function(err, doc){
+              err ? reject(err) : resolve(doc);
+            });
+          });
+
+          res.status(200).send(result)
+        } else {
+          res.status(401).send({msg: "Not match team of User"})
+        }
+      } else {
+        res.status(400).send({msg: "Not Found User"})
+      }
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({msg: "Inter Server Error "})
+      throw error;
+    }
+  },
+
+  // ONE USER CAN ONLY Have MAx 3 Team
   // TODO. Need return new JWT token contain teamId and TeamCode of this User
   async createTeamOfUser(req, res) {
-    console.log("Team Create of USERID:" + req.user.id)    
+    console.log("Team Create of USERID:" + req.user.id)  
+    // Find How Many Team this User created
+    const teamsOfMe = await dbteam.find({createdUserId: req.user.id});
+    console.log("   User have Teams:" + teamsOfMe.length)
+    if (teamsOfMe && teamsOfMe.length >= 3) {
+      // User canot create Any more
+      res.status(500).send({msg: "Bạn Không thể tạo quá 3 Nhóm!"})
+      return;
+    }
+
     var ObjectId = require('mongoose').Types.ObjectId;
-    if (req.user.id) {
+    if (req.body.id) {
+      // if Team ID existed, this is Edit infor
       var item = new dbteam({
         ...req.body,
         _id: new ObjectId(req.body.id)
       });
     } else {
       var item = new dbteam({
-        ...req.body
+        ...req.body,
+        createdUserId: req.user.id
       });
     }
     console.log(item)
+    
+
     try {
       // Find the User with this ID. Create new Team, assign teamId of User to this new ID
       const thisUser = await new Promise((resolve, reject) => {
@@ -49,6 +107,13 @@ module.exports = {
       });
 
       if (thisUser) {
+        // if user already manager of other team or not manager, skip
+        if (thisUser.roleInTeam == "member" && thisUser.teamId) {
+          console.log("Member cannot create team")
+          res.status(401).send({msg: "Member cannot create team"})
+          return;
+        }
+
         const newTeam = await new Promise((resolve, reject) => {
           // item.save(function(err, doc){
           //   err ? reject(err) : resolve(doc);
@@ -120,6 +185,39 @@ module.exports = {
         res.status(200).send({msg: "OK"})
       } else {
         res.status(400).send({msg: "Not Found User "})
+      }
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({msg: "Inter Server Error "})
+      throw error;
+    }
+  },
+  // An User want to Join a team
+  async leaveTeam(req, res) {
+    console.log("Team Leave From USERID:" + req.user.id)
+    try {
+      //Find the User informationi of Request
+      const requestUser = await new Promise((resolve, reject) => {
+        dbuser.findById(req.user.id, function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+
+      if (requestUser) {
+        requestUser.teamCode=null;
+        requestUser.teamId=null;
+        requestUser.roleInTeam=null;
+        // Create new Request. If Found, Update status to requested
+        await new Promise((resolve, reject) => {
+          requestUser.save(function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
+
+        res.status(200).send({msg: "OK"})
+      } else {
+        res.status(400).send({msg: "Not Found User"})
       }
 
     } catch (error) {
@@ -261,16 +359,16 @@ module.exports = {
   },
 
   // Auth API
-  getAllOfUser(req, res) {
-    console.log("Vehicle Get OF USER ID:" + req.user.id)
+  getAllTeamCreatedByUser(req, res) {
+    console.log("Team getAllTeamCreatedByUser:" + req.user.id)
     if (req.user) {
-      dbteam.find({userId: req.user.id}, function(err, result) {
+      dbteam.find({createdUserId: req.user.id}, function(err, result) {
         if (err) {
-            console.log("    Vehicle Get All OF USER Error")
+            console.log("    getAllTeamCreatedByUser USER Error")
             console.log(err);
             res.status(500).send(err)
         } else {
-            console.log("    Vehicle Get All OF USER OK")
+            console.log("    getAllTeamCreatedByUser OK")
             // object of all the users
             console.log(result);
             res.status(200).send(result)

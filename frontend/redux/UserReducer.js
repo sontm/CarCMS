@@ -33,6 +33,7 @@ const USER_UPDATEPROFILE_OK = 'USER_UPDATEPROFILE_OK';
 const USER_REGISTER_OK = 'USER_REGISTER_OK';
 const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
+const USER_LEAVE_TEAM_OK = 'USER_LEAVE_TEAM_OK';
 
 const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
 const TEMP_CALCULATE_CARREPORT_ALL = 'TEMP_CALCULATE_CARREPORT_ALL';
@@ -59,7 +60,7 @@ const DEFAULT_SETTING_SERVICE = {
 }
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
-    teamInfo: {},//"code": "bfOdOi7L", "id": "5db0564ed74e760f4a2c3db9","name": "PhuPhuong",
+    teamInfo: {},//"code": "bfOdOi7L", "id": "","name": "PhuPhuong", canMemberViewReport
     userProfile: {},//"email": "tester3","fullName": "Test3","id": "","phone": "","type": "local", teamId, teamCode, class:"freeUser", pictureUrl, roleInTeam
     isLogined: false,
     token: "",
@@ -146,6 +147,12 @@ export const actUserCreateTeamOK = (data) => (dispatch) => {
     dispatch({
         type: USER_CREATE_TEAM_OK,
         payload: data
+    })
+}
+export const actUserLeaveTeamOK = (data) => (dispatch) => {
+    console.log("actUserLeaveTeamOK:")
+    dispatch({
+        type: USER_LEAVE_TEAM_OK
     })
 }
 
@@ -451,8 +458,17 @@ export default function(state = initialState, action) {
     case USER_CREATE_TEAM_OK:
         return {
             ...state,
-            teamInfo: action.payload
+            teamInfo: action.payload,
+            userProfile: {...state.userProfile, roleInTeam: "manager"}
         };
+    case USER_LEAVE_TEAM_OK:
+        let prevStateLeaveTEam = {...state};
+        prevStateLeaveTEam.teamInfo= {};
+        prevStateLeaveTEam.userProfile.teamId = null;
+        prevStateLeaveTEam.userProfile.teamCode = null;
+        prevStateLeaveTEam.userProfile.roleInTeam = null;
+
+        return prevStateLeaveTEam;
     case USER_LOGIN_OK:
         return {
             ...state,

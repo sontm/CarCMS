@@ -114,7 +114,29 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+    rejoinTeam(data, token, onOK, onError) {
+        axios.post("/team/rejointeam",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
 
+    leaveTeam(token, onOK, onError) {
+        axios.get("/team/leave",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    getTeamsCreatedByMe(token, onOK, onError) {
+        axios.get("/team/createdbyme",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
     getAllJoinTeamRequest(token, onOK, onError) {
         axios.get("/team/join",
            // { headers: this.createHeader(), withCredentials: true})

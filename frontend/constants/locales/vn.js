@@ -31,6 +31,9 @@ export default {
     GENERAL_BIKE: "Xe Máy",
     GENERAL_NODATA: "Chưa Có Dữ Liệu",
     GENERAL_RANDOM: "Ngẫu Nhiên",
+    GENERAL_ROLE: "Vai Trò",
+    GENERAL_ROLE_MANAGER: "Quản Lý",
+    GENERAL_ROLE_MEMBER: "Thành Viên",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",
@@ -103,7 +106,14 @@ export default {
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",
     SETTING_LBL_CREATE_TEAM: "Tạo Nhóm",
     SETTING_LBL_JOIN_TEAM: "Gia Nhập Nhóm",
-    SETTING_LBL_EDIT_TEAM: "Sửa Tên Nhóm",
+    SETTING_LBL_EDIT_TEAM: "Chỉnh Sửa Nhóm",
+    SETTING_LBL_LEAVE_TEAM: "Rời Nhóm",
+    SETTING_LBL_JOIN_TEAM_CODE: "Mã Nhóm Muốn Gia Nhập",
+    SETTING_LBL_JOIN_CREATEDTEAM: "Hoặc vào lại các nhóm đã tạo",
+    SETTING_LBL_CREATE_TEAM_MEM_CANVIEWREPORT: "Cho Phép Thành Viên Xem Báo Cáo Nhóm",
+    SETTING_LBL_MEM_CAN_VIEWREPORT: "Thành Viên Có Thể Xem Báo Cáo Nhóm",
+    SETTING_LBL_MEM_CANNOT_VIEWREPORT: "Thành Viên KHÔNG Thể Xem Báo Cáo Nhóm",
+
     SETTING_LBL_SYNC_FROM: "Đồng Bộ Từ Máy Chủ",
     SETTING_LBL_SYNC_TO: "Đồng Bộ Lên Máy Chủ",
     SETTING_LBL_SYNC_FROM_NOTE: "Dữ Liệu Trên Máy Sẽ Bị Thay Thế",
@@ -197,6 +207,9 @@ export default {
     
 
     NEW_AUTH_HEADER:"Pháp Lý",
+
+    MSG_LEAVE_TEAM: "Bạn có chắc muốn rời Nhóm?",
+    MSG_LOGOUT: "Bạn có chắc muốn Đăng Xuất?",
 
     NOTIFICATION_AUTH: "Sắp Đến Ngày Đăng Kiểm",
     NOTIFICATION_INSURANCE: "Sắp Đến Ngày Đóng Bảo Hiểm Dân Sự",

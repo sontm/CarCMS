@@ -41,7 +41,7 @@ class TeamScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activePage:0,
+      activePage:1,
       sortType: "auth",
       sortAscending: true
     }
@@ -53,42 +53,46 @@ class TeamScreen extends React.Component {
   fetchTeamData() {
     console.log("My Team IDDDDDD")
     console.log(this.props.userData.userProfile.teamId)
-    Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
-      response => {
-          console.log("GEt all Member in Team OK")
-          // console.log(response.data)
-          //this.props.actUserLoginOK(response.data)
-          //this.props.navigation.navigate("Settings")
-          // this.setState({
-          //   members: response.data
-          // })
-          this.props.actTeamGetDataOK(response.data)
-      },
-      error => {
-          console.log("GEt all Member in Team ERROR")
-          console.log(JSON.stringify(error))
-          this.setState({
-              message: "Get Team Data Error!"
-          })
-      }
-    );
+    if (this.props.userData.userProfile.roleInTeam != "manager" && !this.props.userData.teamInfo.canMemberViewReport) {
+      // no get data
+    } else {
+      Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
+        response => {
+            console.log("GEt all Member in Team OK")
+            // console.log(response.data)
+            //this.props.actUserLoginOK(response.data)
+            //this.props.navigation.navigate("Settings")
+            // this.setState({
+            //   members: response.data
+            // })
+            this.props.actTeamGetDataOK(response.data)
+        },
+        error => {
+            console.log("GEt all Member in Team ERROR")
+            console.log(JSON.stringify(error))
+            this.setState({
+                message: "Get Team Data Error!"
+            })
+        }
+      );
 
-    Backend.getAllJoinTeamRequest(this.props.userData.token, 
-      response => {
-          console.log("GEt all JoinRequest OK")
-          // console.log(response.data)
-          //this.props.actUserLoginOK(response.data)
-          //this.props.navigation.navigate("Settings")
-          this.props.actTeamGetJoinRequestOK(response.data)
-      },
-      error => {
-          console.log("GEt all JoinRequest ERROR")
-          console.log(JSON.stringify(error))
-          this.setState({
-              message: "Login Error!"
-          })
-      }
-    );
+      Backend.getAllJoinTeamRequest(this.props.userData.token, 
+        response => {
+            console.log("GEt all JoinRequest OK")
+            // console.log(response.data)
+            //this.props.actUserLoginOK(response.data)
+            //this.props.navigation.navigate("Settings")
+            this.props.actTeamGetJoinRequestOK(response.data)
+        },
+        error => {
+            console.log("GEt all JoinRequest ERROR")
+            console.log(JSON.stringify(error))
+            this.setState({
+                message: "Login Error!"
+            })
+        }
+      );
+    }
   }
   setActivePage(val) {
     this.setState({activePage: val})
@@ -234,16 +238,16 @@ class TeamScreen extends React.Component {
       <Container>
         <Header hasTabs noLeft style={{justifyContent: "space-between", backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
-          <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
-          <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
-              onPress={() => this.setActivePage(0)}>
-            <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_CAR")}</Text>
-          </Button>
-          <Button style={this.state.activePage === 1 ? styles.activeSegment : styles.inActiveSegment}
+          <Segment small style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+          <Button small first style={this.state.activePage === 1 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setActivePage(1)}>
             <Text style={this.state.activePage === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_REPORT")}</Text>
           </Button>
-          <Button last style={this.state.activePage === 2 ? styles.activeSegment : styles.inActiveSegment}
+          <Button small style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
+              onPress={() => this.setActivePage(0)}>
+            <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_CAR")}</Text>
+          </Button>
+          <Button small last style={this.state.activePage === 2 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setActivePage(2)}>
             <Text style={this.state.activePage === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>{AppLocales.t("TEAM_HEADER_MEMBER")}</Text>
             {this.props.teamData.joinRequests && this.props.teamData.joinRequests.length > 0 ? (

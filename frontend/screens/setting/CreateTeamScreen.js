@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
-    Item, Picker, Button, Text, Input,Label } from 'native-base';
+    Item, Picker, Button, Text, Input,Label, Toast, CheckBox } from 'native-base';
 
 import AppConstants from '../../constants/AppConstants'
 import { HeaderText } from '../../components/StyledText';
@@ -17,10 +17,13 @@ class CreateTeamScreen extends React.Component {
         this.state = {
             name: "",
             code: "",
-            id: 0
+            id: 0,
+            canMemberViewReport: true
         };
 
         this.handleCreate = this.handleCreate.bind(this)
+        this.toogleMemberCanViewReport = this.toogleMemberCanViewReport.bind(this)
+        
     }
 
     componentWillMount() {
@@ -31,6 +34,7 @@ class CreateTeamScreen extends React.Component {
                     name: this.props.userData.teamInfo.name,
                     code: this.props.userData.teamInfo.code,
                     id: this.props.userData.teamInfo.id,
+                    canMemberViewReport: this.props.userData.teamInfo.canMemberViewReport
                 })
             }
         } else {
@@ -39,12 +43,19 @@ class CreateTeamScreen extends React.Component {
             })
         }
     }
+    toogleMemberCanViewReport() {
+        this.setState({
+            canMemberViewReport: !this.state.canMemberViewReport
+        })
+    }
     handleCreate() {
         if (this.props.navigation.state.params.isEdit) {
+            // Edit TEam NAme
             Backend.createTeam({
                 id: this.state.id,
                 name: this.state.name,
-                code: this.state.code
+                code: this.state.code,
+                canMemberViewReport: this.state.canMemberViewReport
                 }, this.props.userData.token, 
                 response => {
                     console.log("Edit Team OK")
@@ -56,29 +67,34 @@ class CreateTeamScreen extends React.Component {
                     console.log("Edit Team ERROR")
                     console.log((error))
                     // TODO: Toast
-                    this.setState({
-                        message: "Edit Error!"
-                    })
+                    
                 }
             );
         } else {
+            // Create new Team
             Backend.createTeam({
                 name: this.state.name,
-                code: this.state.code
+                code: this.state.code,
+                canMemberViewReport: this.state.canMemberViewReport
                 }, this.props.userData.token, 
                 response => {
                     console.log("REgister Team OK")
                     console.log(response.data)
                     this.props.actUserCreateTeamOK(response.data)
-                    this.props.navigation.navigate("Settings")
+                    //this.props.navigation.navigate("Settings")
+                    this.props.navigation.goBack()
                 },
                 error => {
                     console.log("Register Team ERROR")
-                    console.log((error))
+                    console.log((error.response.data))
                     // TODO: Toast
-                    this.setState({
-                        message: "Register Error!"
+                    Toast.show({
+                        text: error.response.data.msg,
+                        position: "top",
+                        //buttonText: "Okay",
+                        type: "danger"
                     })
+                    this.props.navigation.goBack()
                 }
             );
         }
@@ -103,17 +119,26 @@ class CreateTeamScreen extends React.Component {
                         </Item>
                     </View>
 
-                    <View style={styles.rowContainerDisable}>
-                        <Item floatingLabel>
+                    <View style={styles.rowContainer}>
+                        <Item stackedLabel>
                         <Label>{AppLocales.t("GENERAL_TEAM_CODE_SHORT")+" ("+
                             AppLocales.t("GENERAL_RANDOM")+")"}
                         </Label>
                         <Input
                             disabled
-                            style={styles.rowForm}
+                            style={{...styles.rowForm, backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG}}
                             value={this.state.code}
                         />
                         </Item>
+                    </View>
+
+                    <View style={{flexDirection: "row", justifyContent:"flex-start",
+                        marginLeft: -10, marginTop: 15, marginBottom: 10}}>
+                        <CheckBox checked={this.state.canMemberViewReport}
+                            onPress={() => this.toogleMemberCanViewReport()}/>
+                        <Text onPress={() => this.toogleMemberCanViewReport()} style={{marginLeft: 12, fontSize: 13}}>
+                            {AppLocales.t("SETTING_LBL_CREATE_TEAM_MEM_CANVIEWREPORT")}
+                        </Text>
                     </View>
 
                     <View style={styles.rowButton}>

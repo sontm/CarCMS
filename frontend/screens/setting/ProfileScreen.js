@@ -109,12 +109,12 @@ class ProfileScreen extends React.Component {
                     </Item>
                     </View>
 
-                    <View style={styles.rowContainerDisabled}>
+                    <View style={styles.rowContainer}>
                         <Item stackedLabel>
                         <Label style={styles.rowLabel}>{AppLocales.t("USER_EMAIL")}</Label>
                         <Input
                             disabled
-                            style={styles.rowForm}
+                            style={{...styles.rowForm, backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG}}
                             //onChangeText={(email) => this.setState({email})}
                             value={this.state.email}
                         />
