@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
-    Item, Picker, Button, Text, Input, Label} from 'native-base';
+    Item, Picker, Button, Text, Input, Label, Toast} from 'native-base';
 
 import AppConstants from '../../constants/AppConstants'
 import { HeaderText } from '../../components/StyledText';
@@ -35,13 +35,40 @@ class ServiceModuleCreateScreen extends React.Component {
     }
     handleCreate() {
         // TODO, check Existed
+        
         if (AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE) {
-            this.props.actCustomAddServiceModuleBike(this.state)
+            var arrToCheck = [...this.props.userData.customServiceModulesBike, 
+                ...this.props.appData.typeServiceBike];
         } else {
-            this.props.actCustomAddServiceModule(this.state)
+            var arrToCheck = [...this.props.userData.customServiceModules, 
+                ...this.props.appData.typeService];
         }
-        AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE = false;
-        this.props.navigation.goBack();
+        let isDuplicated = false;
+        let newName = apputils.changeVietnameseToNonSymbol(this.state.name.trim().toLowerCase());
+        for (let i = 0; i < arrToCheck.length; i++) {
+            let theName = apputils.changeVietnameseToNonSymbol(arrToCheck[i].name.trim().toLowerCase());
+            if (theName == newName) {
+                // Duplicated
+                isDuplicated = true;
+                break;
+            }
+        }
+        if (isDuplicated) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEWSERVICEMODULE_EXIST"),
+                //buttonText: "Okay",
+                position: "top",
+                type: "danger"
+            })
+        } else {
+            if (AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE) {
+                this.props.actCustomAddServiceModuleBike(this.state)
+            } else {
+                this.props.actCustomAddServiceModule(this.state)
+            }
+            AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE = false;
+            this.props.navigation.goBack();
+        }
     }
     render() {
         return (
@@ -128,7 +155,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    appData: state.appData
 });
 const mapActionsToProps = {
     actCustomAddServiceModule,

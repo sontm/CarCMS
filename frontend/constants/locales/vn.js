@@ -223,4 +223,5 @@ export default {
     TOAST_SUCCESS_COPIED: "Đã Sao Chép Mã Nhóm",
     TOAST_NEED_OLDPWD: "Hãy Điền Mật Khẩu Cũ",
     TOAST_NEWPWD_NOTMATCHED: "Mật Khẩu Mới Không Khớp!",
+    TOAST_NEWSERVICEMODULE_EXIST: "Tên Đã Tồn Tại, Hãy Điền Tên Khác!",
 };
