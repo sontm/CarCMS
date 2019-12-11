@@ -7,7 +7,7 @@ import Layout from '../constants/Layout'
 
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
-import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
+import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryAxis, VictoryLegend, VictoryContainer} from 'victory-native';
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
@@ -21,6 +21,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
   calculateServiceTypeTeam() {
     let arrTeamServiceSpend = []; // [{x:"Bao DUong Nho", y: 200}]
     let totalTeamServiceSpend = 0;
+    let legendLabels = [];
 
     let objectTemp = {}; // {"TienPhat": 200}
     this.props.teamData.teamCarList.forEach(element => {
@@ -46,13 +47,15 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                 y: objectTemp[""+prop],
                 x: prop   
             })
+            legendLabels.push({name: prop})
         }
     }
-    return {arrTeamServiceSpend, totalTeamServiceSpend};
+    return {arrTeamServiceSpend, totalTeamServiceSpend,legendLabels};
   }
   calculateServiceTypePrivate() {
     let arrPrivateServiceSpend = []; // [{x:"Bao DUong Nho", y: 200}]
     let totalPrivateServiceSpend = 0;
+    let legendLabels = [];
 
     let objectTemp = {}; // {"TienPhat": 200}
     this.props.userData.vehicleList.forEach(element => {
@@ -79,9 +82,10 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                 y: objectTemp[""+prop],
                 x: prop   
             })
+            legendLabels.push({name: prop})
         }
     }
-    return {arrPrivateServiceSpend, totalPrivateServiceSpend};
+    return {arrPrivateServiceSpend, totalPrivateServiceSpend, legendLabels};
   }
   replaceLongBaoDuong(inText) {
     if (inText.indexOf("Bảo Dưỡng") >= 0) {
@@ -98,12 +102,12 @@ class MoneyUsageReportServiceMaintain extends React.Component {
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
                 // this is Report Team
-                var {arrTeamServiceSpend, totalTeamServiceSpend} = this.calculateServiceTypeTeam();
+                var {arrTeamServiceSpend, totalTeamServiceSpend, legendLabels} = this.calculateServiceTypeTeam();
                 var theArr = arrTeamServiceSpend;
                 var theTotal = totalTeamServiceSpend;
             } else {
                 // this is Report Private
-                var {arrPrivateServiceSpend, totalPrivateServiceSpend} = this.calculateServiceTypePrivate();
+                var {arrPrivateServiceSpend, totalPrivateServiceSpend, legendLabels} = this.calculateServiceTypePrivate();
                 var theArr = arrPrivateServiceSpend;
                 var theTotal = totalPrivateServiceSpend;
             }
@@ -111,7 +115,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
             if (this.props.userData.carReports[this.props.currentVehicle.id].serviceReport) {
                 var {arrServiceTypeSpend, totalServiceSpend2} = 
                     this.props.userData.carReports[this.props.currentVehicle.id].serviceReport;
-
+                var legendLabels =[];
                 var theArr = arrServiceTypeSpend;
                 var theTotal = totalServiceSpend2;
             }
@@ -134,17 +138,35 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                             data={theArr}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => (datum&&datum.y > 0) ? (this.replaceLongBaoDuong(datum.x) + "\n(" 
-                                + AppUtils.formatMoneyToK(datum.y) + ", "
-                                +AppUtils.formatToPercent(datum.y, theTotal)+")") : ""}
+                            labels={({ datum }) => (datum&&datum.y > 0) ? ( 
+                                AppUtils.formatMoneyToK(datum.y) + "\n"
+                                +"("+AppUtils.formatToPercent(datum.y, theTotal)+")") : ""}
                             labelRadius={({ radius }) => radius+3 }
                             labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
-                            />
+                            />                      
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
                                 {AppUtils.formatMoneyToK(theTotal)}
                             </Text>
                         </View>
+                    </View>
+                    <View>
+                        <VictoryContainer
+                            width={Layout.window.width}
+                            height={30*legendLabels.length/2}
+                        >
+                        <VictoryLegend standalone={false}
+                            x={15} y={5}
+                            itemsPerRow={2}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            orientation="horizontal"
+                            gutter={5}
+                            symbolSpacer={5}
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            data={legendLabels}
+                            style={{paddingBottom: 20}}
+                        />
+                        </VictoryContainer>
                     </View>
                 </View>
                 ) : <NoDataText /> }

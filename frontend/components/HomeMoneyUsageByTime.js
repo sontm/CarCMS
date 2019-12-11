@@ -123,30 +123,33 @@ class HomeMoneyUsageByTime extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:30,left:50,right:20}}
-                            domainPadding={{y: [0, 10], x: [20, 10]}}
+                            padding={{top:10,bottom:30,left:10,right:10}}
+                            domainPadding={{y: [0, 10], x: [10, 10]}}
                         >
-                        <VictoryStack
-                            width={Layout.window.width}
-                            // domainPadding={{y: [0, 10], x: [10, 0]}}
+                        <VictoryArea
+                            interpolation="natural"
+                            data={arrTotalMerge}
+                            style={{
+                                data: {
+                                    fill: "#2ca02c", fillOpacity: 0.2, stroke: "#2ca02c", strokeWidth: 1
+                                }
+                            }}
+                            labels={({ datum }) => AppUtils.formatMoneyToK(datum.y)}
+                            labelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                             colorScale={AppConstants.COLOR_SCALE_10}
-                        >
-                            <VictoryBar
-                                data={arrTotalMerge}
-                            />
-                        </VictoryStack>
+                        />
 
                         <VictoryAxis
                             crossAxis
                             standalone={false}
                             tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             tickValues={tickXLabels}
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
-                                ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 5, angle: 30}
+                                ticks: {stroke: "grey", size: 3},
+                                tickLabels: {fontSize: 10, padding: 5, angle: 0}
                             }}
                         />
                         <VictoryAxis
@@ -156,7 +159,7 @@ class HomeMoneyUsageByTime extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
+                                tickLabels: {fontSize: 10, padding: -35}
                             }}
                         />
 

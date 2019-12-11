@@ -161,7 +161,7 @@ const tabNavigator = createBottomTabNavigator({
     tabBarPosition: "bottom",
     tabBarComponent: props => {
       return (
-        <Footer>
+        <Footer style={{height: 45}}>
           <FooterTab style={styles.footerContainer}>
             <Button
               vertical
@@ -228,7 +228,8 @@ const tabNavigator = createBottomTabNavigator({
                   }
                 })
               }>
-              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: 5, marginLeft: 3, marginRight: 3, color: AppConstants.COLOR_PICKER_TEXT}}/>
+              <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: 2, marginLeft: 3, marginRight: 3, 
+                color: "#2980b9"}}/>
             </TouchableOpacity>
             
             <Button
@@ -278,24 +279,24 @@ const styles = StyleSheet.create({
   },
 
   btnActive: {
-    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
     padding: 0
   },
   iconActive: {
-    fontSize: 26,
-    color: "white"
+    fontSize: 24,
+    color: "#2980b9"
   },
   iconInActive: {
-    fontSize: 26,
-    color: "grey"
+    fontSize: 24,
+    color: "#899696"
   },
   textActive: {
-    fontSize: 7,
-    color: "white"
+    fontSize: 9,
+    color: "#2980b9"
   },
   textInActive: {
-    fontSize: 7,
-    color: "grey"
+    fontSize: 9,
+    color: "#899696"
   }
 })
 export default (tabNavigator);

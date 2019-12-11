@@ -155,16 +155,16 @@ class GasUsageTopReport extends React.Component {
                         selectedValue={this.state.duration}
                         onValueChange={this.onValueChangeDuration.bind(this)}
                         textStyle={{ color: "#1f77b4", fontSize: 14 }}
-                        style={{width: 75}}
+                        // style={{width: 75}}
                         >
-                        <Picker.Item label="6" value={6} />
-                        <Picker.Item label="9" value={9} />
-                        <Picker.Item label="12" value={12} />
-                        <Picker.Item label="18" value={18} />
-                        <Picker.Item label="24" value={24} />
+                        <Picker.Item label="6 Tháng" value={6} />
+                        <Picker.Item label="9 Tháng" value={9} />
+                        <Picker.Item label="12 Tháng" value={12} />
+                        <Picker.Item label="18 Tháng" value={18} />
+                        <Picker.Item label="24 Tháng" value={24} />
                         <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
                     </Picker>
-                    <Picker
+                    {/* <Picker
                         mode="dropdown"
                         iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
                         selectedValue={this.state.durationType}
@@ -175,7 +175,7 @@ class GasUsageTopReport extends React.Component {
                         <Picker.Item label="Tháng" value="month" />
                         <Picker.Item label="Quý" value="quarter" />
                         <Picker.Item label="Năm" value="year" />
-                    </Picker>
+                    </Picker> */}
                     <Text style={{fontSize: 13, marginLeft: 10}}>Gần Nhất Đến</Text>
                     <DatePicker
                         defaultDate={new Date()}

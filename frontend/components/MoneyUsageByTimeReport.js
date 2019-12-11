@@ -7,7 +7,7 @@ import Layout from '../constants/Layout'
 
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
-import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis, VictoryLegend} from 'victory-native';
+import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryContainer, VictoryAxis, VictoryLegend} from 'victory-native';
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
@@ -393,11 +393,11 @@ class MoneyUsageByTimeReport extends React.Component {
             <View style={styles.container}>
                 
                 <View style={styles.textRow}>
-                    <Text><H2>
+                    <Text><H3>
                     {this.props.isTotalReport ? 
                             AppLocales.t("HOME_MONEY_SPEND") :
                             AppLocales.t("CARDETAIL_H1_MONEY_USAGE_BYTIME")}
-                    </H2></Text>
+                    </H3></Text>
                 </View>
 
                 <View style={styles.textRowOption}>
@@ -453,20 +453,10 @@ class MoneyUsageByTimeReport extends React.Component {
                     <View style={styles.moneyUsageStackContainer}>
                         <VictoryChart
                             width={Layout.window.width}
-                            height={300}
-                            padding={{top:10+15*legendLabels.length/4,bottom:30,left:3,right:10}}
+                            height={250}
+                            padding={{top:10,bottom:30,left:3,right:10}}
                             domainPadding={{y: [0, 10], x: [40, 10]}}
                         >
-                        <VictoryLegend standalone={false}
-                            x={30} y={5}
-                            itemsPerRow={4}
-                            colorScale={AppConstants.COLOR_SCALE_10}
-                            orientation="horizontal"
-                            gutter={5}
-                            symbolSpacer={5}
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
-                            data={legendLabels}
-                        />
                         {/* TODO, Date X axis not Match */}
                         {this.props.isTotalReport ? (
                             <VictoryStack
@@ -544,8 +534,26 @@ class MoneyUsageByTimeReport extends React.Component {
                                 tickLabels: {fontSize: 10, padding: -32}
                             }}
                         />
-                       
                         </VictoryChart>
+
+
+                        <View>
+                            <VictoryContainer
+                                width={Layout.window.width}
+                                height={35*legendLabels.length/4}
+                            >
+                            <VictoryLegend standalone={false}
+                                x={15} y={5}
+                                itemsPerRow={4}
+                                colorScale={AppConstants.COLOR_SCALE_10}
+                                orientation="horizontal"
+                                gutter={5}
+                                symbolSpacer={5}
+                                labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                                data={legendLabels}
+                            />
+                            </VictoryContainer>
+                        </View>
                     </View> ) : <NoDataText /> }
                 </View>
 
@@ -562,20 +570,10 @@ class MoneyUsageByTimeReport extends React.Component {
                     <View style={styles.moneyUsageStackContainerEachCar}>
                         <VictoryChart
                             width={Layout.window.width}
-                            height={300}
-                            padding={{top:25,bottom:30,left:3,right:10}}
+                            height={250}
+                            padding={{top:20,bottom:30,left:3,right:10}}
                             domainPadding={{y: [0, 0], x: [40, 10]}}
                         >
-                        <VictoryLegend standalone={false}
-                            x={30} y={5}
-                            itemsPerRow={4}
-                            colorScale={AppConstants.COLOR_SCALE_10}
-                            orientation="horizontal"
-                            gutter={5}
-                            symbolSpacer={5}
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
-                            data={AppConstants.LEGEND_CHITIEU}
-                        />
                         <VictoryStack
                             width={Layout.window.width}
                             //domainPadding={{y: [0, 10], x: [10, 0]}}
@@ -637,6 +635,24 @@ class MoneyUsageByTimeReport extends React.Component {
                             }}
                         />
                         </VictoryChart>
+
+                        <View>
+                            <VictoryContainer
+                                width={Layout.window.width}
+                                height={35}
+                            >
+                            <VictoryLegend standalone={false}
+                                x={15} y={5}
+                                itemsPerRow={4}
+                                colorScale={AppConstants.COLOR_SCALE_10}
+                                orientation="horizontal"
+                                gutter={5}
+                                symbolSpacer={5}
+                                labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                                data={AppConstants.LEGEND_CHITIEU}
+                            />
+                            </VictoryContainer>
+                        </View>
                     </View> ) : <NoDataText />}
                 </View>
                 </View>
@@ -657,8 +673,8 @@ class MoneyUsageByTimeReport extends React.Component {
                             data={arrTotalEachCarsAllCategory}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" 
-                                + AppUtils.formatMoneyToK(datum.y) + ", \n"
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (
+                                AppUtils.formatMoneyToK(datum.y) + "\n("
                                 +AppUtils.formatToPercent(datum.y, totalAllCarsAllCategory)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
                             labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
@@ -667,6 +683,23 @@ class MoneyUsageByTimeReport extends React.Component {
                             <Text style={styles.labelProgressText}>
                                 {AppUtils.formatMoneyToK(totalAllCarsAllCategory)}
                             </Text>
+                        </View>
+                        <View>
+                            <VictoryContainer
+                                width={Layout.window.width}
+                                height={35*legendLabels.length/4}
+                            >
+                            <VictoryLegend standalone={false}
+                                x={15} y={5}
+                                itemsPerRow={4}
+                                colorScale={AppConstants.COLOR_SCALE_10}
+                                orientation="horizontal"
+                                gutter={5}
+                                symbolSpacer={5}
+                                labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                                data={legendLabels}
+                            />
+                            </VictoryContainer>
                         </View>
                     </View>
                 </View>
@@ -781,13 +814,13 @@ const styles = StyleSheet.create({
     },
 
     moneyUsageStackContainer: {
-        height: 300,
+        //height: 280,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
     },
     moneyUsageStackContainerEachCar: {
-        height: 300,
+        //height: 280,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
@@ -796,7 +829,7 @@ const styles = StyleSheet.create({
 
     moneyUsagePieContainer: {
         width: Layout.window.width,
-        height: 250,
+        //height: 250,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",
