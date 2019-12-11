@@ -19,38 +19,38 @@ class DebugScreen extends React.Component {
         this.props.userData.vehicleList.forEach(vehicle => {
             if (this.props.userData.carReports[vehicle.id]) {
                 let report = this.props.userData.carReports[vehicle.id];
-                if (report.scheduledNotification) {
-                    if (report.scheduledNotification.authNotify) {
-                        let notObj = report.scheduledNotification.authNotify;
-                        notifyArr.push({
-                            vehiclePlate: notObj.vehiclePlate,
-                            remindDate: notObj.remindDate,
-                            onDate: notObj.onDate,
-                            type: notObj.type,
-                            notificationId: notObj.notificationId
-                        })
-                    }
-                    if (report.scheduledNotification.insuranceNotify) {
-                        let notObj = report.scheduledNotification.insuranceNotify;
-                        notifyArr.push({
-                            vehiclePlate: notObj.vehiclePlate,
-                            remindDate: notObj.remindDate,
-                            onDate: notObj.onDate,
-                            type: notObj.type,
-                            notificationId: notObj.notificationId
-                        })
-                    }
-                    if (report.scheduledNotification.roadFeeNotify) {
-                        let notObj = report.scheduledNotification.roadFeeNotify;
-                        notifyArr.push({
-                            vehiclePlate: notObj.vehiclePlate,
-                            remindDate: notObj.remindDate,
-                            onDate: notObj.onDate,
-                            type: notObj.type,
-                            notificationId: notObj.notificationId
-                        })
-                    }
-                }
+                // if (report.scheduledNotification) {
+                //     if (report.scheduledNotification.authNotify) {
+                //         let notObj = report.scheduledNotification.authNotify;
+                //         notifyArr.push({
+                //             vehiclePlate: notObj.vehiclePlate,
+                //             remindDate: notObj.remindDate,
+                //             onDate: notObj.onDate,
+                //             type: notObj.type,
+                //             notificationId: notObj.notificationId
+                //         })
+                //     }
+                //     if (report.scheduledNotification.insuranceNotify) {
+                //         let notObj = report.scheduledNotification.insuranceNotify;
+                //         notifyArr.push({
+                //             vehiclePlate: notObj.vehiclePlate,
+                //             remindDate: notObj.remindDate,
+                //             onDate: notObj.onDate,
+                //             type: notObj.type,
+                //             notificationId: notObj.notificationId
+                //         })
+                //     }
+                //     if (report.scheduledNotification.roadFeeNotify) {
+                //         let notObj = report.scheduledNotification.roadFeeNotify;
+                //         notifyArr.push({
+                //             vehiclePlate: notObj.vehiclePlate,
+                //             remindDate: notObj.remindDate,
+                //             onDate: notObj.onDate,
+                //             type: notObj.type,
+                //             notificationId: notObj.notificationId
+                //         })
+                //     }
+                // }
             }
         })
 

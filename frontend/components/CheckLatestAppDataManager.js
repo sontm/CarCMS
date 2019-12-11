@@ -2,7 +2,6 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Platform, View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
-import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import AppConstants from '../constants/AppConstants';

@@ -448,8 +448,8 @@ class GasUsageReport extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:40,left:30,right:20}}
-                            domainPadding={{y: [0, 0], x: [20, 10]}}
+                            padding={{top:10,bottom:40,left:3,right:10}}
+                            domainPadding={{y: [0, 0], x: [50, 10]}}
                         >
                         {/* TODO, Date X axis not Match */}
                         <VictoryStack
@@ -475,7 +475,7 @@ class GasUsageReport extends React.Component {
                             standalone={false}
                             // tickFormat={(t,idx) => `${AppUtils.formatDateMonthYearVN(
                             //     (dataToDisplay[idx]&&dataToDisplay[idx].xDate) ? dataToDisplay[idx].xDate : new Date())}`}
-                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                             tickFormat={(t,idx) => `${AppUtils.formatDateMonthYearVN(t)}`}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             //tickCount={dataToDisplay.length}
@@ -483,7 +483,7 @@ class GasUsageReport extends React.Component {
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12,padding: 5, angle: 30}
+                                tickLabels: {fontSize: 10,padding: 5, angle: 30}
                             }}
                         />
                         <VictoryAxis
@@ -493,7 +493,7 @@ class GasUsageReport extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
+                                tickLabels: {fontSize: 10, padding: -30}
                             }}
                         />
 

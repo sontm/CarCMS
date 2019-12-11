@@ -83,6 +83,15 @@ class MoneyUsageReportServiceMaintain extends React.Component {
     }
     return {arrPrivateServiceSpend, totalPrivateServiceSpend};
   }
+  replaceLongBaoDuong(inText) {
+    if (inText.indexOf("Bảo Dưỡng") >= 0) {
+        return inText.replace("Bảo Dưỡng", "BD");
+    } else if (inText.indexOf("Sửa Chữa") >= 0) {
+        return inText.replace("Sửa Chữa", "");
+    } 
+    return inText;
+    
+  }
   render() {
       // Only Team or Private (Detail)
     if (this.props.currentVehicle || this.props.isTotalReport) {
@@ -125,10 +134,10 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                             data={theArr}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (this.replaceLongBaoDuong(datum.x) + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
                                 +AppUtils.formatToPercent(datum.y, theTotal)+")") : ""}
-                            labelRadius={({ radius }) => radius }
+                            labelRadius={({ radius }) => radius+3 }
                             labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
                             />
                         <View style={styles.labelProgress}>

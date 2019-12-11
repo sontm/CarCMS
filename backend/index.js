@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import mongoose from "mongoose";
 import Joi from "joi"
 const passport = require('passport');
+const rateLimit = require("express-rate-limit");
 
 const startServer = async () => {
   const passport = require('passport');
@@ -12,6 +13,13 @@ const startServer = async () => {
   const cookieParser = require('cookie-parser')
   // create express app
   const app = express();
+  const limiter = rateLimit({
+    windowMs: 20 * 60 * 1000, // 20 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+  });
+   
+  //  apply to all requests
+  app.use(limiter);
 
   // Add headers Middle Ware
   app.use(function (req, res, next) {

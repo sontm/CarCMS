@@ -329,10 +329,10 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
     if (!prevUserData || !prevUserData.carReports || !prevUserData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
         console.log(">>>actTempCalculateCarReport in User:")
-        if (!prevUserData || !prevUserData.carReports) {
-            // Maybe from Sync from Server, clear all Notifications
-            apputils.cancelAllAppLocalNotification();
-        }
+        // if (!prevUserData || !prevUserData.carReports) {
+        //     // Maybe from Sync from Server, clear all Notifications
+        //     apputils.cancelAllAppLocalNotification();
+        // }
         let theIdx = AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id);
         AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.splice(theIdx, 1);
         // For calcualte All Time data

@@ -113,35 +113,18 @@ class GasUsageTopReport extends React.Component {
   render() {
     console.log("GasUsageTopReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
     //isTotalReport mean this is used in Home screen or Team screen
-    if (this.props.isTotalReport) { //props
-        if (this.displayByFilter) {
-            var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
-                arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
-                = AppUtils.getStatForGasUsage(this.props.currentVehicle.fillGasList, 
-                    this.state.duration, this.state.durationType, this.state.tillDate);
-            if (this.state.activeDisplay == 1) {
-                var dataToDisplay = arrTotalMoneyMonthly;
-            } else if (this.state.activeDisplay == 2) {
-                var dataToDisplay = arrTotalMoneyPerKmMonthly;
-            } else {
-                var dataToDisplay = arrTotalKmMonthly;
-            }
-        } else {
-            if (this.props.isTotalReport) {
-                if (this.props.isTeamDisplay) {
-                    var {arrGasKmEachCars, arrGasMoneyEachCars, arrGasMoneyPerKmEachCars}
-                        = this.calculateEachVehicleGasUsageTeam(12);
-                }
-                if (this.state.activeDisplay == 1) {
-                    var dataTopToDisplay = arrGasMoneyEachCars;
-                } else if (this.state.activeDisplay == 2) {
-                    var dataTopToDisplay = arrGasMoneyPerKmEachCars;
-                } else {
-                    var dataTopToDisplay = arrGasKmEachCars;
-                }
+    if (this.props.isTotalReport) {
+        if (this.props.isTeamDisplay) {
+            var {arrGasKmEachCars, arrGasMoneyEachCars, arrGasMoneyPerKmEachCars}
+                = this.calculateEachVehicleGasUsageTeam(12);
         }
-
+        if (this.state.activeDisplay == 1) {
+            var dataTopToDisplay = arrGasMoneyEachCars;
+        } else if (this.state.activeDisplay == 2) {
+            var dataTopToDisplay = arrGasMoneyPerKmEachCars;
+        } else {
+            var dataTopToDisplay = arrGasKmEachCars;
+        }
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>
@@ -217,8 +200,8 @@ class GasUsageTopReport extends React.Component {
                     <VictoryChart
                         width={Layout.window.width}
                         height={300}
-                        padding={{top:10,bottom:30,left:50,right:20}}
-                        domainPadding={{y: [0, 0], x: [30, 10]}}
+                        padding={{top:10,bottom:30,left:3,right:10}}
+                        domainPadding={{y: [0, 0], x: [50, 10]}}
                     >
                     <VictoryStack
                         width={Layout.window.width}
@@ -233,12 +216,12 @@ class GasUsageTopReport extends React.Component {
                         crossAxis
                         standalone={false}
                         //tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
-                        tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                        tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                         // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                         style={{
                             // grid: {stroke: "rgb(240,240,240)"},
                             ticks: {stroke: "grey", size: 5},
-                            tickLabels: {fontSize: 12,padding: 5, angle: 30}
+                            tickLabels: {fontSize: 10,padding: 5, angle: 30}
                         }}
                     />
                     <VictoryAxis
@@ -248,15 +231,14 @@ class GasUsageTopReport extends React.Component {
                         // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                         style={{
                             ticks: {stroke: "grey", size: 5},
-                            tickLabels: {fontSize: 12, padding: 0}
+                            tickLabels: {fontSize: 10, padding: -32}
                         }}
                     />
 
                     </VictoryChart>
                 </View> ) : <NoDataText />}
             </View>
-        )}
-        } else {
+        )} else {
             return null;
         }
     }

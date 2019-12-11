@@ -45,6 +45,9 @@ export default {
     DEFAULT_REPORT_RANGE: 6, // 6 tháng
     DEFAULT_IOS_STATUSBAR_HEIGHT: STATUSBAR_HEIGHT, // in IOS, should set this to 20
     TEMPO_USE_BARCHART_GAS: true,
+    LEGEND_CHITIEU: [
+        {name:"Xăng"},{name:"Pháp Lý"},{name:"Phụ Chi"},{name:"Bảo Dưỡng"}
+    ],
 
     //SERVER_API:"http://18.140.121.240:3000/api",
     SERVER_API:  "http://192.168.1.51:3000/api",

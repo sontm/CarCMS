@@ -66,26 +66,26 @@ class MyVehicleScreen extends React.Component {
     // Clear all Notifications of this Car
     if (this.props.userData.carReports[vehicleId]) {
       let report = this.props.userData.carReports[vehicleId];
-      if (report.scheduledNotification) {
-        if (report.scheduledNotification.authNotify) {
-            let notObj = report.scheduledNotification.authNotify;
-            if (notObj.notificationId != null && notObj.notificationId != undefined) {
-              apputils.cancelAppLocalNotification(notObj.notificationId)
-            }
-        }
-        if (report.scheduledNotification.insuranceNotify) {
-            let notObj = report.scheduledNotification.insuranceNotify;
-            if (notObj.notificationId != null && notObj.notificationId != undefined) {
-              apputils.cancelAppLocalNotification(notObj.notificationId)
-            }
-        }
-        if (report.scheduledNotification.roadFeeNotify) {
-            let notObj = report.scheduledNotification.roadFeeNotify;
-            if (notObj.notificationId != null && notObj.notificationId != undefined) {
-              apputils.cancelAppLocalNotification(notObj.notificationId)
-            }
-        }
-      }
+      // if (report.scheduledNotification) {
+      //   if (report.scheduledNotification.authNotify) {
+      //       let notObj = report.scheduledNotification.authNotify;
+      //       if (notObj.notificationId != null && notObj.notificationId != undefined) {
+      //         apputils.cancelAppLocalNotification(notObj.notificationId)
+      //       }
+      //   }
+      //   if (report.scheduledNotification.insuranceNotify) {
+      //       let notObj = report.scheduledNotification.insuranceNotify;
+      //       if (notObj.notificationId != null && notObj.notificationId != undefined) {
+      //         apputils.cancelAppLocalNotification(notObj.notificationId)
+      //       }
+      //   }
+      //   if (report.scheduledNotification.roadFeeNotify) {
+      //       let notObj = report.scheduledNotification.roadFeeNotify;
+      //       if (notObj.notificationId != null && notObj.notificationId != undefined) {
+      //         apputils.cancelAppLocalNotification(notObj.notificationId)
+      //       }
+      //   }
+      // }
     }
     //
     this.props.actVehicleDeleteVehicle(vehicleId, licensePlate)

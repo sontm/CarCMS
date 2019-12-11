@@ -332,7 +332,7 @@ class MoneyUsageReport extends React.Component {
                             ]}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
+                            labels={({ datum }) => (datum&&datum.y>0) ? (datum.x + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
                                 +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
@@ -360,7 +360,7 @@ class MoneyUsageReport extends React.Component {
                             data={arrSubExpenseSpend}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
                                 +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 15 }

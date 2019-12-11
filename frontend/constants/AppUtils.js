@@ -1762,12 +1762,13 @@ class AppUtils {
             },
             error => {console.log("Sync Vehicle From Server Error");console.log(error);}
         );
-        this.cancelAllAppLocalNotification();
+        
+        //this.cancelAllAppLocalNotification();
 
         // If User is Member and TEam have setting of cannot view report
         console.log(props.userData.userProfile.roleInTeam)
-        console.log(props.userData.teamInfo.canMemberViewReport)
-        if (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport) {
+        // user not is manager and setting cannot see
+        if (!props.userData.teamInfo || (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport)) {
             // no team data
         } else {
             Backend.getAllUserOfTeam({teamId: props.userData.userProfile.teamId}, props.userData.token, 
@@ -1910,55 +1911,56 @@ class AppUtils {
                 }
             }
             //Cancel all PRevious Notification in case of PRIVATE car
-            if (remindSetting && prevCarReports) {
-                if (prevCarReports[currentVehicle.id]) {
-                    let report = prevCarReports[currentVehicle.id];
-                    if (report&&report.scheduledNotification) {
-                        if (report.scheduledNotification.authNotify) {
-                            let notObj = report.scheduledNotification.authNotify;
-                            if (notObj.notificationId != null && notObj.notificationId != undefined) {
-                                await new Promise((resolve, reject) => {
-                                    Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
-                                    .then(ret => {
-                                        console.log("  OK Cancel Notification:" + notObj.notificationId)
-                                        resolve(ret);
-                                    }).catch (error => {
-                                        console.log("   Error Cancel:");console.log(error);reject(error)
-                                    })
-                                })
-                            }
-                        }
-                        if (report.scheduledNotification.insuranceNotify) {
-                            let notObj = report.scheduledNotification.insuranceNotify;
-                            if (notObj.notificationId != null && notObj.notificationId != undefined) {
-                                await new Promise((resolve, reject) => {
-                                    Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
-                                    .then(ret => {
-                                        console.log("  OK Cancel Notification:" + notObj.notificationId)
-                                        resolve(ret);
-                                    }).catch (error => {
-                                        console.log("   Error Cancel:");console.log(error);reject(error)
-                                    })
-                                })
-                            }
-                        }
-                        if (report.scheduledNotification.roadFeeNotify) {
-                            let notObj = report.scheduledNotification.roadFeeNotify;
-                            if (notObj.notificationId != null && notObj.notificationId != undefined) {
-                                await new Promise((resolve, reject) => {
-                                    Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
-                                    .then(ret => {
-                                        console.log("  OK Cancel Notification:" + notObj.notificationId)
-                                        resolve(ret);
-                                    }).catch (error => {
-                                        console.log("   Error Cancel:");console.log(error);reject(error)
-                                    })
-                                })
-                            }
-                        }
-                    }
-                }
-            }
+            // No Need Notification
+            // if (remindSetting && prevCarReports) {
+            //     if (prevCarReports[currentVehicle.id]) {
+            //         let report = prevCarReports[currentVehicle.id];
+            //         if (report&&report.scheduledNotification) {
+            //             if (report.scheduledNotification.authNotify) {
+            //                 let notObj = report.scheduledNotification.authNotify;
+            //                 if (notObj.notificationId != null && notObj.notificationId != undefined) {
+            //                     await new Promise((resolve, reject) => {
+            //                         Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
+            //                         .then(ret => {
+            //                             console.log("  OK Cancel Notification Auth:" + notObj.notificationId)
+            //                             resolve(ret);
+            //                         }).catch (error => {
+            //                             console.log("   Error Cancel:");console.log(error);reject(error)
+            //                         })
+            //                     })
+            //                 }
+            //             }
+            //             if (report.scheduledNotification.insuranceNotify) {
+            //                 let notObj = report.scheduledNotification.insuranceNotify;
+            //                 if (notObj.notificationId != null && notObj.notificationId != undefined) {
+            //                     await new Promise((resolve, reject) => {
+            //                         Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
+            //                         .then(ret => {
+            //                             console.log("  OK Cancel Notification Insurance:" + notObj.notificationId)
+            //                             resolve(ret);
+            //                         }).catch (error => {
+            //                             console.log("   Error Cancel:");console.log(error);reject(error)
+            //                         })
+            //                     })
+            //                 }
+            //             }
+            //             if (report.scheduledNotification.roadFeeNotify) {
+            //                 let notObj = report.scheduledNotification.roadFeeNotify;
+            //                 if (notObj.notificationId != null && notObj.notificationId != undefined) {
+            //                     await new Promise((resolve, reject) => {
+            //                         Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
+            //                         .then(ret => {
+            //                             console.log("  OK Cancel Notification RoadFee:" + notObj.notificationId)
+            //                             resolve(ret);
+            //                         }).catch (error => {
+            //                             console.log("   Error Cancel:");console.log(error);reject(error)
+            //                         })
+            //                     })
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
 
             //let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
             let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
@@ -1975,7 +1977,6 @@ class AppUtils {
                 nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
                 = this.getRemindForMaintain(currentVehicle.serviceList, settingService, lastKm)
 
-            console.log("?????????????????? Will call getInfoCarAuthorizeDate")
             let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
                 diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
@@ -1994,92 +1995,92 @@ class AppUtils {
 
             // Create Notification Scheduler
             // Only process if UserData (not Team)
-            let scheduledNotification = {};
-            if (remindSetting && prevCarReports) {
-                let todayDate = new Date();
-                let tomorrowDate = new Date(todayDate.getFullYear(),
-                todayDate.getMonth(), todayDate.getDate() + 1, 23,59,58);
+            // let scheduledNotification = {};
+            // if (remindSetting && prevCarReports) {
+            //     let todayDate = new Date();
+            //     let tomorrowDate = new Date(todayDate.getFullYear(),
+            //     todayDate.getMonth(), todayDate.getDate() + 1, 23,59,58);
 
-                // if NextAuthDate is Over Today, no need notification
-                if (nextAuthorizeDate && nextAuthorizeDate.getTime() > tomorrowDate.getTime()) {
+            //     // if NextAuthDate is Over Today, no need notification
+            //     if (nextAuthorizeDate && nextAuthorizeDate.getTime() > tomorrowDate.getTime()) {
                     
-                    let gapToRemind = 15;
-                    if (remindSetting && remindSetting.dayForAuthRemind > 1) {
-                        gapToRemind = remindSetting.dayForAuthRemind;
-                    }
-                    let remindAuthDate = new Date(nextAuthorizeDate);
-                    remindAuthDate.setDate(remindAuthDate.getDate()-gapToRemind)
-                    // If remindAuthDate is Behind Today, but actual AuthDate is still not Come. Remind Tomorrow
-                    if (remindAuthDate.getTime() < todayDate.getTime()) {
-                        remindAuthDate = tomorrowDate;
-                    }
+            //         let gapToRemind = 15;
+            //         if (remindSetting && remindSetting.dayForAuthRemind > 1) {
+            //             gapToRemind = remindSetting.dayForAuthRemind;
+            //         }
+            //         let remindAuthDate = new Date(nextAuthorizeDate);
+            //         remindAuthDate.setDate(remindAuthDate.getDate()-gapToRemind)
+            //         // If remindAuthDate is Behind Today, but actual AuthDate is still not Come. Remind Tomorrow
+            //         if (remindAuthDate.getTime() < todayDate.getTime()) {
+            //             remindAuthDate = tomorrowDate;
+            //         }
 
-                    let notifyId = await this.scheduleAppLocalNotification(AppLocales.t("NOTIFICATION_AUTH"), ""+currentVehicle.brand + " " + currentVehicle.model + " "
-                        + currentVehicle.licensePlate, nextAuthorizeDate, remindAuthDate)
+            //         let notifyId = await this.scheduleAppLocalNotification(AppLocales.t("NOTIFICATION_AUTH"), ""+currentVehicle.brand + " " + currentVehicle.model + " "
+            //             + currentVehicle.licensePlate, nextAuthorizeDate, remindAuthDate)
 
-                    if (notifyId!=null && notifyId!=undefined) {
-                        scheduledNotification.authNotify = {
-                            vehicleId: currentVehicle.id,
-                            vehiclePlate: currentVehicle.licensePlate,
-                            remindDate: remindAuthDate,
-                            // vehicleBrandModel: currentVehicle.brand + " " + currentVehicle.model,
-                            onDate: nextAuthorizeDate,
-                            type: "auth",
-                            notificationId: notifyId, // Set Later
-                        }
-                    }
-                }
-                if (nextAuthorizeDateInsurance && nextAuthorizeDateInsurance.getTime() > tomorrowDate.getTime()) {
-                    let gapToRemind = 15;
-                    if (remindSetting && remindSetting.dayForInsuranceRemind > 1) {
-                        gapToRemind = remindSetting.dayForInsuranceRemind;
-                    }
-                    let remindAuthDate = new Date(nextAuthorizeDateInsurance);
-                    remindAuthDate.setDate(remindAuthDate.getDate()-gapToRemind);
-                    // If remindAuthDate is Behind Today, but actual AuthDate is still not Come. Remind Tomorrow
-                    if (remindAuthDate.getTime() < todayDate.getTime()) {
-                        remindAuthDate = tomorrowDate;
-                    }
-                    let notifyId = await this.scheduleAppLocalNotification(AppLocales.t("NOTIFICATION_INSURANCE"), ""+currentVehicle.brand + " " + currentVehicle.model + " "
-                        + currentVehicle.licensePlate, nextAuthorizeDateInsurance, remindAuthDate)
-                    if (notifyId!=null && notifyId!=undefined) {
-                        scheduledNotification.insuranceNotify = {
-                            vehicleId: currentVehicle.id,
-                            vehiclePlate: currentVehicle.licensePlate,
-                            remindDate: remindAuthDate,
-                            // vehicleBrandModel: currentVehicle.brand + " " + currentVehicle.model,
-                            onDate: nextAuthorizeDateInsurance,
-                            type: "insurance",
-                            notificationId: notifyId,
-                        }
-                    }
-                }
-                if (nextAuthorizeDateRoadFee && nextAuthorizeDateRoadFee.getTime() > tomorrowDate.getTime()) {
-                    let gapToRemind = 15;
-                    if (remindSetting && remindSetting.dayForRoadFeeRemind > 1) {
-                        gapToRemind = remindSetting.dayForRoadFeeRemind;
-                    }
-                    let remindAuthDate = new Date(nextAuthorizeDateRoadFee);
-                    remindAuthDate.setDate(remindAuthDate.getDate()-gapToRemind);
-                    // If remindAuthDate is Behind Today, but actual AuthDate is still not Come. Remind Tomorrow
-                    if (remindAuthDate.getTime() < todayDate.getTime()) {
-                        remindAuthDate = tomorrowDate;
-                    }
-                    let notifyId = await this.scheduleAppLocalNotification(AppLocales.t("NOTIFICATION_ROADFEE"), ""+currentVehicle.brand + " " + currentVehicle.model + " "
-                        + currentVehicle.licensePlate, nextAuthorizeDateRoadFee, remindAuthDate)
-                    if (notifyId!=null && notifyId!=undefined) {
-                        scheduledNotification.roadFeeNotify = {
-                            vehicleId: currentVehicle.id,
-                            vehiclePlate: currentVehicle.licensePlate,
-                            // vehicleBrandModel: currentVehicle.brand + " " + currentVehicle.model,
-                            onDate: nextAuthorizeDateInsurance,
-                            remindDate: remindAuthDate,
-                            type: "roadFee",
-                            notificationId: notifyId,
-                        }
-                    }
-                }
-            }
+            //         if (notifyId!=null && notifyId!=undefined) {
+            //             scheduledNotification.authNotify = {
+            //                 vehicleId: currentVehicle.id,
+            //                 vehiclePlate: currentVehicle.licensePlate,
+            //                 remindDate: remindAuthDate,
+            //                 // vehicleBrandModel: currentVehicle.brand + " " + currentVehicle.model,
+            //                 onDate: nextAuthorizeDate,
+            //                 type: "auth",
+            //                 notificationId: notifyId, // Set Later
+            //             }
+            //         }
+            //     }
+            //     if (nextAuthorizeDateInsurance && nextAuthorizeDateInsurance.getTime() > tomorrowDate.getTime()) {
+            //         let gapToRemind = 15;
+            //         if (remindSetting && remindSetting.dayForInsuranceRemind > 1) {
+            //             gapToRemind = remindSetting.dayForInsuranceRemind;
+            //         }
+            //         let remindAuthDate = new Date(nextAuthorizeDateInsurance);
+            //         remindAuthDate.setDate(remindAuthDate.getDate()-gapToRemind);
+            //         // If remindAuthDate is Behind Today, but actual AuthDate is still not Come. Remind Tomorrow
+            //         if (remindAuthDate.getTime() < todayDate.getTime()) {
+            //             remindAuthDate = tomorrowDate;
+            //         }
+            //         let notifyId = await this.scheduleAppLocalNotification(AppLocales.t("NOTIFICATION_INSURANCE"), ""+currentVehicle.brand + " " + currentVehicle.model + " "
+            //             + currentVehicle.licensePlate, nextAuthorizeDateInsurance, remindAuthDate)
+            //         if (notifyId!=null && notifyId!=undefined) {
+            //             scheduledNotification.insuranceNotify = {
+            //                 vehicleId: currentVehicle.id,
+            //                 vehiclePlate: currentVehicle.licensePlate,
+            //                 remindDate: remindAuthDate,
+            //                 // vehicleBrandModel: currentVehicle.brand + " " + currentVehicle.model,
+            //                 onDate: nextAuthorizeDateInsurance,
+            //                 type: "insurance",
+            //                 notificationId: notifyId,
+            //             }
+            //         }
+            //     }
+            //     if (nextAuthorizeDateRoadFee && nextAuthorizeDateRoadFee.getTime() > tomorrowDate.getTime()) {
+            //         let gapToRemind = 15;
+            //         if (remindSetting && remindSetting.dayForRoadFeeRemind > 1) {
+            //             gapToRemind = remindSetting.dayForRoadFeeRemind;
+            //         }
+            //         let remindAuthDate = new Date(nextAuthorizeDateRoadFee);
+            //         remindAuthDate.setDate(remindAuthDate.getDate()-gapToRemind);
+            //         // If remindAuthDate is Behind Today, but actual AuthDate is still not Come. Remind Tomorrow
+            //         if (remindAuthDate.getTime() < todayDate.getTime()) {
+            //             remindAuthDate = tomorrowDate;
+            //         }
+            //         let notifyId = await this.scheduleAppLocalNotification(AppLocales.t("NOTIFICATION_ROADFEE"), ""+currentVehicle.brand + " " + currentVehicle.model + " "
+            //             + currentVehicle.licensePlate, nextAuthorizeDateRoadFee, remindAuthDate)
+            //         if (notifyId!=null && notifyId!=undefined) {
+            //             scheduledNotification.roadFeeNotify = {
+            //                 vehicleId: currentVehicle.id,
+            //                 vehiclePlate: currentVehicle.licensePlate,
+            //                 // vehicleBrandModel: currentVehicle.brand + " " + currentVehicle.model,
+            //                 onDate: nextAuthorizeDateInsurance,
+            //                 remindDate: remindAuthDate,
+            //                 type: "roadFee",
+            //                 notificationId: notifyId,
+            //             }
+            //         }
+            //     }
+            // }
 
             let result = {
                 gasReport: {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
@@ -2095,7 +2096,7 @@ class AppUtils {
                 maintainRemind: {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
                     nextEstimatedDateForMaintain, passedKmFromPreviousMaintain},
                 serviceReport: {arrServiceTypeSpend, totalServiceSpend2},
-                scheduledNotification: scheduledNotification
+                //scheduledNotification: scheduledNotification
             }
             
             return result;

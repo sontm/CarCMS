@@ -7,7 +7,7 @@ import Layout from '../constants/Layout'
 
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
-import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
+import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis, VictoryLegend} from 'victory-native';
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
@@ -158,6 +158,7 @@ class MoneyUsageByTimeReport extends React.Component {
     let arrTotalEachCarsAllCategory = [];
     let totalAllCarsAllCategory = 0;
     let tickXLabels = [];
+    let legendLabels = [];
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
           // TODO* arrTotalMoneySpend is Wrong....
@@ -181,7 +182,10 @@ class MoneyUsageByTimeReport extends React.Component {
             })
         }
 
-        arrTotalAllCars.push(filteredArrTotalMoneySpend)
+        if (filteredArrTotalMoneySpend.length > 0) {
+            arrTotalAllCars.push(filteredArrTotalMoneySpend)
+            legendLabels.push({name: element.licensePlate})
+        }
         
         if (filteredArrTotalMoneySpend && filteredArrTotalMoneySpend.length) {
             let totalThisCarMoney = {
@@ -196,7 +200,7 @@ class MoneyUsageByTimeReport extends React.Component {
         }
       }
     });
-    return {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels};
+    return {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels, legendLabels};
   }
   calculateAllVehicleTotalMoneyPercentPrivate() {
     let totalGasSpendPrivate = 0, totalOilSpendPrivate = 0, totalAuthSpendPrivate = 0, 
@@ -265,6 +269,7 @@ class MoneyUsageByTimeReport extends React.Component {
   calculateAllVehicleTotalMoneyTeam(numberOfMonth) {
     let arrTotalAllCars = [];
     let tickXLabels = [];
+    let legendLabels = [];
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         let {arrTotalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
@@ -287,9 +292,10 @@ class MoneyUsageByTimeReport extends React.Component {
         }
         if (filteredArrTotalMoneySpend && filteredArrTotalMoneySpend.length > 0)
             arrTotalAllCars.push(filteredArrTotalMoneySpend)
+            legendLabels.push({name: element.licensePlate})
       }
     });
-    return {arrTotalAllCars, tickXLabels};
+    return {arrTotalAllCars, tickXLabels, legendLabels};
   }
   calculateEachVehicleTotalMoneyTeam(numberOfMonth) {
     let arrTotalGasEachCars = [];
@@ -350,13 +356,13 @@ class MoneyUsageByTimeReport extends React.Component {
     if (this.props.currentVehicle || this.props.isTotalReport) {
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
-                var {arrTotalAllCars, tickXLabels} = this.calculateAllVehicleTotalMoneyTeam(6);
+                var {arrTotalAllCars, tickXLabels, legendLabels} = this.calculateAllVehicleTotalMoneyTeam(6);
                 var {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
                     arrTotalExpenseEachCars, arrTotalServiceEachCars}
                     = this.calculateEachVehicleTotalMoneyTeam();
             } else {
                 // Tong Quan of Current User
-                var {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels} 
+                var {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels, legendLabels} 
                     = this.calculateAllVehicleTotalMoney(6);
                 var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
                     totalExpenseSpendPrivate, totalServiceSpendPrivate, totalAllSpendPrivate}
@@ -366,6 +372,8 @@ class MoneyUsageByTimeReport extends React.Component {
             var {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
                 arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}
                 = this.calculateOneVehicleTotalMoneyPrivate();
+
+            var legendLabels = AppConstants.LEGEND_CHITIEU;
         }
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         let isHasData = true;
@@ -379,6 +387,8 @@ class MoneyUsageByTimeReport extends React.Component {
             !arrTotalExpenseEachCars.length && !arrTotalServiceEachCars.length) {
             isHasTeamData = false;
         }
+        console.log("¥¥¥¥¥¥¥¥¥¥¥arrTotalAllCars¥¥¥¥¥¥¥¥")
+        console.log(arrTotalAllCars)
         return (
             <View style={styles.container}>
                 
@@ -444,9 +454,19 @@ class MoneyUsageByTimeReport extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:30,left:3,right:10}}
+                            padding={{top:10+15*legendLabels.length/4,bottom:30,left:3,right:10}}
                             domainPadding={{y: [0, 10], x: [40, 10]}}
                         >
+                        <VictoryLegend standalone={false}
+                            x={30} y={5}
+                            itemsPerRow={4}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            orientation="horizontal"
+                            gutter={5}
+                            symbolSpacer={5}
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            data={legendLabels}
+                        />
                         {/* TODO, Date X axis not Match */}
                         {this.props.isTotalReport ? (
                             <VictoryStack
@@ -464,6 +484,7 @@ class MoneyUsageByTimeReport extends React.Component {
                         ) : (
                         <VictoryStack
                             width={Layout.window.width}
+
                             colorScale={AppConstants.COLOR_SCALE_10}
                         >
                             {/* This is FOr One Car in Detail Report */}
@@ -520,10 +541,10 @@ class MoneyUsageByTimeReport extends React.Component {
                             //offSetX={400}
                             style={{
                                 ticks: {stroke: "grey", size: 3},
-                                tickLabels: {fontSize: 10, padding: -28}
+                                tickLabels: {fontSize: 10, padding: -32}
                             }}
                         />
-
+                       
                         </VictoryChart>
                     </View> ) : <NoDataText /> }
                 </View>
@@ -542,9 +563,19 @@ class MoneyUsageByTimeReport extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:30,left:50,right:20}}
-                            domainPadding={{y: [0, 0], x: [20, 10]}}
+                            padding={{top:25,bottom:30,left:3,right:10}}
+                            domainPadding={{y: [0, 0], x: [40, 10]}}
                         >
+                        <VictoryLegend standalone={false}
+                            x={30} y={5}
+                            itemsPerRow={4}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            orientation="horizontal"
+                            gutter={5}
+                            symbolSpacer={5}
+                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            data={AppConstants.LEGEND_CHITIEU}
+                        />
                         <VictoryStack
                             width={Layout.window.width}
                             //domainPadding={{y: [0, 10], x: [10, 0]}}
@@ -586,13 +617,13 @@ class MoneyUsageByTimeReport extends React.Component {
                             standalone={false}
                             tickFormat={(t) => `${(this.props.teamData.teamCarList && this.props.teamData.teamCarList[t-1])? 
                                 this.props.teamData.teamCarList[t-1].licensePlate : t}`}
-                            tickLabelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                             tickLabels={tickXLabels}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 11, padding: 5, angle: 30}
+                                tickLabels: {fontSize: 10, padding: 5, angle: 30}
                             }}
                         />
                         <VictoryAxis
@@ -602,7 +633,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 11, padding: 0},
+                                tickLabels: {fontSize: 10, padding: -35},
                             }}
                         />
                         </VictoryChart>
@@ -626,7 +657,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             data={arrTotalEachCarsAllCategory}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", \n"
                                 +AppUtils.formatToPercent(datum.y, totalAllCarsAllCategory)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
@@ -660,7 +691,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             ]}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" 
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", \n"
                                 +AppUtils.formatToPercent(datum.y, totalAllSpendPrivate)+")") : ""}
                             labelRadius={({ radius }) => radius+10 }

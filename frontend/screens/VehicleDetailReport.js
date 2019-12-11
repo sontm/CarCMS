@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, ScrollView } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, TabHeading } from 'native-base';
 import Layout from '../constants/Layout'
@@ -201,9 +201,11 @@ class VehicleDetailReport extends React.Component {
                 </Tab>
                 <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_MONEYUSAGE")}</Text></TabHeading>}>
                     <Content>
+                    <ScrollView>
                     <MoneyUsageByTimeReport currentVehicle={currentVehicle}/>
                     <MoneyUsageReport currentVehicle={currentVehicle}/>
                     <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle}/>
+                    </ScrollView>
                     </Content>
                 </Tab>
                 <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_SERVICE")}</Text></TabHeading>}>
