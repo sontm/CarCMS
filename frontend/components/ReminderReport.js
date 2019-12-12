@@ -13,8 +13,14 @@ import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
 import {NoDataText} from '../components/StyledText';
 
+function shortendAuthText(text) {
+    text = text.replace("Bảo Hiểm Dân Sự", "Bảo Hiểm")
+    text = text.replace("Bảo Trì Đường Bộ", "Đường Bộ")
+    return text;
+}
 function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, licensePlate, owner) {
     if (target > 0 && passed> 0) {
+        let isCombined = text.indexOf("+") >= 0;
     return (
         <View style={styles.reminderItemContainer} key={text+""+passed+"/"+target+licensePlate+isTeam}>
             <View style={styles.reminderProgress}>
@@ -36,7 +42,14 @@ function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, lic
                 </View>
             </View>
             <View style={styles.reminderInfo}>
+                {isCombined ? (
+                    <View>
+                        <Text style={{color: "tomato"}}>{shortendAuthText(text)}</Text>
+                        <Text style={{color: "tomato", fontSize: 13}}>{passed}/{target} ({unit})</Text>
+                    </View>
+                ) : (
                 <Text style={{color: "tomato"}}>{text}{" "}{passed}/{target} ({unit})</Text>
+                )}
                 <Text style={{fontSize: 13}}>{car}{" "}{licensePlate}{" "}{owner}</Text>
                 {nextDate ?
                 <Text style={{fontSize: 13}}>
@@ -60,6 +73,41 @@ class ReminderReport extends React.Component {
     this.numRemindPrivate = 0;
     this.numRemindTeam = 0;
   }
+  
+  combineAuthType(authArr) {
+        var combined = [];
+        authArr.forEach((item, idx) => {
+            if (item.diffDayFromLast && item.lastDaysValidFor && item.nextDate && new Date(item.nextDate)) {
+                // find the Existed
+                let isExisted = false;
+                for(let i = 0; i < combined.length; i++) {
+                    let cur = combined[i];
+                    if (cur.diffDayFromLast == item.diffDayFromLast && cur.lastDaysValidFor == item.lastDaysValidFor 
+                            && new Date(cur.nextDate).getTime() == new Date(item.nextDate).getTime()) {
+                        // Existed
+                        isExisted = true;
+                        // Add to the Text
+                        cur.type += "+" + item.type;
+                        break;
+                    } else {
+                        isExisted = false;
+                    }
+                }
+                if (!isExisted) {
+                    combined.push({
+                        type: item.type,
+                        diffDayFromLast: item.diffDayFromLast,
+                        lastDaysValidFor: item.lastDaysValidFor,
+                        nextDate: item.nextDate
+                    })
+                }
+            }
+        })
+        console.log("combined")
+        console.log(combined)
+        return combined;
+        
+  }
   renderTabPrivate() {
     let resultView = [];
     this.props.userData.vehicleList.forEach(element => {
@@ -78,21 +126,33 @@ class ReminderReport extends React.Component {
                 diffDayFromLastAuthorizeRoadFee, nextAuthorizeDateRoadFee, lastAuthDaysValidForRoadFee}
             = this.props.userData.carReports[element.id].authReport;
         
+        var authArr = [];
+        authArr.push({
+            type: AppLocales.t("GENERAL_AUTHROIZE_AUTH"),
+            diffDayFromLast: diffDayFromLastAuthorize,
+            lastDaysValidFor: lastAuthDaysValidFor,
+            nextDate: nextAuthorizeDate
+        })
+        authArr.push({
+            type: AppLocales.t("GENERAL_AUTHROIZE_INSURANCE"),
+            diffDayFromLast: diffDayFromLastAuthorizeInsurance,
+            lastDaysValidFor: lastAuthDaysValidForInsurance,
+            nextDate: nextAuthorizeDateInsurance
+        })
+        authArr.push({
+            type: AppLocales.t("GENERAL_AUTHROIZE_ROADFEE"),
+            diffDayFromLast: diffDayFromLastAuthorizeRoadFee,
+            lastDaysValidFor: lastAuthDaysValidForRoadFee,
+            nextDate: nextAuthorizeDateRoadFee
+        })
 
-        resultView.push(
-            renderRemindItem(false, AppLocales.t("GENERAL_AUTHROIZE_AUTH"), diffDayFromLastAuthorize, lastAuthDaysValidFor, 
-            nextAuthorizeDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate)
-        )
-        resultView.push(
-            renderRemindItem(false, AppLocales.t("GENERAL_AUTHROIZE_INSURANCE"), diffDayFromLastAuthorizeInsurance, lastAuthDaysValidForInsurance, 
-            nextAuthorizeDateInsurance, AppLocales.t("GENERAL_DAY"),
-            element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-        )
-        resultView.push(
-            renderRemindItem(false, AppLocales.t("GENERAL_AUTHROIZE_ROADFEE"), diffDayFromLastAuthorizeRoadFee, lastAuthDaysValidForRoadFee, 
-            nextAuthorizeDateRoadFee, AppLocales.t("GENERAL_DAY"),
-            element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-        )
+        let ret = this.combineAuthType(authArr);
+        ret.forEach(item => {
+            resultView.push(
+                renderRemindItem(false, item.type, item.diffDayFromLast, item.lastDaysValidFor, 
+                    item.nextDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate)
+            )
+        })
       }
     })
     resultView = resultView.filter(item => {
@@ -279,7 +339,7 @@ const styles = StyleSheet.create({
         // borderColor: "grey",
         marginLeft: 5,
         marginRight: 5,
-        marginTop: 3
+        marginTop: 3,
     },
     reminderProgress: {
         width: 50,

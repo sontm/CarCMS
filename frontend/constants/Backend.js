@@ -11,12 +11,14 @@ class Backend {
             var headers = {
                             'Content-Type': 'application/json',
                             'Access-Control-Allow-Credentials':true,
+                            'APIKEY': 'S1E9C9R0E0T5K0E7Y-qlx',
                             'Authorization': 'Bearer ' + token
                         };
         } else {
             var headers = {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Credentials':true
+                'Access-Control-Allow-Credentials':true,
+                'APIKEY': 'S1E9C9R0E0T5K0E7Y-qlx',
             };
         }
         return headers;

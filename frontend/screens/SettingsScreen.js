@@ -1,4 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
+import axios from 'axios';
 import React from 'react';
 import { Platform, Clipboard } from 'react-native';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
@@ -95,16 +96,17 @@ class SettingsScreen extends React.Component {
   // },
   async doLoginGoogle() {
     try {
+      console.log("doLoginGoogle...")
       const result = await Google.logInAsync({
         // behavior: "web",
         androidClientId: "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",
         iosClientId: "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com",
         scopes: ["profile", "email"]
       })
-
+      console.log(result)
       if (result.type === "success") {
         console.log("Login Google OK")
-        console.log(result)
+        
 
         Backend.loginGoogle({
           idToken: result.idToken
@@ -136,42 +138,57 @@ class SettingsScreen extends React.Component {
       //   permissions,
       //   declinedPermissions,
       // } 
+      console.log("Start doLoginFacebook")
       const result = await Facebook.logInWithReadPermissionsAsync('704967129987939', {
         permissions: ['public_profile', 'email'],
       });
       if (result.type === 'success') {
         // Get the user's name using Facebook's Graph API
-        const response = await fetch(`https://graph.facebook.com/me?access_token=${result.token}&fields=id,name,birthday,email,address,gender,picture.type(normal)`);
-        const profile = await response.json() 
-        
-       // "email": "XX",
-        // "id": "YYY",
-        // "name": "XXX",
-        // "picture": Object {
-        //   "data": Object {
-        //     "height": 200,
-        //     "is_silhouette": false,
-        //     "url": "XXX",
-        //     "width": 200,
-        //   },
-        // },
         console.log(result)
-        console.log('Logged in!', `Hi ${profile.name}!`);
-        console.log(profile)
-        
-        // Send the User Information and Access Token to Server for validate
-        Backend.loginFacebook({
-          accessToken: result.token,
-          userProfile: profile
-        },
-        response => {
-          console.log("Backend Return OK")
+        //let strUrl = "https://graph.facebook.com/me?access_token=" + result.token + "&fields=id,name,birthday,email,address,gender,picture.type(normal)";
+        let strUrl = "https://graph.facebook.com/me?access_token=" + result.token + "&fields=id,name,email,picture.type(normal)";
+        console.log(strUrl)
+        //const response = await fetch("https://graph.facebook.com/me?access_token=${result.token}&fields=id,name,birthday,email,address,gender,picture.type(normal)`);
+        //const response = await fetch(strUrl);
+        //const profile = await response.json() 
+        axios.get(strUrl)
+        .then(response => {
+          console.log("GraphFB Returned")
           console.log(response.data)
-          this.props.actUserLoginOK(response.data)
-        },
-        error => {
-          console.log(JSON.stringify(error))
+          const profile = response.data
+          // "email": "XX",
+          // "id": "YYY",
+          // "name": "XXX",
+          // "picture": Object {
+          //   "data": Object {
+          //     "height": 200,
+          //     "is_silhouette": false,
+          //     "url": "XXX",
+          //     "width": 200,
+          //   },
+          // },
+          console.log(profile)
+          console.log('Logged in!', `Hi ${profile.name}!`);
+          
+          // Send the User Information and Access Token to Server for validate
+          Backend.loginFacebook({
+            accessToken: result.token,
+            userProfile: profile
+          },
+          response => {
+            console.log("Backend Return OK")
+            console.log(response.data)
+            this.props.actUserLoginOK(response.data)
+          },
+          error => {
+            console.log(JSON.stringify(error))
+          })
         })
+        .catch(error => {
+          console.log(error);
+        });
+        
+       
       } else {
         // type === 'cancel'
       }
@@ -195,7 +212,7 @@ class SettingsScreen extends React.Component {
               <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
                 <View style={{width: "100%",flexDirection: "column",justifyContent: "center",alignItems: "center",}}>
                   {this.props.userData.userProfile.pictureUrl ? (
-                    <Thumbnail source={{uri: uri}} style={styles.avatarContainer}/>
+                    <Thumbnail source={{uri: this.props.userData.userProfile.pictureUrl }} style={styles.avatarContainerImage}/>
                   ): (
                     <Icon type="FontAwesome" name="user-circle-o" style={styles.avatarContainer}/>
                   )}
@@ -551,6 +568,13 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 10,
     minHeight: 125,
+  },
+  avatarContainerImage: {
+    height: 60,
+    width: 60,
+    //fontSize: 60,
+    //color: AppConstants.COLOR_PICKER_TEXT,
+    //color: "white"
   },
   avatarContainer: {
     height: 60,

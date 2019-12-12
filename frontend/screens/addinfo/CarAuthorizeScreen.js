@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, 
-    Input,  Label, DatePicker, Card, CardItem } from 'native-base';
+    Input,  Label, DatePicker, Card, CardItem, CheckBox } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
 import AppConstants from '../../constants/AppConstants'
@@ -27,9 +27,11 @@ class CarAuthorizeScreen extends React.Component {
             subType: "",
             remark: "",
             validFor:"", // i.e Each Auth in 1 year
+            subTypeArr: []
         };
 
         this.save = this.save.bind(this)
+        this.onSetSubType = this.onSetSubType.bind(this)
     }
 
     componentWillMount() {
@@ -43,6 +45,7 @@ class CarAuthorizeScreen extends React.Component {
                     if (!theSubType || theSubType.length<= 0) {
                         theSubType = this.props.appData.typeAuth[0].name;
                     }
+                    console.log("   theSubTypeArr:" + currentVehicle.authorizeCarList[i].subTypeArr)
                     console.log("   theSubType:" + theSubType)
                     this.setState({
                         ...currentVehicle.authorizeCarList[i],
@@ -103,6 +106,28 @@ class CarAuthorizeScreen extends React.Component {
         }
     }
 
+    onSetSubType(idx) {
+        let prevSubTypeArr = this.state.subTypeArr;
+        let inIdx = prevSubTypeArr.indexOf(this.props.appData.typeAuth[idx].name);
+        if (inIdx >= 0) {
+            // Existed, should Remove
+            prevSubTypeArr.splice(inIdx, 1);
+        } else {
+            prevSubTypeArr.push(this.props.appData.typeAuth[idx].name)
+        }
+        let subType = "";
+        prevSubTypeArr.forEach((item,idx) => {
+            if (idx == prevSubTypeArr.length-1) {
+                subType += item;
+            } else {
+                subType += item + '+';
+            }
+        })
+        this.setState({
+            subType: subType,
+            subTypeArr:prevSubTypeArr
+        })
+    }
     render() {
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
@@ -161,27 +186,24 @@ class CarAuthorizeScreen extends React.Component {
                         </Item>
                     </View>
 
-                    <View style={styles.rowContainer}>
+                    <View style={styles.rowContainerVertical}>
                         <Text style={styles.rowLabel}>
                         {AppLocales.t("NEW_AUTH_TYPE")+":"}
                         </Text>
-                        <View style={styles.rowForm}>
-                            <Picker
-                                mode="dropdown"
-                                iosIcon={<Icon name="arrow-down" />}
-                                style={{width: (Layout.window.width-40)*0.6,
-                                    alignSelf:"center"}}
-                                placeholderStyle={{ color: "#bfc6ea" }}
-                                placeholderIconColor="#007aff"
-                                selectedValue={this.state.subType}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    this.setState({subType: itemValue})
-                                }
-                            >
-                                {this.props.appData.typeAuth.map(item => (
-                                    <Picker.Item label={item.name} value={item.name} key={item.id}/>
-                                ))}
-                            </Picker>
+                        <View style={{flexDirection: "row", marginTop: 10}}>
+                            <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[0].name) >=0} 
+                                onPress={() =>this.onSetSubType(0)}/>
+                            <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(0)}>{this.props.appData.typeAuth[0].name}</Text>
+                        </View>
+                        <View style={{flexDirection: "row", marginTop: 10}}>
+                            <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[1].name) >=0} 
+                                onPress={() =>this.onSetSubType(1)}/>
+                            <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(1)}>{this.props.appData.typeAuth[1].name}</Text>
+                        </View>
+                        <View style={{flexDirection: "row", marginTop: 10}}>
+                            <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[2].name) >=0} 
+                                onPress={() =>this.onSetSubType(2)}/>
+                            <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(2)}>{this.props.appData.typeAuth[2].name}</Text>
                         </View>
                     </View>
                     
@@ -273,6 +295,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 7,
     backgroundColor: '#fff',
     flexDirection: "column"
+  },
+  rowContainerVertical: {
+    flexDirection: "column",
+    alignItems: "flex-start", // vertial align
+    width: "96%",
   },
   rowContainer: {
     flexDirection: "row",

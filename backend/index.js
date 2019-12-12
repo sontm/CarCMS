@@ -21,20 +21,33 @@ const startServer = async () => {
   //  apply to all requests
   app.use(limiter);
 
+  // Simple API Check only
+  var myAPIChecker = function (req, res, next) {
+    let apiKey = req.header("APIKEY");
+    console.log(apiKey)
+    if (apiKey && apiKey == "S1E9C9R0E0T5K0E7Y-qlx") {
+      next()
+    } else {
+      res.status(501).send({msg: "UnAuthorized!"})
+    }
+  }
+
+  app.use(myAPIChecker)
+
   // Add headers Middle Ware
-  app.use(function (req, res, next) {
-      // Website you wish to allow to connect
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      // Request methods you wish to allow
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-      // Request headers you wish to allow
-      res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-      // Set to true if you need the website to include cookies in the requests sent
-      // to the API (e.g. in case you use sessions)
-      res.setHeader('Access-Control-Allow-Credentials', true);
-      // Pass to next layer of middleware
-      next();
-  });
+  // app.use(function (req, res, next) {
+  //     // Website you wish to allow to connect
+  //     res.setHeader('Access-Control-Allow-Origin', '*');
+  //     // Request methods you wish to allow
+  //     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  //     // Request headers you wish to allow
+  //     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  //     // Set to true if you need the website to include cookies in the requests sent
+  //     // to the API (e.g. in case you use sessions)
+  //     res.setHeader('Access-Control-Allow-Credentials', true);
+  //     // Pass to next layer of middleware
+  //     next();
+  // });
 
   // parse requests of content-type - application/x-www-form-urlencoded
   app.use(bodyParser.urlencoded({ extended: true }))

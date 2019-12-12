@@ -132,7 +132,7 @@ class VehicleDetailReport extends React.Component {
                                     </Text>
                                     <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                                 </View>
-                                <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
+                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
                                         this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate): "NA"}</Text>
                             </View>
@@ -158,7 +158,7 @@ class VehicleDetailReport extends React.Component {
                                     </Text>
                                     <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                                 </View>
-                                <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance ? 
+                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
                                         this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance): "NA"}</Text>
                             </View>
@@ -184,7 +184,7 @@ class VehicleDetailReport extends React.Component {
                                     </Text>
                                     <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                                 </View>
-                                <Text>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee ? 
+                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
                                         this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee): "NA"}</Text>
                             </View>

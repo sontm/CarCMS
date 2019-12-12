@@ -887,14 +887,16 @@ class AppUtils {
 
         if (authorizeList && authorizeList.length > 0) {
             authorizeList.forEach((item, index) => {
-                console.log("   ??????????? Type AUTH:" + item.subType)
-                if (item.subType == "Bảo Hiểm Dân Sự") {
+                console.log("   ??????????? Type AUTH:" + item.subTypeArr)
+                if (item.subTypeArr.indexOf("Bảo Hiểm Dân Sự") >= 0) {
                     if (maxInsuranceIdx < index) maxInsuranceIdx = index;
                     totalMoneyAuthorize += item.price;
-                } else if (item.subType == "Phí Bảo Trì Đường Bộ") {
+                }
+                if (item.subTypeArr.indexOf("Phí Bảo Trì Đường Bộ") >= 0) {
                     if (maxRoadFeeIdx < index) maxRoadFeeIdx = index;
                     totalMoneyAuthorize += item.price;
-                } else {
+                }
+                if (item.subTypeArr.indexOf("Đăng Kiểm") >= 0) {
                     if (maxAuthIdx < index) maxAuthIdx = index;
                     totalMoneyAuthorize += item.price;
                 }
