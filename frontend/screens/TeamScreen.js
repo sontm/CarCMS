@@ -115,8 +115,13 @@ class TeamScreen extends React.Component {
     if(this.state.activePage === 0) {
       let allVehicles = [];
       this.props.teamData.members.forEach(item=> {
-        if (item.vehicleList && item.vehicleList.length) {
-          allVehicles.push(...item.vehicleList)
+        if (this.props.userData.teamInfo.excludeMyCar && 
+            item.id == this.props.userData.userProfile.id) {
+              // Skip my cars
+        } else {
+          if (item.vehicleList && item.vehicleList.length) {
+            allVehicles.push(...item.vehicleList)
+          }
         }
       })
       let viewDisplay = [];

@@ -888,15 +888,15 @@ class AppUtils {
         if (authorizeList && authorizeList.length > 0) {
             authorizeList.forEach((item, index) => {
                 console.log("   ??????????? Type AUTH:" + item.subTypeArr)
-                if (item.subTypeArr.indexOf("Bảo Hiểm Dân Sự") >= 0) {
+                if (item.subTypeArr && item.subTypeArr.indexOf("Bảo Hiểm Dân Sự") >= 0) {
                     if (maxInsuranceIdx < index) maxInsuranceIdx = index;
                     totalMoneyAuthorize += item.price;
                 }
-                if (item.subTypeArr.indexOf("Phí Bảo Trì Đường Bộ") >= 0) {
+                if (item.subTypeArr && item.subTypeArr.indexOf("Phí Bảo Trì Đường Bộ") >= 0) {
                     if (maxRoadFeeIdx < index) maxRoadFeeIdx = index;
                     totalMoneyAuthorize += item.price;
                 }
-                if (item.subTypeArr.indexOf("Đăng Kiểm") >= 0) {
+                if (item.subTypeArr && item.subTypeArr.indexOf("Đăng Kiểm") >= 0) {
                     if (maxAuthIdx < index) maxAuthIdx = index;
                     totalMoneyAuthorize += item.price;
                 }
@@ -1769,7 +1769,7 @@ class AppUtils {
 
         // If User is Member and TEam have setting of cannot view report
         console.log(props.userData.userProfile.roleInTeam)
-        // user not is manager and setting cannot see
+        //user not is manager and setting cannot see
         if (!props.userData.teamInfo || (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport)) {
             // no team data
         } else {
@@ -1782,7 +1782,7 @@ class AppUtils {
                 // this.setState({
                 //   members: response.data
                 // })
-                props.actTeamGetDataOK(response.data)
+                props.actTeamGetDataOK(response.data, props.userData)
             },
             error => {
                 console.log("GEt all Member in Team ERROR")

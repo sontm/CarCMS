@@ -111,6 +111,7 @@ export default {
     SETTING_LBL_JOIN_TEAM_CODE: "Mã Nhóm Muốn Gia Nhập",
     SETTING_LBL_JOIN_CREATEDTEAM: "Hoặc vào lại các nhóm đã tạo",
     SETTING_LBL_CREATE_TEAM_MEM_CANVIEWREPORT: "Cho Phép Thành Viên Xem Báo Cáo Nhóm",
+    SETTING_LBL_CREATE_TEAM_EXCLUDE_MYCAR: "Bỏ Xe Của Tôi Trong Báo Cáo Nhóm",
     SETTING_LBL_MEM_CAN_VIEWREPORT: "Thành Viên Có Thể Xem Báo Cáo Nhóm",
     SETTING_LBL_MEM_CANNOT_VIEWREPORT: "Thành Viên KHÔNG Thể Xem Báo Cáo Nhóm",
 

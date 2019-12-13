@@ -18,11 +18,14 @@ class CreateTeamScreen extends React.Component {
             name: "",
             code: "",
             id: 0,
-            canMemberViewReport: true
+            canMemberViewReport: true,
+            excludeMyCar: false
         };
 
         this.handleCreate = this.handleCreate.bind(this)
         this.toogleMemberCanViewReport = this.toogleMemberCanViewReport.bind(this)
+        this.toggleExcludeMyCar = this.toggleExcludeMyCar.bind(this)
+        
         
     }
 
@@ -34,7 +37,8 @@ class CreateTeamScreen extends React.Component {
                     name: this.props.userData.teamInfo.name,
                     code: this.props.userData.teamInfo.code,
                     id: this.props.userData.teamInfo.id,
-                    canMemberViewReport: this.props.userData.teamInfo.canMemberViewReport
+                    canMemberViewReport: this.props.userData.teamInfo.canMemberViewReport,
+                    excludeMyCar: this.props.userData.teamInfo.excludeMyCar ? true : false
                 })
             }
         } else {
@@ -48,6 +52,11 @@ class CreateTeamScreen extends React.Component {
             canMemberViewReport: !this.state.canMemberViewReport
         })
     }
+    toggleExcludeMyCar() {
+        this.setState({
+            excludeMyCar: !this.state.excludeMyCar
+        })
+    }
     handleCreate() {
         if (this.props.navigation.state.params.isEdit) {
             // Edit TEam NAme
@@ -55,7 +64,8 @@ class CreateTeamScreen extends React.Component {
                 id: this.state.id,
                 name: this.state.name,
                 code: this.state.code,
-                canMemberViewReport: this.state.canMemberViewReport
+                canMemberViewReport: this.state.canMemberViewReport,
+                excludeMyCar: this.state.excludeMyCar
                 }, this.props.userData.token, 
                 response => {
                     console.log("Edit Team OK")
@@ -75,7 +85,8 @@ class CreateTeamScreen extends React.Component {
             Backend.createTeam({
                 name: this.state.name,
                 code: this.state.code,
-                canMemberViewReport: this.state.canMemberViewReport
+                canMemberViewReport: this.state.canMemberViewReport,
+                excludeMyCar: this.state.excludeMyCar
                 }, this.props.userData.token, 
                 response => {
                     console.log("REgister Team OK")
@@ -138,6 +149,15 @@ class CreateTeamScreen extends React.Component {
                             onPress={() => this.toogleMemberCanViewReport()}/>
                         <Text onPress={() => this.toogleMemberCanViewReport()} style={{marginLeft: 12, fontSize: 13}}>
                             {AppLocales.t("SETTING_LBL_CREATE_TEAM_MEM_CANVIEWREPORT")}
+                        </Text>
+                    </View>
+
+                    <View style={{flexDirection: "row", justifyContent:"flex-start",
+                        marginLeft: -10, marginTop: 15, marginBottom: 10}}>
+                        <CheckBox checked={this.state.excludeMyCar}
+                            onPress={() => this.toggleExcludeMyCar()}/>
+                        <Text onPress={() => this.toggleExcludeMyCar()} style={{marginLeft: 12, fontSize: 13}}>
+                            {AppLocales.t("SETTING_LBL_CREATE_TEAM_EXCLUDE_MYCAR")}
                         </Text>
                     </View>
 

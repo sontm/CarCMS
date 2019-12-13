@@ -50,7 +50,7 @@ export const actTeamUserWillLogout = () => (dispatch) => {
     })
 }
 
-export const actTeamGetDataOK = (data) => (dispatch) => {
+export const actTeamGetDataOK = (data, userData) => (dispatch) => {
     console.log("actTeamGetDataOK:")
     dispatch({
         type: TEAM_GET_OK,
@@ -62,29 +62,53 @@ export const actTeamGetDataOK = (data) => (dispatch) => {
         duration: 300,
     }
 
-    let teamCarReportsAll = {};
-    data.forEach ((mem, idxMem )=> {
-        mem.vehicleList.forEach((item, idx) => {
-            //actTempCalculateTeamCarReport(item, dispatch)
-            AppUtils.actTempCalculateCarReportAsyncWrapper(item, options)
-            .then (result => {
-                console.log("  OK Team Calculate Report:" + item.licensePlate)
-                teamCarReportsAll[""+item.id] = result
-
-                if ( idxMem == data.length -1 && idx == mem.vehicleList.length-1) {
-                    console.log("======================= Final Dispatch Team Reports")
-                    dispatch({
-                        type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
-                        payload: teamCarReportsAll
-                    })
-                }
-            })
-            .catch (error => {
-                console.log("  Error Team Calculate Report:" + item.licensePlate)
-                console.log(error)
-            })
-        })
+    let myCarIdArr = [];
+    userData.vehicleList.forEach(item => {
+        myCarIdArr.push(item.id);
     })
+
+    let teamCarReportsAll = {};
+    let needProcessCount = 0;
+    let doneProcessCount = 0;
+    for (let idxMem = 0; idxMem < data.length; idxMem++) {
+        let mem = data[idxMem];
+    //data.forEach ((mem, idxMem )=> {
+        // if (mem.id == userData.userProfile.id) {
+        //     // nothing
+        // } else 
+        for (let idx = 0; idx < mem.vehicleList.length; idx++) {
+            let item = mem.vehicleList[idx];
+        //mem.vehicleList.forEach((item, idx) => {
+            // If Exclude My Car, NoNeed
+            if (userData.teamInfo.excludeMyCar && myCarIdArr.indexOf(item.id) >= 0 ) {
+                // no thing
+            } else {
+                needProcessCount++;
+                //actTempCalculateTeamCarReport(item, dispatch)
+                AppUtils.actTempCalculateCarReportAsyncWrapper(item, options)
+                .then (result => {
+                    doneProcessCount++;
+                    console.log("=======================OK Team Calculate Report:" + item.id 
+                        + ","+idxMem+","+idx);
+                    console.log("  ==========needProcessCount:" + needProcessCount 
+                        + ","+doneProcessCount);
+                    teamCarReportsAll[""+item.id] = result
+
+                    //if ( idxMem == data.length -1 && idx == mem.vehicleList.length-1) {
+                    if ( doneProcessCount == needProcessCount) {
+                        dispatch({
+                            type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
+                            payload: teamCarReportsAll
+                        })
+                    }
+                })
+                .catch (error => {
+                    console.log("  Error Team Calculate Report:" + item.licensePlate)
+                    console.log(error)
+                })
+            }
+        }
+    }
 }
 
 export const actTeamGetJoinRequestOK = (data) => (dispatch) => {

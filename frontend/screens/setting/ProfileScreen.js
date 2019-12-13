@@ -38,7 +38,7 @@ class ProfileScreen extends React.Component {
                 email: this.props.userData.userProfile.email,
                 phone: this.props.userData.userProfile.phone,
                 pictureUrl: this.props.userData.userProfile.pictureUrl,
-                teamName: this.props.userData.teamInfo.name
+                teamName: this.props.userData.teamInfo?this.props.userData.teamInfo.name:""
             })
         }
     }

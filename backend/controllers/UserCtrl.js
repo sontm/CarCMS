@@ -424,6 +424,7 @@ module.exports = {
       });
     });
     if (currentUser) {
+      //console.log(currentUser.vehicleList[0])
       res.status(200).send(currentUser.vehicleList)
     } else {
       res.status(500).send({msg: "Error, Not Found User"})

@@ -24,6 +24,10 @@ const TeamSchema = new Schema({
         type:Boolean,
         required: false
     },
+    excludeMyCar: {
+        type:Boolean,
+        required: false
+    },
 });
 
 TeamSchema.set('toJSON', {
