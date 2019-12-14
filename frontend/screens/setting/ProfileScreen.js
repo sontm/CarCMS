@@ -180,7 +180,7 @@ class ProfileScreen extends React.Component {
                     {/* TODO for Edit Profile, also Team name here  */}
                     <View style={styles.rowButton}>
                     <Button
-                        block primary
+                        rounded primary
                         onPress={() => this.updateProfile()}
                     ><Text>{AppLocales.t("GENERAL_EDITDATA")}</Text></Button>
                     </View>

@@ -36,6 +36,7 @@ class RegisterVehicleScreen extends React.Component {
     componentWillMount() {
         console.log("CURRENTVEHICLE:" + AppConstants.CURRENT_VEHICLE_ID)
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+            // Edit Information
             for (let i = 0; i < this.props.userData.vehicleList.length; i++) {
                 if (this.props.userData.vehicleList[i].id == AppConstants.CURRENT_VEHICLE_ID) {
                     this.setState({
@@ -45,16 +46,22 @@ class RegisterVehicleScreen extends React.Component {
                         licensePlate: this.props.userData.vehicleList[i].licensePlate,
                         type: this.props.userData.vehicleList[i].type ? this.props.userData.vehicleList[i].type : "car",
                         //checkedDate: this.props.userData.vehicleList[i].checkedDate,
-                        isDefault: this.props.userData.vehicleList[i].isDefault
+                        //isDefault: this.props.userData.vehicleList[i].isDefault
                     })
                 }
             }
         } else {
             // In case this is the First Car, Set it to Default
-            if (!this.props.userData.vehicleList || this.props.userData.vehicleList.length < 1) {
-                this.setState({
-                    isDefault: true
-                })
+            // if (!this.props.userData.vehicleList || this.props.userData.vehicleList.length < 1) {
+            //     this.setState({
+            //         isDefault: true
+            //     })
+            // }
+            // Set to the First Car in List
+            if (this.props.appData.carModels && this.props.appData.carModels.length > 0) {
+            this.setState({
+                brand: this.props.appData.carModels[0].name
+            })
             }
         }
     }
@@ -66,35 +73,43 @@ class RegisterVehicleScreen extends React.Component {
         })
     }
     save(newVehicle) {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit:")
-            // Only Set some Information. IFNOT, fillGasList will LOSt
-            newVehicle = {
-                id: this.state.id,
-                brand:this.state.brand,
-                model: this.state.model,
-                licensePlate: this.state.licensePlate,
-                type: this.state.type ? this.state.type : "car",
-                isDefault: this.state.isDefault
-            }
-
-            console.log(JSON.stringify(newVehicle))
-            this.props.actVehicleEditVehicle(newVehicle, this.props.userData)
-            this.props.navigation.navigate("MyVehicle")
+        if (!this.state.licensePlate) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                type: "danger"
+            })
         } else {
-            console.log("WIll Save:")
-            console.log(this.state)
-            // let maxId = 0;
-            // this.props.userData.vehicleList.forEach(item => {
-            //     if (maxId < item.id) {
-            //         maxId = item.id
-            //     }
-            // })
+            if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+                console.log("WIll Edit:")
+                // Only Set some Information. IFNOT, fillGasList will LOSt
+                newVehicle = {
+                    id: this.state.id,
+                    brand:this.state.brand,
+                    model: this.state.model,
+                    licensePlate: this.state.licensePlate,
+                    type: this.state.type ? this.state.type : "car",
+                    isDefault: this.state.isDefault
+                }
 
-            newVehicle.id = apputils.uuidv4();
-            console.log(JSON.stringify(newVehicle))
-            this.props.actVehicleAddVehicle(newVehicle, this.props.userData)
-            this.props.navigation.navigate("MyVehicle")
+                console.log(JSON.stringify(newVehicle))
+                this.props.actVehicleEditVehicle(newVehicle, this.props.userData)
+                this.props.navigation.navigate("MyVehicle")
+            } else {
+                console.log("WIll Save:")
+                console.log(this.state)
+                // let maxId = 0;
+                // this.props.userData.vehicleList.forEach(item => {
+                //     if (maxId < item.id) {
+                //         maxId = item.id
+                //     }
+                // })
+
+                newVehicle.id = apputils.uuidv4();
+                console.log(JSON.stringify(newVehicle))
+                this.props.actVehicleAddVehicle(newVehicle, this.props.userData)
+                this.props.navigation.navigate("MyVehicle")
+            }
         }
     }
 
@@ -132,33 +147,33 @@ class RegisterVehicleScreen extends React.Component {
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                            <Label>{AppLocales.t("NEW_CAR_TYPE")+": "}</Label>
-                            <View style={styles.rowForm}>
-                            <Text>{AppLocales.t("GENERAL_CAR")+""}</Text>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                                <Label>{AppLocales.t("NEW_CAR_TYPE")}</Label>
+                            </View>
+                            <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
                             <CheckBox checked={this.state.type == "car"} 
                                 onPress={() =>this.setState({type: "car"})}/>
+                            <Text onPress={() =>this.setState({type: "car"})}>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
                             
-                            <Text>{"         " + AppLocales.t("GENERAL_BIKE")+""}</Text>
-                            <CheckBox checked={this.state.type == "bike"} 
+                            <CheckBox style={{marginLeft: 20}} checked={this.state.type == "bike"} 
                                 onPress={() =>this.setState({type: "bike"})}/>
+                            <Text onPress={() =>this.setState({type: "bike"})}>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
+                            
                             </View>
                         </Item>
                     </View>
 
 
                     <View style={styles.rowContainer}>
-                        {/* <Text style={styles.rowLabel}>
-                            {AppLocales.t("NEW_CAR_BRAND")}:
-                        </Text> */}
                         {/* <Item regular> */}
-                        <Item picker style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                            <Label>{AppLocales.t("NEW_CAR_BRAND")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label>{AppLocales.t("NEW_CAR_BRAND")}</Label>
                             <View style={styles.rowForm}>
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
-                                style={{width: (Layout.window.width-40)*0.7}}
+                                style={{width: AppConstants.DEFAULT_FORM_WIDTH}}
                                 placeholder={"--"+AppLocales.t("NEW_CAR_BRAND")+"--"}
                                 placeholderStyle={{ color: "#bfc6ea" }}
                                 placeholderIconColor="#007aff"
@@ -177,16 +192,13 @@ class RegisterVehicleScreen extends React.Component {
 
                     </View>
                     <View style={styles.rowContainer}>
-                        {/* <Text style={styles.rowLabel}>
-                        {AppLocales.t("NEW_CAR_MODEL")}:
-                        </Text> */}
-                        <Item picker style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                            <Label>{AppLocales.t("NEW_CAR_MODEL")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <Label>{AppLocales.t("NEW_CAR_MODEL")}</Label>
                             <View style={styles.rowForm}>
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
-                                style={{width: (Layout.window.width-40)*0.7}}
+                                style={{width: AppConstants.DEFAULT_FORM_WIDTH}}
                                 placeholder={"--"+AppLocales.t("NEW_CAR_MODEL")+"--"}
                                 placeholderStyle={{ color: "#bfc6ea" }}
                                 placeholderIconColor="#007aff"
@@ -203,27 +215,23 @@ class RegisterVehicleScreen extends React.Component {
                         </Item>
                     </View>
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                            <Label>{AppLocales.t("NEW_CAR_PLATE")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                                <Label>{AppLocales.t("NEW_CAR_PLATE")}</Label>
+                                {!this.state.licensePlate ?
+                                <Label style={{color: "red"}}>*</Label>
+                                : null}
+                            </View>
                             <Input 
                                 style={styles.rowForm}
                                 onChangeText={(licensePlate) => this.setState({licensePlate})}
                                 value={this.state.licensePlate}
                             />
                         </Item>
-                        {/* <Text style={styles.rowLabel}>
-                        {AppLocales.t("NEW_CAR_PLATE")}:
-                        </Text>
-                        <TextInput
-                            style={styles.rowFormTextInput}
-                            placeholder="Number Plate"
-                            onChangeText={(licensePlate) => this.setState({licensePlate})}
-                            value={this.state.licensePlate}
-                        /> */}
                     </View>
   
 
-                    <View style={styles.rowContainer}>
+                    {/* <View style={styles.rowContainer}>
                         <View style={styles.rowLabel}>
                             <CheckBox checked={this.state.isDefault}  color={AppConstants.COLOR_D3_DARK_GREEN}
                                 onPress={this.handleToggleCheckDefault}
@@ -233,17 +241,15 @@ class RegisterVehicleScreen extends React.Component {
                            <Text>{AppLocales.t("GENERAL_DEFAULT")}</Text>
                         </View>
                     </View>
-
-                    
-
-                    <View style={styles.rowButton}>
-                    <Button
+                     */}
+                </View>
+                </Content>
+                <View style={styles.rowButton}>
+                    <Button rounded
                         style={styles.btnSubmit}
                         onPress={() => this.save(this.state)}
                     ><Text>{((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
-                    </View>
                 </View>
-                </Content>
             </Container>
         );
     }
@@ -268,43 +274,45 @@ RegisterVehicleScreen.navigationOptions = ({ navigation }) => ({
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
-    paddingTop: 15,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    flexDirection: "column"
+    paddingTop: 5,
+    paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
+    backgroundColor: "rgba(0,0,0,0)",
+    flexDirection: "column",
+    paddingBottom: 50
   },
   rowContainer: {
     flexDirection: "row",
     alignSelf:"center",
     alignItems: "center", // vertial align
-    height: 60,
-    width: "90%"
-    // borderBottomColor: "rgb(230, 230, 230)",
-    // borderBottomWidth: 0.5
+    //height: 60,
+    width: AppConstants.DEFAULT_FORM_WIDTH,
+    marginTop: 15
   },
-  rowLabel: {
-    flex: 2,
-    textAlign: "right",
-    paddingRight: 5,
-    flexDirection: "row",
-    justifyContent: "flex-end"
-  },
+
   rowFormNoBorder: {
-    flex: 3,
-    flexDirection: "row"
+    flexDirection: "row",
+    width: AppConstants.DEFAULT_FORM_WIDTH,
   },
   rowForm: {
-    flex: 3,
     flexDirection: "row",
-    borderBottomColor: "rgb(230, 230, 230)",
-    borderBottomWidth: 0.5
+    borderBottomColor: "rgb(210, 210, 210)",
+    borderBottomWidth: 0.5,
+    width: AppConstants.DEFAULT_FORM_WIDTH,
   },
+  
   rowButton: {
-    marginTop: 20,
+    alignItems: "center",
     alignSelf: "center",
+    position: 'absolute',
+    justifyContent: "center",
+    bottom: 3,
+    left: 0,
+    right: 0,
   },
   btnSubmit: {
-
+    width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    justifyContent: "center",
   }
 });
 

@@ -133,13 +133,6 @@ class SettingServiceScreenModules extends React.Component {
                         <Right style={{flex: 0}}></Right>
                     </ListItem>
                 ))} 
-                
-                    <View style={styles.rowButton}>
-                    <Button
-                        block primary
-                        onPress={() => this.okSetModules()}
-                    ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-                    </View>
 
                 </View>
             </Content>

@@ -43,7 +43,7 @@ class CreateTeamScreen extends React.Component {
             }
         } else {
             this.setState({
-                code: apputils.makeRandomAlphaNumeric(8)
+                code: apputils.makeRandomAlphaNumeric(12)
             })
         }
     }
@@ -119,7 +119,7 @@ class CreateTeamScreen extends React.Component {
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Item floatingLabel>
+                        <Item stackedLabel>
                         <Label>{AppLocales.t("GENERAL_NAME")+" "+AppLocales.t("GENERAL_TEAM")}
                         </Label>
                         <Input
@@ -163,14 +163,14 @@ class CreateTeamScreen extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        block primary
+                        rounded primary
                         onPress={() => this.handleCreate()}
                     >
                         <Text>
                         {this.props.navigation.state.params.isEdit ? (
-                            AppLocales.t("GENERAL_EDITDATA")
+                            AppLocales.t("SETTING_LBL_EDIT_TEAM")
                         ): (
-                            AppLocales.t("GENERAL_ADD")
+                            AppLocales.t("SETTING_LBL_CREATE_TEAM")
                         )}
                         </Text></Button>
                     </View>
@@ -207,21 +207,24 @@ CreateTeamScreen.navigationOptions = ({navigation}) => ({
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
-    paddingTop: 15,
-    paddingHorizontal: 15,
+    paddingTop: 5,
+    paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
     backgroundColor: '#fff',
     flexDirection: "column"
   },
   rowContainer: {
     flexDirection: "row",
     alignItems: "center", // vertial align
+    width: AppConstants.DEFAULT_FORM_WIDTH,
+    marginTop: 12,
   },
   rowContainerDisable: {
     marginTop: 7,
     paddingTop: 12,
     flexDirection: "row",
     alignItems: "center", // vertial align
-    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    marginTop: 12,
   },
   rowLabel: {
     flex: 1,

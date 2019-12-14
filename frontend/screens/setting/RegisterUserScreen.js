@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input } from 'native-base';
+import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker,
+     Button, Text, Input, Label, Toast } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
 import AppConstants from '../../constants/AppConstants'
@@ -8,6 +9,7 @@ import {HeaderText} from '../../components/StyledText'
 import { connect } from 'react-redux';
 import {actUserRegisterOK} from '../../redux/UserReducer'
 import Backend from '../../constants/Backend'
+import AppLocales from '../../constants/i18n'
 
 class RegisterUserScreen extends React.Component {
     constructor(props) {
@@ -16,33 +18,43 @@ class RegisterUserScreen extends React.Component {
             fullName: "Tester",
             email: "tester",
             phone: "Phone123",
-            password: "123456"
+            password: "123456",
+            isShowPwd: false
         };
 
         this.handleSignup = this.handleSignup.bind(this)
     }
 
     handleSignup() {
-        Backend.registerUser({
-            email: this.state.email,
-            password: this.state.password,
-            fullName: this.state.fullName,
-            phone: this.state.phone,
-            }, 
-            response => {
-                console.log("REgister OK")
-                console.log(response.data)
-                this.props.actUserRegisterOK()
-                this.props.navigation.navigate("Settings")
-            },
-            error => {
-                console.log("Register ERROR")
-                console.log(error)
-                this.setState({
-                    message: "Register Error!"
-                })
-            }
-        );
+        // Validate 
+        if (!this.state.fullName || !this.state.email || !this.state.password) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                type: "danger"
+            })
+        } else {
+            Backend.registerUser({
+                email: this.state.email,
+                password: this.state.password,
+                fullName: this.state.fullName,
+                phone: this.state.phone,
+                }, 
+                response => {
+                    console.log("REgister OK")
+                    console.log(response.data)
+                    this.props.actUserRegisterOK()
+                    this.props.navigation.navigate("Settings")
+                },
+                error => {
+                    console.log("Register ERROR")
+                    console.log(error)
+                    this.setState({
+                        message: "Register Error!"
+                    })
+                }
+            );
+        }
        
     }
     render() {
@@ -51,52 +63,71 @@ class RegisterUserScreen extends React.Component {
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Email(*):
-                        </Text>
-                        <Item regular style={styles.rowForm}>
+                        <Item stackedLabel>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label>Email</Label>
+                            {!this.state.email ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
                         <Input
-                            placeholder="Email"
+                            style={styles.rowForm}
                             onChangeText={(email) => this.setState({email})}
                             value={this.state.email}
+                            keyboardType="email-address"
                         />
                         </Item>
                     </View>
                     
+                    <View style={styles.rowForm}>
+                        <Item stackedLabel>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label>{AppLocales.t("GENERAL_PWD")}</Label>
+                            {!this.state.password ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
+                        <Item style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                            {/* <Label>{AppLocales.t("GENERAL_PWD")}</Label> */}
+                            <Input
+                                secureTextEntry={this.state.isShowPwd ? false : true}
+                                onChangeText={(password) => this.setState({password})}
+                                value={this.state.password}
+                            />
+                            <TouchableOpacity 
+                            onPress={() => this.setState({isShowPwd: !this.state.isShowPwd})}>
+                            <Icon name={this.state.isShowPwd ? "eye-off" : "eye"} />
+                            </TouchableOpacity>
+                        </Item>
+                        </Item>
+                    </View>
+
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            FullName:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
+                        <Item stackedLabel>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label>{AppLocales.t("GENERAL_FULLNAME")}</Label>
+                            {!this.state.fullName ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
                         <Input
-                            placeholder="FullName"
+                            style={styles.rowForm}
                             onChangeText={(fullName) => this.setState({fullName})}
                             value={this.state.fullName}
                         />
                         </Item>
                     </View>
+
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Phone:
-                        </Text>
-                        <Item regular style={styles.rowForm}>
+                        <Item stackedLabel>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label>{AppLocales.t("GENERAL_PHONE")}</Label>
+                        </View>
                         <Input
-                            placeholder="Phone"
+                            style={styles.rowForm}
                             onChangeText={(phone) => this.setState({phone})}
                             value={this.state.phone}
-                        />
-                        </Item>
-                    </View>
-                    
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                            Password(*):
-                        </Text>
-                        <Item regular style={styles.rowForm}>
-                        <Input
-                            placeholder="Password"
-                            onChangeText={(password) => this.setState({password})}
-                            value={this.state.password}
+                            keyboardType="phone-pad"
                         />
                         </Item>
                     </View>
@@ -105,7 +136,7 @@ class RegisterUserScreen extends React.Component {
                     <Button
                         block primary
                         onPress={() => this.handleSignup()}
-                    ><Text>OK</Text></Button>
+                    ><Text>{AppLocales.t("SETTING_LBL_SIGNUP")}</Text></Button>
                     </View>
 
                 </View>
@@ -118,15 +149,15 @@ class RegisterUserScreen extends React.Component {
 RegisterUserScreen.navigationOptions = ({navigation}) => ({
     header: (
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
+          <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" />
             </Button>
           </Left>
-          <Body>
-            <Title><HeaderText>Register User</HeaderText></Title>
+          <Body style={{flex: 5}}>
+            <Title><HeaderText>{AppLocales.t("SETTING_LBL_SIGNUP")}</HeaderText></Title>
           </Body>
-          <Right />
+          <Right style={{flex: 0}}/>
         </Header>
     )
 });
@@ -142,17 +173,18 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: "row",
     alignItems: "center", // vertial align
-    height: 50,
-    borderWidth: 1,
-    borderColor:"grey"
-  },
-  rowLabel: {
-    flex: 1,
-    textAlign: "right",
-    paddingRight: 5
+    justifyContent: "center",
+    width: AppConstants.DEFAULT_FORM_WIDTH,
+    marginTop: 10,
+    alignSelf:"center"
+    // borderWidth: 1,
+    // borderColor:"grey"
   },
   rowForm: {
-    flex: 2
+    flex: 2,
+    borderBottomColor: "rgb(210, 210, 210)",
+    borderBottomWidth: 0.5,
+    width: AppConstants.DEFAULT_FORM_WIDTH,
   },
   rowButton: {
     marginTop: 20,

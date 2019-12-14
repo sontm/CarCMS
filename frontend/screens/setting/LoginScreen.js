@@ -43,21 +43,6 @@ class LoginScreen extends React.Component {
         return (
             <Container>
             <Content>
-                <View style={styles.rowButton}>
-                    <Button
-                        block primary
-                        onPress={() => {}}
-                    ><Text>Login By Facebook</Text></Button>
-                </View>
-
-                <View style={styles.rowButton}>
-                <Button
-                    block primary
-                    onPress={() => {}}
-                ><Text>Login By Google</Text></Button>
-                </View>
-
-
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
                         <Text style={styles.rowLabel}>

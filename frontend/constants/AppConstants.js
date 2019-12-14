@@ -1,4 +1,5 @@
 import { Platform} from 'react-native';
+import Layout from './Layout';
 
 // TODO
 const ADS_BANNERID_ANDROID = "ca-app-pub-3940256099942544/6300978111"
@@ -13,7 +14,10 @@ export default {
     IS_DEBUG_MODE: true,
 
     DEFAULT_BOTTOM_NAV_HEIGHT: 50,
-    
+    DEFAULT_FORM_WIDTH: Layout.window.width*0.9,
+    DEFAULT_FORM_PADDING_HORIZON: Layout.window.width*0.05,
+    DEFAULT_FORM_BUTTON_WIDTH: 150,
+
     ADS_BANNERID: BANNER_ID,
     ADS_INTERESTIALID: INTERESTIAL_ID,
     ADS_COUNT_CLICK_SHOW_INTERESTIAL: 20, // after every x click, show Interestial
@@ -51,8 +55,9 @@ export default {
 
     //SERVER_API:"https://yamastack.com/api/",
     //SERVER_API:"http://18.140.121.240:3000/api",
-    SERVER_API:  "http://192.168.1.51:3000/api",
+    //SERVER_API:  "http://192.168.1.51:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here (not OK when on LAN setting of Expo)
+    SERVER_API:  "http://172.20.10.2:3000/api",
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
     COLOR_PICKER_TEXT: "#1f77b4",
 
@@ -61,7 +66,7 @@ export default {
     COLOR_GREY_BG: "rgb(200, 200, 200)",
     COLOR_GREY_LIGHT_BG: "rgb(240, 240, 240)",
 
-    COLOR_HEADER_BG: "#3b5998",
+    COLOR_HEADER_BG: "#3b5998", // MainThemeColor
     COLOR_HEADER_BUTTON: "white",
     COLOR_BUTTON_BG: "#3b5998", // FB color
     COLOR_FACEBOOK: "#3b5998", // FB color
@@ -70,6 +75,7 @@ export default {
     COLOR_D3_DARK_GREEN: "#2ca02c",
     COLOR_D3_LIGHT_GREEN: "#98df8a",
     COLOR_TEXT_LIGHT_INFO: "rgb(150,150,150)",
+    COLOR_TEXT_DARKDER_INFO: "rgb(110,110,110)",
 
     COLOR_FILL_FUEL: "#FF9501",
     COLOR_FILL_AUTH: "#3cc97b",

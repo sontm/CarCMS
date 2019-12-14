@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingTop: 15,
-    paddingHorizontal: "6%",
+    paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
     backgroundColor: '#fff',
     flexDirection: "column"
   },
@@ -318,8 +318,9 @@ const styles = StyleSheet.create({
     alignItems: "flex-end", // vertial align
     justifyContent: "center",
     //height: 50,
-    width: "86%",
-    alignSelf:"center"
+    width: AppConstants.DEFAULT_FORM_WIDTH,
+    alignSelf:"center",
+    marginTop: 7,
   },
   rowLabel: {
     flex: 5,

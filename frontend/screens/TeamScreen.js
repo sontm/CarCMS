@@ -26,7 +26,7 @@ import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 import TeamMembers from './team/TeamMembers'
 import TeamReport from './team/TeamReport'
 import TeamReport2 from './team/TeamReport2'
-import { NoDataText } from '../components/StyledText';
+import { NoDataText, WhiteText } from '../components/StyledText';
 
 function getNameOfSortType(type) {
   if (type == "auth") return AppLocales.t("TEAM_VEHICLE_SORT_AUTH");
@@ -241,8 +241,18 @@ class TeamScreen extends React.Component {
     console.log("TeamScreen Render")
     return (
       <Container>
-        <Header hasTabs noLeft style={{justifyContent: "space-between", backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+        
+        <Header hasTabs style={{justifyContent: "space-between", backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+        <Left style={{flex:1, marginRight: 0}}>
+            <TouchableOpacity onPress={this.fetchTeamData} >
+            <View style={{alignItems: "center"}}>
+              <Icon name="cloud-download" style={{color: "white"}} />
+              <WhiteText style={{fontSize: 10}}>{AppLocales.t("GENERAL_EDITDATA")}</WhiteText>
+            </View>
+            </TouchableOpacity>
+        </Left>
+
+        <Body style={{flex:5, justifyContent: "center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
           <Segment small style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
           <Button small first style={this.state.activePage === 1 ? styles.activeSegment : styles.inActiveSegment}
               onPress={() => this.setActivePage(1)}>
@@ -262,13 +272,10 @@ class TeamScreen extends React.Component {
             ) : (null)
             }
           </Button>
-        </Segment>
-          </Body>
-          <Right style={{flex:1}}>
-            <Button transparent onPress={this.fetchTeamData}>
-              <Icon type="MaterialIcons" name="refresh" style={{color: "white"}} />
-            </Button>
-          </Right>
+          </Segment>
+        </Body>
+        <Right style={{flex:1}}>
+        </Right>
         </Header>
         {this.state.activePage === 1? (
         <Tabs style={{flex: 1}}>
@@ -304,7 +311,7 @@ TeamScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
   contentContainer: {
 

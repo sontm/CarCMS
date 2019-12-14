@@ -1773,7 +1773,7 @@ class AppUtils {
         if (!props.userData.teamInfo || (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport)) {
             // no team data
         } else {
-            Backend.getAllUserOfTeam({teamId: props.userData.userProfile.teamId}, props.userData.token, 
+            Backend.getAllUserOfTeam({teamId: props.userData.teamInfo.id}, props.userData.token, 
             response => {
                 console.log("GEt all Member in Team OK")
                 // console.log(response.data)

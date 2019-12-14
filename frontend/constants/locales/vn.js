@@ -29,11 +29,14 @@ export default {
     GENERAL_OR: "Hoặc",
     GENERAL_CAR: "Ôtô",
     GENERAL_BIKE: "Xe Máy",
+    GENERAL_PWD: "Mật Khẩu",
     GENERAL_NODATA: "Chưa Có Dữ Liệu",
     GENERAL_RANDOM: "Ngẫu Nhiên",
     GENERAL_ROLE: "Vai Trò",
     GENERAL_ROLE_MANAGER: "Quản Lý",
     GENERAL_ROLE_MEMBER: "Thành Viên",
+    GENERAL_FULLNAME: "Họ Tên",
+    GENERAL_PHONE: "Điện Thoại",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",
@@ -41,6 +44,7 @@ export default {
     GENERAL_MAINTAIN_MODULE: "Bộ Phận",
 
     MAINTAIN_ADD_MODULE: "Thêm Bộ Phận",
+    MAINTAIN_CREATE_MODULE: "Tạo Bộ Phận",
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Cá Nhân",
@@ -101,6 +105,11 @@ export default {
     TEAM_VEHICLE_SORT_GAS_EFF_DETAIL: "6 Tháng Gần Đây",
     TEAM_VEHICLE_SORT_MONEYTOTAL_DETAIL: "6 Tháng Gần Đây",
 
+    TEAM_MEM_TOTALCAR: "Tổng Số Xe",
+    TEAM_MEM_REQUEST_OK: "OK",
+    TEAM_MEM_REQUEST_REJECT: "Từ Chối",
+    TEAM_MEM_REQUEST_BLOCK: "Chặn",
+
 
     SETTING_H1_PRO_FEATURE: "Phiên Bản PRO",
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",
@@ -128,9 +137,12 @@ export default {
     SETTING_LBL_MAINTAIN_MODULES: "Cài Đặt Các Bộ Phận Bảo Dưỡng",
 
     SETTING_H1_ACCOUNT: "Tài Khoản",
+    SETTING_LBL_SIGNUP: "Đăng Ký Tài Khoản",
     SETTING_LBL_LOGIN_GOOGLE: "Đăng Nhập Với Google",
     SETTING_LBL_LOGIN_FB: "Đăng Nhập Với Facebook",
-    SETTING_LBL_LOGIN: "Đăng Nhập với Tài Khoản Đã Tạo",
+    SETTING_LBL_LOGIN_BTN: "Đăng Nhập với Tài Khoản Đã Tạo",
+    SETTING_LBL_LOGIN: "Đăng Nhập",
+    SETTING_LBL_LOGIN_DESC: "Đăng Nhập để Đồng Bộ Dữ Liệu và Quản Lý Nhóm",
     SETTING_LBL_REGISTER: "Tạo Tài Khoản",
     SETTING_LBL_PROFILE: "Thông Tin Cá Nhân",
     
@@ -193,7 +205,7 @@ export default {
     NEW_OIL_HEADER:"Thay Dầu",
     NEW_OIL_VALIDFOR:"Giá Trị Cho(Km)(*)",
 
-    NEW_AUTH_VALIDFOR:"Giá Trị Cho(Ngày)(*)",
+    NEW_AUTH_VALIDFOR:"Giá Trị Cho(Ngày)(?)",
     NEW_AUTH_TYPE:"Loại",
 
     NEW_EXPENSE_HEADER:"Thêm Chi Phí",
@@ -225,4 +237,5 @@ export default {
     TOAST_NEED_OLDPWD: "Hãy Điền Mật Khẩu Cũ",
     TOAST_NEWPWD_NOTMATCHED: "Mật Khẩu Mới Không Khớp!",
     TOAST_NEWSERVICEMODULE_EXIST: "Tên Đã Tồn Tại, Hãy Điền Tên Khác!",
+    TOAST_NEED_FILL_ENOUGH: "Hãy nhập đủ thông tin cần thiết!",
 };

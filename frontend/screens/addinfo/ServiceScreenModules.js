@@ -166,15 +166,16 @@ class ServiceScreenModules extends React.Component {
                     </ListItem>
                 ))} 
                 
-                    <View style={styles.rowButton}>
-                    <Button
-                        block primary
-                        onPress={() => this.okSetModules()}
-                    ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-                    </View>
+                    
 
                 </View>
             </Content>
+            <View style={styles.rowButton}>
+                <Button rounded
+                    style={styles.btnSubmit}
+                    onPress={() => this.okSetModules()}
+                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+            </View>
             </Container>
         );
     }
@@ -212,7 +213,8 @@ const styles = StyleSheet.create({
     //paddingTop: 15,
     paddingHorizontal: 3,
     backgroundColor: '#fff',
-    flexDirection: "column"
+    flexDirection: "column",
+    paddingBottom: 70
   },
   rowContainer: {
     flexDirection: "row",
@@ -235,11 +237,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5
   },
   rowButton: {
-    marginTop: 20,
+    alignItems: "center",
     alignSelf: "center",
+    position: 'absolute',
+    justifyContent: "center",
+    bottom: 3,
+    left: 0,
+    right: 0,
   },
   btnSubmit: {
-
+    width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    justifyContent: "center",
   },
   textHeadingRow: {
     flexDirection: "row",

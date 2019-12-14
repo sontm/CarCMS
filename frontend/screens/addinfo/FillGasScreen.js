@@ -3,7 +3,7 @@ import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppConstants from '../../constants/AppConstants'
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, 
-    Label, DatePicker } from 'native-base';
+    Label, DatePicker, Toast } from 'native-base';
     import {HeaderText} from '../../components/StyledText'
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
@@ -33,6 +33,8 @@ class FillGasScreen extends React.Component {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
                 AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
+            console.log("LoadGas From Info")
+            console.log(AppConstants.CURRENT_VEHICLE_ID)
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
 
             for (let i = 0; i < currentVehicle.fillGasList.length; i++) {
@@ -46,50 +48,69 @@ class FillGasScreen extends React.Component {
                 }
             }
         } else {
-            this.setState({
-                vehicleId: AppConstants.CURRENT_VEHICLE_ID
-            })
+            // If There is No Current Vehicle ID, Set to the First 
+            if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
+                if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
+                    this.setState({
+                        vehicleId: this.props.userData.vehicleList[0].id
+                    })
+                }
+            } else {
+                this.setState({
+                    vehicleId: AppConstants.CURRENT_VEHICLE_ID
+                })
+            }
         }
         
     }
 
     save(newVehicle) {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit FillGas:")
-            let newData = {
-                ...this.state,
-
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                amount: Number(this.state.amount),
-                price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm)
-            }
-
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
-            this.props.navigation.goBack()
+        // Validate 
+        if (!this.state.vehicleId || !this.state.price || !this.state.currentKm) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                type: "danger"
+            })
         } else {
-            console.log("WIll Save Fill Gas:")
-            let newData = {
-                ...this.state,
 
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                amount: Number(this.state.amount),
-                price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm)
+            if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+                console.log("WIll Edit FillGas:")
+                let newData = {
+                    ...this.state,
+
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    amount: Number(this.state.amount),
+                    price: Number(this.state.price),
+                    currentKm: Number(this.state.currentKm)
+                }
+
+                this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
+                this.props.navigation.goBack()
+            } else {
+                console.log("WIll Save Fill Gas:")
+                let newData = {
+                    ...this.state,
+
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    amount: Number(this.state.amount),
+                    price: Number(this.state.price),
+                    currentKm: Number(this.state.currentKm)
+                }
+
+                newData.id = apputils.uuidv4();
+                console.log(JSON.stringify(newData))
+                this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
+
+                this.props.navigation.navigate('VehicleDetail')
             }
-
-            newData.id = apputils.uuidv4();
-            console.log(JSON.stringify(newData))
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
-
-            this.props.navigation.navigate('VehicleDetail')
         }
     }
 
     render() {
-        console.log("FIll Gas State of ID:" + AppConstants.CURRENT_VEHICLE_ID)
+        console.log("FIll Gas State of ID:" + this.state.vehicleId)
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
         if (today.getFullYear() == theDate.getFullYear && today.getMonth() == theDate.getMonth() &&
@@ -102,9 +123,9 @@ class FillGasScreen extends React.Component {
             <Container>
             <Content>
             <View style={styles.formContainer}>
-                <View style={styles.rowContainer}>
+                <View style={styles.rowContainerCarSelect}>
                     <Picker
-                        style={{width: (Layout.window.width-40)*0.9, borderColor: "#1f77b4",borderWidth: 0.3,
+                        style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
                             alignSelf:"center"}}
                         mode="dropdown"
                         iosIcon={<Icon name="arrow-down" />}
@@ -124,8 +145,13 @@ class FillGasScreen extends React.Component {
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
+                    <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                        <Label>{AppLocales.t("NEW_GAS_FILLDATE")}</Label>
+                        {!this.state.fillDate ?
+                        <Label style={{color: "red"}}>*</Label>
+                        : null}
+                    </View>
                     <View style={styles.rowForm}>
                     <DatePicker
                         defaultDate={theDate}
@@ -159,8 +185,13 @@ class FillGasScreen extends React.Component {
                 </View> */}
 
                 <View style={styles.rowContainer}>
-                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")+": "}</Label>
+                    <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                        <Label>{AppLocales.t("NEW_GAS_PRICE")}</Label>
+                        {!this.state.price ?
+                        <Label style={{color: "red"}}>*</Label>
+                        : null}
+                    </View>
                     <Input
                         style={styles.rowForm}
                         keyboardType="numeric"
@@ -171,8 +202,14 @@ class FillGasScreen extends React.Component {
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_CURRENTKM")+": "}</Label>
+                    <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                        <Label>{AppLocales.t("NEW_GAS_CURRENTKM")}</Label>
+                        {!this.state.currentKm ?
+                        <Label style={{color: "red"}}>*</Label>
+                        : null}
+                    </View>
+
                     <Input
                         style={styles.rowForm}
                         keyboardType="numeric"
@@ -183,8 +220,11 @@ class FillGasScreen extends React.Component {
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                    <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_REMARK")+": "}</Label>
+                    <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                        <Label>{AppLocales.t("NEW_GAS_REMARK")}</Label>
+                    </View>
+
                     <Input
                         style={styles.rowForm}
                         onChangeText={(remark) => this.setState({remark})}
@@ -192,15 +232,14 @@ class FillGasScreen extends React.Component {
                     />
                     </Item>
                 </View>
-
-                <View style={styles.rowButton}>
-                <Button
-                    block primary
-                    onPress={() => this.save(this.state)}
-                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-                </View>
             </View>
             </Content>
+            <View style={styles.rowButton}>
+                <Button rounded
+                    style={styles.btnSubmit}
+                    onPress={() => this.save(this.state)}
+                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+            </View>
             </Container>
         );
     }
@@ -225,38 +264,52 @@ FillGasScreen.navigationOptions = ({navigation}) => ({
 const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
-    paddingTop: 15,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    flexDirection: "column"
+    paddingTop: 10,
+    paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
+    //backgroundColor: '#fff',
+    flexDirection: "column",
+    paddingBottom: 150
+  },
+  rowContainerCarSelect: {
+    flexDirection: "row",
+    alignItems: "center", // vertial align
+    justifyContent: "center",
+    width: AppConstants.DEFAULT_FORM_WIDTH,
+    alignSelf:"center",
+    height: 60,
+    borderColor: AppConstants.COLOR_HEADER_BG,
+    borderWidth: 1,
+    borderRadius: 15
   },
   rowContainer: {
     flexDirection: "row",
     alignItems: "center", // vertial align
     justifyContent: "center",
-    height: 54,
-    width: "90%",
+    width: AppConstants.DEFAULT_FORM_WIDTH,
+    marginTop: 10,
     alignSelf:"center"
     // borderWidth: 1,
     // borderColor:"grey"
   },
-  rowLabel: {
-    flex: 1,
-    textAlign: "right",
-    paddingRight: 5,
-    color: "rgb(120, 120, 120)"
-  },
   rowForm: {
     flex: 2,
-    borderBottomColor: "rgb(230, 230, 230)",
-    borderBottomWidth: 0.5
+    borderBottomColor: "rgb(210, 210, 210)",
+    borderBottomWidth: 0.5,
+    width: AppConstants.DEFAULT_FORM_WIDTH,
   },
   rowButton: {
-    marginTop: 20,
+    alignItems: "center",
     alignSelf: "center",
+    position: 'absolute',
+    justifyContent: "center",
+    bottom: 3,
+    left: 0,
+    right: 0,
   },
   btnSubmit: {
-
+    width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    justifyContent: "center",
   }
 });
 

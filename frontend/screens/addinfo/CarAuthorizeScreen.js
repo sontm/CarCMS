@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, 
-    Input,  Label, DatePicker, Card, CardItem, CheckBox } from 'native-base';
+    Input,  Label, DatePicker, Card, CardItem, CheckBox, Toast } from 'native-base';
 
 import { ExpoLinksView } from '@expo/samples';
 import AppConstants from '../../constants/AppConstants'
@@ -58,51 +58,70 @@ class CarAuthorizeScreen extends React.Component {
                 }
             }
         } else {
-            this.setState({
-                vehicleId: AppConstants.CURRENT_VEHICLE_ID
-            })
+            // If There is No Current Vehicle ID, Set to the First 
+            if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
+                console.log(this.props.userData.vehicleList)
+                if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
+                    console.log(this.props.userData.vehicleList[0].id)
+                    this.setState({
+                        vehicleId: this.props.userData.vehicleList[0].id
+                    })
+                }
+            } else {
+                this.setState({
+                    vehicleId: AppConstants.CURRENT_VEHICLE_ID
+                })
+            }
         }
     }
     
     save = async (newVehicle) => {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit FillOil:")
-            let newData = {
-                ...this.state,
+        if (!this.state.vehicleId || !this.state.price || !this.state.validFor || this.state.subTypeArr.length == 0) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                type: "danger"
+            })
+            } else {
+            if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+                console.log("WIll Edit FillOil:")
+                let newData = {
+                    ...this.state,
 
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm),
-                validFor: Number(this.state.validFor)
-            }
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    price: Number(this.state.price),
+                    currentKm: Number(this.state.currentKm),
+                    validFor: Number(this.state.validFor)
+                }
 
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
-            this.props.navigation.goBack()
-        } else {
-            console.log("WIll Save Car Authorize:")
-            let newData = {
-                ...this.state,
+                this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
+                this.props.navigation.goBack()
+            } else {
+                console.log("WIll Save Car Authorize:")
+                let newData = {
+                    ...this.state,
+                    
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    price: Number(this.state.price),
+                    currentKm: Number(this.state.currentKm),
+                    validFor: Number(this.state.validFor)
+                }
+                // let maxId = 0;
+                // this.props.userData.authorizeCarList.forEach(item => {
+                //     if (maxId < item.id) {
+                //         maxId = item.id
+                //     }
+                // })
+                newData.id = apputils.uuidv4();
                 
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm),
-                validFor: Number(this.state.validFor)
+                console.log(newData)
+
+                this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
+
+                this.props.navigation.navigate('VehicleDetail')
             }
-            // let maxId = 0;
-            // this.props.userData.authorizeCarList.forEach(item => {
-            //     if (maxId < item.id) {
-            //         maxId = item.id
-            //     }
-            // })
-            newData.id = apputils.uuidv4();
-            
-            console.log(newData)
-
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
-
-            this.props.navigation.navigate('VehicleDetail')
         }
     }
 
@@ -141,9 +160,9 @@ class CarAuthorizeScreen extends React.Component {
             <Container>
             <Content>
                 <View style={styles.formContainer}>
-                    <View style={styles.rowContainer}>
+                    <View style={styles.rowContainerCarSelect}>
                         <Picker
-                            style={{width: (Layout.window.width-40)*0.9, borderColor: "#1f77b4",borderWidth: 0.3,
+                            style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
                                 alignSelf:"center"}}
                             mode="dropdown"
                             iosIcon={<Icon name="arrow-down" />}
@@ -163,8 +182,8 @@ class CarAuthorizeScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label>{AppLocales.t("NEW_GAS_FILLDATE")}</Label>
                         <View style={styles.rowForm}>
                         <DatePicker
                             defaultDate={theDate}
@@ -187,9 +206,15 @@ class CarAuthorizeScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainerVertical}>
-                        <Text style={styles.rowLabel}>
-                        {AppLocales.t("NEW_AUTH_TYPE")+":"}
-                        </Text>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Text>
+                            {AppLocales.t("NEW_AUTH_TYPE")+" "}
+                            </Text>
+                            {this.state.subTypeArr.length == 0 ?
+                            <Text style={{color: "red"}}>*</Text>
+                            : null}
+                        </View>
+                        
                         <View style={{flexDirection: "row", marginTop: 10}}>
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[0].name) >=0} 
                                 onPress={() =>this.onSetSubType(0)}/>
@@ -208,8 +233,14 @@ class CarAuthorizeScreen extends React.Component {
                     </View>
                     
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label>{AppLocales.t("NEW_GAS_PRICE")}</Label>
+                            {!this.state.price ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
                         <Input
                             style={styles.rowForm}
                             keyboardType="numeric"
@@ -220,8 +251,13 @@ class CarAuthorizeScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_AUTH_VALIDFOR")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label>{AppLocales.t("NEW_AUTH_VALIDFOR")}</Label>
+                            {!this.state.validFor ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
                         <Input
                             style={styles.rowForm}
                             keyboardType="numeric"
@@ -232,8 +268,8 @@ class CarAuthorizeScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_REMARK")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label>{AppLocales.t("NEW_GAS_REMARK")}</Label>
                         <Input
                             style={styles.rowForm}
                             onChangeText={(remark) => this.setState({remark})}
@@ -241,17 +277,7 @@ class CarAuthorizeScreen extends React.Component {
                         />
                         </Item>
                     </View>
-                    
-                    <View style={styles.rowButton}>
-                    <Button
-                        block primary
-                        onPress={() => this.save(this.state)}
-                    ><Text>
-                    {((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? 
-                        AppLocales.t("GENERAL_EDITDATA") : 
-                        AppLocales.t("GENERAL_ADDDATA")}
-                    </Text></Button>
-                    </View>
+                
 
                     <View style={styles.rowNote}>
                         <Card>
@@ -267,6 +293,16 @@ class CarAuthorizeScreen extends React.Component {
 
                 </View>
             </Content>
+            <View style={styles.rowButton}>
+                    <Button rounded
+                        style={styles.btnSubmit}
+                        onPress={() => this.save(this.state)}
+                    ><Text>
+                    {((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? 
+                        AppLocales.t("GENERAL_EDITDATA") : 
+                        AppLocales.t("GENERAL_ADDDATA")}
+                    </Text></Button>
+            </View>
             </Container>
         );
     }
@@ -289,50 +325,66 @@ CarAuthorizeScreen.navigationOptions = ({navigation}) => ({
 });
 
 const styles = StyleSheet.create({
-  formContainer: {
-    flex: 1,
-    paddingTop: 15,
-    paddingHorizontal: 7,
-    backgroundColor: '#fff',
-    flexDirection: "column"
-  },
-  rowContainerVertical: {
-    flexDirection: "column",
-    alignItems: "flex-start", // vertial align
-    width: "96%",
-  },
-  rowContainer: {
-    flexDirection: "row",
-    alignItems: "center", // vertial align
-    justifyContent: "center",
-    height: 50,
-    width: "96%",
-    alignSelf:"center"
-  },
-  rowLabel: {
-    flex: 2,
-    textAlign: "right",
-    paddingRight: 5,
-    color: "rgb(120, 120, 120)",
-    fontSize: 15
-  },
-  rowForm: {
-    flex: 3,
-    borderBottomColor: "rgb(230, 230, 230)",
-    borderBottomWidth: 0.5
-  },
-  rowButton: {
-    marginTop: 20,
-    alignSelf: "center",
-  },
-  rowNote: {
-    marginTop: 20,
-    alignSelf:"center",
-    width: "96%",
-  },
-  btnSubmit: {
-
-  }
+    formContainer: {
+      flex: 1,
+      paddingTop: 10,
+      paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
+      //backgroundColor: '#fff',
+      flexDirection: "column",
+      paddingBottom: 150
+    },
+    rowContainerCarSelect: {
+      flexDirection: "row",
+      alignItems: "center", // vertial align
+      justifyContent: "center",
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+      alignSelf:"center",
+      height: 60,
+      borderColor: AppConstants.COLOR_HEADER_BG,
+      borderWidth: 1,
+      borderRadius: 15
+    },
+    rowContainer: {
+      flexDirection: "row",
+      alignItems: "center", // vertial align
+      justifyContent: "center",
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+      marginTop: 10,
+      alignSelf:"center"
+      // borderWidth: 1,
+      // borderColor:"grey"
+    },
+    rowContainerVertical: {
+        marginTop: 12,
+        flexDirection: "column",
+        alignItems: "flex-start", // vertial align
+        width: AppConstants.DEFAULT_FORM_WIDTH,
+    },
+    rowForm: {
+      flex: 2,
+      borderBottomColor: "rgb(210, 210, 210)",
+      borderBottomWidth: 0.5,
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+    },
+    rowNote: {
+        marginTop: 30,
+        alignSelf:"center",
+        width: AppConstants.DEFAULT_FORM_WIDTH,
+    },
+    rowButton: {
+      alignItems: "center",
+      alignSelf: "center",
+      position: 'absolute',
+      justifyContent: "center",
+      bottom: 3,
+      left: 0,
+      right: 0,
+    },
+    btnSubmit: {
+      width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+      backgroundColor: AppConstants.COLOR_BUTTON_BG,
+      justifyContent: "center",
+    }
 });
 
 const mapStateToProps = (state) => ({

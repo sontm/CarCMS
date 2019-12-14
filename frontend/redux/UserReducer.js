@@ -144,6 +144,7 @@ export const actUserRegisterOK = (data) => (dispatch) => {
 
 export const actUserCreateTeamOK = (data) => (dispatch) => {
     console.log("actCreateTeamOK:")
+    console.log(data)
     dispatch({
         type: USER_CREATE_TEAM_OK,
         payload: data

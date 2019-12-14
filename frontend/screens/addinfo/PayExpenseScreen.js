@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker, Toast } from 'native-base';
 
 import {HeaderText} from '../../components/StyledText'
 import Layout from '../../constants/Layout';
@@ -44,46 +44,72 @@ class PayExpenseScreen extends React.Component {
                 }
             }
         } else {
-            this.setState({
-                vehicleId: AppConstants.CURRENT_VEHICLE_ID
-            })
+            // If There is No Current Vehicle ID, Set to the First 
+            var defaultType = "";
+            if (this.props.appData.typeExpense && this.props.appData.typeExpense.length > 0) {
+                defaultType = this.props.appData.typeExpense[0].name;
+            }
+            if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
+                console.log(this.props.userData.vehicleList)
+                if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
+                    console.log(this.props.userData.vehicleList[0].id)
+                    this.setState({
+                        vehicleId: this.props.userData.vehicleList[0].id,
+                        subType: defaultType
+                    })
+                }
+            } else {
+                this.setState({
+                    vehicleId: AppConstants.CURRENT_VEHICLE_ID,
+                    subType: defaultType
+                })
+            }
         }
     }
     
     save = async (newVehicle) => {
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit Expense:")
-            let newData = {
-                ...this.state,
-
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                price: Number(this.state.price)
-            }
-
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
-            this.props.navigation.goBack()
+        if (!this.state.vehicleId || !this.state.price || !this.state.subType) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                type: "danger"
+            })
         } else {
-            console.log("WIll Save Expense:")
-            let newData = {
-                ...this.state,
-                
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                price: Number(this.state.price)
-            }
-            
-            // let maxId = 0;
-            // this.props.userData.expenseList.forEach(item => {
-            //     if (maxId < item.id) {
-            //         maxId = item.id
-            //     }
-            // })
-            newData.id = apputils.uuidv4();
-            console.log(newData)
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
 
-            this.props.navigation.navigate('VehicleDetail')
+            if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+                console.log("WIll Edit Expense:")
+                let newData = {
+                    ...this.state,
+
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    price: Number(this.state.price)
+                }
+
+                this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
+                this.props.navigation.goBack()
+            } else {
+                console.log("WIll Save Expense:")
+                let newData = {
+                    ...this.state,
+                    
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    price: Number(this.state.price)
+                }
+                
+                // let maxId = 0;
+                // this.props.userData.expenseList.forEach(item => {
+                //     if (maxId < item.id) {
+                //         maxId = item.id
+                //     }
+                // })
+                newData.id = apputils.uuidv4();
+                console.log(newData)
+                this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
+
+                this.props.navigation.navigate('VehicleDetail')
+            }
         }
     }
 
@@ -96,13 +122,14 @@ class PayExpenseScreen extends React.Component {
         } else {
             var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
         }
+        console.log(this.state)
         return (
             <Container>
             <Content>
                 <View style={styles.formContainer}>
-                    <View style={styles.rowContainer}>
+                    <View style={styles.rowContainerCarSelect}>
                         <Picker
-                            style={{width: (Layout.window.width-40)*0.9, borderColor: "#1f77b4",borderWidth: 0.3,
+                            style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
                                 alignSelf:"center"}}
                             mode="dropdown"
                             iosIcon={<Icon name="arrow-down" />}
@@ -122,8 +149,8 @@ class PayExpenseScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label>{AppLocales.t("NEW_GAS_FILLDATE")}</Label>
                         <View style={styles.rowForm}>
                         <DatePicker
                             defaultDate={theDate}
@@ -146,8 +173,13 @@ class PayExpenseScreen extends React.Component {
                     </View>
                     
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label>{AppLocales.t("NEW_GAS_PRICE")}</Label>
+                            {!this.state.price ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
                         <Input
                             style={styles.rowForm}
                             keyboardType="numeric"
@@ -158,15 +190,13 @@ class PayExpenseScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Text style={styles.rowLabel}>
-                        {AppLocales.t("NEW_EXPENSE_TYPE")+":"}
-                        </Text>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label>{AppLocales.t("NEW_EXPENSE_TYPE")}</Label>
                         <View style={styles.rowForm}>
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
-                                style={{width: (Layout.window.width-40)*0.6,
-                                    alignSelf:"center"}}
+                                style={{width: AppConstants.DEFAULT_FORM_WIDTH}}
                                 placeholderStyle={{ color: "#bfc6ea" }}
                                 placeholderIconColor="#007aff"
                                 selectedValue={this.state.subType}
@@ -179,11 +209,12 @@ class PayExpenseScreen extends React.Component {
                                 ))}
                             </Picker>
                         </View>
+                        </Item>
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_REMARK")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label>{AppLocales.t("NEW_GAS_REMARK")}</Label>
                         <Input
                             style={styles.rowForm}
                             onChangeText={(remark) => this.setState({remark})}
@@ -191,16 +222,16 @@ class PayExpenseScreen extends React.Component {
                         />
                         </Item>
                     </View>
-                    
-                    <View style={styles.rowButton}>
-                    <Button
-                        block primary
-                        onPress={() => this.save(this.state)}
-                    ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-                    </View>
+
 
                 </View>
             </Content>
+            <View style={styles.rowButton}>
+                <Button primary rounded
+                    style={styles.btnSubmit}
+                    onPress={() => this.save(this.state)}
+                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+            </View>
             </Container>
         );
     }
@@ -223,40 +254,56 @@ PayExpenseScreen.navigationOptions = ({navigation}) => ({
 });
 
 const styles = StyleSheet.create({
-  formContainer: {
-    flex: 1,
-    paddingTop: 15,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    flexDirection: "column"
-  },
-  rowContainer: {
-    flexDirection: "row",
-    alignItems: "center", // vertial align
-    justifyContent: "center",
-    height: 54,
-    width: "90%",
-    alignSelf:"center"
-  },
-  rowLabel: {
-    flex: 1,
-    textAlign: "right",
-    paddingRight: 5,
-    color: "rgb(120, 120, 120)"
-  },
-  rowForm: {
-    flex: 2,
-    borderBottomColor: "rgb(230, 230, 230)",
-    borderBottomWidth: 0.5
-  },
-  rowButton: {
-    marginTop: 20,
-    alignSelf: "center",
-  },
-  btnSubmit: {
-
-  }
-});
+    formContainer: {
+      flex: 1,
+      paddingTop: 10,
+      paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
+      //backgroundColor: '#fff',
+      flexDirection: "column",
+      paddingBottom: 150
+    },
+    rowContainerCarSelect: {
+      flexDirection: "row",
+      alignItems: "center", // vertial align
+      justifyContent: "center",
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+      alignSelf:"center",
+      height: 60,
+      borderColor: AppConstants.COLOR_HEADER_BG,
+      borderWidth: 1,
+      borderRadius: 15
+    },
+    rowContainer: {
+      flexDirection: "row",
+      alignItems: "center", // vertial align
+      justifyContent: "center",
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+      marginTop: 10,
+      alignSelf:"center"
+      // borderWidth: 1,
+      // borderColor:"grey"
+    },
+    rowForm: {
+      flex: 2,
+      borderBottomColor: "rgb(210, 210, 210)",
+      borderBottomWidth: 0.5,
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+    },
+    rowButton: {
+      alignItems: "center",
+      alignSelf: "center",
+      position: 'absolute',
+      justifyContent: "center",
+      bottom: 3,
+      left: 0,
+      right: 0,
+    },
+    btnSubmit: {
+      width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+      backgroundColor: AppConstants.COLOR_BUTTON_BG,
+      justifyContent: "center",
+    }
+  });
 
 const mapStateToProps = (state) => ({
     userData: state.userData,

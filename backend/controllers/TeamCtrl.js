@@ -6,7 +6,7 @@ module.exports = {
   // req.body: teamId
   async getAllUserOfTeam(req, res) {
     console.log("getAllUserOfTeam:" + req.body.teamId)  
-    console.log(req.user)  
+    console.log(req.body)  
     if (req.body.teamId) {
       try {
         // Find the User with this ID. Create new Team, assign teamId of User to this new ID
@@ -47,7 +47,6 @@ module.exports = {
           requestUser.teamCode = result.code;
           requestUser.roleInTeam = "manager";
 
-          // Create new Request. If Found, Update status to requested
           await new Promise((resolve, reject) => {
             requestUser.save(function(err, doc){
               err ? reject(err) : resolve(doc);

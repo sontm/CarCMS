@@ -80,22 +80,35 @@ class JoinRequestScreen extends React.Component {
           </View>
           {this.props.teamData.joinRequests.length > 0 ? this.props.teamData.joinRequests.map(item => (
               <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                  <Left>
+                  <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                   </Left>
-                  <Body>
-                      <Text>{item.fullName}</Text>
-                      <Text>{item.email}</Text>
+                  <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                    <Text style={{fontSize: 16, fontWeight: "bold", marginTop: 5}}>{item.fullName}</Text>
+                    <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
                   </Body>
-                  <Right>
+                  <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center"}}>
                       <TouchableOpacity 
-                          onPress={() => this.handleJoin(item, "approved")}>
-                          <Icon type="MaterialCommunityIcons" name="hand-okay" style={styles.listItemEditIcon}/></TouchableOpacity>
+                            onPress={() => this.handleJoin(item, "approved")}>
+                          <View style={{alignItems: "center"}}>
+                            <Icon type="AntDesign" name="checkcircle" style={styles.listItemEditIcon}/>
+                            <Text style={{fontSize: 12, alignSelf:"center"}}>{AppLocales.t("TEAM_MEM_REQUEST_OK")}</Text>
+                          </View>
+                      </TouchableOpacity>
+
                       <TouchableOpacity 
-                          onPress={() => this.handleJoin(item, "rejected")}>
-                          <Icon type="AntDesign" name="closecircle" style={styles.listItemDeleteIcon}/></TouchableOpacity>
+                            onPress={() => this.handleJoin(item, "rejected")}>
+                          <View style={{alignItems: "center", marginLeft: 10}}>
+                            <Icon type="AntDesign" name="closecircle" style={styles.listItemDeleteIcon}/>
+                            <Text style={{fontSize: 12, alignSelf:"center"}}>{AppLocales.t("TEAM_MEM_REQUEST_REJECT")}</Text>
+                          </View>
+                        </TouchableOpacity>
                       <TouchableOpacity 
-                          onPress={() => this.handleJoin(item, "blocked")}>
-                          <Icon type="MaterialIcons" name="block" style={styles.listItemBlockIcon}/></TouchableOpacity>
+                            onPress={() => this.handleJoin(item, "blocked")}>
+                        <View style={{alignItems: "center", marginLeft: 10}}>
+                          <Icon type="MaterialIcons" name="block" style={styles.listItemBlockIcon}/>
+                          <Text style={{fontSize: 12, alignSelf:"center"}}>{AppLocales.t("TEAM_MEM_REQUEST_BLOCK")}</Text>
+                        </View>
+                      </TouchableOpacity>
                   </Right>
               </ListItem>
           )) : (
@@ -107,16 +120,19 @@ class JoinRequestScreen extends React.Component {
           </View>
           {this.props.teamData.members.length > 0 ? this.props.teamData.members.map(item => (
             <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                <Left>
+                <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", width: 0}}>
                 </Left>
-                <Body>
+                <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", marginLeft: -7}}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate("MemberVehicles", {member: item})} key={item.id}>
-                    <Text>{item.fullName}</Text>
-                    <Text>{item.email}</Text>
+                    <Text style={{fontSize: 16, fontWeight: "bold", marginTop: 5}}>{item.fullName}</Text>
+                    <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
+                    <Text style={{fontSize: 13, fontStyle: "italic", marginTop: 3, marginBottom: 5}}>
+                      {AppLocales.t("TEAM_MEM_TOTALCAR") + ": " + item.vehicleList.length}
+                    </Text>
                     </TouchableOpacity>
                 </Body>
-                <Right>
-                  <Icon name="arrow-forward" style={styles.iconRight}/>
+                <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center"}}>
+                  <Icon name="arrow-forward" style={{alignSelf: "center"}}/>
                 </Right>
             </ListItem>
           )): (
@@ -130,7 +146,8 @@ class JoinRequestScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    paddingBottom: 150
   },
   contentContainer: {
 
@@ -147,19 +164,32 @@ const styles = StyleSheet.create({
   },
 
   listItemRow: {
-    marginTop: 7,
-    backgroundColor:"white"
+    height: 70,
+    marginLeft: 7,
+    marginRight: 7,
+    marginTop: 5,
+    backgroundColor:"white",
+    borderRadius: 3,
+    borderColor: "rgb(220, 220, 220)",
+    borderWidth: 0.7,
+    shadowColor: "#777777",
+    shadowOpacity: 0.4,
+    shadowRadius: 2,
+    shadowOffset: {
+        height: 2,
+        width: 1
+    }
   },
   listItemDeleteIcon: {
-    color: "rgb(250, 100, 100)",
-    fontSize: 24
+    color: AppConstants.COLOR_GOOGLE,
+    fontSize: 28
   },
   listItemEditIcon: {
-    color: "blue",
-    fontSize: 34
+    color: "green",
+    fontSize: 28
   },
   listItemBlockIcon: {
-    color: "rgb(250, 100, 100)",
+    color: AppConstants.COLOR_GOOGLE,
     fontSize: 30
   }
 });

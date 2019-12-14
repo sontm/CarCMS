@@ -90,7 +90,7 @@ class ServiceModuleCreateScreen extends React.Component {
                     <Button
                         block primary
                         onPress={() => this.handleCreate()}
-                    ><Text>OK</Text></Button>
+                            ><Text>{AppLocales.t("MAINTAIN_CREATE_MODULE")}</Text></Button>
                     </View>
 
                 </View>
@@ -111,9 +111,9 @@ ServiceModuleCreateScreen.navigationOptions = ({navigation}) => ({
           <Body>
             <Title><HeaderText>
                 {AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE ? (
-                    AppLocales.t("GENERAL_BIKE")
+                    AppLocales.t("MAINTAIN_CREATE_MODULE") + " " + AppLocales.t("GENERAL_BIKE")
                 ): (
-                    AppLocales.t("GENERAL_CAR")
+                    AppLocales.t("MAINTAIN_CREATE_MODULE") + " " + AppLocales.t("GENERAL_CAR")
                 )}
             </HeaderText></Title>
           </Body>

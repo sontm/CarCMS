@@ -4,7 +4,7 @@ import React from 'react';
 import { Platform, Clipboard } from 'react-native';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
-    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Thumbnail, Toast } from 'native-base';
+    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Thumbnail, Toast, Item, Label, Input } from 'native-base';
 import Layout from '../constants/Layout'
 
 import {HeaderText, WhiteText} from '../components/StyledText'
@@ -29,11 +29,19 @@ class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      email: "tester1",
+      password: "123456",
+      isShowPwd: false
+    };
+
     this.syncDataToServer = this.syncDataToServer.bind(this)
     this.syncDataFromServer = this.syncDataFromServer.bind(this)
     this.handleLogout = this.handleLogout.bind(this)
 
     this.doLoginGoogle = this.doLoginGoogle.bind(this)
+    this.handleLogin = this.handleLogin.bind(this)
+    
   }
   syncDataFromServer() {
     AppUtils.syncDataFromServer(this.props)
@@ -128,6 +136,23 @@ class SettingsScreen extends React.Component {
       console.log(e)
     }
   }
+  handleLogin() {
+    Backend.login({email: this.state.email, password: this.state.password}, 
+        response => {
+            console.log("Login OK")
+            console.log(response.data)
+            this.props.actUserLoginOK(response.data)
+            this.props.navigation.navigate("Settings")
+        },
+        error => {
+            console.log("Login ERROR")
+            console.log(error)
+            this.setState({
+                message: "Login Error!"
+            })
+        }
+    );
+  }
 
   async doLoginFacebook() {
     try {
@@ -198,7 +223,7 @@ class SettingsScreen extends React.Component {
   }
 
   render() {
-    console.log(this.props.userData.userProfile)
+    console.log(this.props.userData.teamInfo)
     const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
     return (
         <Container>
@@ -217,12 +242,12 @@ class SettingsScreen extends React.Component {
                     <Icon type="FontAwesome" name="user-circle-o" style={styles.avatarContainer}/>
                   )}
                   <View style={{flexDirection: "row", marginTop: 5}}>
-                    <Text><H3>{this.props.userData.userProfile.fullName}</H3></Text>
+                    <Text><H3 style={{color: "white"}}>{this.props.userData.userProfile.fullName}</H3></Text>
                   </View>
-                  <Text  style={{color: AppConstants.COLOR_PICKER_TEXT}}>{this.props.userData.userProfile.email}</Text>
+                  <Text  style={{color: "white", fontStyle: "italic"}}>{this.props.userData.userProfile.email}</Text>
                 </View>
                 <View style={{position:"absolute", left: Layout.window.width*0.9}}>
-                  <Icon name="arrow-forward" style={styles.iconRight}/>
+                  <Icon name="arrow-forward" style={{...styles.iconRight, color: "rgb(220,220,220)"}}/>
                 </View>
               </View>
             </TouchableOpacity>
@@ -230,27 +255,27 @@ class SettingsScreen extends React.Component {
               {(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
                 <View>
                 <View  style={{marginTop: 10, flexDirection:"row", alignItems:"center"}}>
-                  <Text style={{color: AppConstants.COLOR_GREY_MIDDLE}}>
+                  <Text style={{color: "rgb(220,220,220)"}}>
                     {AppLocales.t("GENERAL_TEAM")+": "}
                   </Text>
-                  <Text style={{fontWeight: "bold"}}>
+                  <Text style={{fontWeight: "bold", color: "white"}}>
                     {this.props.userData.teamInfo.name }
                   </Text>
                 </View>
                 <View  style={{marginTop: 10, flexDirection:"row", alignItems:"center"}}>
-                  <Text style={{color: AppConstants.COLOR_GREY_MIDDLE}}>
+                  <Text style={{color: "rgb(220,220,220)"}}>
                     {AppLocales.t("GENERAL_ROLE")+": "}
                   </Text>
-                  <Text style={{fontStyle: "italic"}}>
+                  <Text style={{fontStyle: "italic", color: "white"}}>
                     {this.props.userData.userProfile.roleInTeam == "manager" ?  
                       AppLocales.t("GENERAL_ROLE_MANAGER") : AppLocales.t("GENERAL_ROLE_MEMBER")}
                   </Text>
                 </View>
                 <View  style={{marginTop: 5, flexDirection:"row", alignItems:"center"}}>
-                  <Text style={{color: AppConstants.COLOR_GREY_MIDDLE}}>
+                  <Text style={{color: "rgb(220,220,220)"}}>
                     {AppLocales.t("GENERAL_TEAM_CODE_SHORT")+" "+AppLocales.t("GENERAL_TEAM")+": "}
                   </Text>
-                  <Text>
+                  <Text style={{color: "white"}}>
                     {this.props.userData.teamInfo.code}
                   </Text>
                   <TouchableOpacity 
@@ -263,15 +288,13 @@ class SettingsScreen extends React.Component {
                         Clipboard.setString(this.props.userData.teamInfo.code)
                       }}>
                     <Icon type="FontAwesome5" name="copy" 
-                      style={{fontSize: 20, color: "grey", marginLeft: 10}}/>
+                      style={{fontSize: 20, color: "white", marginLeft: 10}}/>
                   </TouchableOpacity>
                 </View>
                 </View>) : 
-                <Text style={{fontSize: 13, fontStyle: "italic",marginTop: 5}}>{AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
+                <Text style={{fontSize: 13, fontStyle: "italic",marginTop: 5, color: "white"}}>{AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
                   </Text>
               }
-            </View>
-            
             {(this.props.userData.isLogined) ? (
             <View style={styles.rowContainerNoMargin}>
                 <Button small block danger onPress={() => this.handleLogout()} style={{width: 150}}>
@@ -280,9 +303,59 @@ class SettingsScreen extends React.Component {
             </View>
             ) : null}
             </View>
+            
+            </View>
             ) : (
-            <View>
-              <View style={{...styles.rowContainerNoBorder, marginTop: 10, paddingTop: 2, paddingBottom: 2}}>
+            <View style={{marginTop: 30, marginBottom: 30}}>
+              <View style={{alignSelf: "center"}}>
+                <H3>{AppLocales.t("SETTING_LBL_LOGIN")}</H3>
+              </View>
+              <View style={styles.rowForm}>
+                  <Item>
+                    <Input
+                        onChangeText={(email) => this.setState({email})}
+                        value={this.state.email}
+                        placeholder={"Email"}
+                        keyboardType="email-address"
+                    />
+                  </Item>
+              </View>
+              <View style={styles.rowForm}>
+                  <Item>
+                    {/* <Label>{AppLocales.t("GENERAL_PWD")}</Label> */}
+                    <Input
+                        secureTextEntry={this.state.isShowPwd ? false : true}
+                        onChangeText={(password) => this.setState({password})}
+                        value={this.state.password}
+                        placeholder={AppLocales.t("GENERAL_PWD")}
+                    />
+                    <TouchableOpacity 
+                      onPress={() => this.setState({isShowPwd: !this.state.isShowPwd})}>
+                      <Icon name={this.state.isShowPwd ? "eye-off" : "eye"} />
+                    </TouchableOpacity>
+                  </Item>
+              </View>
+
+              <View style={{...styles.rowContainerNoBorder, marginTop: 8, paddingTop: 2, paddingBottom: 2, flexDirection: "column"}}>
+                <Button rounded onPress={() => this.handleLogin()} 
+                    style={{backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG, width: 270, justifyContent:"center"}}>
+                  <Icon type="AntDesign" name="login" style={{color: "rgb(80,80,80)", fontSize: 16, marginRight: -4}} />
+                  <Text style={{...styles.textNormal, fontSize: 14}}>{AppLocales.t("SETTING_LBL_LOGIN_BTN")}</Text>
+                </Button>
+                <Text style={{fontSize: 13, fontStyle: "italic", marginTop: 2}}>{AppLocales.t("SETTING_LBL_LOGIN_DESC")}</Text>
+              </View>
+              <View style={{...styles.rowContainerNoBorder, marginTop: -6, paddingTop: 0, paddingBottom: 0}}>
+                <Button transparent onPress={() => this.props.navigation.navigate("RegisterUser")} >
+                  <Icon type="AntDesign" name="adduser" style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 17, marginRight: 0}} />
+                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 17, marginLeft: -4}}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text>
+                </Button>
+              </View>
+
+              <View style={{...styles.rowContainerNoBorder, marginTop: -5, paddingTop: 0, paddingBottom: 5}}>
+                <Text>{AppLocales.t("GENERAL_OR")}</Text>
+              </View>
+
+              <View style={{...styles.rowContainerNoBorder, marginTop: 5, paddingTop: 2, paddingBottom: 2}}>
                 <Button rounded onPress={() => this.doLoginGoogle()} 
                     style={{backgroundColor: AppConstants.COLOR_GOOGLE, color: "white", width: 270, justifyContent:"center"}}>
                   <Icon type="AntDesign" name="google" style={{fontSize: 20, color: "white", marginRight: 0}} />
@@ -296,26 +369,6 @@ class SettingsScreen extends React.Component {
                   <Text style={{...styles.textNormal, color: "white"}}>{AppLocales.t("SETTING_LBL_LOGIN_FB")}</Text>
                 </Button>
               </View>
-
-              <View style={{...styles.rowContainerNoBorder, margin: 4, paddingTop: 2, paddingBottom: 2}}>
-                <Text>{AppLocales.t("GENERAL_OR")}</Text>
-              </View>
-
-              <View style={{...styles.rowContainerNoBorder, margin: 4, paddingTop: 2, paddingBottom: 2}}>
-                <Button rounded onPress={() => this.props.navigation.navigate("Login")} 
-                    style={{backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG, width: 270, justifyContent:"center"}}>
-                  <Icon type="AntDesign" name="login" style={{color: "rgb(80,80,80)", fontSize: 16, marginRight: -4}} />
-                  <Text style={{...styles.textNormal, fontSize: 14}}>{AppLocales.t("SETTING_LBL_LOGIN")}</Text>
-                </Button>
-              </View>
-              <View style={{...styles.rowContainerNoBorder, marginTop: -5, paddingTop: 0, paddingBottom: 0}}>
-                <Button transparent onPress={() => this.props.navigation.navigate("RegisterUser")} >
-                  <Icon type="AntDesign" name="adduser" style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 16, marginRight: 0}} />
-                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT}}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text>
-                </Button>
-              </View>
-
-
             </View>
             )}
             
@@ -340,7 +393,9 @@ class SettingsScreen extends React.Component {
               </TouchableOpacity>
             </View> */}
 
-            <View style={styles.textRow}>
+            {this.props.userData.isLogined ?
+            <View>
+            <View style={{...styles.textRow, marginTop: 0}}>
                 <Text style={styles.textSection}>
                 {AppLocales.t("SETTING_H1_ACCOUNT")}
                 </Text>
@@ -429,6 +484,7 @@ class SettingsScreen extends React.Component {
                 </Card>
               </TouchableOpacity>
             </View>
+            </View> : null}
 
 
             <View style={styles.textRow}>
@@ -546,28 +602,25 @@ class SettingsScreen extends React.Component {
 }
 
 SettingsScreen.navigationOptions = ({navigation}) => ({
-    header: null
+  header: null
 });
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    marginTop: 10,
     flexDirection: "column",
     justifyContent: "space-between",
-    marginLeft: 3,
-    marginRight: 3,
     paddingBottom: 60,
   },
 
   userInfoContainer: {
-    //backgroundColor: "#1f77b4",
+    backgroundColor: AppConstants.COLOR_HEADER_BG,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 30,
-    marginBottom: 10,
+    paddingBottom: 10,
     minHeight: 125,
+    paddingTop: 30,
   },
   avatarContainerImage: {
     height: 60,
@@ -580,8 +633,8 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     fontSize: 60,
-    color: AppConstants.COLOR_PICKER_TEXT,
-    //color: "white"
+    //color: AppConstants.COLOR_PICKER_TEXT,
+    color: "white"
   },
 
   proContainer: {
@@ -623,6 +676,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center", // vertial align
     paddingBottom: 2,
+    marginTop: 10
   },
   rowContainer: {
     flexDirection: "row",
@@ -658,6 +712,16 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     flex: 9,
   },
+
+  rowForm: {
+    width: 270,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    alignSelf: "center",
+    height: 70
+  },
+
   rowRightIcon: {
     flex: 1,
     flexDirection:"row",

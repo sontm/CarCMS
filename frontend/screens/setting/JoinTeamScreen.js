@@ -37,6 +37,7 @@ class JoinTeamScreen extends React.Component {
         if (item && item.code) {
             Backend.rejoinTeam({code: item.code}, this.props.userData.token,
                 response => {
+                    console.log("===============onReJoinTeamOfMe Data")
                     console.log(response.data)
                     // Rejoin team can ReUse Create Team
                     this.props.actUserCreateTeamOK(response.data)
@@ -68,6 +69,8 @@ class JoinTeamScreen extends React.Component {
        
     }
     render() {
+        console.log("---------------------this.props.userData.teamInfo")
+        console.log(this.props.userData.teamInfo)
         return (
             <Container>
             <Content>
@@ -88,12 +91,12 @@ class JoinTeamScreen extends React.Component {
                     <Button
                         block primary
                         onPress={() => this.handleSubmit()}
-                    ><Text>OK</Text></Button>
+                        ><Text>{AppLocales.t("SETTING_LBL_JOIN_TEAM")}</Text></Button>
                     </View>
 
                     {this.state.teamsByMe.length > 0 ? (
-                    <Text style={{marginTop: 20}}>
-                        {AppLocales.t("SETTING_LBL_JOIN_CREATEDTEAM")}
+                    <Text style={{marginTop: 20, marginBottom: 7, fontSize: 18}}>
+                        {AppLocales.t("SETTING_LBL_JOIN_CREATEDTEAM")+":"}
                     </Text>
                     ) : null}
 
@@ -136,7 +139,7 @@ JoinTeamScreen.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title><HeaderText>Join Team</HeaderText></Title>
+            <Title><HeaderText>{AppLocales.SETTING_LBL_JOIN_TEAM}</HeaderText></Title>
           </Body>
           <Right />
         </Header>

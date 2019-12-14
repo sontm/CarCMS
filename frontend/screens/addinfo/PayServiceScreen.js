@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker, CheckBox, ListItem } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, 
+    Picker, Button, Text, Input,Label, DatePicker, CheckBox, ListItem, Toast } from 'native-base';
 
 import {HeaderText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
@@ -67,51 +68,67 @@ class PayServiceScreen extends React.Component {
         } else {
            
             AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES = {};
-            this.setState({
-                vehicleId: AppConstants.CURRENT_VEHICLE_ID
-            })
+            // If There is No Current Vehicle ID, Set to the First 
+            if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
+                if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
+                    this.setState({
+                        vehicleId: this.props.userData.vehicleList[0].id
+                    })
+                }
+            } else {
+                this.setState({
+                    vehicleId: AppConstants.CURRENT_VEHICLE_ID
+                })
+            }
         }
     }
     
     save = async (newVehicle) => {
-        console.log(this.state)
-
-        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit FillOil:")
-            let newData = {
-                ...this.state,
-
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm)
-            }
-            console.log(newData)
-
-            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
-            this.props.navigation.goBack()
+        if (!this.state.vehicleId || !this.state.price || !this.state.currentKm || Object.keys(this.state.serviceModule) == 0) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                type: "danger"
+            })
         } else {
-            console.log("WIll Save Car Authorize:")
-            let newData = {
-                ...this.state,
-                
-                vehicleId: (this.state.vehicleId),
-                fillDate: this.state.fillDate,
-                price: Number(this.state.price),
-                currentKm: Number(this.state.currentKm)
+
+            if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+                console.log("WIll Edit FillOil:")
+                let newData = {
+                    ...this.state,
+
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    price: Number(this.state.price),
+                    currentKm: Number(this.state.currentKm)
+                }
+                console.log(newData)
+
+                this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
+                this.props.navigation.goBack()
+            } else {
+                console.log("WIll Save Car Authorize:")
+                let newData = {
+                    ...this.state,
+                    
+                    vehicleId: (this.state.vehicleId),
+                    fillDate: this.state.fillDate,
+                    price: Number(this.state.price),
+                    currentKm: Number(this.state.currentKm)
+                }
+                // let maxId = 0;
+                // this.props.userData.serviceList.forEach(item => {
+                //     if (maxId < item.id) {
+                //         maxId = item.id
+                //     }
+                // })
+                newData.id = apputils.uuidv4();
+                console.log(newData)
+
+                this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
+
+                this.props.navigation.navigate('VehicleDetail')
             }
-            // let maxId = 0;
-            // this.props.userData.serviceList.forEach(item => {
-            //     if (maxId < item.id) {
-            //         maxId = item.id
-            //     }
-            // })
-            newData.id = apputils.uuidv4();
-            console.log(newData)
-
-            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
-
-            this.props.navigation.navigate('VehicleDetail')
         }
     }
 
@@ -180,6 +197,7 @@ class PayServiceScreen extends React.Component {
         }
     }
     render() {
+        console.log(this.state)
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
         if (today.getFullYear() == theDate.getFullYear && today.getMonth() == theDate.getMonth() &&
@@ -200,11 +218,13 @@ class PayServiceScreen extends React.Component {
 
                 let item = this.state.serviceModule[""+prop];
                 viewServiceModule.push(
-                    <ListItem key={prop+""+item} style={{flexDirection:"row", justifyContent: "space-between"}}>
-                        <Text>{prop+":" + item}</Text>
+                    <ListItem key={prop+""+item} style={{flexDirection:"row", 
+                        justifyContent: "space-between", borderWidth: 0, borderColor: "rgba(0,0,0,0)", 
+                        paddingVertical: 0, marginVertical: -5}}>
+                        <Text style={{fontSize: 13}}>{prop+": " + item}</Text>
                         <TouchableOpacity 
                                 onPress={() => this.removeMaintainModule(prop)}>
-                            <Icon type="FontAwesome" name="remove" style={{fontSize: 17, color: "grey"}} />
+                            <Icon type="FontAwesome" name="remove" style={{fontSize: 20, color: "grey", marginLeft: 7}} />
                         </TouchableOpacity>
                     </ListItem>
                 )
@@ -215,9 +235,9 @@ class PayServiceScreen extends React.Component {
             <Container>
             <Content>
                 <View style={styles.formContainer}>
-                    <View style={styles.rowContainer}>
+                    <View style={styles.rowContainerCarSelect}>
                         <Picker
-                            style={{width: (Layout.window.width-40)*0.9, borderColor: "#1f77b4",borderWidth: 0.3,
+                            style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
                                 alignSelf:"center"}}
                             mode="dropdown"
                             iosIcon={<Icon name="arrow-down" />}
@@ -237,8 +257,8 @@ class PayServiceScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_FILLDATE")}</Label>
                         <View style={styles.rowForm}>
                         <DatePicker
                             defaultDate={theDate}
@@ -261,22 +281,25 @@ class PayServiceScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                    <View style={styles.rowForm}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                            <Label>{AppLocales.t("NEW_SERVICE_TYPE")+": "}</Label>
-                            <View style={{flexDirection: "row", justifyContent: "flex-start"}}>
-                            <Text style={styles.smallerText}>{AppLocales.t("NEW_SERVICE_MAINTAIN")+""}</Text>
+                            <Label>{AppLocales.t("NEW_SERVICE_TYPE")}</Label>
+                            <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
+
                             <CheckBox checked={this.state.isConstantFix != true} 
                                 onPress={() =>this.setState({isConstantFix: false})}/>
+                            <Text style={{...styles.smallerText, marginLeft: 12}}  onPress={() =>this.setState({isConstantFix: false})}>
+                                {AppLocales.t("NEW_SERVICE_MAINTAIN")+""}</Text>
                             
-                            <Text style={styles.smallerText}>{"          " + AppLocales.t("NEW_SERVICE_CONSANTFIX")+""}</Text>
-                            <CheckBox checked={this.state.isConstantFix == true} 
+                            <CheckBox style={{marginLeft: 10}}checked={this.state.isConstantFix == true} 
                                 onPress={() =>this.setState({isConstantFix: true})}/>
+                            <Text style={{...styles.smallerText, marginLeft: 12}} onPress={() =>this.setState({isConstantFix: true})}>
+                                {AppLocales.t("NEW_SERVICE_CONSANTFIX")+""}</Text>
+                            
                             </View>
                         </Item>
-                        </View>
                     </View>
                     
+                    {!this.state.isConstantFix ? 
                     <View style={styles.rowContainer}>
                         <View style={styles.rowForm}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
@@ -284,7 +307,7 @@ class PayServiceScreen extends React.Component {
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
-                                style={{width: (Layout.window.width-40)*0.9,
+                                style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
                                     alignSelf:"center"}}
                                 placeholderStyle={{ color: "#bfc6ea" }}
                                 placeholderIconColor="#007aff"
@@ -299,11 +322,17 @@ class PayServiceScreen extends React.Component {
                             </Picker>
                         </Item>
                         </View>
-                    </View>
+                    </View> : null}
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_PRICE")}</Label>
+                            {!this.state.price ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
+
                         <Input
                             style={styles.rowForm}
                             keyboardType="numeric"
@@ -314,8 +343,13 @@ class PayServiceScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                        <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_CURRENTKM")+": "}</Label>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                            <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_CURRENTKM")}</Label>
+                            {!this.state.currentKm ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+                        </View>
                         <Input
                             style={styles.rowForm}
                             keyboardType="numeric"
@@ -325,30 +359,34 @@ class PayServiceScreen extends React.Component {
                         </Item>
                     </View>
 
-                    <View style={styles.rowContainer}>
-                        <View style={styles.rowForm}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
-                            <View style={{flexDirection:"row"}}>
-                                <Label>{AppLocales.t("NEW_SERVICE_MODULES")}</Label>
-                                <Button transparent small
+                    <View style={styles.rowContainerVertical}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between", 
+                            alignItems:"center", width: AppConstants.DEFAULT_FORM_WIDTH}}>
+                            <View style={{flexDirection: "row"}}>
+                            <Text style={{fontSize: 16, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                                {AppLocales.t("NEW_SERVICE_MODULES")}</Text>
+                            {Object.keys(this.state.serviceModule).length == 0 ?
+                            <Text style={{color: "red"}}>*</Text>
+                            : null}
+                            </View> 
+                            <Button success small
                                     onPress={() => {
                                         this.props.navigation.navigate("ServiceModules", 
                                         {onOk: this.onUpdateMaintainModules,
                                         isBike: this.currentVehileIsBike})
                                 }}>
                                     <Text>{AppLocales.t("MAINTAIN_ADD_MODULE")}</Text>
-                                    <Icon type="Entypo" name="plus" style={{fontSize: 14}}/>
-                                </Button>
-                            </View>
-                            <View style={{width: (Layout.window.width-40)*0.6}}>
-                                {viewServiceModule}
-                            </View>
-                        </Item>
+                                    <Icon type="Entypo" name="plus" style={{fontSize: 14, marginLeft: -10}}/>
+                            </Button>
+                        </View>
+                        <View style={{flexDirection: "column", alignItems: "flex-end", minHeight: 60, 
+                            width: AppConstants.DEFAULT_FORM_WIDTH}}>
+                            {viewServiceModule}
                         </View>
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item inlineLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                         <Label style={styles.rowLabel}>{AppLocales.t("NEW_GAS_REMARK")+": "}</Label>
                         <Input
                             style={styles.rowForm}
@@ -357,16 +395,14 @@ class PayServiceScreen extends React.Component {
                         />
                         </Item>
                     </View>
-                    
-                    <View style={styles.rowButton}>
-                    <Button
-                        block primary
-                        onPress={() => this.save(this.state)}
-                    ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-                    </View>
-
                 </View>
             </Content>
+            <View style={styles.rowButton}>
+                <Button rounded
+                    style={styles.btnSubmit}
+                    onPress={() => this.save(this.state)}
+                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+            </View>
             </Container>
         );
     }
@@ -389,44 +425,75 @@ PayServiceScreen.navigationOptions = ({navigation}) => ({
 });
 
 const styles = StyleSheet.create({
-  formContainer: {
-    flex: 1,
-    paddingTop: 15,
-    paddingHorizontal: 15,
-    backgroundColor: '#fff',
-    flexDirection: "column"
-  },
-  rowContainer: {
-    flexDirection: "row",
-    alignItems: "center", // vertial align
-    justifyContent: "center",
-    //height: 54,
-    width: "90%",
-    alignSelf:"center"
-    
-  },
-  rowLabel: {
-    flex: 1,
-    textAlign: "right",
-    paddingRight: 5,
-    color: "rgb(120, 120, 120)"
-  },
-  rowForm: {
-    flex: 2,
-    borderBottomColor: "rgb(230, 230, 230)",
-    borderBottomWidth: 0.5
-  },
-  rowButton: {
-    marginTop: 20,
-    alignSelf: "center",
-  },
-  btnSubmit: {
+    formContainer: {
+      flex: 1,
+      paddingTop: 10,
+      paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
+      //backgroundColor: '#fff',
+      flexDirection: "column",
+      paddingBottom: 150
+    },
+    rowContainerCarSelect: {
+      flexDirection: "row",
+      alignItems: "center", // vertial align
+      justifyContent: "center",
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+      alignSelf:"center",
+      height: 60,
+      borderColor: AppConstants.COLOR_HEADER_BG,
+      borderWidth: 1,
+      borderRadius: 15
+    },
+    rowContainerVertical: {
+        flexDirection: "column",
+        alignItems: "center", // vertial align
+        justifyContent: "center",
+        width: AppConstants.DEFAULT_FORM_WIDTH,
+        marginTop: 10,
+        alignSelf:"center"
+        // borderWidth: 1,
+        // borderColor:"grey"
+    },
 
-  },
-  smallerText: {
-      fontSize: 13
-  }
+    rowContainer: {
+      flexDirection: "row",
+      alignItems: "center", // vertial align
+      justifyContent: "center",
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+      marginTop: 10,
+      alignSelf:"center"
+      // borderWidth: 1,
+      // borderColor:"grey"
+    },
+    rowForm: {
+      flexDirection: "row",
+      borderBottomColor: "rgb(210, 210, 210)",
+      borderBottomWidth: 0.5,
+      width: AppConstants.DEFAULT_FORM_WIDTH,
+    },
+    rowFormNoBorder: {
+        flexDirection: "row",
+        width: AppConstants.DEFAULT_FORM_WIDTH,
+    },
+    rowButton: {
+      alignItems: "center",
+      alignSelf: "center",
+      position: 'absolute',
+      justifyContent: "center",
+      bottom: 3,
+      left: 0,
+      right: 0,
+    },
+    btnSubmit: {
+      width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+      backgroundColor: AppConstants.COLOR_BUTTON_BG,
+      justifyContent: "center",
+    },
+    smallerText: {
+        fontSize: 13
+    }
 });
+
 
 const mapStateToProps = (state) => ({
     userData: state.userData,

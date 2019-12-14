@@ -161,7 +161,7 @@ const tabNavigator = createBottomTabNavigator({
     tabBarPosition: "bottom",
     tabBarComponent: props => {
       return (
-        <Footer style={{height: 45}}>
+        <Footer style={{height: 48}}>
           <FooterTab style={styles.footerContainer}>
             <Button
               vertical

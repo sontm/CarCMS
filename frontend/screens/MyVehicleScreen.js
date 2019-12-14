@@ -197,6 +197,7 @@ MyVehicleScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
   contentContainer: {
   },
