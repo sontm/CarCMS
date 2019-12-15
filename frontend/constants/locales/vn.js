@@ -56,7 +56,7 @@ export default {
 
     MYCAR_HEADER: "Xe Của Tôi",
     MYCAR_HEADER_REPORT: "Báo Cáo Chung",
-    HOME_HEADER: "Tổng Quan",
+    HOME_HEADER: "TỔNG QUAN",
     MYCAR_SERVICEREPORT:"Lịch Bảo Dưỡng",
 
     HOME_TOTAL_PRIVATE: "Tổng Chi Phí Cá Nhân",
@@ -82,6 +82,7 @@ export default {
     CARDETAIL_AVERAGE_IN: "Trung Bình ",
     CARDETAIL_AVERAGE_ALL: "Trung Bình Tổng Thời Gian",
     CARDETAIL_HISTORY_HEADER: "Lịch Sử Sử Dụng",
+    CARDETAIL_SERVICE_TABLE:"Sổ Bảo Dưỡng",
 
     TEAM_HEADER_CAR: "  Xe  ",
     TEAM_HEADER_REPORT: "Báo Cáo",
@@ -221,8 +222,9 @@ export default {
     NEW_SERVICE_MAINTAIN:"Bảo Dưỡng",
     NEW_SERVICE_MODULES:"Bộ Phận",
     
-
     NEW_AUTH_HEADER:"Pháp Lý",
+
+    TEXT_PLEASE_SELECT_CAR_SERVICES: "Hãy Lựa Chọn Xe",
 
     MSG_LEAVE_TEAM: "Bạn có chắc muốn rời Nhóm?",
     MSG_LOGOUT: "Bạn có chắc muốn Đăng Xuất?",

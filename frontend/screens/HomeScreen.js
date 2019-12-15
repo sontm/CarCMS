@@ -146,39 +146,52 @@ class HomeScreen extends React.Component {
   }
   render() {
     console.log("HOMESCreen Render")
+    let isUserHasTeam = true;
+    let addedFontSize = 0;
+    if (!this.props.userData.teamInfo || !this.props.userData.teamInfo.id) {
+      isUserHasTeam = false;
+      addedFontSize = 3;
+    }
     let {totalMoneyPrivate, totalMoneyPrivateThisMonth, totalMoneyPrivatePrevMonth} = this.calculateAllVehicleTotalMoney();
-    let {totalMoneyTeam, totalMoneyTeamThisMonth, totalMoneyTeamPrevMonth} = this.calculateAllVehicleTotalMoneyTeam();
+    if (isUserHasTeam) {
+      var {totalMoneyTeam, totalMoneyTeamThisMonth, totalMoneyTeamPrevMonth} = this.calculateAllVehicleTotalMoneyTeam();
+    }
     if (totalMoneyPrivateThisMonth > totalMoneyPrivatePrevMonth) {
       var iconInfoUsage= (
         <Icon type="Entypo" name="arrow-up" 
-            style={{color: "#d62728", marginLeft: 5}} />
+            style={{color: AppConstants.COLOR_GOOGLE, marginLeft: 0, fontSize: 15+addedFontSize, width: 15+addedFontSize}} />
       )
     } else if (totalMoneyPrivateThisMonth < totalMoneyPrivatePrevMonth) {
       var iconInfoUsage= (
         <Icon type="Entypo" name="arrow-down" 
-            style={{color: "#2ca02c", marginLeft: 5}} />
+            style={{color: AppConstants.COLOR_D3_DARK_GREEN, marginLeft: 0, fontSize: 15+addedFontSize, width: 15+addedFontSize}} />
       )
     }
-    if (totalMoneyTeamThisMonth > totalMoneyTeamPrevMonth) {
-      var iconInfoUsageTeam= (
-        <Icon type="Entypo" name="arrow-up" 
-            style={{color: "#d62728", marginLeft: 5}} />
-      )
-    } else if (totalMoneyTeamThisMonth < totalMoneyTeamPrevMonth) {
-      var iconInfoUsageTeam= (
-        <Icon type="Entypo" name="arrow-down" 
-            style={{color: "#2ca02c", marginLeft: 5}} />
-      )
+    
+    
+    if (isUserHasTeam) {
+      if (totalMoneyTeamThisMonth > totalMoneyTeamPrevMonth) {
+        var iconInfoUsageTeam= (
+          <Icon type="Entypo" name="arrow-up" 
+              style={{color: AppConstants.COLOR_GOOGLE, marginLeft: 0, fontSize: 15, width: 15}} />
+        )
+      } else if (totalMoneyTeamThisMonth < totalMoneyTeamPrevMonth) {
+        var iconInfoUsageTeam= (
+          <Icon type="Entypo" name="arrow-down" 
+              style={{color: AppConstants.COLOR_D3_DARK_GREEN, marginLeft: 0, fontSize: 15, width: 15}} />
+        )
+      }
     }
+
     return (
       <Container>
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
+          <Left style={{flex:1}}>
           </Left>
-          <Body>
+          <Body style={{flex: 5, alignItems: "center"}}>
             <Title><HeaderText>{AppLocales.t("HOME_HEADER")}</HeaderText></Title>
           </Body>
-          <Right />
+          <Right  style={{flex:1}}/>
         </Header>
         
         <Content>
@@ -186,74 +199,71 @@ class HomeScreen extends React.Component {
             style={styles.container}
             contentContainerStyle={styles.contentContainer}>
             
+            <View style={styles.gapRow}>
+
+            </View>
             <View style={styles.statRow}>
-              <Card style={styles.equalStartRow}>
+              <Card style={isUserHasTeam ? styles.equalStartRow : styles.equalStartRowSingle}>
                   <CardItem header>
                       <View style={{alignItems: "center"}}>
-                      <Body>
-                        <Text style={{alignSelf: "center", fontSize: 12}}>
-                        {AppLocales.t("HOME_TOTAL_PRIVATE_THISMONTH")+":"}
+                        <Body>
+                          <Text style={{alignSelf: "center", fontSize: 11+addedFontSize, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                          {AppLocales.t("HOME_TOTAL_PRIVATE_THISMONTH")}
+                          </Text>
+                        </Body>
+                        <View style={{flexDirection: "row", alignItems: "center"}}>
+                          <Text style={{color: AppConstants.COLOR_FACEBOOK, fontSize: 36+addedFontSize*2}}>
+                            {AppUtils.formatMoneyToK(totalMoneyPrivateThisMonth)}</Text>
+                          {iconInfoUsage}
+                        </View>
+                        <Body>
+                          <Text style={{alignSelf: "center", fontSize: 14+addedFontSize}}>
+                          {AppLocales.t("GENERAL_PREV_MONTH")+": " + AppUtils.formatMoneyToK(totalMoneyPrivatePrevMonth)}
                         </Text>
-                      </Body>
-                      <View style={{flexDirection: "row", alignItems: "center"}}>
-                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyPrivateThisMonth)}</H2></Text>
-                      {iconInfoUsage}
+                        </Body>
+
+                        <Text style={{marginTop: 15, fontSize: 20+addedFontSize, color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>
+                            {AppUtils.formatMoneyToK(totalMoneyPrivate)}</Text>
+                        <Body>
+                          <Text style={{alignSelf: "center", fontSize: 13+addedFontSize, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                          {AppLocales.t("HOME_TOTAL_PRIVATE")}
+                          </Text>
+                        </Body>
                       </View>
-                      <Body>
-                        <Text style={{alignSelf: "center", fontSize: 13}}>
-                        {AppLocales.t("GENERAL_PREV_MONTH")+": " + AppUtils.formatMoneyToK(totalMoneyPrivatePrevMonth)}
-                      </Text>
-                      </Body>
-                  </View>
                   </CardItem>
               </Card>
+              {isUserHasTeam ? (
               <Card style={styles.equalStartRow}>
                   <CardItem header>
                       <View style={{alignItems: "center"}}>
                       <Body>
-                        <Text style={{alignSelf: "center", fontSize: 12}}>
-                        {AppLocales.t("HOME_TOTAL_TEAM_THISMONTH")+":"}
+                        <Text style={{alignSelf: "center", fontSize: 11, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                        {AppLocales.t("HOME_TOTAL_TEAM_THISMONTH")}
                         </Text>
                       </Body>
                       <View style={{flexDirection: "row", alignItems: "center"}}>
-                        <Text><H2>{AppUtils.formatMoneyToK(totalMoneyTeamThisMonth)}</H2></Text>
+                        <Text style={{color: AppConstants.COLOR_FACEBOOK, fontSize: 36}}>
+                          {AppUtils.formatMoneyToK(totalMoneyTeamThisMonth)}</Text>
                         {iconInfoUsageTeam}
                       </View>
 
                       <Body>
-                        <Text style={{alignSelf: "center", fontSize: 13}}>
+                        <Text style={{alignSelf: "center", fontSize: 14}}>
                           {AppLocales.t("GENERAL_PREV_MONTH")+": " + AppUtils.formatMoneyToK(totalMoneyTeamPrevMonth)}
                         </Text>
                       </Body>
-                  </View>
-                  </CardItem>
-              </Card>
-            </View>
-            <View style={styles.statRowEnd}>
-              <Card style={styles.equalStartRow}>
-                  <CardItem header>
-                      <View style={{alignItems: "center"}}>
-                      <Text><H2>{AppUtils.formatMoneyToK(totalMoneyPrivate)}</H2></Text>
+
+                      <Text style={{marginTop: 15, fontSize: 20, color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>
+                        {AppUtils.formatMoneyToK(totalMoneyTeam)}</Text>
                       <Body>
-                      <Text style={{alignSelf: "center", fontSize: 13}}>
-                      {AppLocales.t("HOME_TOTAL_PRIVATE")}
-                      </Text>
-                  </Body>
-                  </View>
-                  </CardItem>
-              </Card>
-              <Card style={styles.equalStartRow}>
-                  <CardItem header>
-                      <View style={{alignItems: "center"}}>
-                      <Text><H2>{AppUtils.formatMoneyToK(totalMoneyTeam)}</H2></Text>
-                      <Body>
-                      <Text style={{alignSelf: "center", fontSize: 13}}>
+                      <Text style={{alignSelf: "center", fontSize: 13, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
                           {AppLocales.t("HOME_TOTAL_TEAM")}
                           </Text>
                       </Body>
-                      </View>
+                  </View>
                   </CardItem>
               </Card>
+              ) : null}
             </View>
 
             <ReminderReport/>
@@ -280,13 +290,17 @@ const styles = StyleSheet.create({
   contentContainer: {
 
   },
+  gapRow: {
+    backgroundColor: AppConstants.COLOR_HEADER_BG,
+    height: 100
+  },
   statRow: {
     flexDirection: "row",
     justifyContent: "center",
     flexWrap: "wrap",
     flexGrow: 100,
     paddingTop: 10,
-    backgroundColor: AppConstants.COLOR_HEADER_BG
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
   },
   statRowEnd: {
     flexDirection: "row",
@@ -298,16 +312,52 @@ const styles = StyleSheet.create({
   },
   equalStartRow: {
       flex: 1,
-      marginLeft: 2,
-      marginRight: 2,
-      marginTop: 2,
-      padding: 0,
-      borderWidth: 0.5,
-      borderRadius: 0,
+      marginLeft: 5,
+      marginRight: 5,
+      marginTop: -100,
+      paddingVertical: 7,
+      // borderWidth: 0.5,
+      // borderRadius: 0,
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
+
+      borderRadius: 10,
+      borderColor: "rgb(220, 220, 220)",
+      borderWidth: 1,
+
+      shadowColor: "#777777",
+      shadowOpacity: 0.4,
+      shadowRadius: 3,
+      shadowOffset: {
+          height: 3,
+          width: 1
+      },
   },
+  equalStartRowSingle: {
+    flex: 1,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: -100,
+    paddingVertical: 0,
+    // borderWidth: 0.5,
+    // borderRadius: 0,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+
+    borderRadius: 12,
+    borderColor: "rgb(220, 220, 220)",
+    borderWidth: 1,
+
+    shadowColor: "#777777",
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+    shadowOffset: {
+        height: 3,
+        width: 1
+    },
+},
 
 
   textRow: {

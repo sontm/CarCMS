@@ -73,7 +73,9 @@ class ServiceMaintainSettingScreen extends React.Component {
         return (
             <Container>
             <Tabs style={{flex: 1}}>
-            <Tab heading={ <TabHeading><Text>{AppLocales.t("GENERAL_CAR")}</Text></TabHeading>}>
+            <Tab heading={AppLocales.t("GENERAL_CAR")}
+                    tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                    activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
                 <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
@@ -194,7 +196,9 @@ class ServiceMaintainSettingScreen extends React.Component {
 
 
 
-                <Tab heading={ <TabHeading><Text>{AppLocales.t("GENERAL_BIKE")}</Text></TabHeading>}>
+                <Tab heading={AppLocales.t("GENERAL_BIKE")}
+                        tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
                 <Content>
                 <View style={styles.formContainer}>
                 <View style={styles.rowContainer}>

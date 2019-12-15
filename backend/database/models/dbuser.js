@@ -104,7 +104,11 @@ const UserSchema = new Schema({
             expenseList: [],
             serviceList: []
         }
-    ]
+    ],
+    customServiceModules: [],
+    customServiceModulesBike: [],
+    settings: {},
+    settingService: {}
 });
 
 UserSchema.set('toJSON', {

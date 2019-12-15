@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         backgroundColor: "white",
         flexDirection: "column",
-        borderRadius: 0,
+        borderRadius: 10,
         borderColor: "rgb(220, 220, 220)",
         borderWidth: 1,
         justifyContent: "flex-start",

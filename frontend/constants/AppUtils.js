@@ -1715,7 +1715,13 @@ class AppUtils {
     async syncDataToServer(props) {
         console.log("LengVehicleList:" + props.userData.vehicleList.length)
       if (props.userData.vehicleList && props.userData.vehicleList.length > 0) {
-        Backend.postFillItemList(props.userData.vehicleList, props.userData.token ,"vehicle",
+        Backend.postFillItemList({
+            vehicleList: props.userData.vehicleList,
+            customServiceModules: props.userData.customServiceModules,
+            customServiceModulesBike: props.userData.customServiceModulesBike,
+            settings: props.userData.settings,
+            settingService: props.userData.settingService
+            }, props.userData.token ,"vehicle",
           response => {
             console.log("Sync Post Vehicle OK")
             props.actVehicleSyncToServerOK()
@@ -1754,13 +1760,21 @@ class AppUtils {
       //   );
       // }
     }
+
+    // Data will Have: {
+    // vehicleList: props.userData.vehicleList,
+    // customServiceModules: props.userData.customServiceModules,
+    // customServiceModulesBike: props.userData.customServiceModulesBike,
+    // settings: props.userData.settings,
+    // settingService: props.userData.settingService
+    // }
     syncDataFromServer(props) {
-        Backend.getAllItemList("vehicle", props.userData.token,
+        Backend.getAllItemList(props.userData.token,
             response => {
                 console.log("Sync Vehicle From Server OK");
                 //this.props.actVehicleAddVehicle(response.data, true)
                 //console.log(response.data)
-                props.actVehicleSyncAllFromServer(response.data)
+                props.actVehicleSyncAllFromServer(response.data, props)
             },
             error => {console.log("Sync Vehicle From Server Error");console.log(error);}
         );
@@ -1768,7 +1782,7 @@ class AppUtils {
         //this.cancelAllAppLocalNotification();
 
         // If User is Member and TEam have setting of cannot view report
-        console.log(props.userData.userProfile.roleInTeam)
+        //console.log(props.userData.userProfile.roleInTeam)
         //user not is manager and setting cannot see
         if (!props.userData.teamInfo || (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport)) {
             // no team data
@@ -1782,7 +1796,7 @@ class AppUtils {
                 // this.setState({
                 //   members: response.data
                 // })
-                props.actTeamGetDataOK(response.data, props.userData)
+                props.actTeamGetDataOK(response.data, props.userData, props.teamData)
             },
             error => {
                 console.log("GEt all Member in Team ERROR")

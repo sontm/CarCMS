@@ -116,7 +116,9 @@ class MyVehicleScreen extends React.Component {
     if (this.state.activePage==1) {
       var viewPage1 = (
           <Tabs style={{flex: 1}}>
-            <Tab heading={ <TabHeading><Icon type="MaterialIcons" name="attach-money" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB1")}</Text></TabHeading>}>
+            <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")}
+                tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
               <Content><View style={styles.container}><ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}>
@@ -127,7 +129,9 @@ class MyVehicleScreen extends React.Component {
 
               </ScrollView></View></Content>
             </Tab>
-            <Tab heading={ <TabHeading><Icon type="MaterialCommunityIcons" name="fuel" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB2")}</Text></TabHeading>}>
+            <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB2")} 
+                tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
             <Content><View style={styles.container}><ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}>

@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
       height: 60,
       borderColor: AppConstants.COLOR_HEADER_BG,
       borderWidth: 1,
-      borderRadius: 15
+      borderRadius: 10
     },
     rowContainerVertical: {
         flexDirection: "column",

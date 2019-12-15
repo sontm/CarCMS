@@ -222,6 +222,14 @@ class SettingsScreen extends React.Component {
     }
   }
 
+  componentWillReceiveProps(newProps) {
+    if (!this.props.userData.isLogined && newProps.userData.isLogined) {
+      console.log("**********&&&&&&&&&^^^^^^^^^^%%%%%%%%User Have Just Logind^^^^6")
+      // This time, User have Just logined, will Sync
+      AppUtils.syncDataFromServer(newProps)
+    }
+  }
+
   render() {
     console.log(this.props.userData.teamInfo)
     const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
@@ -777,7 +785,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    teamData: state.teamData
 });
 const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,

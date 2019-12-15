@@ -12,13 +12,18 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import { NoDataText } from './StyledText';
 
 class ServiceMaintainTable extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+        vehicleId: 0
+    }
   }
 
-  parseMaintainTableData(theVehicle) {
+  parseMaintainTableData(theVehicle, baseWidth) {
     let arrCurrentKm = [];
     let arrDiffKm = ["-"];
     let arrCurrentDate = [];
@@ -40,11 +45,12 @@ class ServiceMaintainTable extends React.Component {
     if (theVehicle.type != "car") {
         customArr = this.props.appData.customServiceModulesBike;
     }
-
-    customArr.forEach(item => {
-        objTableData[""+item.name] = [];
-        firstCol.push([item.name]);
-    })
+    if (customArr) {
+        customArr.forEach(item => {
+            objTableData[""+item.name] = [];
+            firstCol.push([item.name]);
+        })
+    }
     serviceArr.forEach(item => {
         objTableData[""+item.name] = [];
         firstCol.push([item.name]);
@@ -94,7 +100,7 @@ class ServiceMaintainTable extends React.Component {
                     }
                 }
             }
-            widthArr.push(60);
+            widthArr.push(baseWidth);
         })
     }
 
@@ -114,7 +120,41 @@ class ServiceMaintainTable extends React.Component {
 
   
   render() {
+
+    let currentVehicle = null;
     if (this.props.currentVehicle) {
+        currentVehicle = this.props.currentVehicle;
+    } else if (this.props.selectFromList) {
+        for (let i = 0; i < this.props.teamData.teamCarList.length; i++) {
+            if (this.props.teamData.teamCarList[i].id == this.state.vehicleId) {
+                currentVehicle = this.props.teamData.teamCarList[i];
+                break;
+            }
+        }
+    }
+    if (currentVehicle) {
+        // Calculate Width
+        // General, Width is divided into 5.5; First Col will be 1.5
+        //   If Less than 4 Column Data, divided to ColCount+1.5
+        if (!currentVehicle.serviceList || currentVehicle.serviceList.length == 0) {
+            // No Data
+            return (
+                <Container>
+                <Content>
+                <View style={styles.container}>
+                    <NoDataText />
+                </View>
+                </Content>
+                </Container>
+            )
+        } else {
+            // MinBaseWidth is 60, 
+            var baseWidth = Layout.window.width / (currentVehicle.serviceList.length+1.5);
+            if (baseWidth < 60) {
+                baseWidth = 60;
+            }
+        }
+
         // const state = this.state;
         // const tableData = [];
         // for (let i = 0; i < 30; i += 1) {
@@ -124,85 +164,107 @@ class ServiceMaintainTable extends React.Component {
         // }
         // tableData.push(rowData);
         // }
-        let {tableData, arrCurrentKm, arrDiffKm, arrCurrentDate, arrDiffDay, arrMaintainType, widthArr, firstCol} = this.parseMaintainTableData(this.props.currentVehicle)
-        return (
-            <View style={styles.container}>
-                <View style={styles.textRow}>
-                    <Text><H2>
-                    {AppLocales.t("MYCAR_SERVICEREPORT")}
-                    </H2></Text>
-                </View>
+        var {tableData, arrCurrentKm, arrDiffKm, arrCurrentDate, arrDiffDay, arrMaintainType, widthArr, firstCol} = 
+            this.parseMaintainTableData(currentVehicle, baseWidth)
+    }
+    var dropdownView = [];
+    dropdownView.push(
+        <Picker.Item label={"--" + AppLocales.t("TEXT_PLEASE_SELECT_CAR_SERVICES") + "--"}
+            value={0} key={0}/>)
+    this.props.teamData.teamCarList.forEach(item => {
+        dropdownView.push (
+            <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate + ", " + item.ownerFullName}
+            value={item.id} key={item.id}/>
+        )
+    })
+    return (
+        <View style={styles.container}>
+            <View style={styles.rowContainerCarSelect}>
+                <Picker
+                    style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
+                        alignSelf:"center"}}
+                    mode="dropdown"
+                    iosIcon={<Icon name="arrow-down" />}
+                    placeholder={"--"+AppLocales.t("NEW_GAS_CAR")+"--"}
+                    placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
+                    placeholderIconColor="#007aff"
+                    selectedValue={this.state.vehicleId}
+                    onValueChange={(itemValue, itemIndex) =>
+                        this.setState({vehicleId: itemValue})
+                    }
+                >
+                    {dropdownView}
+                </Picker>
+            </View>
 
-                <View style={{flexDirection: "row"}}>
-                <View style={{width: 80}}>
-                    <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                        <Row data={["Loại Bảo Dưỡng"]} style={styles.headerFirst} textStyle={styles.textHeader}/>
-                        <Row data={["Tại Km,Ngày"]} style={styles.headerFirst} textStyle={styles.textHeader}/>
-                        <Row data={["Đi Thực Tế"]} style={styles.headerHighFirst} textStyle={styles.textHeader}/>
+            {baseWidth ? (
+            <View>
+            <View style={{...styles.textRow, marginTop: 7, marginBottom: 7}}>
+                <Text><H2>
+                {AppLocales.t("CARDETAIL_SERVICE_TABLE")}
+                </H2></Text>
+            </View>
+
+            <View style={{flexDirection: "row"}}>
+            <View style={{width: baseWidth*1.5}}>
+                <Table borderStyle={{borderWidth: 1, borderColor: AppConstants.COLOR_GREY_LIGHT_BG}}>
+                    <Row data={["Loại Bảo Dưỡng"]} style={styles.headerFirst} textStyle={styles.textHeader}/>
+                    <Row data={["Tại Km,Ngày"]} style={styles.headerFirst} textStyle={styles.textHeader}/>
+                    {/* <Row data={["Đi Thực Tế"]} style={styles.headerHighFirst} textStyle={styles.textHeader}/> */}
+                </Table>
+                <ScrollView style={styles.dataWrapper}>
+                <Table borderStyle={{borderWidth: 1, borderColor: AppConstants.COLOR_GREY_LIGHT_BG}}>
+                    {
+                    firstCol.map((rowData, index) => (
+                        <Row
+                        key={index}
+                        data={rowData}
+                        style={[styles.row, index%2 && {backgroundColor: 'white'}]}
+                        textStyle={styles.textSmallFirstCol}
+                        />
+                    ))
+                    }
+                </Table>
+                </ScrollView>
+            </View>
+
+            <ScrollView horizontal={true} style={{}}>
+                <View>
+                    <Table borderStyle={{borderWidth: 0.8, borderColor: AppConstants.COLOR_GREY_LIGHT_BG}}>
+                        <Row data={arrMaintainType} widthArr={widthArr} style={styles.header} textStyle={styles.textHeader}/>
+                        <Row data={arrCurrentKm} widthArr={widthArr} style={styles.header} textStyle={styles.textHeaderMedium}/>
+                        {/* <Row data={arrDiffKm} widthArr={widthArr} style={styles.headerHigh} textStyle={styles.textHeaderSmall}/> */}
                     </Table>
                     <ScrollView style={styles.dataWrapper}>
-                    <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+                    <Table borderStyle={{borderWidth: 0.8, borderColor: AppConstants.COLOR_GREY_LIGHT_BG}}>
                         {
-                        firstCol.map((rowData, index) => (
+                        tableData.map((rowData, index) => (
                             <Row
                             key={index}
                             data={rowData}
-                            style={[styles.row, index%2 && {backgroundColor: '#F7F6E7'}]}
-                            textStyle={styles.textSmall}
+                            widthArr={widthArr}
+                            style={[styles.row, index%2 && {backgroundColor: 'white'}]}
+                            textStyle={styles.text}
                             />
                         ))
                         }
                     </Table>
                     </ScrollView>
                 </View>
-
-                <ScrollView horizontal={true} style={{}}>
-                    <View>
-                        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                            <Row data={arrMaintainType} widthArr={widthArr} style={styles.header} textStyle={styles.textHeader}/>
-                            <Row data={arrCurrentKm} widthArr={widthArr} style={styles.header} textStyle={styles.textHeaderMedium}/>
-                            <Row data={arrDiffKm} widthArr={widthArr} style={styles.headerHigh} textStyle={styles.textHeaderSmall}/>
-                        </Table>
-                        <ScrollView style={styles.dataWrapper}>
-                        <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                            {
-                            tableData.map((rowData, index) => (
-                                <Row
-                                key={index}
-                                data={rowData}
-                                widthArr={widthArr}
-                                style={[styles.row, index%2 && {backgroundColor: '#F7F6E7'}]}
-                                textStyle={styles.text}
-                                />
-                            ))
-                            }
-                        </Table>
-                        </ScrollView>
-                    </View>
-                </ScrollView>
-                </View>
-
-                <View style={styles.textRow}>
-                    <Text style={{fontSize: 14, fontStyle: "italic"}}>
-                        {AppLocales.t("GENERAL_MAINTAIN_THAYTHE")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_THAYTHE") + ". "}
-                        {AppLocales.t("GENERAL_MAINTAIN_BAODUONG")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + ". "}
-                        {AppLocales.t("GENERAL_MAINTAIN_KIEMTRA")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_KIEMTRA") + ". "}
-                    </Text>
-                </View>
-                
+            </ScrollView>
             </View>
-        )
-    } else {
-        return (
-            <Container>
-            <Content>
-            <View style={styles.container}>
 
+            <View style={styles.textRow}>
+                <Text style={{fontSize: 14, fontStyle: "italic"}}>
+                    {AppLocales.t("GENERAL_MAINTAIN_THAYTHE")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_THAYTHE") + ". "}
+                    {AppLocales.t("GENERAL_MAINTAIN_BAODUONG")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + ". "}
+                    {AppLocales.t("GENERAL_MAINTAIN_KIEMTRA")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_KIEMTRA") + ". "}
+                </Text>
             </View>
-            </Content>
-            </Container>
-        )
-    }
+            </View>
+            ) : null }
+        </View>
+    )
     }
 }
 
@@ -210,12 +272,20 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       flexDirection: "column",
-      borderWidth: 0.5,
-      borderColor: "grey",
       justifyContent: "space-between",
       marginBottom: 20,
-      borderRadius: 7,
-      paddingBottom: 20
+    },
+    rowContainerCarSelect: {
+        flexDirection: "row",
+        alignItems: "center", // vertial align
+        justifyContent: "center",
+        width: AppConstants.DEFAULT_FORM_WIDTH,
+        marginTop: 15,
+        alignSelf:"center",
+        height: 60,
+        borderColor: AppConstants.COLOR_HEADER_BG,
+        borderWidth: 1,
+        borderRadius: 10
     },
 
 
@@ -237,18 +307,19 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         flexGrow: 100
     },
-    header: { height: 30, backgroundColor: '#537791' },
-    headerHigh: {height: 40, backgroundColor: '#537791'},
-    headerFirst: { height: 30, backgroundColor: '#5377A1' },
-    headerHighFirst: {height: 40, backgroundColor: '#5377A1'},
+    header: { height: 30, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER},
+    headerHigh: {height: 40, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER},
+    headerFirst: { height: 30, backgroundColor: AppConstants.COLOR_HEADER_BG },
+    headerHighFirst: {height: 40, backgroundColor: AppConstants.COLOR_HEADER_BG},
 
     text: { textAlign: 'center', fontWeight: '100' },
     textSmall: { textAlign: 'center', fontSize: 12, },
+    textSmallFirstCol: { textAlign: 'center', fontSize: 12, color: AppConstants.COLOR_HEADER_BG},
     textHeader: {textAlign: 'center', fontSize: 13, color: "white"},
     textHeaderMedium: {textAlign: 'center', fontSize: 12, color: "white"},
     textHeaderSmall: {textAlign: 'center', fontSize: 11, color: "white"},
     dataWrapper: { marginTop: -1 },
-    row: { height: 25, backgroundColor: '#E7E6E1' }
+    row: { height: 25, backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG }
 
 })
 

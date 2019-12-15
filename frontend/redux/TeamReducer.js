@@ -1,5 +1,7 @@
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
+var _ = require('lodash');
+
 const TEMP_CALCULATE_TEAMCARREPORT = 'TEMP_CALCULATE_TEAMCARREPORT';
 
 const TEMP_CALCULATE_TEAMCARREPORT_ALL = 'TEMP_CALCULATE_TEAMCARREPORT_ALL';
@@ -50,7 +52,7 @@ export const actTeamUserWillLogout = () => (dispatch) => {
     })
 }
 
-export const actTeamGetDataOK = (data, userData) => (dispatch) => {
+export const actTeamGetDataOK = (data, userData, oldTeamData) => (dispatch) => {
     console.log("actTeamGetDataOK:")
     dispatch({
         type: TEAM_GET_OK,
@@ -83,29 +85,47 @@ export const actTeamGetDataOK = (data, userData) => (dispatch) => {
             if (userData.teamInfo.excludeMyCar && myCarIdArr.indexOf(item.id) >= 0 ) {
                 // no thing
             } else {
-                needProcessCount++;
-                //actTempCalculateTeamCarReport(item, dispatch)
-                AppUtils.actTempCalculateCarReportAsyncWrapper(item, options)
-                .then (result => {
-                    doneProcessCount++;
-                    console.log("=======================OK Team Calculate Report:" + item.id 
-                        + ","+idxMem+","+idx);
-                    console.log("  ==========needProcessCount:" + needProcessCount 
-                        + ","+doneProcessCount);
-                    teamCarReportsAll[""+item.id] = result
-
-                    //if ( idxMem == data.length -1 && idx == mem.vehicleList.length-1) {
-                    if ( doneProcessCount == needProcessCount) {
-                        dispatch({
-                            type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
-                            payload: teamCarReportsAll
-                        })
+                // Deep Compare Object here
+                let isSameData = false;
+                if (oldTeamData && oldTeamData.teamCarList && oldTeamData.teamCarList.length > 0) {
+                    for (let l = 0; l < oldTeamData.teamCarList.length; l++) {
+                       if (oldTeamData.teamCarList[l].id == item.id) {
+                            //Found Matched Vehicle, Compare is Same
+                            // comapre every data because there is ownerName added to each car
+                            if (_.isEqual(item.fillGasList, oldTeamData.teamCarList[l].fillGasList) &&
+                                    _.isEqual(item.authorizeCarList, oldTeamData.teamCarList[l].authorizeCarList) &&
+                                    _.isEqual(item.expenseList, oldTeamData.teamCarList[l].expenseList) &&
+                                    _.isEqual(item.serviceList, oldTeamData.teamCarList[l].serviceList)) {
+                                isSameData = true;
+                                break;
+                            }
+                       }
                     }
-                })
-                .catch (error => {
-                    console.log("  Error Team Calculate Report:" + item.licensePlate)
-                    console.log(error)
-                })
+                }
+                if (isSameData && oldTeamData.teamCarReports[""+item.id]) {
+                    console.log("&&&&&&&&&&&&&&^^^^^^ TEAM Yeah Same Data when sync from Server, No need Reports:"+ item.licensePlate)
+                    teamCarReportsAll[""+item.id] = oldTeamData.teamCarReports[""+item.id]
+                } else {
+                    needProcessCount++;
+                    //actTempCalculateTeamCarReport(item, dispatch)
+                    AppUtils.actTempCalculateCarReportAsyncWrapper(item, options)
+                    .then (result => {
+                        doneProcessCount++;
+                        teamCarReportsAll[""+item.id] = result
+
+                        //if ( idxMem == data.length -1 && idx == mem.vehicleList.length-1) {
+                        if ( doneProcessCount == needProcessCount) {
+                            dispatch({
+                                type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
+                                payload: teamCarReportsAll
+                            })
+                        }
+                    })
+                    .catch (error => {
+                        console.log("  Error Team Calculate Report:" + item.licensePlate)
+                        console.log(error)
+                    })
+                }
             }
         }
     }
@@ -145,9 +165,8 @@ export default function(state = initialState, action) {
         return {
             ...state,
             members: action.payload,
-            carReports:{}, // {id: {gasReport,oilReport,authReport,moneyReport}}
             teamCarList:teamCarList,
-            teamCarReports: {},
+            //teamCarReports: {},// {id: {gasReport,oilReport,authReport,moneyReport}}
             lastSyncFromServerOn: new Date()
         };
     case TEMP_CALCULATE_TEAMCARREPORT:

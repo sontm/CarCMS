@@ -368,46 +368,73 @@ module.exports = {
 
 
 
-
-  async addVehicles(req, res) {
+  // Input
+    // vehicleList: props.userData.vehicleList,
+    // customServiceModules: props.userData.customServiceModules,
+    // customServiceModulesBike: props.userData.customServiceModulesBike,
+    // settings: props.userData.settings,
+    // settingService: props.userData.settingService
+  async syncToServer(req, res) {
     console.log("Vehicle Sync of USERID:" + req.user.id)
-    console.log(req.body)
-    // Find current User record contain Vehicle data
+    
+    // Find current User record 
     const currentUser = await new Promise((resolve, reject) => {
       dbuser.findById(req.user.id, function(err, doc){
         err ? reject(err) : resolve(doc);
       });
     });
     if (currentUser) {
-      if (req.body.constructor == Array) {
-        // If this is Array, process each item
-        currentUser.vehicleList = [];
-        for (let loop = 0; loop < req.body.length; loop++) {
-          let element = req.body[loop];
-          // TODO for LOGIC of Sync
-
-          currentUser.vehicleList.push({
-            ...element,
-            userId: req.user.id
-          });
-        }
-
-        await new Promise((resolve, reject) => {
-          currentUser.save(function(err, doc){
-            err ? reject(err) : resolve(doc);
-          });
-        });
-      } else {
+      // Update VehicleList
+      currentUser.vehicleList = [];
+      for (let loop = 0; loop < req.body.vehicleList.length; loop++) {
+        let element = req.body.vehicleList[loop];
         currentUser.vehicleList.push({
-          ...req.body,
+          ...element,
           userId: req.user.id
         });
-        await new Promise((resolve, reject) => {
-          currentUser.save(function(err, doc){
-            err ? reject(err) : resolve(doc);
-          });
-        });
       }
+      currentUser.customServiceModules = req.body.customServiceModules;
+      currentUser.customServiceModulesBike = req.body.customServiceModulesBike;
+      currentUser.settings = req.body.settings;
+      currentUser.settingService = req.body.settingService;
+
+      console.log(" -- Will Save User")
+      console.log(currentUser)
+
+      await new Promise((resolve, reject) => {
+        currentUser.save(function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      // if (req.body.constructor == Array) {
+      //   // If this is Array, process each item
+      //   currentUser.vehicleList = [];
+      //   for (let loop = 0; loop < req.body.length; loop++) {
+      //     let element = req.body[loop];
+      //     // TODO for LOGIC of Sync
+
+      //     currentUser.vehicleList.push({
+      //       ...element,
+      //       userId: req.user.id
+      //     });
+      //   }
+
+      //   await new Promise((resolve, reject) => {
+      //     currentUser.save(function(err, doc){
+      //       err ? reject(err) : resolve(doc);
+      //     });
+      //   });
+      // } else {
+      //   currentUser.vehicleList.push({
+      //     ...req.body,
+      //     userId: req.user.id
+      //   });
+      //   await new Promise((resolve, reject) => {
+      //     currentUser.save(function(err, doc){
+      //       err ? reject(err) : resolve(doc);
+      //     });
+      //   });
+      // }
       res.status(200).send({msg: "Sync To Server Vehicle OK"})
     } else {
       res.status(500).send({msg: "Error, Not Found User"})
@@ -415,7 +442,12 @@ module.exports = {
   },
 
   // Auth API
-  async getAllVehiclesOfUser(req, res) {
+  // vehicleList: props.userData.vehicleList,
+    // customServiceModules: props.userData.customServiceModules,
+    // customServiceModulesBike: props.userData.customServiceModulesBike,
+    // settings: props.userData.settings,
+    // settingService: props.userData.settingService
+  async syncFromServer(req, res) {
     console.log("Vehicle Get OF USER ID:" + req.user.id)
     // Find current User record contain Vehicle data
     const currentUser = await new Promise((resolve, reject) => {
@@ -425,7 +457,14 @@ module.exports = {
     });
     if (currentUser) {
       //console.log(currentUser.vehicleList[0])
-      res.status(200).send(currentUser.vehicleList)
+      res.status(200).send({
+        vehicleList: currentUser.vehicleList,
+        customServiceModules: currentUser.customServiceModules,
+        customServiceModulesBike: currentUser.customServiceModulesBike,
+        settings: currentUser.settings,
+        settingService: currentUser.settingService,
+      }
+      )
     } else {
       res.status(500).send({msg: "Error, Not Found User"})
     }

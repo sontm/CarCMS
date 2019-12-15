@@ -21,9 +21,10 @@ app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), us
 app.post('/api/users/update', passport.authenticate('jwt', {session: false}), 
   user.updateUserProfile);
 
-
-app.post('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.addVehicles);
-app.get('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.getAllVehiclesOfUser);
+// Sync To Server from App
+app.post('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.syncToServer);
+// Sync From Server to App
+app.get('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.syncFromServer);
 
 // upsert
 app.post('/api/team', passport.authenticate('jwt', {session: false}), team.createTeamOfUser);

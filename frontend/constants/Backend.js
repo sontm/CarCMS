@@ -36,7 +36,7 @@ class Backend {
             .catch((error) => {onError(error);});
     }
 
-    getAllItemList(type, token, onOK, onError) {
+    getAllItemList(token, onOK, onError) {
         axios.get("/users/vehicle",
             { headers: this.createHeader(token)})
             .then((response) => {onOK(response);})

@@ -115,7 +115,9 @@ class SettingServiceScreenModules extends React.Component {
         return (
             <Container>
             <Tabs style={{flex: 1}} onChangeTab={this.onChangeTab}>
-            <Tab heading={ <TabHeading><Text>{AppLocales.t("GENERAL_CAR")}</Text></TabHeading>}>
+            <Tab heading={AppLocales.t("GENERAL_CAR")}
+                tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
             <Content>
                 <View style={styles.formContainer}>
                 {customView}
@@ -138,7 +140,9 @@ class SettingServiceScreenModules extends React.Component {
             </Content>
             </Tab>
 
-            <Tab heading={ <TabHeading><Text>{AppLocales.t("GENERAL_BIKE")}</Text></TabHeading>}>
+            <Tab heading={AppLocales.t("GENERAL_BIKE")}
+                tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
             <Content>
                 <View style={styles.formContainer}>
                 {customViewBike}

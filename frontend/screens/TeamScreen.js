@@ -16,6 +16,7 @@ import {Container, Header, Title, Left, Icon, Right, Button, Body,
   Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading, CheckBox } from 'native-base';
   import {checkAndShowInterestial} from '../components/AdsManager'
 import VehicleBasicReport from '../components/VehicleBasicReport'
+import ServiceMaintainTable from '../components/ServiceMaintainTable'
 import AppConstants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
 import AppLocales from '../constants/i18n'
@@ -278,12 +279,24 @@ class TeamScreen extends React.Component {
         </Right>
         </Header>
         {this.state.activePage === 1? (
-        <Tabs style={{flex: 1}}>
-          <Tab heading={ <TabHeading><Icon type="MaterialIcons" name="attach-money" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB1")}</Text></TabHeading>}>
+        <Tabs style={{flex: 1}} locked={true}>
+          <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")}
+              tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
             <TeamReport navigation={this.props.navigation}/>
           </Tab>
-          <Tab heading={ <TabHeading><Icon type="MaterialCommunityIcons" name="fuel" /><Text>{AppLocales.t("TEAM_REPORT_REPORT_TAB2")}</Text></TabHeading>}>
+          <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB2")}
+              tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
             <TeamReport2 navigation={this.props.navigation}/>
+          </Tab>
+          <Tab heading={AppLocales.t("CARDETAIL_SERVICE_TABLE")}
+              tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+            <Content>
+                <ServiceMaintainTable selectFromList={true}/>
+            </Content>
+            
           </Tab>
         </Tabs>
         ) : (

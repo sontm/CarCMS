@@ -2,6 +2,7 @@ import { REHYDRATE } from 'redux-persist';
 import AppConstants from '../constants/AppConstants'
 import AppUtils from '../constants/AppUtils'
 import apputils from '../constants/AppUtils';
+var _ = require('lodash');
 
 const VEHICLE_SYNC_FROMSERVER = 'VEHICLE_SYNC_FROMSERVER';
 const VEHICLE_SYNC_TOSERVER = 'VEHICLE_SYNC_TOSERVER';
@@ -60,19 +61,26 @@ const DEFAULT_SETTING_SERVICE = {
 }
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
+    // Below will Sync. Special when User Leave Team, Join Team...
     teamInfo: {},//"code": "bfOdOi7L", "id": "","name": "PhuPhuong", canMemberViewReport
+    // Below will Sync; Updated in Login
     userProfile: {},//"email": "tester3","fullName": "Test3","id": "","phone": "","type": "local", teamId, teamCode, class:"freeUser", pictureUrl, roleInTeam
     isLogined: false,
     token: "",
     defaultVehicleId: "",
+    // Below will Sync
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
                     // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":
     carReports:{}, // {vehicleid: {gasReport,authReport,moneyReport,maintainRemind, scheduledNotification}}
 
+    // Below will Sync
     customServiceModules: [],
+    // Below will Sync
     customServiceModulesBike: [],
 
+    // Below will Sync
     settings: DEFAULT_SETTING_REMIND, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
+    // Below will Sync
     settingService: DEFAULT_SETTING_SERVICE,
     lastSyncFromServerOn: null, // date of last sync
     lastSyncToServerOn: null,
@@ -165,6 +173,8 @@ export const actUserUpdateProfileOK = (data) => (dispatch) => {
         payload: data
     })
 }
+
+//{user,token,teamInfo}
 export const actUserLoginOK = (data) => (dispatch) => {
     console.log("actUserLoginOK:")
     dispatch({
@@ -365,7 +375,14 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
     }
 }
 
-export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
+// data will have
+// vehicleList: props.userData.vehicleList,
+    // customServiceModules: props.userData.customServiceModules,
+    // customServiceModulesBike: props.userData.customServiceModulesBike,
+    // settings: props.userData.settings,
+    // settingService: props.userData.settingService
+// oldProps have both userData, teamData
+export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
     console.log("actVehicleSyncFromServer:")
     dispatch({
         type: VEHICLE_SYNC_FROMSERVER,
@@ -379,26 +396,48 @@ export const actVehicleSyncAllFromServer = (data) => (dispatch) => {
         duration: 300,
     }
     let allCarReports = {};
-    data.forEach ((vehicle, index) => {
-        AppUtils.actTempCalculateCarReportAsyncWrapper(vehicle, options)
-        .then (result => {
-            console.log("  OK User Calculate Report:" + vehicle.licensePlate)
-            allCarReports[""+vehicle.id] = result
-
-            if (index == data.length - 1) {
-                console.log("======================= Final Dispatch User Reports")
-                dispatch({
-                    type: TEMP_CALCULATE_CARREPORT_ALL,
-                    payload: allCarReports
+    let needProcess = 0;
+    let doneProcess = 0;
+    if (data.vehicleList && data.vehicleList.length > 0) {
+        data.vehicleList.forEach ((vehicle, index) => {
+            // Deep Compare Object here
+            let isSameData = false;
+            for (let l = 0; l < oldProps.userData.vehicleList.length; l++) {
+                if (oldProps.userData.vehicleList[l].id == vehicle.id) {
+                    // Found Matched Vehicle, Compare is Same
+                    if (_.isEqual(vehicle, oldProps.userData.vehicleList[l])) {
+                        isSameData = true;
+                        break;
+                    }
+                }
+            }
+            if (isSameData && oldProps.userData.carReports[""+vehicle.id]) {
+                console.log("&&&&&&&&&&&&&&^^^^^^^^ Yeah Same Data when sync from Server, No need Reports:"+ vehicle.licensePlate)
+                allCarReports[""+vehicle.id] = oldProps.userData.carReports[""+vehicle.id]
+            } else {
+                needProcess++;
+                AppUtils.actTempCalculateCarReportAsyncWrapper(vehicle, options)
+                .then (result => {
+                    console.log("  OK User Calculate Report:" + vehicle.licensePlate)
+                    allCarReports[""+vehicle.id] = result
+                    doneProcess++;
+                    
+                    //if (index == data.vehicleList.length - 1) {
+                    if (doneProcess == needProcess) {
+                        console.log("======================= Final Dispatch User Reports")
+                        dispatch({
+                            type: TEMP_CALCULATE_CARREPORT_ALL,
+                            payload: allCarReports
+                        })
+                    }
+                })
+                .catch (error => {
+                    console.log("  Error User Calculate Report:" + vehicle.licensePlate)
+                    console.log(error)
                 })
             }
         })
-        .catch (error => {
-            console.log("  Error User Calculate Report:" + vehicle.licensePlate)
-            console.log(error)
-        })
-    })
-    
+    }
 }
 export const actVehicleSyncToServerOK = (data) => (dispatch) => {
     console.log("actVehicleSyncToServerOK:")
@@ -508,8 +547,13 @@ export default function(state = initialState, action) {
     case VEHICLE_SYNC_FROMSERVER:
         let newStateSyncFrom = {
             ...state,
-            vehicleList: action.payload,
-            carReports: {},
+            vehicleList: action.payload.vehicleList,
+            customServiceModules: action.payload.customServiceModules,
+            customServiceModulesBike: action.payload.customServiceModulesBike,
+            settings: action.payload.settings,
+            settingService: action.payload.settingService,
+
+            //carReports: {},// this will be updated during Caluclation,because some may not need to Re-calculate
             lastSyncFromServerOn: new Date()
         }
         if (!newStateSyncFrom.settingService) {

@@ -2,7 +2,7 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, ScrollView } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
-    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, TabHeading } from 'native-base';
+    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, TabHeading, ScrollableTab } from 'native-base';
 import Layout from '../constants/Layout'
 import {HeaderText} from '../components/StyledText'
 import AppUtils from '../constants/AppUtils'
@@ -73,8 +73,13 @@ class VehicleDetailReport extends React.Component {
         return (
             <Container>
             {this.props.userData.carReports[currentVehicle.id] ? (
-            <Tabs style={{flex: 1}} locked={true}>
-                <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("CARDETAIL_REMINDER")}</Text></TabHeading>}>
+            // <Tabs locked={true} renderTabBar={()=> <ScrollableTab tabsContainerStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}/>}>
+            <Tabs locked={true}>
+                <Tab heading={AppLocales.t("CARDETAIL_REMINDER")}
+                        tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                        activeTextStyle={{fontSize: 14,color: "white"}}>
                     <Content>
                     <View style={styles.container}>
                         <View style={styles.reminderContainer}>
@@ -194,12 +199,18 @@ class VehicleDetailReport extends React.Component {
                     </View>
                     </Content>
                 </Tab>
-                <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_GAS")}</Text></TabHeading>}>
+                <Tab heading={AppLocales.t("GENERAL_GAS")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                        activeTextStyle={{fontSize: 14,color: "white"}}>
                     <Content>
                     <GasUsageReport currentVehicle={currentVehicle}/>
                     </Content>
                 </Tab>
-                <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_MONEYUSAGE")}</Text></TabHeading>}>
+                <Tab heading={AppLocales.t("GENERAL_MONEYUSAGE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                        activeTextStyle={{fontSize: 14,color: "white"}}>
                     <Content>
                     <ScrollView>
                     <MoneyUsageByTimeReport currentVehicle={currentVehicle}/>
@@ -208,7 +219,10 @@ class VehicleDetailReport extends React.Component {
                     </ScrollView>
                     </Content>
                 </Tab>
-                <Tab heading={ <TabHeading><Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_SERVICE")}</Text></TabHeading>}>
+                <Tab heading={AppLocales.t("CARDETAIL_SERVICE_TABLE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                        activeTextStyle={{fontSize: 14,color: "white"}}>
                     <Content>
                     <ServiceMaintainTable  currentVehicle={currentVehicle}/>
                     </Content>
