@@ -18,9 +18,10 @@ import Backend from '../constants/Backend';
 import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer, 
   actVehicleSyncToServerOK} from '../redux/UserReducer';
 import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK} from '../redux/UserReducer'
-import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout} from '../redux/TeamReducer'
+import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout, actTeamLeaveTeamOK} from '../redux/TeamReducer'
 import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
+import NetInfo from "@react-native-community/netinfo";
 
 import AppLocales from '../constants/i18n'
 import { italic } from 'ansi-colors';
@@ -44,11 +45,33 @@ class SettingsScreen extends React.Component {
     
   }
   syncDataFromServer() {
-    AppUtils.syncDataFromServer(this.props)
+    NetInfo.fetch().then(state => {
+      if (state.isConnected) {
+        AppUtils.syncDataFromServer(this.props)
+      } else {
+        Toast.show({
+          text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+          //buttonText: "Okay",
+          type: "danger"
+        })
+      }
+    });
+    
   }
 
   syncDataToServer() {
-    AppUtils.syncDataToServer(this.props)
+    NetInfo.fetch().then(state => {
+      if (state.isConnected) {
+        AppUtils.syncDataToServer(this.props)
+      } else {
+        Toast.show({
+          text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+          //buttonText: "Okay",
+          type: "danger"
+        })
+      }
+    });
+    
   }
   handleLogout() {
     Alert.alert(
@@ -78,13 +101,23 @@ class SettingsScreen extends React.Component {
           },
           {text: 'OK', style: 'destructive' , onPress: () => {
               console.log('Delete Pressed')
-              Backend.leaveTeam(this.props.userData.token,
-                response => {
-                  this.props.actUserLeaveTeamOK()
-                }, error => {
-                  console.log("User LEave team Error")
-                })
-              
+              NetInfo.fetch().then(state => {
+                if (state.isConnected) {
+                  Backend.leaveTeam(this.props.userData.token,
+                    response => {
+                      this.props.actUserLeaveTeamOK()
+                      this.props.actTeamLeaveTeamOK()
+                    }, error => {
+                      console.log("User LEave team Error")
+                    })
+                } else {
+                  Toast.show({
+                    text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+                    //buttonText: "Okay",
+                    type: "danger"
+                  })
+                }
+              });
           }},
       ],
       {cancelable: true})
@@ -105,6 +138,16 @@ class SettingsScreen extends React.Component {
   async doLoginGoogle() {
     try {
       console.log("doLoginGoogle...")
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+        Toast.show({
+          text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+          //buttonText: "Okay",
+          type: "danger"
+        })
+        return;
+      }
+      
       const result = await Google.logInAsync({
         // behavior: "web",
         androidClientId: "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",
@@ -137,21 +180,32 @@ class SettingsScreen extends React.Component {
     }
   }
   handleLogin() {
-    Backend.login({email: this.state.email, password: this.state.password}, 
-        response => {
-            console.log("Login OK")
-            console.log(response.data)
-            this.props.actUserLoginOK(response.data)
-            this.props.navigation.navigate("Settings")
-        },
-        error => {
-            console.log("Login ERROR")
-            console.log(error)
-            this.setState({
-                message: "Login Error!"
-            })
-        }
-    );
+    NetInfo.fetch().then(state => {
+      if (state.isConnected) {
+        Backend.login({email: this.state.email, password: this.state.password}, 
+          response => {
+              console.log("Login OK")
+              console.log(response.data)
+              this.props.actUserLoginOK(response.data)
+              this.props.navigation.navigate("Settings")
+          },
+          error => {
+              console.log("Login ERROR")
+              console.log(error)
+              this.setState({
+                  message: "Login Error!"
+              })
+          }
+        );
+      } else {
+        Toast.show({
+          text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+          //buttonText: "Okay",
+          type: "danger"
+        })
+      }
+    });
+    
   }
 
   async doLoginFacebook() {
@@ -164,6 +218,16 @@ class SettingsScreen extends React.Component {
       //   declinedPermissions,
       // } 
       console.log("Start doLoginFacebook")
+      const netState = await NetInfo.fetch();
+      if (!netState.isConnected) {
+        Toast.show({
+          text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+          //buttonText: "Okay",
+          type: "danger"
+        })
+        return;
+      }
+
       const result = await Facebook.logInWithReadPermissionsAsync('704967129987939', {
         permissions: ['public_profile', 'email'],
       });
@@ -232,6 +296,11 @@ class SettingsScreen extends React.Component {
 
   render() {
     console.log(this.props.userData.teamInfo)
+    // NetInfo.fetch().then(state => {
+    //   console.log("Connection type", state.type); // wifi...
+    //   console.log("Is connected?", state.isConnected); // true..
+    // });
+
     const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
     return (
         <Container>
@@ -792,7 +861,7 @@ const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
   actUserLogout, actUserLoginOK,actVehicleSyncToServerOK,
   actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout,
-  actUserLeaveTeamOK
+  actUserLeaveTeamOK, actTeamLeaveTeamOK
 };
   
 export default connect(

@@ -2,6 +2,7 @@ import { REHYDRATE } from 'redux-persist';
 import AppConstants from '../constants/AppConstants'
 import AppUtils from '../constants/AppUtils'
 import apputils from '../constants/AppUtils';
+
 var _ = require('lodash');
 
 const VEHICLE_SYNC_FROMSERVER = 'VEHICLE_SYNC_FROMSERVER';
@@ -623,8 +624,18 @@ export default function(state = initialState, action) {
         let newStateAddGas = {...state};
         for (let i = 0; i < newStateAddGas.vehicleList.length; i++) {
             if (newStateAddGas.vehicleList[i].id == action.payload.vehicleId ) {
+                action.payload.fillDate = new Date(action.payload.fillDate)
+
                 newStateAddGas.vehicleList[i].fillGasList = 
                     [...newStateAddGas.vehicleList[i].fillGasList, action.payload];
+                    
+                newStateAddGas.vehicleList[i].fillGasList.sort(function(a, b) {
+                    let aDate = new Date(a.fillDate);
+                    let bDate = new Date(b.fillDate);
+                    // Ascending
+                    return aDate - bDate;
+                })
+
                 break;
             }
         }
@@ -635,8 +646,16 @@ export default function(state = initialState, action) {
         let newStateAddOil = {...state};
         for (let i = 0; i < newStateAddOil.vehicleList.length; i++) {
             if (newStateAddOil.vehicleList[i].id == action.payload.vehicleId ) {
+                action.payload.fillDate = new Date(action.payload.fillDate)
                 newStateAddOil.vehicleList[i].fillOilList = 
                     [...newStateAddOil.vehicleList[i].fillOilList, action.payload];
+                
+                newStateAddOil.vehicleList[i].fillOilList.sort(function(a, b) {
+                    let aDate = new Date(a.fillDate);
+                    let bDate = new Date(b.fillDate);
+                    // Ascending
+                    return aDate - bDate;
+                })
                 break;
             }
         }
@@ -647,8 +666,16 @@ export default function(state = initialState, action) {
         let newStateAddAuth = {...state};
         for (let i = 0; i < newStateAddAuth.vehicleList.length; i++) {
             if (newStateAddAuth.vehicleList[i].id == action.payload.vehicleId ) {
+                action.payload.fillDate = new Date(action.payload.fillDate)
                 newStateAddAuth.vehicleList[i].authorizeCarList = 
                     [...newStateAddAuth.vehicleList[i].authorizeCarList, action.payload];
+                
+                newStateAddAuth.vehicleList[i].authorizeCarList.sort(function(a, b) {
+                    let aDate = new Date(a.fillDate);
+                    let bDate = new Date(b.fillDate);
+                    // Ascending
+                    return aDate - bDate;
+                })
                 break;
             }
         }
@@ -658,8 +685,15 @@ export default function(state = initialState, action) {
         let newStateAddExpense = {...state};
         for (let i = 0; i < newStateAddExpense.vehicleList.length; i++) {
             if (newStateAddExpense.vehicleList[i].id == action.payload.vehicleId ) {
+                action.payload.fillDate = new Date(action.payload.fillDate)
                 newStateAddExpense.vehicleList[i].expenseList = 
                     [...newStateAddExpense.vehicleList[i].expenseList, action.payload];
+                    newStateAddExpense.vehicleList[i].expenseList.sort(function(a, b) {
+                    let aDate = new Date(a.fillDate);
+                    let bDate = new Date(b.fillDate);
+                    // Ascending
+                    return aDate - bDate;
+                })
                 break;
             }
         }
@@ -669,8 +703,16 @@ export default function(state = initialState, action) {
         let newStateAddService = {...state};
         for (let i = 0; i < newStateAddService.vehicleList.length; i++) {
             if (newStateAddService.vehicleList[i].id == action.payload.vehicleId ) {
+                action.payload.fillDate = new Date(action.payload.fillDate)
                 newStateAddService.vehicleList[i].serviceList = 
                     [...newStateAddService.vehicleList[i].serviceList, action.payload];
+                    
+                newStateAddService.vehicleList[i].serviceList.sort(function(a, b) {
+                    let aDate = new Date(a.fillDate);
+                    let bDate = new Date(b.fillDate);
+                    // Ascending
+                    return aDate - bDate;
+                })
                 break;
             }
         }
@@ -711,7 +753,15 @@ export default function(state = initialState, action) {
             if (newStateVehicleGasEdit.vehicleList[i].id == action.payload.vehicleId ) {
                 for (let j = 0; j < newStateVehicleGasEdit.vehicleList[i].fillGasList.length; j++) {
                     if (newStateVehicleGasEdit.vehicleList[i].fillGasList[j].id == action.payload.id) {
+                        action.payload.fillDate = new Date(action.payload.fillDate)
                         newStateVehicleGasEdit.vehicleList[i].fillGasList[j] = {...action.payload}
+
+                        newStateVehicleGasEdit.vehicleList[i].fillGasList.sort(function(a, b) {
+                            let aDate = new Date(a.fillDate);
+                            let bDate = new Date(b.fillDate);
+                            // Ascending
+                            return aDate - bDate;
+                        })
                         break;
                     }
                 }
@@ -724,7 +774,15 @@ export default function(state = initialState, action) {
             if (newStateVehicleOilEdit.vehicleList[i].id == action.payload.vehicleId ) {
                 for (let j = 0; j < newStateVehicleOilEdit.vehicleList[i].fillOilList.length; j++) {
                     if (newStateVehicleOilEdit.vehicleList[i].fillOilList[j].id == action.payload.id) {
+                        action.payload.fillDate = new Date(action.payload.fillDate)
                         newStateVehicleOilEdit.vehicleList[i].fillOilList[j] = {...action.payload}
+
+                        newStateVehicleOilEdit.vehicleList[i].fillOilList.sort(function(a, b) {
+                            let aDate = new Date(a.fillDate);
+                            let bDate = new Date(b.fillDate);
+                            // Ascending
+                            return aDate - bDate;
+                        })
                         break;
                     }
                 }
@@ -737,7 +795,15 @@ export default function(state = initialState, action) {
             if (newStateVehicleAuthEdit.vehicleList[i].id == action.payload.vehicleId ) {
                 for (let k = 0; k < newStateVehicleAuthEdit.vehicleList[i].authorizeCarList.length; k++) {
                     if (newStateVehicleAuthEdit.vehicleList[i].authorizeCarList[k].id == action.payload.id) {
+                        action.payload.fillDate = new Date(action.payload.fillDate)
                         newStateVehicleAuthEdit.vehicleList[i].authorizeCarList[k] = {...action.payload}
+
+                        newStateVehicleAuthEdit.vehicleList[i].authorizeCarList.sort(function(a, b) {
+                            let aDate = new Date(a.fillDate);
+                            let bDate = new Date(b.fillDate);
+                            // Ascending
+                            return aDate - bDate;
+                        })
                         break;
                     }
                 }
@@ -761,7 +827,15 @@ export default function(state = initialState, action) {
             if (newStateVehicleExpenseEdit.vehicleList[i].id == action.payload.vehicleId ) {
                 for (let k = 0; k < newStateVehicleExpenseEdit.vehicleList[i].expenseList.length; k++) {
                     if (newStateVehicleExpenseEdit.vehicleList[i].expenseList[k].id == action.payload.id) {
+                        action.payload.fillDate = new Date(action.payload.fillDate)
                         newStateVehicleExpenseEdit.vehicleList[i].expenseList[k] = {...action.payload}
+
+                        newStateVehicleExpenseEdit.vehicleList[i].expenseList.sort(function(a, b) {
+                            let aDate = new Date(a.fillDate);
+                            let bDate = new Date(b.fillDate);
+                            // Ascending
+                            return aDate - bDate;
+                        })
                         break;
                     }
                 }
@@ -784,7 +858,15 @@ export default function(state = initialState, action) {
             if (newStateVehicleServiceEdit.vehicleList[i].id == action.payload.vehicleId ) {
                 for (let k = 0; k < newStateVehicleServiceEdit.vehicleList[i].serviceList.length; k++) {
                     if (newStateVehicleServiceEdit.vehicleList[i].serviceList[k].id == action.payload.id) {
+                        action.payload.fillDate = new Date(action.payload.fillDate)
                         newStateVehicleServiceEdit.vehicleList[i].serviceList[k] = {...action.payload}
+
+                        newStateVehicleServiceEdit.vehicleList[i].serviceList.sort(function(a, b) {
+                            let aDate = new Date(a.fillDate);
+                            let bDate = new Date(b.fillDate);
+                            // Ascending
+                            return aDate - bDate;
+                        })
                         break;
                     }
                 }

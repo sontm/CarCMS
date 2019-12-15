@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, 
-  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading, CheckBox } from 'native-base';
+  Content,Text, Card, CardItem, Segment, ListItem, Badge, Picker, Tabs, Tab, TabHeading, CheckBox , Toast} from 'native-base';
   import {checkAndShowInterestial} from '../components/AdsManager'
 import VehicleBasicReport from '../components/VehicleBasicReport'
 import ServiceMaintainTable from '../components/ServiceMaintainTable'
@@ -21,6 +21,7 @@ import AppConstants from '../constants/AppConstants'
 import Backend from '../constants/Backend'
 import AppLocales from '../constants/i18n'
 import AppUtils from '../constants/AppUtils'
+import NetInfo from "@react-native-community/netinfo";
 
 import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 
@@ -57,42 +58,53 @@ class TeamScreen extends React.Component {
     if (this.props.userData.userProfile.roleInTeam != "manager" && !this.props.userData.teamInfo.canMemberViewReport) {
       // no get data
     } else {
-      Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
-        response => {
-            console.log("GEt all Member in Team OK")
-            // console.log(response.data)
-            //this.props.actUserLoginOK(response.data)
-            //this.props.navigation.navigate("Settings")
-            // this.setState({
-            //   members: response.data
-            // })
-            this.props.actTeamGetDataOK(response.data)
-        },
-        error => {
-            console.log("GEt all Member in Team ERROR")
-            console.log(JSON.stringify(error))
-            this.setState({
-                message: "Get Team Data Error!"
-            })
+      NetInfo.fetch().then(state => {
+        if (state.isConnected) {
+          Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
+            response => {
+                console.log("GEt all Member in Team OK")
+                // console.log(response.data)
+                //this.props.actUserLoginOK(response.data)
+                //this.props.navigation.navigate("Settings")
+                // this.setState({
+                //   members: response.data
+                // })
+                this.props.actTeamGetDataOK(response.data)
+            },
+            error => {
+                console.log("GEt all Member in Team ERROR")
+                console.log(JSON.stringify(error))
+                this.setState({
+                    message: "Get Team Data Error!"
+                })
+            }
+          );
+    
+          Backend.getAllJoinTeamRequest(this.props.userData.token, 
+            response => {
+                console.log("GEt all JoinRequest OK")
+                // console.log(response.data)
+                //this.props.actUserLoginOK(response.data)
+                //this.props.navigation.navigate("Settings")
+                this.props.actTeamGetJoinRequestOK(response.data)
+            },
+            error => {
+                console.log("GEt all JoinRequest ERROR")
+                console.log(JSON.stringify(error))
+                this.setState({
+                    message: "Login Error!"
+                })
+            }
+          );
+        } else {
+          Toast.show({
+            text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+            //buttonText: "Okay",
+            type: "danger"
+          })
         }
-      );
-
-      Backend.getAllJoinTeamRequest(this.props.userData.token, 
-        response => {
-            console.log("GEt all JoinRequest OK")
-            // console.log(response.data)
-            //this.props.actUserLoginOK(response.data)
-            //this.props.navigation.navigate("Settings")
-            this.props.actTeamGetJoinRequestOK(response.data)
-        },
-        error => {
-            console.log("GEt all JoinRequest ERROR")
-            console.log(JSON.stringify(error))
-            this.setState({
-                message: "Login Error!"
-            })
-        }
-      );
+      });
+      
     }
   }
   setActivePage(val) {

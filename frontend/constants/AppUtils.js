@@ -5,6 +5,7 @@ import AppLocales from '../constants/i18n'
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
     Month: [6, 12, 24, 48, 96]
@@ -172,8 +173,14 @@ class AppUtils {
         if (t)
         return dateFormat(new Date(t), "d/mm/yyyy H:MM:ss");
     }
+
+    // format to K or Million
     formatMoneyToK(v) {
-        return (v/1000).toFixed(0) + "K";
+        if (v < 1000000) {
+            return (v/1000).toFixed(0) + "N";
+        } else {
+            return (v/1000000).toFixed(2) + "Tr";
+        }
     }
     formatToPercent(v, total) {
         return (v*100/total).toFixed(0) + "%";
@@ -395,8 +402,6 @@ class AppUtils {
     // Output of Average KM Weekly/Monthly
     // [{x:dateFillGas, y:average}]
     getStatForGasUsage(fillGasList, duration=12, durationType="month", tillDate=new Date()) {
-        // Sort by fill Date
-        // TODO
         if (!fillGasList || fillGasList.length < 1) {
             return {};
         }
@@ -775,8 +780,6 @@ class AppUtils {
     // Deprecate. Now User in Maintain Reminds
     // input: [{vehicleId: 1, fillDate: "10/15/2018, 11:02:58 PM", price: 50000, currentKm: 90, id: 1}]
     getInfoForOilUsage(fillOilList, lastDate, lastKm, averageKmPerDay) {
-        // Sort by fill Date
-        // TODO
         if (!fillOilList) {
             return {};
         }
@@ -829,7 +832,7 @@ class AppUtils {
             settingService = DEFAULT_SETTING_SERVICE;
         }
 
-        // Sort by Fill Date
+        // Sort by Fill Date Descending
         serviceList.sort(function(a, b) { 
             return new Date(b.fillDate) - new Date(a.fillDate);
         })
@@ -1663,9 +1666,6 @@ class AppUtils {
         if (!serviceList) {
             return {};
         }
-
-        // TODO, Sort By Time
-
         let nextEstimateDateForService = null;
         let lastEstimateKmForService = 0;
         let serviceReminds = {}

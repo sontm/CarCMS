@@ -10,7 +10,7 @@ const TEMP_CAR_LIST = 'TEMP_CAR_LIST';
 
 const TEAM_GET_OK = 'TEAM_GET_OK';
 const TEAM_GET_JOIN_REQ_OK = 'TEAM_GET_JOIN_REQ_OK';
-
+const TEAM_LEAVE_OK = "TEAM_LEAVE_OK";
 const TEMP_USER_LOGOUT = 'TEMP_USER_LOGOUT';
 
 const initialState = {
@@ -139,6 +139,13 @@ export const actTeamGetJoinRequestOK = (data) => (dispatch) => {
     })
 }
 
+export const actTeamLeaveTeamOK = () => (dispatch) => {
+    console.log("actTeamLeaveTeamOK:")
+    dispatch({
+        type: TEAM_LEAVE_OK,
+    })
+}
+
 
 
 // Note, in this Reducer, cannot Access state.user
@@ -187,6 +194,15 @@ export default function(state = initialState, action) {
         return {
             ...state,
             teamCarList: action.payload
+        }
+    case TEAM_LEAVE_OK:
+        return {
+            ...state,
+            members: [],
+            joinRequests: [],
+            teamCarList:[], // will have new "ownerFullName" as fullname of user
+            teamCarReports: {},
+            lastSyncFromServerOn: null
         }
     case TEMP_USER_LOGOUT:
         return {

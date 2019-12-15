@@ -179,6 +179,7 @@ class ServiceMaintainTable extends React.Component {
     })
     return (
         <View style={styles.container}>
+            {this.props.selectFromList ? (
             <View style={styles.rowContainerCarSelect}>
                 <Picker
                     style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
@@ -195,7 +196,7 @@ class ServiceMaintainTable extends React.Component {
                 >
                     {dropdownView}
                 </Picker>
-            </View>
+            </View>) : null}
 
             {baseWidth ? (
             <View>

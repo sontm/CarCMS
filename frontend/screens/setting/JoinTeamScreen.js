@@ -10,6 +10,7 @@ import {actUserCreateTeamOK} from '../../redux/UserReducer'
 import Backend from '../../constants/Backend'
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
+import NetInfo from "@react-native-community/netinfo";
 
 class JoinTeamScreen extends React.Component {
     constructor(props) {
@@ -35,37 +36,59 @@ class JoinTeamScreen extends React.Component {
     }
     onReJoinTeamOfMe(item) {
         if (item && item.code) {
-            Backend.rejoinTeam({code: item.code}, this.props.userData.token,
-                response => {
-                    console.log("===============onReJoinTeamOfMe Data")
-                    console.log(response.data)
-                    // Rejoin team can ReUse Create Team
-                    this.props.actUserCreateTeamOK(response.data)
-                    this.props.navigation.goBack()
-                }, err => {
-                    console.log("rejoinTeam ERROR")
-                })
+            NetInfo.fetch().then(state => {
+                if (state.isConnected) {
+                    Backend.rejoinTeam({code: item.code}, this.props.userData.token,
+                        response => {
+                            console.log("===============onReJoinTeamOfMe Data")
+                            console.log(response.data)
+                            // Rejoin team can ReUse Create Team
+                            this.props.actUserCreateTeamOK(response.data)
+                            this.props.navigation.goBack()
+                        }, err => {
+                            console.log("rejoinTeam ERROR")
+                    })
+                } else {
+                  Toast.show({
+                    text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+                    //buttonText: "Okay",
+                    type: "danger"
+                  })
+                }
+              });
+            
         }
     }
     handleSubmit() {
-        Backend.joinTeam({
-            teamCode: this.state.code
-            }, this.props.userData.token, 
-            response => {
-                console.log("Join Team OK")
-                console.log(response.data)
-                //this.props.actUserCreateTeamOK(response.data)
-                //this.props.navigation.navigate("Settings")
-                this.props.navigation.goBack()
-            },
-            error => {
-                console.log("Join Team ERROR")
-                console.log((error))
-                this.setState({
-                    message: "Register Error!"
-                })
+        NetInfo.fetch().then(state => {
+            if (state.isConnected) {
+                Backend.joinTeam({
+                    teamCode: this.state.code
+                    }, this.props.userData.token, 
+                    response => {
+                        console.log("Join Team OK")
+                        console.log(response.data)
+                        //this.props.actUserCreateTeamOK(response.data)
+                        //this.props.navigation.navigate("Settings")
+                        this.props.navigation.goBack()
+                    },
+                    error => {
+                        console.log("Join Team ERROR")
+                        console.log((error))
+                        this.setState({
+                            message: "Register Error!"
+                        })
+                    }
+                );
+            } else {
+              Toast.show({
+                text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+                //buttonText: "Okay",
+                type: "danger"
+              })
             }
-        );
+          });
+        
        
     }
     render() {

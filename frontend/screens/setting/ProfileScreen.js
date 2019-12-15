@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 
 import Backend from '../../constants/Backend'
 import {actUserUpdateProfileOK} from '../../redux/UserReducer';
-
+import NetInfo from "@react-native-community/netinfo";
 
 class ProfileScreen extends React.Component {
     constructor(props) {
@@ -63,25 +63,36 @@ class ProfileScreen extends React.Component {
                 type: "danger"
             })
         } else {
-            let newData = {
-                fullName: this.state.fullName,
-                phone: this.state.phone,
-            }
-            if (this.state.isChangePwd) {
-                newData.oldPwd = this.state.oldPwd;
-                newData.newPwd = this.state.newPwd1;
-            }
-
-            Backend.updateUserProfile(newData
-                , this.props.userData.token,
-                response => {
-                    console.log(response.data)
-                    this.props.actUserUpdateProfileOK(response.data)
-                    //this.props.navigation.goBack();
-                }, error => {
-                    console.log(error)
-                    console.log("Update Profile Error!")
-                });
+            NetInfo.fetch().then(state => {
+                if (state.isConnected) {
+                    let newData = {
+                        fullName: this.state.fullName,
+                        phone: this.state.phone,
+                    }
+                    if (this.state.isChangePwd) {
+                        newData.oldPwd = this.state.oldPwd;
+                        newData.newPwd = this.state.newPwd1;
+                    }
+        
+                    Backend.updateUserProfile(newData
+                        , this.props.userData.token,
+                        response => {
+                            console.log(response.data)
+                            this.props.actUserUpdateProfileOK(response.data)
+                            //this.props.navigation.goBack();
+                        }, error => {
+                            console.log(error)
+                            console.log("Update Profile Error!")
+                        });
+                } else {
+                  Toast.show({
+                    text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+                    //buttonText: "Okay",
+                    type: "danger"
+                  })
+                }
+            });
+            
             
         }
     }

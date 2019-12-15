@@ -85,19 +85,13 @@ class VehicleDetailHistory extends React.Component {
         let displayDatas = [...thisVehicle.authorizeCarList, ...thisVehicle.fillGasList,
             ...thisVehicle.expenseList, ...thisVehicle.serviceList];
         // Sort this data as Time order
-        let yearList = [];
         displayDatas.sort(function(a, b) {
             let aDate = new Date(a.fillDate);
             let bDate = new Date(b.fillDate);
 
             return bDate - aDate;
         })
-        displayDatas.forEach(item => {
-            let aDate = new Date(item.fillDate);
-            if (yearList.indexOf(""+aDate.getFullYear()) < 0) {
-                yearList.push(""+aDate.getFullYear())
-            }
-        })
+
         
         let dataByYear= {};
         displayDatas.forEach(item => {

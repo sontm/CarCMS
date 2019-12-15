@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import {actUserRegisterOK} from '../../redux/UserReducer'
 import Backend from '../../constants/Backend'
 import AppLocales from '../../constants/i18n'
+import NetInfo from "@react-native-community/netinfo";
 
 class RegisterUserScreen extends React.Component {
     constructor(props) {
@@ -34,26 +35,36 @@ class RegisterUserScreen extends React.Component {
                 type: "danger"
             })
         } else {
-            Backend.registerUser({
-                email: this.state.email,
-                password: this.state.password,
-                fullName: this.state.fullName,
-                phone: this.state.phone,
-                }, 
-                response => {
-                    console.log("REgister OK")
-                    console.log(response.data)
-                    this.props.actUserRegisterOK()
-                    this.props.navigation.navigate("Settings")
-                },
-                error => {
-                    console.log("Register ERROR")
-                    console.log(error)
-                    this.setState({
-                        message: "Register Error!"
-                    })
+            NetInfo.fetch().then(state => {
+                if (state.isConnected) {
+                    Backend.registerUser({
+                        email: this.state.email,
+                        password: this.state.password,
+                        fullName: this.state.fullName,
+                        phone: this.state.phone,
+                        }, 
+                        response => {
+                            console.log("REgister OK")
+                            console.log(response.data)
+                            this.props.actUserRegisterOK()
+                            this.props.navigation.navigate("Settings")
+                        },
+                        error => {
+                            console.log("Register ERROR")
+                            console.log(error)
+                            this.setState({
+                                message: "Register Error!"
+                            })
+                        }
+                    );
+                } else {
+                  Toast.show({
+                    text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+                    //buttonText: "Okay",
+                    type: "danger"
+                  })
                 }
-            );
+              });
         }
        
     }
