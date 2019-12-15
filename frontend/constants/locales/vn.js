@@ -37,6 +37,9 @@ export default {
     GENERAL_ROLE_MEMBER: "Thành Viên",
     GENERAL_FULLNAME: "Họ Tên",
     GENERAL_PHONE: "Điện Thoại",
+    GENERAL_HISTORY: "Lịch Sử",
+    GENERAL_EDIT_SHORT: "Sửa",
+    GENERAL_DELETE_SHORT: "Xoá",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",

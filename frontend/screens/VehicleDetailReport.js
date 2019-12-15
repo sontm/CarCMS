@@ -247,7 +247,7 @@ VehicleDetailReport.navigationOptions = ({navigation}) => ({
                 {vehicle: navigation.state.params.vehicle, isMyVehicle:navigation.state.params.isMyVehicle})}>
                 <View style={styles.rightHistoryView}>
                 <Icon type="MaterialCommunityIcons" name="file-document-outline" style={styles.rightHistoryIcon}/>
-                <Text style={styles.rightHistoryText}>History</Text>
+                <Text style={styles.rightHistoryText}>{AppLocales.t("GENERAL_HISTORY")}</Text>
                 </View>
             </TouchableOpacity>
             
