@@ -43,7 +43,7 @@ export default ({ children }) => (
                         <div class="col-xl-3 col-lg-3 d-none d-lg-block">
                             <div class="main-menu  d-none d-lg-block">
                                 <ul id="navigation">
-                                        <ListLink to="/quanlyxe/PrivacyPolicy">Chính Sách Bảo Mật</ListLink>
+                                        <ListLink to="/quanlyxe/PrivacyPolicy">Quyền Riêng Tư/Privacy Policy</ListLink>
 
                                         {/* <li><a href="#">blog <i class="ti-angle-down"></i></a>
                                             <ul class="submenu">
