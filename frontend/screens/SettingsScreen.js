@@ -329,7 +329,7 @@ class SettingsScreen extends React.Component {
               </View>
             </TouchableOpacity>
 
-              {(this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
+              {(this.props.userData.teamInfo && this.props.userData.teamInfo.code) ? (
                 <View>
                 <View  style={{marginTop: 10, flexDirection:"row", alignItems:"center"}}>
                   <Text style={{color: "rgb(220,220,220)"}}>
@@ -477,7 +477,7 @@ class SettingsScreen extends React.Component {
                 {AppLocales.t("SETTING_H1_ACCOUNT")}
                 </Text>
             </View>
-            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.name)) ? (
+            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.code)) ? (
             <TouchableOpacity 
                   onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})}>
                 <View style={styles.rowContainerNoBorder}>
@@ -490,7 +490,7 @@ class SettingsScreen extends React.Component {
             </TouchableOpacity>
             ) : null }
 
-            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.name)) ? (
+            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.code)) ? (
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("JoinTeam")}>
               <View style={styles.rowContainer}>
@@ -504,7 +504,7 @@ class SettingsScreen extends React.Component {
             ) : null }
 
             {(this.props.userData.isLogined && this.props.userData.teamInfo && 
-                this.props.userData.teamInfo.name && this.props.userData.userProfile.roleInTeam=="manager") ? (
+                this.props.userData.teamInfo.code && this.props.userData.userProfile.roleInTeam=="manager") ? (
             <TouchableOpacity 
                   onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: true})}>
                 <View style={styles.rowContainerNoBorder}>
@@ -516,7 +516,7 @@ class SettingsScreen extends React.Component {
                 </View>
             </TouchableOpacity>
             ) : null }
-            {(this.props.userData.isLogined && this.props.userData.teamInfo && this.props.userData.teamInfo.name) ? (
+            {(this.props.userData.isLogined && this.props.userData.teamInfo && this.props.userData.teamInfo.code) ? (
             <TouchableOpacity 
                   onPress={() => this.onClickLeaveTeam()}>
                 <View style={styles.rowContainerNoBorder}>

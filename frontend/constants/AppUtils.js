@@ -312,6 +312,14 @@ class AppUtils {
         }
         return {sum, avg};
     }
+    calculateDiffDayOf2Date(pre, after) {
+        let preDate = this.normalizeFillDate(new Date(pre))
+        let afterDate = this.normalizeFillDate(new Date(after))
+        const diffTime = Math.abs(afterDate - preDate); // in ms
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    }
+
+
     // Input: [{x, y}, {x, y}]
 
     // Output
@@ -844,6 +852,8 @@ class AppUtils {
         let nextEstimatedKmForMaintain = 0;
         let nextEstimatedDateForMaintain = 0;
         let passedKmFromPreviousMaintain = 0;
+
+        
         if (serviceList && serviceList.length > 0) {
             for (let index = serviceList.length -1; index >= 0; index--) {
                 let item = serviceList[index];
@@ -863,9 +873,10 @@ class AppUtils {
                     passedKmFromPreviousMaintain = lastKm - lastKmMaintain;
                 }
             }
+            let totalNextDay = this.calculateDiffDayOf2Date(lastDateMaintain, nextEstimatedDateForMaintain);
 
             return {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
-                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay}
         }
         return {}
     }
@@ -1773,7 +1784,7 @@ class AppUtils {
             response => {
                 console.log("Sync Vehicle From Server OK");
                 //this.props.actVehicleAddVehicle(response.data, true)
-                //console.log(response.data)
+                //console.log(response.data.teamInfo)
                 props.actVehicleSyncAllFromServer(response.data, props)
             },
             error => {console.log("Sync Vehicle From Server Error");console.log(error);}
@@ -1990,7 +2001,7 @@ class AppUtils {
             //         lastDate, lastKm, averageKmPerDay);
 
             let {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
-                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay}
                 = this.getRemindForMaintain(currentVehicle.serviceList, settingService, lastKm)
 
             let {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
@@ -2110,7 +2121,7 @@ class AppUtils {
                     totalGasSpend, totalOilSpend, totalAuthSpend, totalExpenseSpend, totalServiceSpend, totalMoneySpend},
                 expenseReport: {arrExpenseTypeSpend, arrExpenseTypeByTime},
                 maintainRemind: {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
-                    nextEstimatedDateForMaintain, passedKmFromPreviousMaintain},
+                    nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay},
                 serviceReport: {arrServiceTypeSpend, totalServiceSpend2},
                 //scheduledNotification: scheduledNotification
             }

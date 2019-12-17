@@ -69,7 +69,7 @@ class TeamScreen extends React.Component {
                 // this.setState({
                 //   members: response.data
                 // })
-                this.props.actTeamGetDataOK(response.data)
+                this.props.actTeamGetDataOK(response.data, this.props.userData, this.props.teamData)
             },
             error => {
                 console.log("GEt all Member in Team ERROR")

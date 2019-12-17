@@ -33,7 +33,7 @@ class CreateTeamScreen extends React.Component {
     componentWillMount() {
         if (this.props.navigation.state.params.isEdit) {
             // Edit mode
-            if (this.props.userData.teamInfo && this.props.userData.teamInfo.name) {
+            if (this.props.userData.teamInfo && this.props.userData.teamInfo.code) {
                 this.setState({
                     name: this.props.userData.teamInfo.name,
                     code: this.props.userData.teamInfo.code,

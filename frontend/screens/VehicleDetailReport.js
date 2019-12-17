@@ -69,7 +69,38 @@ class VehicleDetailReport extends React.Component {
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
         
         let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase(), currentVehicle.type!="car")
+        // calcualte Service maintain date or KM
+        //totalNextDay
+        let passedDay =  AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
+            new Date());
+        let totalDayForMaintain = this.props.userData.carReports[currentVehicle.id].maintainRemind.totalNextDay;
+        if (!totalDayForMaintain) {
+            totalDayForMaintain = AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
+                this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain);
+        }
+        let percentByDate = 1.0 * passedDay/totalDayForMaintain;
+        let percentByKm = 1.0 * this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain/
+            this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+        if (percentByDate > percentByKm) {
+            // Will Show by Date
+            var passService = passedDay;
+            var totalNeedService = totalDayForMaintain;
+            var unitService = AppLocales.t("GENERAL_DAY");
+            var nextDateService = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
 
+            var passServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
+            var totalNeedServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+            var unitServiceSub = "Km";
+        } else {
+            var passServiceSub = passedDay;
+            var totalNeedServiceSub = totalDayForMaintain;
+            var unitServiceSub = AppLocales.t("GENERAL_DAY");
+            var nextDateServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
+
+            var passService = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
+            var totalNeedService = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+            var unitService = "Km";
+        }
         return (
             <Container>
             {this.props.userData.carReports[currentVehicle.id] ? (
@@ -90,14 +121,14 @@ class VehicleDetailReport extends React.Component {
                         </View>
                         
                         <View style={styles.statRow}>
-                            {this.props.userData.carReports[currentVehicle.id].maintainRemind ? (
+                            {(this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService )? (
+                            <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                             <VictoryPie
                                 colorScale={["tomato", "silver"]}
                                 data={[
-                                    { x: "", y: this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain },
-                                    { x: "", y: (this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor - 
-                                        this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain) },
+                                    { x: "", y: passService },
+                                    { x: "", y: (totalNeedService - passService) },
                                 ]}
                                 height={140}
                                 innerRadius={58}
@@ -108,14 +139,29 @@ class VehicleDetailReport extends React.Component {
                             <View style={styles.labelProgress}>
                                 <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_SERVICE") + ": "}</Text>
                                 <Text style={styles.labelProgressText}>
-                                    {this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain}/
-                                    {this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor}
+                                    {passService}/
+                                    {totalNeedService}
                                 </Text>
-                                <Text>Km</Text>
+                                <Text>{unitService}</Text>
                             </View>
+                            {nextDateService ? 
+                            <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}
+                                {AppUtils.formatDateMonthDayYearVNShort(nextDateService)}
+                            </Text> : null}
+                            </View>
+                            <Text style={{fontSize: 13}}>{"(Nếu Theo "+ unitServiceSub + ": "}
+                                {passServiceSub+"/"+ totalNeedServiceSub}
+                                {!nextDateServiceSub ? ")" : ""}
+                            </Text>
+                            {nextDateServiceSub ? 
+                            <Text style={{fontSize: 13}}>{AppLocales.t("GENERAL_NEXT") + ": "}
+                                {AppUtils.formatDateMonthDayYearVNShort(nextDateServiceSub)+")"}
+                            </Text> : null}
                             </View>
                             ) : null }
 
+                            {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor ? 
+                            <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
                                     colorScale={["tomato", "silver"]}
@@ -141,7 +187,10 @@ class VehicleDetailReport extends React.Component {
                                     AppUtils.formatDateMonthDayYearVNShort(
                                         this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate): "NA"}</Text>
                             </View>
+                            </View> : null}
 
+                            {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance ?  (
+                            <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
                                     colorScale={["tomato", "silver"]}
@@ -166,8 +215,10 @@ class VehicleDetailReport extends React.Component {
                                 <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
                                         this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance): "NA"}</Text>
-                            </View>
+                            </View></View>) : null}
 
+                            {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee ? (
+                            <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
                                     colorScale={["tomato", "silver"]}
@@ -191,8 +242,10 @@ class VehicleDetailReport extends React.Component {
                                 </View>
                                 <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
-                                        this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee): "NA"}</Text>
-                            </View>
+                                        this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee): "NA"}
+                                </Text>
+                            </View></View>
+                            ) : null}
 
                         </View>
                     </View>
@@ -274,8 +327,8 @@ const styles = StyleSheet.create({
     container: {
       //backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
       flexDirection: "column",
-      borderWidth: 0.5,
-      borderColor: "grey",
+    //   borderWidth: 0.5,
+    //   borderColor: "grey",
       justifyContent: "space-between",
     },
 
@@ -370,6 +423,15 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
 
+    remindItemContainer: {
+        width: 150,
+        height: 180,
+        justifyContent: "flex-start",
+        alignItems: "center",
+        alignSelf: "center",
+        paddingTop: 5,
+        marginBottom: 10,
+    },
     progressContainer: {
         width: 150,
         height: 150,

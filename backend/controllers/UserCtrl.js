@@ -442,11 +442,12 @@ module.exports = {
   },
 
   // Auth API
-  // vehicleList: props.userData.vehicleList,
+    // vehicleList: props.userData.vehicleList,
     // customServiceModules: props.userData.customServiceModules,
     // customServiceModulesBike: props.userData.customServiceModulesBike,
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
+    // teamInfo: teamInfo
   async syncFromServer(req, res) {
     console.log("Vehicle Get OF USER ID:" + req.user.id)
     // Find current User record contain Vehicle data
@@ -456,6 +457,20 @@ module.exports = {
       });
     });
     if (currentUser) {
+      // Find Team data of this User
+      // Return Team Info also
+      let teamInfo = await new Promise((resolve, reject) => {
+        dbteam.findById(currentUser.teamId,function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      console.log("teamInfo")
+      console.log(teamInfo)
+      if (!teamInfo) {
+        teamInfo = {};
+      }
+      
+
       //console.log(currentUser.vehicleList[0])
       res.status(200).send({
         vehicleList: currentUser.vehicleList,
@@ -463,6 +478,7 @@ module.exports = {
         customServiceModulesBike: currentUser.customServiceModulesBike,
         settings: currentUser.settings,
         settingService: currentUser.settingService,
+        teamInfo: teamInfo
       }
       )
     } else {

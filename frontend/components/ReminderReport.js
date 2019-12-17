@@ -114,12 +114,33 @@ class ReminderReport extends React.Component {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
         if (this.props.userData.carReports[element.id].maintainRemind) {
             var {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
-                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay}
                 = this.props.userData.carReports[element.id].maintainRemind;
-            resultView.push(
-                renderRemindItem(false, AppLocales.t("GENERAL_SERVICE"), passedKmFromPreviousMaintain, lastMaintainKmValidFor, 
-                    null, "Km", element.brand+" " +element.model, element.licensePlate)
-            )
+            
+            let passedDay =  AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[element.id].maintainRemind.lastDateMaintain,
+                new Date());
+            let totalDayForMaintain = this.props.userData.carReports[element.id].maintainRemind.totalNextDay;
+            if (!totalDayForMaintain) {
+                totalDayForMaintain = AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[element.id].maintainRemind.lastDateMaintain,
+                    this.props.userData.carReports[element.id].maintainRemind.nextEstimatedDateForMaintain);
+            }
+            let percentByDate = 1.0 * passedDay/totalDayForMaintain;
+            let percentByKm = 1.0 * this.props.userData.carReports[element.id].maintainRemind.passedKmFromPreviousMaintain/
+                this.props.userData.carReports[element.id].maintainRemind.lastMaintainKmValidFor;
+            if (percentByDate > percentByKm) {
+                // Will Show by Date
+                resultView.push(
+                    renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), passedDay, totalDayForMaintain, 
+                    this.props.userData.carReports[element.id].maintainRemind.nextEstimatedDateForMaintain,
+                    AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
+                )
+            } else {
+                resultView.push(
+                    renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), this.props.userData.carReports[element.id].maintainRemind.passedKmFromPreviousMaintain, 
+                    this.props.userData.carReports[element.id].maintainRemind.lastMaintainKmValidFor, 
+                    null, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
+                )
+            }
         }
         var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,
@@ -179,12 +200,34 @@ class ReminderReport extends React.Component {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         if (this.props.teamData.teamCarReports[element.id].maintainRemind) {
             var {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
-                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain}
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay}
                 = this.props.teamData.teamCarReports[element.id].maintainRemind;
-            resultView.push(
-                renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), passedKmFromPreviousMaintain, lastMaintainKmValidFor, 
+            
+            let passedDay =  AppUtils.calculateDiffDayOf2Date(this.props.teamData.teamCarReports[element.id].maintainRemind.lastDateMaintain,
+                new Date());
+            let totalDayForMaintain = this.props.teamData.teamCarReports[element.id].maintainRemind.totalNextDay;
+            if (!totalDayForMaintain) {
+                totalDayForMaintain = AppUtils.calculateDiffDayOf2Date(this.props.teamData.teamCarReports[element.id].maintainRemind.lastDateMaintain,
+                    this.props.teamData.teamCarReports[element.id].maintainRemind.nextEstimatedDateForMaintain);
+            }
+            let percentByDate = 1.0 * passedDay/totalDayForMaintain;
+            let percentByKm = 1.0 * this.props.teamData.teamCarReports[element.id].maintainRemind.passedKmFromPreviousMaintain/
+                this.props.teamData.teamCarReports[element.id].maintainRemind.lastMaintainKmValidFor;
+            if (percentByDate > percentByKm) {
+                // Will Show by Date
+                resultView.push(
+                    renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), passedDay, totalDayForMaintain, 
+                    this.props.teamData.teamCarReports[element.id].maintainRemind.nextEstimatedDateForMaintain,
+                    AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
+                )
+            } else {
+                resultView.push(
+                    renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), this.props.teamData.teamCarReports[element.id].maintainRemind.passedKmFromPreviousMaintain, 
+                    this.props.teamData.teamCarReports[element.id].maintainRemind.lastMaintainKmValidFor, 
                     null, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-            )
+                )
+            }
+            
         }
         var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                 diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,

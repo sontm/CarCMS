@@ -382,6 +382,7 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
     // customServiceModulesBike: props.userData.customServiceModulesBike,
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
+    // teamInfo: teamInfo
 // oldProps have both userData, teamData
 export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
     console.log("actVehicleSyncFromServer:")
@@ -553,7 +554,7 @@ export default function(state = initialState, action) {
             customServiceModulesBike: action.payload.customServiceModulesBike,
             settings: action.payload.settings,
             settingService: action.payload.settingService,
-
+            teamInfo: action.payload.teamInfo,
             //carReports: {},// this will be updated during Caluclation,because some may not need to Re-calculate
             lastSyncFromServerOn: new Date()
         }
