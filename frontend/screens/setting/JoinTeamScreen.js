@@ -7,6 +7,8 @@ import AppConstants from '../../constants/AppConstants'
 import { HeaderText } from '../../components/StyledText';
 import { connect } from 'react-redux';
 import {actUserCreateTeamOK} from '../../redux/UserReducer'
+import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../../redux/TeamReducer'
+
 import Backend from '../../constants/Backend'
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
@@ -44,6 +46,35 @@ class JoinTeamScreen extends React.Component {
                             console.log(response.data)
                             // Rejoin team can ReUse Create Team
                             this.props.actUserCreateTeamOK(response.data)
+                            // Sync Team Data heare also
+                            Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
+                            response2 => {
+                                console.log("GEt all Member in Team OK")
+    
+                                this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData)
+                            },
+                            error => {
+                                console.log("GEt all Member in Team ERROR")
+                                console.log(JSON.stringify(error))
+                                this.setState({
+                                    message: "Get Team Data Error!"
+                                })
+                            }
+                            );
+                    
+                            Backend.getAllJoinTeamRequest(this.props.userData.token, 
+                            response3 => {
+                                console.log("GEt all JoinRequest OK")
+                                this.props.actTeamGetJoinRequestOK(response3.data)
+                            },
+                            error => {
+                                console.log("GEt all JoinRequest ERROR")
+                                console.log(JSON.stringify(error))
+                                this.setState({
+                                    message: "Login Error!"
+                                })
+                            })
+
                             this.props.navigation.goBack()
                         }, err => {
                             console.log("rejoinTeam ERROR")
@@ -70,6 +101,10 @@ class JoinTeamScreen extends React.Component {
                         console.log(response.data)
                         //this.props.actUserCreateTeamOK(response.data)
                         //this.props.navigation.navigate("Settings")
+                        
+                        
+
+
                         this.props.navigation.goBack()
                     },
                     error => {
@@ -202,10 +237,11 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    teamData: state.teamData
 });
 const mapActionsToProps = {
-    actUserCreateTeamOK
+    actUserCreateTeamOK, actTeamGetDataOK, actTeamGetJoinRequestOK
 };
   
 export default connect(

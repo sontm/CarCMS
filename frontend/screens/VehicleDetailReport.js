@@ -150,7 +150,7 @@ class VehicleDetailReport extends React.Component {
                             </Text> : null}
                             </View>
                             <Text style={{fontSize: 13}}>{"(Nếu Theo "+ unitServiceSub + ": "}
-                                {passServiceSub+"/"+ totalNeedServiceSub}
+                                {passServiceSub+"/"+ totalNeedServiceSub+ unitServiceSub}
                                 {!nextDateServiceSub ? ")" : ""}
                             </Text>
                             {nextDateServiceSub ? 

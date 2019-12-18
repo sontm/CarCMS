@@ -54,7 +54,8 @@ class TeamScreen extends React.Component {
   }
   fetchTeamData() {
     console.log("My Team IDDDDDD")
-    console.log(this.props.userData.userProfile.teamId)
+    console.log(this.props.userData.userProfile)
+    console.log(this.props.userData.teamInfo)
     if (this.props.userData.userProfile.roleInTeam != "manager" && !this.props.userData.teamInfo.canMemberViewReport) {
       // no get data
     } else {

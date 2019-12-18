@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppConstants from '../../constants/AppConstants'
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input, 
     Label, DatePicker, Toast } from 'native-base';
-    import {HeaderText} from '../../components/StyledText'
+    import {HeaderText, NoDataText} from '../../components/StyledText'
 import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import apputils from '../../constants/AppUtils';
@@ -28,6 +28,7 @@ class FillGasScreen extends React.Component {
         };
 
         this.save = this.save.bind(this)
+        this.actualSave = this.actualSave.bind(this)
     }
     componentWillMount() {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
@@ -35,7 +36,8 @@ class FillGasScreen extends React.Component {
             // Load from Info
             console.log("LoadGas From Info")
             console.log(AppConstants.CURRENT_VEHICLE_ID)
-            const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+            let currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+            this.currentVehicle = currentVehicle;
 
             for (let i = 0; i < currentVehicle.fillGasList.length; i++) {
                 if (currentVehicle.fillGasList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
@@ -51,11 +53,17 @@ class FillGasScreen extends React.Component {
             // If There is No Current Vehicle ID, Set to the First 
             if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
+                    let currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.userData.vehicleList[0].id);
+                    this.currentVehicle = currentVehicle;
+
                     this.setState({
                         vehicleId: this.props.userData.vehicleList[0].id
                     })
                 }
             } else {
+                let currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+                this.currentVehicle = currentVehicle;
+
                 this.setState({
                     vehicleId: AppConstants.CURRENT_VEHICLE_ID
                 })
@@ -64,7 +72,51 @@ class FillGasScreen extends React.Component {
         
     }
 
-    save(newVehicle) {
+    actualSave(maxMeter) {
+        let curMaxMeter = 0;
+        if (maxMeter) {
+            curMaxMeter = maxMeter+1;
+        }
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+            console.log("WIll Edit FillGas:")
+            let newData = {
+                ...this.state,
+
+                vehicleId: (this.state.vehicleId),
+                fillDate: this.state.fillDate,
+                amount: Number(this.state.amount),
+                price: Number(this.state.price),
+                currentKm: Number(this.state.currentKm)+curMaxMeter
+            }
+            if (curMaxMeter) {
+                newData.maxMeter = curMaxMeter;
+            }
+
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
+            this.props.navigation.goBack()
+        } else {
+            console.log("WIll Save Fill Gas:")
+            let newData = {
+                ...this.state,
+
+                vehicleId: (this.state.vehicleId),
+                fillDate: this.state.fillDate,
+                amount: Number(this.state.amount),
+                price: Number(this.state.price),
+                currentKm: Number(this.state.currentKm)+curMaxMeter
+            }
+            if (curMaxMeter) {
+                newData.maxMeter = curMaxMeter;
+            }
+
+            newData.id = apputils.uuidv4();
+            console.log(JSON.stringify(newData))
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
+
+            this.props.navigation.navigate('VehicleDetail')
+        }
+    }
+    save() {
         // Validate 
         if (!this.state.vehicleId || !this.state.price || !this.state.currentKm) {
             Toast.show({
@@ -73,44 +125,98 @@ class FillGasScreen extends React.Component {
                 type: "danger"
             })
         } else {
-
-            if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-                console.log("WIll Edit FillGas:")
-                let newData = {
-                    ...this.state,
-
-                    vehicleId: (this.state.vehicleId),
-                    fillDate: this.state.fillDate,
-                    amount: Number(this.state.amount),
-                    price: Number(this.state.price),
-                    currentKm: Number(this.state.currentKm)
-                }
-
-                this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
-                this.props.navigation.goBack()
-            } else {
-                console.log("WIll Save Fill Gas:")
-                let newData = {
-                    ...this.state,
-
-                    vehicleId: (this.state.vehicleId),
-                    fillDate: this.state.fillDate,
-                    amount: Number(this.state.amount),
-                    price: Number(this.state.price),
-                    currentKm: Number(this.state.currentKm)
-                }
-
-                newData.id = apputils.uuidv4();
-                console.log(JSON.stringify(newData))
-                this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
-
-                this.props.navigation.navigate('VehicleDetail')
+            // Found Previous KM 
+            // const currentVehicle = this.props.userData.vehicleList.find(item => 
+            //     item.id == this.state.vehicleId);
+            let currentVehicle = this.currentVehicle;
+            
+            console.log("-----maxMeter")
+            console.log(currentVehicle.maxMeter)
+            let theMaxMeter = 0;
+            if (currentVehicle.maxMeter) {
+                theMaxMeter = currentVehicle.maxMeter;
             }
+
+            let prevItem = null;
+            let currentKm = Number(this.state.currentKm);
+            // Only check if isBike
+            if (currentVehicle.fillGasList && currentVehicle.fillGasList.length > 0) {
+                for (let l = currentVehicle.fillGasList.length -1; l >= 0; l--) {
+                    // if the Date is Smaller than this date, that is the Previous
+                    let item = currentVehicle.fillGasList[l];
+                    if (new Date(this.state.fillDate).getTime() > new Date(item.fillDate).getTime()) {
+                        prevItem = item;
+                        break;
+                    }
+                }
+            }
+            if (prevItem) {
+                // Bike Odometer ussually 99999, Car is 999999
+                console.log("currentKm:" + currentKm)
+                console.log("prevItem.currentKm:" + prevItem.currentKm)
+                if (!theMaxMeter && currentKm < 5000 && prevItem.currentKm > 80000) {
+                    // Validate Current KM if Over Max Odometer. 
+                    Alert.alert(
+                        "Km hiện tại (" + currentKm + ") nhỏ hơn lần trước (" + prevItem.currentKm + ") rất nhiều.",
+                        "Công tơ mét đã quay hết vòng ? Hãy Nhập Số Lớn Nhất của Công tơ mét!",
+                        [
+                            {
+                                text: 'Không Phải, Tiếp Tục Lưu',
+                                onPress: () => {this.actualSave()},
+                                style: 'destructive',
+                            },
+                            {text: 'OK, Nhập Số', 
+                                onPress: () => {
+                                    // go to props
+                                    this.props.navigation.navigate("SetMaxOdometer", {vehicleId: this.state.vehicleId})
+                                } 
+                            },
+                            
+                        ],
+                        {cancelable: true}
+                    );
+                } else if (currentKm+theMaxMeter < prevItem.currentKm) {
+                    // Validate if Current KM Smaller than Previous
+                    Alert.alert(
+                        "Km hiện tại (" + currentKm + (theMaxMeter>0?(" " +theMaxMeter):"") +") nhỏ hơn lần trước (" + prevItem.currentKm + ").",
+                        "Bạn có muốn Huỷ và Nhập Lại?",
+                        [
+                            {text: 'Không, Tiếp Tục Lưu', style: 'destructive' , 
+                                onPress: () => {
+                                    this.actualSave(currentVehicle.maxMeter)
+                                } 
+                            },
+                            {
+                                text: 'Huỷ, Nhập Lại',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                            },
+                        ],
+                        {cancelable: true}
+                    );
+                } else {
+                    this.actualSave(currentVehicle.maxMeter)
+                }
+
+                
+            } else {
+                this.actualSave(currentVehicle.maxMeter)
+            }
+
+
+            
         }
     }
 
     render() {
-        console.log("FIll Gas State of ID:" + this.state.vehicleId)
+        if (!this.currentVehicle) {
+            // No Car Associated,
+            return (
+                <View style={styles.formContainer}>
+                    <NoDataText content="Không Có Xe Tương Ứng!"/>
+                </View>
+            )
+        } 
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
         if (today.getFullYear() == theDate.getFullYear && today.getMonth() == theDate.getMonth() &&
@@ -204,11 +310,16 @@ class FillGasScreen extends React.Component {
                 <View style={styles.rowContainer}>
                     <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                     <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
-                        <Label>{AppLocales.t("NEW_GAS_CURRENTKM")}</Label>
+                        <Label>{AppLocales.t("NEW_GAS_CURRENTKM")}
+                        </Label>
                         {!this.state.currentKm ?
                         <Label style={{color: "red"}}>*</Label>
                         : null}
                     </View>
+                    <Label>
+                        {(this.currentVehicle&&this.currentVehicle.maxMeter>0) ? 
+                            "(Đã qua vòng Công tơ mét "+ this.currentVehicle.maxMeter + "Km)" : null}
+                    </Label>
 
                     <Input
                         style={styles.rowForm}
@@ -317,8 +428,7 @@ const mapStateToProps = (state) => ({
     userData: state.userData
 });
 const mapActionsToProps = {
-    actVehicleAddFillItem,
-    actVehicleEditFillItem
+    actVehicleAddFillItem, actVehicleEditFillItem
 };
   
 export default connect(

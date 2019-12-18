@@ -45,6 +45,8 @@ class PayServiceScreen extends React.Component {
         this.onUpdateMaintainModules = this.onUpdateMaintainModules.bind(this)
         this.removeMaintainModule = this.removeMaintainModule.bind(this)
 
+        this.actualSave = this.actualSave.bind(this)
+        
         this.currentVehileIsBike = false;
     }
 
@@ -53,6 +55,8 @@ class PayServiceScreen extends React.Component {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+            this.currentVehicle = currentVehicle;
+
             for (let i = 0; i < currentVehicle.serviceList.length; i++) {
                 if (currentVehicle.serviceList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES = currentVehicle.serviceList[i].serviceModule;
@@ -71,18 +75,72 @@ class PayServiceScreen extends React.Component {
             // If There is No Current Vehicle ID, Set to the First 
             if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
+                    let currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.userData.vehicleList[0].id);
+                    this.currentVehicle = currentVehicle;
+
                     this.setState({
                         vehicleId: this.props.userData.vehicleList[0].id
                     })
                 }
             } else {
+                let currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+                this.currentVehicle = currentVehicle;
+
                 this.setState({
                     vehicleId: AppConstants.CURRENT_VEHICLE_ID
                 })
             }
         }
     }
-    
+    actualSave(maxMeter) {
+        let curMaxMeter = 0;
+        if (maxMeter) {
+            curMaxMeter = maxMeter+1;
+        }
+        if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
+            console.log("WIll Edit Service:")
+            let newData = {
+                ...this.state,
+
+                vehicleId: (this.state.vehicleId),
+                fillDate: this.state.fillDate,
+                price: Number(this.state.price),
+                currentKm: Number(this.state.currentKm)+curMaxMeter
+            }
+            if (curMaxMeter) {
+                newData.maxMeter = curMaxMeter;
+            }
+            console.log(newData)
+
+            this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
+            this.props.navigation.goBack()
+        } else {
+            console.log("WIll Save Car Authorize:")
+            let newData = {
+                ...this.state,
+                
+                vehicleId: (this.state.vehicleId),
+                fillDate: this.state.fillDate,
+                price: Number(this.state.price),
+                currentKm: Number(this.state.currentKm)+curMaxMeter
+            }
+            if (curMaxMeter) {
+                newData.maxMeter = curMaxMeter;
+            }
+            // let maxId = 0;
+            // this.props.userData.serviceList.forEach(item => {
+            //     if (maxId < item.id) {
+            //         maxId = item.id
+            //     }
+            // })
+            newData.id = apputils.uuidv4();
+            console.log(newData)
+
+            this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
+
+            this.props.navigation.navigate('VehicleDetail')
+        }
+    }
     save = async (newVehicle) => {
         if (!this.state.vehicleId || !this.state.price || !this.state.currentKm || Object.keys(this.state.serviceModule) == 0) {
             Toast.show({
@@ -91,44 +149,81 @@ class PayServiceScreen extends React.Component {
                 type: "danger"
             })
         } else {
-
-            if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-                console.log("WIll Edit FillOil:")
-                let newData = {
-                    ...this.state,
-
-                    vehicleId: (this.state.vehicleId),
-                    fillDate: this.state.fillDate,
-                    price: Number(this.state.price),
-                    currentKm: Number(this.state.currentKm)
-                }
-                console.log(newData)
-
-                this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
-                this.props.navigation.goBack()
-            } else {
-                console.log("WIll Save Car Authorize:")
-                let newData = {
-                    ...this.state,
-                    
-                    vehicleId: (this.state.vehicleId),
-                    fillDate: this.state.fillDate,
-                    price: Number(this.state.price),
-                    currentKm: Number(this.state.currentKm)
-                }
-                // let maxId = 0;
-                // this.props.userData.serviceList.forEach(item => {
-                //     if (maxId < item.id) {
-                //         maxId = item.id
-                //     }
-                // })
-                newData.id = apputils.uuidv4();
-                console.log(newData)
-
-                this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
-
-                this.props.navigation.navigate('VehicleDetail')
+            let currentVehicle = this.currentVehicle;
+            
+            console.log("-----maxMeter")
+            console.log(currentVehicle.maxMeter)
+            let theMaxMeter = 0;
+            if (currentVehicle.maxMeter) {
+                theMaxMeter = currentVehicle.maxMeter;
             }
+
+            let prevItem = null;
+            let currentKm = Number(this.state.currentKm);
+
+            if (currentVehicle.fillGasList && currentVehicle.fillGasList.length > 0) {
+                for (let l = currentVehicle.fillGasList.length -1; l >= 0; l--) {
+                    // if the Date is Smaller than this date, that is the Previous
+                    let item = currentVehicle.fillGasList[l];
+                    if (new Date(this.state.fillDate).getTime() > new Date(item.fillDate).getTime()) {
+                        prevItem = item;
+                        break;
+                    }
+                }
+            }
+            if (prevItem) {
+                // Bike Odometer ussually 99999, Car is 999999
+                console.log("currentKm:" + currentKm)
+                console.log("prevItem.currentKm:" + prevItem.currentKm)
+                if (!theMaxMeter && currentKm < 30000 && prevItem.currentKm > 90000) {
+                    // Validate Current KM if Over Max Odometer. 
+                    Alert.alert(
+                        "Km hiện tại (" + currentKm + ") nhỏ hơn lần đổ xăng trước (" + prevItem.currentKm + ") rất nhiều.",
+                        "Công tơ mét đã quay hết vòng ? Hãy Nhập Số Lớn Nhất của Công tơ mét!",
+                        [
+                            {
+                                text: 'Không Phải, Tiếp Tục Lưu',
+                                onPress: () => {this.actualSave()},
+                                style: 'destructive',
+                            },
+                            {text: 'OK, Nhập Số', 
+                                onPress: () => {
+                                    // go to props
+                                    this.props.navigation.navigate("SetMaxOdometer", {vehicleId: this.state.vehicleId})
+                                } 
+                            },
+                            
+                        ],
+                        {cancelable: true}
+                    );
+                } else if (currentKm+theMaxMeter < prevItem.currentKm) {
+                    // Validate if Current KM Smaller than Previous
+                    Alert.alert(
+                        "Km hiện tại (" + currentKm + (theMaxMeter>0?(" " +theMaxMeter):"") +") nhỏ hơn lần trước (" + prevItem.currentKm + ").",
+                        "Bạn có muốn Huỷ và Nhập Lại?",
+                        [
+                            {text: 'Không, Tiếp Tục Lưu', style: 'destructive' , 
+                                onPress: () => {
+                                    this.actualSave(currentVehicle.maxMeter)
+                                } 
+                            },
+                            {
+                                text: 'Huỷ, Nhập Lại',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                            },
+                        ],
+                        {cancelable: true}
+                    );
+                } else {
+                    this.actualSave(currentVehicle.maxMeter)
+                }
+
+                
+            } else {
+                this.actualSave(currentVehicle.maxMeter)
+            }
+            
         }
     }
 
@@ -197,6 +292,15 @@ class PayServiceScreen extends React.Component {
         }
     }
     render() {
+        if (!this.currentVehicle) {
+            // No Car Associated,
+            return (
+                <View style={styles.formContainer}>
+                    <NoDataText content="Không Có Xe Tương Ứng!"/>
+                </View>
+            )
+        } 
+
         console.log(this.state)
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
@@ -350,6 +454,10 @@ class PayServiceScreen extends React.Component {
                             <Label style={{color: "red"}}>*</Label>
                             : null}
                         </View>
+                        <Label>
+                        {(this.currentVehicle&&this.currentVehicle.maxMeter>0) ? 
+                            "(Đã qua vòng Công tơ mét "+ this.currentVehicle.maxMeter + "Km)" : null}
+                        </Label>
                         <Input
                             style={styles.rowForm}
                             keyboardType="numeric"

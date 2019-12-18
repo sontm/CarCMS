@@ -464,12 +464,9 @@ module.exports = {
           err ? reject(err) : resolve(doc);
         });
       });
-      console.log("teamInfo")
-      console.log(teamInfo)
       if (!teamInfo) {
         teamInfo = {};
       }
-      
 
       //console.log(currentUser.vehicleList[0])
       res.status(200).send({

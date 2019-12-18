@@ -37,6 +37,8 @@ const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 const USER_LEAVE_TEAM_OK = 'USER_LEAVE_TEAM_OK';
 
+const USER_SET_MAX_METER = 'USER_SET_MAX_METER';
+
 const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
 const TEMP_CALCULATE_CARREPORT_ALL = 'TEMP_CALCULATE_CARREPORT_ALL';
 
@@ -70,8 +72,9 @@ const initialState = {
     token: "",
     defaultVehicleId: "",
     // Below will Sync
-    vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]
-                    // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":
+    vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]/
+                    // Each item: maxMeter ...
+                    // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":, maxMeter
     carReports:{}, // {vehicleid: {gasReport,authReport,moneyReport,maintainRemind, scheduledNotification}}
 
     // Below will Sync
@@ -479,6 +482,15 @@ export const actCustomDelServiceModuleBike = (data) => (dispatch) => {
 }
 
 
+// data: {vehicleId, maxMeter}
+export const actUserSetMaxOdometer = (data) => (dispatch) => {
+    console.log("actUserSetMaxOdometer:")
+    dispatch({
+        type: USER_SET_MAX_METER,
+        payload: data
+    })
+}
+
 function checkNameExistInServiceModule(arr, value) {
     if (arr && arr.length > 0) {
         for (let i = 0; i < arr.length; i++) {
@@ -501,7 +513,11 @@ export default function(state = initialState, action) {
         return {
             ...state,
             teamInfo: action.payload,
-            userProfile: {...state.userProfile, roleInTeam: "manager"}
+            userProfile: {...state.userProfile, 
+                teamId: action.payload.id,
+                teamCOde: action.payload.code,
+                roleInTeam: "manager"
+            }
         };
     case USER_LEAVE_TEAM_OK:
         let prevStateLeaveTEam = {...state};
@@ -951,6 +967,16 @@ export default function(state = initialState, action) {
         }
 
         return prevStateServiceDelBike;
+    case USER_SET_MAX_METER:
+        let prevStateSetMeter = {...state};
+        for (let i = 0; i < prevStateSetMeter.vehicleList.length; i++) {
+            if (prevStateSetMeter.vehicleList[i].id == action.payload.vehicleId ) {
+                prevStateSetMeter.vehicleList[i].maxMeter = action.payload.maxMeter;
+
+                break;
+            }
+        }
+        return prevStateSetMeter;
     default:
         return state;
     }

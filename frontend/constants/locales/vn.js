@@ -40,6 +40,7 @@ export default {
     GENERAL_HISTORY: "Lịch Sử",
     GENERAL_EDIT_SHORT: "Sửa",
     GENERAL_DELETE_SHORT: "Xoá",
+    GENERAL_CONFIRM: "Xác Nhận",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",
@@ -70,6 +71,8 @@ export default {
     HOME_PRIVATE_MONEY_USAGE: "Chi Tiêu Cá Nhân Gần Đây",
     HOME_TEAM_MONEY_USAGE: "Chi Tiêu Nhóm Gần Đây",
     
+    ADD_MAX_METER_HEADER: "Công tơ Mét",
+    ADD_MAX_METER_LBL: "Số Lớn Nhất Công tơ Mét",
 
     CARDETAIL_HEADER: "Báo Cáo Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",

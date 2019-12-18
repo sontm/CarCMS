@@ -51,6 +51,7 @@ class MoneyUsageByTimeReport extends React.Component {
     let arrTotalAuthOneCar = [];
     let arrTotalExpenseOneCar = [];
     let arrTotalServiceOneCar = [];
+    let legendLabels = [];
     let tickXLabels = [];
     // TODO for Testing and with Time selected
     
@@ -82,7 +83,9 @@ class MoneyUsageByTimeReport extends React.Component {
                     arrTotalGasOneCar.push(thisCarGasItem);
                 }
             })
-           
+           if (arrTotalGasOneCar.length > 0) {
+            legendLabels.push({name:AppLocales.t("GENERAL_GAS")})
+           }
         }
         
         if (arrOilSpend && arrOilSpend.length) {
@@ -98,7 +101,6 @@ class MoneyUsageByTimeReport extends React.Component {
                     arrTotalOilOneCar.push(thisCarOilItem);
                 }
             })
-            
         }
         
         if (arrAuthSpend && arrAuthSpend.length) {
@@ -113,7 +115,9 @@ class MoneyUsageByTimeReport extends React.Component {
                     arrTotalAuthOneCar.push(thisCarAuthItem);
                 }
             })
-            
+            if (arrTotalAuthOneCar.length > 0) {
+                legendLabels.push({name:AppLocales.t("GENERAL_AUTHROIZE")})
+            }
         }
         
         if (arrExpenseSpend && arrExpenseSpend.length) {
@@ -129,6 +133,9 @@ class MoneyUsageByTimeReport extends React.Component {
                     arrTotalExpenseOneCar.push(thisCarExpenseItem);
                 }
             })
+            if (arrTotalExpenseOneCar.length > 0) {
+                legendLabels.push({name:AppLocales.t("GENERAL_EXPENSE")})
+            }
             
         }
         
@@ -144,12 +151,14 @@ class MoneyUsageByTimeReport extends React.Component {
                     arrTotalServiceOneCar.push(thisCarServiceItem);
                 }
             })
-            
+            if (arrTotalServiceOneCar.length > 0) {
+                legendLabels.push({name:AppLocales.t("GENERAL_SERVICE")})
+            }
         }
     }
     //});
     return {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
-        arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}
+        arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels}
   }
 
 
@@ -370,10 +379,8 @@ class MoneyUsageByTimeReport extends React.Component {
             }
         } else {
             var {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
-                arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels}
+                arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels}
                 = this.calculateOneVehicleTotalMoneyPrivate();
-
-            var legendLabels = AppConstants.LEGEND_CHITIEU;
         }
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         let isHasData = true;
@@ -484,11 +491,6 @@ class MoneyUsageByTimeReport extends React.Component {
                                 interpolation="linear"
                             /> : null}
 
-                            {arrTotalOilOneCar && arrTotalOilOneCar.length ?
-                            <VictoryBar
-                                data={arrTotalOilOneCar}
-                                interpolation="linear"
-                            /> : null}
 
                             {arrTotalAuthOneCar && arrTotalAuthOneCar.length ?
                             <VictoryBar

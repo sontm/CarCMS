@@ -11,6 +11,7 @@ import Colors from '../constants/Colors';
 
 import HomeScreen from '../screens/HomeScreen';
 import RegisterVehicleScreen from '../screens/RegisterVehicleScreen';
+import SetMaxOdometer from '../screens/addinfo/SetMaxOdometer';
 import FillGasScreen from '../screens/addinfo/FillGasScreen';
 import FillOilScreen from '../screens/addinfo/FillOilScreen';
 import CarAuthorizeScreen from '../screens/addinfo/CarAuthorizeScreen';
@@ -66,7 +67,8 @@ const MyVehicleStack = createStackNavigator(
     PayExpense: PayExpenseScreen,
     PayService: PayServiceScreen,
     ServiceModules: ServiceScreenModules,
-    ServiceModuleCreate: ServiceModuleCreateScreen
+    ServiceModuleCreate: ServiceModuleCreateScreen,
+    SetMaxOdometer: SetMaxOdometer
   },
   config
 );

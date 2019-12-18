@@ -22,6 +22,7 @@ class RegisterVehicleScreen extends React.Component {
             type: 'car', // car or bike
             //: new Date().toLocaleDateString(),
             isDefault: false,
+            maxMeter: 0,
             fillGasList:[],
             fillOilList:[],
             authorizeCarList:[],
@@ -45,6 +46,7 @@ class RegisterVehicleScreen extends React.Component {
                         model: this.props.userData.vehicleList[i].model,
                         licensePlate: this.props.userData.vehicleList[i].licensePlate,
                         type: this.props.userData.vehicleList[i].type ? this.props.userData.vehicleList[i].type : "car",
+                        maxMeter: this.props.userData.vehicleList[i].maxMeter
                         //checkedDate: this.props.userData.vehicleList[i].checkedDate,
                         //isDefault: this.props.userData.vehicleList[i].isDefault
                     })
@@ -229,6 +231,24 @@ class RegisterVehicleScreen extends React.Component {
                             />
                         </Item>
                     </View>
+
+                    {this.state.maxMeter > 0 ?
+                    <View style={styles.rowContainer}>
+                        <Item stackedLabel>
+                        <Label>
+                            {AppLocales.t("ADD_MAX_METER_LBL")}
+                        </Label>
+                        <Text style={{fontStyle: "italic", fontSize: 14, color: AppConstants.COLOR_TEXT_DARKEST_INFO, alignSelf: "flex-start"}}>
+                            {(this.state.maxMeter>0) ? 
+                            "(Xe đã qua vòng Công tơ mét "+ this.state.maxMeter + "Km)" : null}
+                        </Text>
+                        <Input
+                            onChangeText={(maxMeter) => this.setState({maxMeter})}
+                            value={""+this.state.maxMeter}
+                            keyboardType="numeric"
+                        />
+                        </Item>
+                    </View> : null}
   
 
                     {/* <View style={styles.rowContainer}>
