@@ -24,10 +24,12 @@
     "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "node-uuid": "^1.4.8",
+    "nodemailer": "^6.4.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "uuid": "^3.3.3"
+    "uuid": "^3.3.3",
+    "xoauth2": "^1.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",

@@ -24,7 +24,7 @@ const startServer = async () => {
   // Simple API Check only
   var myAPIChecker = function (req, res, next) {
     let apiKey = req.header("APIKEY");
-    console.log(apiKey)
+    //console.log(apiKey)
     if (apiKey && apiKey == "S1E9C9R0E0T5K0E7Y-qlx") {
       next()
     } else {

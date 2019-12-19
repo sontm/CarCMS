@@ -177,6 +177,15 @@ class Backend {
             .catch((error) => {onError(error);});
     }
 
+    getAllNotification(lstExist, token, onOK, onError) {
+        console.log("Backend getAllNotification:")
+        axios.post("/app/notification/me",
+            JSON.stringify(lstExist),
+            { headers: this.createHeader(token)})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
 }
 
 const backend = new Backend();

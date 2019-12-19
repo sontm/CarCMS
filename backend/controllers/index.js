@@ -46,6 +46,13 @@ app.post('/api/team/rejointeam', passport.authenticate('jwt', {session: false}),
 app.get('/api/app/lateston', appData.getLatestDataDateOn);
 app.get('/api/app/appdata', appData.getLatestAppData);
 
+app.post('/api/app/notification', appData.addAppNotification);
+app.post('/api/app/notification/me', passport.authenticate('jwt', {session: false}),
+  appData.getMyNotification);
+app.get('/api/app/notification/all', appData.getAllAppNotification);
+
+app.get('/api/app/recovermail', appData.sendEmailForgotPassword);
+
 // app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
 // app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);
 // app.get('/api/vehicle/all', vehicle.getAll);

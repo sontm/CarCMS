@@ -1,5 +1,6 @@
 import dbuser from "../database/models/dbuser";
 import dbteam from "../database/models/dbteam";
+import dbnotification from "../database/models/dbnotification";
 import apputil from "../components/AppUtil";
 import axios from 'axios';
 const bcrypt = require('bcrypt')
@@ -468,6 +469,28 @@ module.exports = {
         teamInfo = {};
       }
 
+      // Load Notification also
+      let notiInfo = await new Promise((resolve, reject) => {
+        dbnotification.find( 
+          { 
+            $and: [
+              {
+                $or:[ 
+                  {forAll: true},
+                  {'teamId':currentUser.teamId},
+                  {'userId':currentUser.id} 
+                ],
+              },
+              {enable: true}
+            ]
+          },function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      if (!notiInfo) {
+        notiInfo = [];
+      }
+
       //console.log(currentUser.vehicleList[0])
       res.status(200).send({
         vehicleList: currentUser.vehicleList,
@@ -475,7 +498,8 @@ module.exports = {
         customServiceModulesBike: currentUser.customServiceModulesBike,
         settings: currentUser.settings,
         settingService: currentUser.settingService,
-        teamInfo: teamInfo
+        teamInfo: teamInfo,
+        notifications: notiInfo
       }
       )
     } else {

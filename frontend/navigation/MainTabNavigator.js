@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
 import HomeScreen from '../screens/HomeScreen';
+import NotificationScreen from '../screens/NotificationScreen';
 import RegisterVehicleScreen from '../screens/RegisterVehicleScreen';
 import SetMaxOdometer from '../screens/addinfo/SetMaxOdometer';
 import FillGasScreen from '../screens/addinfo/FillGasScreen';
@@ -51,6 +52,7 @@ const config = Platform.select({
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
+    Notification: NotificationScreen
   },
   config
 );

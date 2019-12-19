@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import {Container, Header, Title, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, ScrollableTab, ListItem } from 'native-base';
 import Layout from '../constants/Layout'
-import {HeaderText} from '../components/StyledText'
+import {HeaderText, NoDataText} from '../components/StyledText'
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
@@ -22,7 +22,7 @@ class VehicleDetailHistory extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        vehicle: {},
+        vehicleId: 0
     };
 
     this.renderHistoryList = this.renderHistoryList.bind(this)
@@ -33,11 +33,24 @@ class VehicleDetailHistory extends React.Component {
   componentDidMount() {
     //console.log("DetailReport DidMount:" + this.props.navigation.state.params.vehicleId)
     //AppConstants.CURRENT_VEHICLE_ID = this.props.navigation.state.params.vehicleId;
+    if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
+        this.currentVehicle = this.props.navigation.state.params.vehicle;
+        this.setState({
+            vehicleId: this.props.navigation.state.params.vehicle.id
+        })
+    } else {
+        var currentVehicle = this.props.userData.vehicleList.find(
+        item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+        if (currentVehicle) {
+            this.currentVehicle = currentVehicle;
+            this.setState({
+                vehicleId: AppConstants.CURRENT_VEHICLE_ID
+            })
+        }
+        
+    }
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.log("DetailReport WillReceiveProps")
-  }
   handleEditItem(id, type) {
     if (this.props.navigation.state.params.isMyVehicle) {
         AppConstants.CURRENT_EDIT_FILL_ID = id;
@@ -67,7 +80,7 @@ class VehicleDetailHistory extends React.Component {
             },
             {text: 'Delete', style: 'destructive' , onPress: () => {
                 console.log('Delete Pressed')
-                this.props.actVehicleDeleteFillItem(itemId, type, this.props.userData)
+                this.props.actVehicleDeleteFillItem(this.state.vehicleId , itemId, type, this.props.userData)
             }},
         ],
         {cancelable: true}
@@ -77,13 +90,8 @@ class VehicleDetailHistory extends React.Component {
 
     renderHistoryList() {
         console.log("renderHistoryList, VehicleID:" + AppConstants.CURRENT_VEHICLE_ID)
-        if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
-            var thisVehicle = this.props.navigation.state.params.vehicle;
-        } else {
-            var thisVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
-        }
-        let displayDatas = [...thisVehicle.authorizeCarList, ...thisVehicle.fillGasList,
-            ...thisVehicle.expenseList, ...thisVehicle.serviceList];
+        let displayDatas = [...this.currentVehicle.authorizeCarList, ...this.currentVehicle.fillGasList,
+            ...this.currentVehicle.expenseList, ...this.currentVehicle.serviceList];
         // Sort this data as Time order
         displayDatas.sort(function(a, b) {
             let aDate = new Date(a.fillDate);
@@ -192,32 +200,34 @@ class VehicleDetailHistory extends React.Component {
   render() {
     console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
 
-    if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
-        var currentVehicle = this.props.navigation.state.params.vehicle;
+    if (this.currentVehicle) {
+        return (
+            <Container>
+            <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+            <Left style={{flex: 1}}>
+                <Button transparent onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back" />
+                </Button>
+            </Left>
+            <Body style={{flex: 6}}>
+                <Title><HeaderText>{AppLocales.t("GENERAL_HISTORY")+ " " +
+                    this.currentVehicle.brand + " " + this.currentVehicle.model + " "+ this.currentVehicle.licensePlate}</HeaderText></Title>
+            </Body>
+            <Right style={{flex: 0}}>
+            </Right>
+            </Header>
+            {this.renderHistoryList()}
+            
+            </Container>
+        )
     } else {
-        var currentVehicle = this.props.userData.vehicleList.find(
-        item => item.id == AppConstants.CURRENT_VEHICLE_ID);
+        return (
+            <Container>
+            <NoDataText />
+            </Container>
+        )
     }
-    return (
-        <Container>
-        <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left style={{flex: 1}}>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body style={{flex: 6}}>
-            <Title><HeaderText>{AppLocales.t("GENERAL_HISTORY")+ " " +
-                currentVehicle.brand + " " + currentVehicle.model + " "+ currentVehicle.licensePlate}</HeaderText></Title>
-          </Body>
-          <Right style={{flex: 0}}>
-          </Right>
-        </Header>
-        {this.renderHistoryList()}
-        
-        </Container>
-    )
-    }
+  }
 }
 
 VehicleDetailHistory.navigationOptions = ({navigation}) => ({

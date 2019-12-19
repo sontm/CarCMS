@@ -103,8 +103,6 @@ class ReminderReport extends React.Component {
                 }
             }
         })
-        console.log("combined")
-        console.log(combined)
         return combined;
         
   }

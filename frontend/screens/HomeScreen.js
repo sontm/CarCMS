@@ -15,9 +15,9 @@ import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import AppLocales from '../constants/i18n';
 
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, H2, H3, H1 } from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, H2, H3, H1 , Badge} from 'native-base';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
-import { HeaderText } from '../components/StyledText';
+import { HeaderText, WhiteText } from '../components/StyledText';
 import {
   LineChart
 } from "react-native-chart-kit";
@@ -25,7 +25,7 @@ import HomeMoneyUsageByTime from '../components/HomeMoneyUsageByTime'
 import HomeMoneyUsageByTimeTeam from '../components/HomeMoneyUsageByTimeTeam'
 import ReminderReport from '../components/ReminderReport'
 
-import {actVehicleDeleteVehicle, actVehicleAddVehicle} from '../redux/UserReducer'
+import {actVehicleDeleteVehicle, actVehicleAddVehicle, actUserGetNotifications} from '../redux/UserReducer'
 import {actTempCalculateCarReport} from '../redux/UserReducer'
 
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
@@ -35,19 +35,15 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      vehicleList:[],
-      fillGasList:[],
-      fillOilList:[],
-      authorizeCarList:[],
+      notSeenNotiCount: 0
     };
 
   }
   componentDidMount() {
     console.log("HOMESCreen DidMount")
     //this.loadFromStorage()
-    this.props.userData.vehicleList.forEach(element => {
-      //this.props.actTempCalculateCarReport(element, null, this.props.userData)
-    });
+    // Load Notification messages
+    this.props.actUserGetNotifications(this.props.userData)
   }
   loadFromStorage = async () => {
     // const vehicleList = await AsyncStorage.getItem(AppConstants.STORAGE_VEHICLE_LIST)
@@ -75,6 +71,8 @@ class HomeScreen extends React.Component {
 
   componentDidUpdate() {
     console.log("HOMESCreen DIDUpdate")
+    // Check Notification Count
+
   }
   componentWillReceiveProps(nextProps) {
     console.log("HOMESCreen WillReceiveProps")
@@ -191,7 +189,15 @@ class HomeScreen extends React.Component {
           <Body style={{flex: 5, alignItems: "center"}}>
             <Title><HeaderText>{AppLocales.t("HOME_HEADER")}</HeaderText></Title>
           </Body>
-          <Right  style={{flex:1}}/>
+          <Right  style={{flex:1}}>
+            <Button badge transparent onPress={() => this.props.navigation.navigate("Notification")}>
+              <Icon name="notifications" style={{color: "white", fontSize: 24}} />
+              {this.props.userData.countNotSeenNoti > 0 ?
+              <Badge danger style={styles.notifyBadge}>
+                <Text style={styles.notifyBadgeText}>{this.props.userData.countNotSeenNoti}</Text>
+              </Badge> : null}
+            </Button>
+          </Right>
         </Header>
         
         <Content>
@@ -391,6 +397,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
   },
+
+  notifyBadge: {
+    position:"relative",
+    left: -10,
+    top: 0,
+    // width: 20,
+    //width: 20,
+    height: 16,
+    flexDirection:"column",
+    justifyContent: "center"
+  },
+  notifyBadgeText: {
+    position:"relative",
+    top: -1,
+    fontSize: 11,
+  },
 });
 
 const mapStateToProps = (state) => ({
@@ -399,7 +421,7 @@ const mapStateToProps = (state) => ({
 });
 const mapActionsToProps = {
   actVehicleDeleteVehicle, actVehicleAddVehicle,
-  actTempCalculateCarReport
+  actTempCalculateCarReport, actUserGetNotifications
 };
 
 export default connect(

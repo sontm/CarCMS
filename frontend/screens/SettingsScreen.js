@@ -109,6 +109,7 @@ class SettingsScreen extends React.Component {
                       this.props.actTeamLeaveTeamOK()
                     }, error => {
                       console.log("User LEave team Error")
+                      console.log(error.response)
                     })
                 } else {
                   Toast.show({

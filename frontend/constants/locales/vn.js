@@ -41,6 +41,7 @@ export default {
     GENERAL_EDIT_SHORT: "Sửa",
     GENERAL_DELETE_SHORT: "Xoá",
     GENERAL_CONFIRM: "Xác Nhận",
+    GENERAL_NOTIFICATION:"Thông Báo",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",

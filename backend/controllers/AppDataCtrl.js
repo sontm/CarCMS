@@ -1,3 +1,9 @@
+import dbnotification from "../database/models/dbnotification";
+import dbuser from "../database/models/dbuser";
+
+var mailer = require("nodemailer");
+var xoauth2 = require('xoauth2');
+
 const DATA_BRAND_MODEL = [
   { id: 1,name: "Toyota", type:"car",
       models: [{"id":1,"name":"Alphard"},{"id":2,"name":"Altis"},{"id":3,"name":"Avanza"},{"id":4,"name":"Camry"},{"id":5,"name":"Fortuner"},{"id":6,"name":"Hiace"},{"id":7,"name":"Hilux"},{"id":8,"name":"Innova"},{"id":9,"name":"LandPrado"},{"id":10,"name":"LandCruiser"},{"id":11,"name":"Prado"},{"id":12,"name":"Rush"},{"id":13,"name":"Vios"},{"id":14,"name":"Wigo"},{"id":15,"name":"Yaris"}]},
@@ -240,6 +246,8 @@ module.exports = {
   },
 
 
+
+
   getLatestDataDateOn(req, res) {
     console.log("App getLatestDataDateOn")
     if (true || req.user) {
@@ -266,4 +274,158 @@ module.exports = {
       res.status(501).send({msg: "Require Authentication."})
     }
   },
+  async addAppNotification(req, res) {
+    console.log("App addAppNotification")
+    console.log(req.body)
+    //if (req.user) {
+    try {
+      var item = new dbnotification({
+        ...req.body
+      });
+
+      let newNotification = await new Promise((resolve, reject) => {
+        item.save(function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      res.status(200).send(newNotification)
+    } catch (error) {
+      console.log("Create Notificatioiin MSG error")
+      console.log(error)
+      res.status(200).send(newNotification)
+    }
+  },
+
+  // req.body is array of string ids
+  async getMyNotification(req, res) {
+    console.log("App getMyNotification")
+    console.log(req.body)
+    let notQueryIds = [];
+    if (req.body && req.body.length > 0) {
+      notQueryIds = req.body;
+    }
+    if (req.user) {
+      // Find All message or teamId same or userID same
+      // Find the User Record
+      const currentUser = await new Promise((resolve, reject) => {
+        dbuser.findById(req.user.id, function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      dbnotification.find( 
+        { 
+          $and: [
+            {
+              $or:[ 
+                {forAll: true},
+                {'teamId':currentUser.teamId},
+                {'userId':currentUser.id} 
+              ],
+            },
+            {"_id": { "$nin": notQueryIds }},
+            {enable: true}
+          ]
+        }, function(err, result) {
+        if (err) {
+            console.log("    Get All Notification of User Error")
+            console.log(err);
+            res.status(500).send(err)
+        } else {
+            console.log("    Get All Notification of User OK:"+result.length)
+            // object of all the users
+            //console.log(result);
+            res.status(200).send(result)
+        }
+      });
+    } else {
+      // Get "All" Notification
+      console.log("No User, get All Notitification")
+      dbnotification.find({forAll: true, enable: true}, function(err, result) {
+        if (err) {
+            console.log("    Get All Notification of Guest Error")
+            console.log(err);
+            res.status(500).send(err)
+        } else {
+            console.log("    Get All Notification of Guest OK:"+result.length)
+            // object of all the users
+            //console.log(result);
+            res.status(200).send(result)
+        }
+      });
+    }
+  },
+  getAllAppNotification(req, res) {
+    console.log("App getAllAppNotification")
+    dbnotification.find({}, function(err, result) {
+      if (err) {
+          console.log("    Get All Notification Error")
+          console.log(err);
+          res.status(500).send(err)
+      } else {
+          console.log("    Get All Notification OK")
+          // object of all the users
+          console.log(result);
+          res.status(200).send(result)
+      }
+    });
+  },
+
+  sendEmailForgotPassword(req, res) {
+    // Use Smtp Protocol to send Email
+    //var smtpTransport = mailer.createTransport("SMTP",{
+    // var smtpTransport1 = mailer.createTransport({
+    //   // service: "Gmail",
+    //   host: 'smtp.gmail.com',
+    //   port: 465,
+    //   secure: true, // use SS
+    //   auth: {
+    //       user: "son.tranminh.vn@gmail.com",
+    //       pass: "xxx"
+    //   }
+    // });
+    // var smtpTransport = mailer.createTransport({
+    //   service: 'Gmail',
+    //   auth: {
+    //     xoauth2: xoauth2.createXOAuth2Generator({
+    //         user: 'son.tranminh.vn@gmail.com',
+    //         clientId: '-' ,
+    //         clientSecret: '-' ,
+    //         refreshToken: '-'
+    //     })
+    //    }
+    // });
+    var outlookSMTP = mailer.createTransport({
+      host: "smtp-mail.outlook.com", // hostname
+      secureConnection: false, // TLS requires secureConnection to be false
+      port: 587, // port for secure SMTP
+      auth: {
+          user: "sansanjav@hotmail.com",
+          pass: "XXX"
+      },
+      tls: {
+          ciphers:'SSLv3'
+      }
+  });
+
+    var mail = {
+        from: "QuanLyXe",
+        //from: '"Our Code World " <mymail@outlook.com>',
+        to: "sontm.uet.vnu@gmail.com",
+        subject: "Send Email Using Node.js",
+        text: "Node.js New world for me",
+        html: "<b>Node.js New world for me</b>"
+    }
+
+    outlookSMTP.sendMail(mail, function(error, response){
+        if(error){
+            console.log(error);
+            res.status(500).send(error)
+        }else{
+            console.log("Message sent: " + response.message);
+            res.status(200).send("OK")
+        }
+
+        outlookSMTP.close();
+    });
+  }
 };

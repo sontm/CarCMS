@@ -2,6 +2,7 @@ import { REHYDRATE } from 'redux-persist';
 import AppConstants from '../constants/AppConstants'
 import AppUtils from '../constants/AppUtils'
 import apputils from '../constants/AppUtils';
+import backend from '../constants/Backend';
 
 var _ = require('lodash');
 
@@ -38,6 +39,8 @@ const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 const USER_LEAVE_TEAM_OK = 'USER_LEAVE_TEAM_OK';
 
 const USER_SET_MAX_METER = 'USER_SET_MAX_METER';
+const USER_GET_APPNOTIFICATION = 'USER_GET_APPNOTIFICATION';
+const USER_SAW_ALL_APPNOTIFICATION = 'USER_SAW_ALL_APPNOTIFICATION';
 
 const TEMP_CALCULATE_CARREPORT = 'TEMP_CALCULATE_CARREPORT';
 const TEMP_CALCULATE_CARREPORT_ALL = 'TEMP_CALCULATE_CARREPORT_ALL';
@@ -86,6 +89,11 @@ const initialState = {
     settings: DEFAULT_SETTING_REMIND, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
     // Below will Sync
     settingService: DEFAULT_SETTING_SERVICE,
+
+    // WIll Sync from Server
+    notifications: [], //  "content","enable","forAll","id","issueDate","teamId",title",userId". Will add notSeen Locally
+    countNotSeenNoti: 0,
+
     lastSyncFromServerOn: null, // date of last sync
     lastSyncToServerOn: null,
 };
@@ -258,34 +266,34 @@ export const actVehicleAddFillItem = (data, type, prevUserData) => (dispatch, ge
 }
 
 // type: gas, oil, auth, 
-export const actVehicleDeleteFillItem = (itemId, type, prevUserData) => (dispatch, getState) => {
+export const actVehicleDeleteFillItem = (vehicleId, itemId, type, prevUserData) => (dispatch, getState) => {
     console.log("actVehicleDeleteFillItem:"+itemId+",type:" + type)
     //AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(itemId.vehicleId)
 
     if (type == AppConstants.FILL_ITEM_GAS) {
         dispatch({
             type: VEHICLE_FILL_GAS_DEL,
-            payload: itemId
+            payload: {itemId, vehicleId: vehicleId}
         })
     } else if (type == AppConstants.FILL_ITEM_OIL) {
         dispatch({
             type: VEHICLE_FILL_OIL_DEL,
-            payload: itemId
+            payload: {itemId, vehicleId: vehicleId}
         })
     } else if (type == AppConstants.FILL_ITEM_AUTH) {
         dispatch({
             type: VEHICLE_CAR_AUTH_DEL,
-            payload: itemId
+            payload: {itemId, vehicleId: vehicleId}
         })
     } else if (type == AppConstants.FILL_ITEM_EXPENSE) {
         dispatch({
             type: VEHICLE_EXPENSE_DEL,
-            payload: itemId
+            payload: {itemId, vehicleId: vehicleId}
         })
     } else if (type == AppConstants.FILL_ITEM_SERVICE) {
         dispatch({
             type: VEHICLE_SERVICE_DEL,
-            payload: itemId
+            payload: {itemId, vehicleId: vehicleId}
         })
     }
 
@@ -491,6 +499,35 @@ export const actUserSetMaxOdometer = (data) => (dispatch) => {
     })
 }
 
+export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
+    // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
+    console.log("actUserGetNotifications, token:" + prevUserProps.token)
+    let notiIds = [];
+    if (prevUserProps.notifications) {
+        prevUserProps.notifications.forEach(item => {
+            notiIds.push(item.id)
+        })
+    }
+    backend.getAllNotification(notiIds, prevUserProps.token,
+    response => {
+        console.log("  OK Got Notification:" )
+        console.log(response.data)
+        dispatch({
+            type: USER_GET_APPNOTIFICATION,
+            payload: response.data
+        })
+    },error => {
+        console.log("  Error Got Notificationt:")
+        console.log(error)
+    })
+}
+
+export const actUserSawAllNotifications = () => (dispatch) => {
+    dispatch({
+        type: USER_SAW_ALL_APPNOTIFICATION,
+    })
+}
+
 function checkNameExistInServiceModule(arr, value) {
     if (arr && arr.length > 0) {
         for (let i = 0; i < arr.length; i++) {
@@ -547,6 +584,9 @@ export default function(state = initialState, action) {
             carReports:{},
             settings: DEFAULT_SETTING_REMIND,
             settingService: DEFAULT_SETTING_SERVICE,
+            notifications: [],
+            countNotSeenNoti: 0,
+
             lastSyncFromServerOn: null, // date of last sync
             lastSyncToServerOn: null,
         };
@@ -563,6 +603,19 @@ export default function(state = initialState, action) {
         }
         return prevStateUpdateProfile;
     case VEHICLE_SYNC_FROMSERVER:
+        // Process Notification Sync Here 
+        let receivedNotis0 = action.payload.notifications;
+        let newNotis0 = [];
+        if (receivedNotis0 && receivedNotis0.length > 0) {
+            newNotis0 = receivedNotis0;
+        }
+        newNotis0.sort(function(a, b) {
+            let aDate = new Date(a.issueDate);
+            let bDate = new Date(b.issueDate);
+            // Descending
+            return bDate - aDate;
+        })
+
         let newStateSyncFrom = {
             ...state,
             vehicleList: action.payload.vehicleList,
@@ -570,6 +623,9 @@ export default function(state = initialState, action) {
             customServiceModulesBike: action.payload.customServiceModulesBike,
             settings: action.payload.settings,
             settingService: action.payload.settingService,
+            notifications: newNotis0,
+            countNotSeenNoti: 0,
+
             teamInfo: action.payload.teamInfo,
             //carReports: {},// this will be updated during Caluclation,because some may not need to Re-calculate
             lastSyncFromServerOn: new Date()
@@ -577,6 +633,8 @@ export default function(state = initialState, action) {
         if (!newStateSyncFrom.settingService) {
             newStateSyncFrom.settingService = DEFAULT_SETTING_SERVICE;
         }
+        
+
         return newStateSyncFrom;
     case VEHICLE_SYNC_TOSERVER:
         return {
@@ -736,33 +794,46 @@ export default function(state = initialState, action) {
         return newStateAddService;
 
     case VEHICLE_FILL_GAS_DEL:
-        let newStateGasDel = {...state};
-        for (let i = 0; i < newStateGasDel.fillGasList.length; i++) {
-            if (newStateGasDel.fillGasList[i].id == action.payload) {
-                newStateGasDel.fillGasList.splice(i, 1);
-                break;
+        let delState1 = {...state};
+        let  findVehicle1 = delState1.vehicleList.find(
+            item => item.id == action.payload.vehicleId);
+        if (findVehicle1) {
+            for (let i = 0; i < findVehicle1.fillGasList.length; i++) {
+                if (findVehicle1.fillGasList[i].id == action.payload.itemId) {
+                    findVehicle1.fillGasList.splice(i, 1);
+                    break;
+                }
             }
         }
-        return newStateGasDel;
-    case VEHICLE_FILL_OIL_DEL:
-        let newStateOilDel = {...state};
-        for (let i = 0; i < newStateOilDel.fillOilList.length; i++) {
-            if (newStateOilDel.fillOilList[i].id == action.payload) {
-                newStateOilDel.fillOilList.splice(i, 1);
-                break;
-            }
-        }
-        return newStateOilDel;
-    case VEHICLE_CAR_AUTH_DEL:
-        let newStateAuthDel = {...state};
-        for (let i = 0; i < newStateAuthDel.authorizeCarList.length; i++) {
-            if (newStateAuthDel.authorizeCarList[i].id == action.payload) {
-                newStateAuthDel.authorizeCarList.splice(i, 1);
-                break;
-            }
-        }
-        return newStateAuthDel;
+        return delState1;
 
+    case VEHICLE_FILL_OIL_DEL:
+        let delState2 = {...state};
+        let  findVehicle2 = delState2.vehicleList.find(
+            item => item.id == action.payload.vehicleId);
+        if (findVehicle2) {
+            for (let i = 0; i < findVehicle2.fillOilList.length; i++) {
+                if (findVehicle2.fillOilList[i].id == action.payload.itemId) {
+                    findVehicle2.fillOilList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        return delState2;
+
+    case VEHICLE_CAR_AUTH_DEL:
+        let delState3 = {...state};
+        let  findVehicle3 = delState3.vehicleList.find(
+            item => item.id == action.payload.vehicleId);
+        if (findVehicle3) {
+            for (let i = 0; i < findVehicle3.authorizeCarList.length; i++) {
+                if (findVehicle3.authorizeCarList[i].id == action.payload.itemId) {
+                    findVehicle3.authorizeCarList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        return delState3;
 
     case VEHICLE_FILL_GAS_EDIT:
         let newStateVehicleGasEdit = {...state}
@@ -830,14 +901,18 @@ export default function(state = initialState, action) {
         return newStateVehicleAuthEdit;
     
     case VEHICLE_EXPENSE_DEL:
-        let newStateExpenseDel = {...state};
-        for (let i = 0; i < newStateExpenseDel.expenseList.length; i++) {
-            if (newStateExpenseDel.expenseList[i].id == action.payload) {
-                newStateExpenseDel.expenseList.splice(i, 1);
-                break;
+        let delState4 = {...state};
+        let  findVehicle4 = delState4.vehicleList.find(
+            item => item.id == action.payload.vehicleId);
+        if (findVehicle4) {
+            for (let i = 0; i < findVehicle4.expenseList.length; i++) {
+                if (findVehicle4.expenseList[i].id == action.payload.itemId) {
+                    findVehicle4.expenseList.splice(i, 1);
+                    break;
+                }
             }
         }
-        return newStateExpenseDel;
+        return delState4;
     case VEHICLE_EXPENSE_EDIT:
         let newStateVehicleExpenseEdit = {...state}
         for (let i = 0; i < newStateVehicleExpenseEdit.vehicleList.length; i++) {
@@ -861,14 +936,19 @@ export default function(state = initialState, action) {
         return newStateVehicleExpenseEdit;
 
     case VEHICLE_SERVICE_DEL:
-        let newStateServiceDel = {...state};
-        for (let i = 0; i < newStateServiceDel.serviceList.length; i++) {
-            if (newStateServiceDel.serviceList[i].id == action.payload) {
-                newStateServiceDel.serviceList.splice(i, 1);
-                break;
+        let delState5 = {...state};
+        let  findVehicle5 = delState5.vehicleList.find(
+            item => item.id == action.payload.vehicleId);
+        if (findVehicle5) {
+            for (let i = 0; i < findVehicle5.expenseList.length; i++) {
+                if (findVehicle5.expenseList[i].id == action.payload.itemId) {
+                    findVehicle5.expenseList.splice(i, 1);
+                    break;
+                }
             }
         }
-        return newStateServiceDel;
+        return delState5;
+
     case VEHICLE_SERVICE_EDIT:
         let newStateVehicleServiceEdit = {...state}
         for (let i = 0; i < newStateVehicleServiceEdit.vehicleList.length; i++) {
@@ -977,6 +1057,59 @@ export default function(state = initialState, action) {
             }
         }
         return prevStateSetMeter;
+    case USER_GET_APPNOTIFICATION:
+        let prevNotis = state.notifications;
+        if (!prevNotis) {
+            prevNotis = [];
+        }
+        // add to notifications list if not exist ID
+        let receivedNotis = action.payload;
+        let newNotis = [...prevNotis];
+        let isHaveNew = false;
+        let countNotSeenNoti = 0;
+        receivedNotis.forEach (item => {
+            let existedItem = prevNotis.find(noti => noti.id == item.id);
+            if (!existedItem) {
+                isHaveNew = true;
+                // Not Exist, Add
+                // New Item is not Seen
+                item.notSeen = true;
+                countNotSeenNoti++;
+
+                newNotis.unshift(item);
+            }
+        })
+        // Sort by Time
+        if (isHaveNew) {
+            newNotis.sort(function(a, b) {
+                let aDate = new Date(a.issueDate);
+                let bDate = new Date(b.issueDate);
+                // Descending
+                return bDate - aDate;
+            })
+        }
+        // console.log("  FInal Notifications")
+        // console.log(newNotis)
+
+        return {
+            ...state,
+            notifications: newNotis,
+            countNotSeenNoti: countNotSeenNoti
+        }
+    case USER_SAW_ALL_APPNOTIFICATION:
+        let prevNotis2 = state.notifications;
+        if (!prevNotis2) {
+            prevNotis2 = [];
+        }
+        let newNotis2 = [...prevNotis2];
+        newNotis2.forEach(item => {
+            item.notSeen = false;
+        })
+        return {
+            ...state,
+            notifications: newNotis2,
+            countNotSeenNoti: 0
+        }
     default:
         return state;
     }
