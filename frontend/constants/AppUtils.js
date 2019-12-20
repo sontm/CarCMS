@@ -1780,6 +1780,7 @@ class AppUtils {
     // settingService: props.userData.settingService
     // }
     syncDataFromServer(props) {
+        props.actUserStartSyncPrivate();
         Backend.getAllItemList(props.userData.token,
             response => {
                 console.log("Sync Vehicle From Server OK");
@@ -1798,23 +1799,7 @@ class AppUtils {
         if (!props.userData.teamInfo || (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport)) {
             // no team data
         } else {
-            Backend.getAllUserOfTeam({teamId: props.userData.teamInfo.id}, props.userData.token, 
-            response => {
-                console.log("GEt all Member in Team OK")
-                // console.log(response.data)
-                //this.props.actUserLoginOK(response.data)
-                //this.props.navigation.navigate("Settings")
-                // this.setState({
-                //   members: response.data
-                // })
-                props.actTeamGetDataOK(response.data, props.userData, props.teamData)
-            },
-            error => {
-                console.log("GEt all Member in Team ERROR")
-                console.log(JSON.stringify(error))
-            }
-            );
-      
+            props.actUserStartSyncTeam();
             Backend.getAllJoinTeamRequest(props.userData.token, 
             response => {
                 console.log("GEt all JoinRequest OK")
@@ -1822,8 +1807,27 @@ class AppUtils {
                 //this.props.actUserLoginOK(response.data)
                 //this.props.navigation.navigate("Settings")
                 props.actTeamGetJoinRequestOK(response.data)
+
+                Backend.getAllUserOfTeam({teamId: props.userData.teamInfo.id}, props.userData.token, 
+                    response => {
+                        console.log("GEt all Member in Team OK")
+                        // console.log(response.data)
+                        //this.props.actUserLoginOK(response.data)
+                        //this.props.navigation.navigate("Settings")
+                        // this.setState({
+                        //   members: response.data
+                        // })
+                        props.actTeamGetDataOK(response.data, props.userData, props.teamData, props)
+                    },
+                    error => {
+                        props.actUserStartSyncTeamDone(); // close Dialog also when Error
+                        console.log("GEt all Member in Team ERROR")
+                        console.log(JSON.stringify(error))
+                    }
+                );
             },
             error => {
+                props.actUserStartSyncTeamDone(); // close Dialog also when Error
                 console.log("GEt all JoinRequest ERROR")
                 console.log(JSON.stringify(error))
             }

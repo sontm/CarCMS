@@ -48,6 +48,13 @@ const TEMP_CALCULATE_CARREPORT_ALL = 'TEMP_CALCULATE_CARREPORT_ALL';
 const SETTING_MAINTAIN_TYPE = 'SETTING_MAINTAIN_TYPE';
 const SETTING_REMIND = 'SETTING_REMIND';
 
+const USER_SYNC_PRIVATE_START = 'USER_SYNC_PRIVATE_START';
+const USER_SYNC_PRIVATE_DONE = 'USER_SYNC_PRIVATE_DONE';
+const USER_SYNC_TEAM_START = 'USER_SYNC_TEAM_START';
+const USER_SYNC_TEAM_DONE = 'USER_SYNC_TEAM_DONE';
+const USER_INIT_DATA = 'USER_INIT_DATA';
+const USER_FORCE_CLOSE_MODAL = 'USER_FORCE_CLOSE_MODAL';
+
 const CUSTOM_ADD_SERVICEMODULE = 'CUSTOM_ADD_SERVICEMODULE';
 const CUSTOM_ADD_SERVICEMODULE_BIKE = 'CUSTOM_ADD_SERVICEMODULE_BIKE';
 const CUSTOM_DEL_SERVICEMODULE = 'CUSTOM_DEL_SERVICEMODULE';
@@ -93,6 +100,8 @@ const initialState = {
     // WIll Sync from Server
     notifications: [], //  "content","enable","forAll","id","issueDate","teamId",title",userId". Will add notSeen Locally
     countNotSeenNoti: 0,
+
+    modalState: 0, // 1: syncPrivate, 2: syncTeam, 0: close. ++ when start each sync, -- when done each
 
     lastSyncFromServerOn: null, // date of last sync
     lastSyncToServerOn: null,
@@ -437,7 +446,9 @@ export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
                     
                     //if (index == data.vehicleList.length - 1) {
                     if (doneProcess == needProcess) {
-                        console.log("======================= Final Dispatch User Reports")
+                        oldProps.actUserStartSyncPrivateDone();
+
+                        console.log("======================= Final Dispatch User Reports:")
                         dispatch({
                             type: TEMP_CALCULATE_CARREPORT_ALL,
                             payload: allCarReports
@@ -451,7 +462,56 @@ export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
             }
         })
     }
+    if (needProcess == 0) {
+        // Nothing New,
+        oldProps.actUserStartSyncPrivateDone();
+    }
 }
+
+
+
+
+export const actUserInitializeInitialDataWhenAppStart = () => (dispatch) => {
+    console.log("actUserInitializeInitialDataWhenAppStart:")
+    dispatch({
+        type: USER_INIT_DATA
+    })
+}
+export const actUserStartSyncPrivate = () => (dispatch) => {
+    console.log("actUserStartSyncPrivate:")
+    dispatch({
+        type: USER_SYNC_PRIVATE_START
+    })
+}
+export const actUserStartSyncPrivateDone = () => (dispatch) => {
+    console.log("actUserStartSyncPrivate:")
+    dispatch({
+        type: USER_SYNC_PRIVATE_DONE
+    })
+}
+export const actUserStartSyncTeam = () => (dispatch) => {
+    console.log("actUserStartSyncPrivate:")
+    dispatch({
+        type: USER_SYNC_TEAM_START
+    })
+}
+export const actUserStartSyncTeamDone = () => (dispatch) => {
+    console.log("actUserStartSyncPrivate:")
+    dispatch({
+        type: USER_SYNC_TEAM_DONE
+    })
+}
+export const actUserForCloseModal = () => (dispatch) => {
+    console.log("actUserForCloseModal:")
+    dispatch({
+        type: USER_FORCE_CLOSE_MODAL
+    })
+}
+
+
+
+
+
 export const actVehicleSyncToServerOK = (data) => (dispatch) => {
     console.log("actVehicleSyncToServerOK:")
     dispatch({
@@ -983,6 +1043,7 @@ export default function(state = initialState, action) {
             ...state,
         };
         newStateCarReportAll.carReports = action.payload
+        newStateCarReportAll.modalState = (newStateCarReportAll.modalState-1 >= 0) ? (newStateCarReportAll.modalState-1) : 0
 
         return newStateCarReportAll;
 
@@ -1109,6 +1170,37 @@ export default function(state = initialState, action) {
             ...state,
             notifications: newNotis2,
             countNotSeenNoti: 0
+        }
+
+    case USER_SYNC_PRIVATE_START:
+        return {
+            ...state,
+            modalState: 1
+        }
+    case USER_SYNC_PRIVATE_DONE:
+        return {
+            ...state,
+            modalState: (state.modalState-1 >= 0) ? (state.modalState-1) : 0
+        }
+    case USER_SYNC_TEAM_START:
+        return {
+            ...state,
+            modalState: state.modalState+1
+        }
+    case USER_SYNC_TEAM_DONE:
+        return {
+            ...state,
+            modalState: (state.modalState-1 >= 0) ? (state.modalState-1) : 0
+        }
+    case USER_INIT_DATA:
+        return {
+            ...state,
+            modalState: 0
+        }
+    case USER_FORCE_CLOSE_MODAL:
+        return {
+            ...state,
+            modalState: 0
         }
     default:
         return state;

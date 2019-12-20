@@ -1,7 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
 import React from 'react';
-import { Platform, Clipboard } from 'react-native';
+import { ActivityIndicator, Spinner, Clipboard, Modal} from 'react-native';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Thumbnail, Toast, Item, Label, Input } from 'native-base';
@@ -16,8 +16,8 @@ import { connect } from 'react-redux';
 import Backend from '../constants/Backend';
 
 import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer, 
-  actVehicleSyncToServerOK} from '../redux/UserReducer';
-import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK} from '../redux/UserReducer'
+  actVehicleSyncToServerOK, actUserStartSyncPrivate,actUserStartSyncPrivateDone,actUserStartSyncTeam,actUserStartSyncTeamDone} from '../redux/UserReducer';
+import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK, actUserForCloseModal} from '../redux/UserReducer'
 import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout, actTeamLeaveTeamOK} from '../redux/TeamReducer'
 import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
@@ -43,6 +43,20 @@ class SettingsScreen extends React.Component {
     this.doLoginGoogle = this.doLoginGoogle.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
     
+    this.onShowModalDialog = this.onShowModalDialog.bind(this)
+    this.onForceCloseModalByPressBack = this.onForceCloseModalByPressBack.bind(this)
+  }
+  onForceCloseModalByPressBack() {
+    console.log("Calling onForceCloseModalByPressBack..........")
+    this.props.actUserForCloseModal()
+  }
+  onShowModalDialog() {
+    setTimeout(() => {
+      // Will try to close Dialog if Overtimeout 
+      if (this.props.userData.modalState > 0) {
+        this.props.actUserForCloseModal()
+      }
+    }, 20000);
   }
   syncDataFromServer() {
     NetInfo.fetch().then(state => {
@@ -296,16 +310,38 @@ class SettingsScreen extends React.Component {
   }
 
   render() {
-    console.log(this.props.userData.teamInfo)
     // NetInfo.fetch().then(state => {
     //   console.log("Connection type", state.type); // wifi...
     //   console.log("Is connected?", state.isConnected); // true..
     // });
-
+    console.log("===============this.props.userData.modalState")
+    console.log(this.props.userData.modalState)
     const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
     return (
         <Container>
         <Content>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={(this.props.userData.modalState > 0) ? true : false}
+          onRequestClose={() => this.onForceCloseModalByPressBack()}
+          onShow={() => this.onShowModalDialog()}
+          >
+          <View style={{height: Layout.window.height, backgroundColor: "rgba(80, 80, 80, 0.3)"}}>
+            <Card style={styles.modalDialog}>
+              <CardItem>
+                <Body style={{flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                  <ActivityIndicator size="large" color="green" />
+                  <Text style={{fontSize: 17, color: AppConstants.COLOR_TEXT_DARKDER_INFO, marginTop: 10}}>
+                    {this.props.userData.modalState > 1 ? 
+                      AppLocales.t("INFO_SYNCING_PRIVATE_DATA") : AppLocales.t("INFO_SYNCING_TEAM_DATA")}
+                    </Text>
+                  
+                </Body>
+              </CardItem>
+            </Card>
+          </View>
+        </Modal>
         <View style={styles.container}>
             {(this.props.userData.isLogined) ? (
             <View>
@@ -852,6 +888,12 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: AppConstants.COLOR_D3_DARK_GREEN
   },
+
+  modalDialog: {
+    marginTop: Layout.window.height / 2 - 100,
+    marginLeft: Layout.window.width * 0.05,
+    width: Layout.window.width * 0.9
+  },
 })
 
 const mapStateToProps = (state) => ({
@@ -862,7 +904,9 @@ const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
   actUserLogout, actUserLoginOK,actVehicleSyncToServerOK,
   actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout,
-  actUserLeaveTeamOK, actTeamLeaveTeamOK
+  actUserLeaveTeamOK, actTeamLeaveTeamOK,
+  actUserStartSyncPrivate,actUserStartSyncPrivateDone,actUserStartSyncTeam,actUserStartSyncTeamDone,
+  actUserForCloseModal
 };
   
 export default connect(

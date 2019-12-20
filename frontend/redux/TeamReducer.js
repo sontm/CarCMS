@@ -52,7 +52,7 @@ export const actTeamUserWillLogout = () => (dispatch) => {
     })
 }
 
-export const actTeamGetDataOK = (data, userData, oldTeamData) => (dispatch) => {
+export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (dispatch) => {
     console.log("actTeamGetDataOK:")
     dispatch({
         type: TEAM_GET_OK,
@@ -115,6 +115,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData) => (dispatch) => {
 
                         //if ( idxMem == data.length -1 && idx == mem.vehicleList.length-1) {
                         if ( doneProcessCount == needProcessCount) {
+                            oldProps.actUserStartSyncTeamDone();
                             dispatch({
                                 type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
                                 payload: teamCarReportsAll
@@ -128,6 +129,9 @@ export const actTeamGetDataOK = (data, userData, oldTeamData) => (dispatch) => {
                 }
             }
         }
+    }
+    if (needProcessCount == 0) {
+       oldProps.actUserStartSyncTeamDone();
     }
 }
 

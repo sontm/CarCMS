@@ -237,6 +237,9 @@ export default {
     NOTIFICATION_INSURANCE: "Sắp Đến Ngày Đóng Bảo Hiểm Dân Sự",
     NOTIFICATION_ROADFEE: "Sắp Đến Ngày Phí Bảo Trì Đường Bộ",
 
+    INFO_SYNCING_PRIVATE_DATA:"Đang đồng bộ dữ liệu Cá Nhân...",
+    INFO_SYNCING_TEAM_DATA:"Đang đồng bộ dữ liệu Nhóm...",
+
     NOTE_VALIDFOR_OIL: "Chung Toi De mac dinh la \n 1000KM for Oto. What Are You Thinasd k sdfis my work dsdfnot allasdfk jasdf ",
     NOTE_VALIDFOR_AUTH: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Oto",
     NOTE_VALIDFOR_INSURANCE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Bao Hiem Bat Buoc",

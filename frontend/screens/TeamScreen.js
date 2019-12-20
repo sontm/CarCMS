@@ -8,8 +8,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  AsyncStorage,
-  SafeAreaView
+  Modal,
+  ActivityIndicator
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, 
@@ -22,8 +22,10 @@ import Backend from '../constants/Backend'
 import AppLocales from '../constants/i18n'
 import AppUtils from '../constants/AppUtils'
 import NetInfo from "@react-native-community/netinfo";
+import Layout from '../constants/Layout'
 
 import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
+import {actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal} from '../redux/UserReducer'
 
 import TeamMembers from './team/TeamMembers'
 import TeamReport from './team/TeamReport'
@@ -51,6 +53,21 @@ class TeamScreen extends React.Component {
     this.onSortChange = this.onSortChange.bind(this)
     this.fetchTeamData = this.fetchTeamData.bind(this)
     this.setActivePage = this.setActivePage.bind(this)
+
+    this.onForceCloseModalByPressBack = this.onForceCloseModalByPressBack.bind(this)
+    this.onShowModalDialog = this.onShowModalDialog.bind(this)
+  }
+  onForceCloseModalByPressBack() {
+    console.log("Calling onForceCloseModalByPressBack..........")
+    this.props.actUserForCloseModal()
+  }
+  onShowModalDialog() {
+    setTimeout(() => {
+      // Will try to close Dialog if Overtimeout 
+      if (this.props.userData.modalState > 0) {
+        this.props.actUserForCloseModal()
+      }
+    }, 20000);
   }
   fetchTeamData() {
     console.log("My Team IDDDDDD")
@@ -61,26 +78,8 @@ class TeamScreen extends React.Component {
     } else {
       NetInfo.fetch().then(state => {
         if (state.isConnected) {
-          Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
-            response => {
-                console.log("GEt all Member in Team OK")
-                // console.log(response.data)
-                //this.props.actUserLoginOK(response.data)
-                //this.props.navigation.navigate("Settings")
-                // this.setState({
-                //   members: response.data
-                // })
-                this.props.actTeamGetDataOK(response.data, this.props.userData, this.props.teamData)
-            },
-            error => {
-                console.log("GEt all Member in Team ERROR")
-                console.log(JSON.stringify(error))
-                this.setState({
-                    message: "Get Team Data Error!"
-                })
-            }
-          );
-    
+          this.props.actUserStartSyncTeam();
+
           Backend.getAllJoinTeamRequest(this.props.userData.token, 
             response => {
                 console.log("GEt all JoinRequest OK")
@@ -88,8 +87,30 @@ class TeamScreen extends React.Component {
                 //this.props.actUserLoginOK(response.data)
                 //this.props.navigation.navigate("Settings")
                 this.props.actTeamGetJoinRequestOK(response.data)
+
+                Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
+                  response => {
+                      console.log("GEt all Member in Team OK")
+                      // console.log(response.data)
+                      //this.props.actUserLoginOK(response.data)
+                      //this.props.navigation.navigate("Settings")
+                      // this.setState({
+                      //   members: response.data
+                      // })
+                      this.props.actTeamGetDataOK(response.data, this.props.userData, this.props.teamData, this.props)
+                  },
+                  error => {
+                      this.props.actUserStartSyncTeamDone();
+                      console.log("GEt all Member in Team ERROR")
+                      console.log(JSON.stringify(error))
+                      this.setState({
+                          message: "Get Team Data Error!"
+                      })
+                  }
+                );
             },
             error => {
+                this.props.actUserStartSyncTeamDone();
                 console.log("GEt all JoinRequest ERROR")
                 console.log(JSON.stringify(error))
                 this.setState({
@@ -291,6 +312,29 @@ class TeamScreen extends React.Component {
         <Right style={{flex:1}}>
         </Right>
         </Header>
+
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={(this.props.userData.modalState > 0) ? true : false}
+          onRequestClose={() => this.onForceCloseModalByPressBack()}
+          onShow={() => this.onShowModalDialog()}
+          >
+          <View style={{height: Layout.window.height, backgroundColor: "rgba(80, 80, 80, 0.3)"}}>
+            <Card style={styles.modalDialog}>
+              <CardItem>
+                <Body style={{flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
+                  <ActivityIndicator size="large" color="green" />
+                  <Text style={{fontSize: 17, color: AppConstants.COLOR_TEXT_DARKDER_INFO, marginTop: 10}}>
+                    {AppLocales.t("INFO_SYNCING_TEAM_DATA")}
+                    </Text>
+                  
+                </Body>
+              </CardItem>
+            </Card>
+          </View>
+        </Modal>
+
         {this.state.activePage === 1? (
         <Tabs style={{flex: 1}} locked={true}>
           <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")}
@@ -425,6 +469,11 @@ const styles = StyleSheet.create({
     color: AppConstants.COLOR_TEXT_LIGHT_INFO,
     fontSize: 12
   },
+  modalDialog: {
+    marginTop: Layout.window.height / 2 - 100,
+    marginLeft: Layout.window.width * 0.05,
+    width: Layout.window.width * 0.9
+  },
 });
 
 const mapStateToProps = (state) => ({
@@ -432,7 +481,8 @@ const mapStateToProps = (state) => ({
   userData: state.userData
 });
 const mapActionsToProps = {
-  actTeamGetDataOK, actTeamGetJoinRequestOK
+  actTeamGetDataOK, actTeamGetJoinRequestOK,
+  actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal
 };
 
 export default connect(
