@@ -457,10 +457,12 @@ class SettingsScreen extends React.Component {
                 </Button>
                 <Text style={{fontSize: 13, fontStyle: "italic", marginTop: 2}}>{AppLocales.t("SETTING_LBL_LOGIN_DESC")}</Text>
               </View>
-              <View style={{...styles.rowContainerNoBorder, marginTop: -6, paddingTop: 0, paddingBottom: 0}}>
+              <View style={{...styles.rowContainerNoBorder, marginTop: -6, paddingTop: 0, paddingBottom: 0, justifyContent:"space-between"}}>
                 <Button transparent onPress={() => this.props.navigation.navigate("RegisterUser")} >
-                  <Icon type="AntDesign" name="adduser" style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 17, marginRight: 0}} />
                   <Text style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 17, marginLeft: -4}}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text>
+                </Button>
+                <Button transparent onPress={() => this.props.navigation.navigate("ForgotPasswordScreen")} >
+                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 17, marginLeft: -4}}>{AppLocales.t("SETTING_LBL_PWD_FORGOT")}</Text>
                 </Button>
               </View>
 

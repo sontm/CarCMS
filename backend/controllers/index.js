@@ -20,6 +20,7 @@ app.post('/api/users', user.registerLocalUser);
 app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), user.getUserProfile);
 app.post('/api/users/update', passport.authenticate('jwt', {session: false}), 
   user.updateUserProfile);
+app.post('/api/resetpwd', user.resetPassword);  // Reset PWD, no need Authen
 
 // Sync To Server from App
 app.post('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.syncToServer);
@@ -58,7 +59,8 @@ app.post('/api/app/notification/me', passport.authenticate('jwt', {session: fals
   appData.getMyNotification);
 app.get('/api/app/notification/all', appData.getAllAppNotification);
 
-app.get('/api/app/recovermail', appData.sendEmailForgotPassword);
+//app.get('/api/app/recovermail', appData.sendEmailForgotPassword);
+app.post('/api/app/recovermail', appData.requestEmailPasswordRecovery);
 
 // app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
 // app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);

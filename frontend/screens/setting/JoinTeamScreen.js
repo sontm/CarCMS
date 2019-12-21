@@ -205,7 +205,7 @@ JoinTeamScreen.navigationOptions = ({navigation}) => ({
             </Button>
           </Left>
           <Body>
-            <Title><HeaderText>{AppLocales.SETTING_LBL_JOIN_TEAM}</HeaderText></Title>
+            <Title><HeaderText>{AppLocales.t("SETTING_LBL_JOIN_TEAM")}</HeaderText></Title>
           </Body>
           <Right />
         </Header>

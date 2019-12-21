@@ -1,5 +1,8 @@
 import dbnotification from "../database/models/dbnotification";
 import dbuser from "../database/models/dbuser";
+import dbpwdrecovery from "../database/models/dbpwdrecovery";
+import apputil from "../components/AppUtil";
+import { date } from "joi";
 
 var mailer = require("nodemailer");
 var xoauth2 = require('xoauth2');
@@ -370,6 +373,82 @@ module.exports = {
     });
   },
 
+  // body: req.body.email
+  async requestEmailPasswordRecovery(req, res) {
+    // Generate token
+    try {
+      // FIrst, Check if there is any User with this email
+      if (!req.body.email) {
+        res.status(400).send({msg: "Email không đúng"})
+        return;
+      }
+
+      const currentUser = await dbuser.findOne({email: req.body.email});
+      if (!currentUser) {
+        console.log("CAnnot FInd Use with Email "+req.body.email)
+        res.status(400).send({msg: "Email này chưa dùng cho tài khoản nào."})
+        return;
+      }
+
+      let randomToken = apputil.makeRandomAlphaNumeric(40);
+      let randomUuid = apputil.uuidv4();
+      let token = randomToken+"-"+randomUuid;
+      let today = new Date();
+
+      let newRecovery = new dbpwdrecovery();
+      newRecovery.token = token;
+      newRecovery.email = "sontm.uet.vnu@gmail.com";
+      newRecovery.userId = currentUser.id;
+      newRecovery.createdAt = today;
+      newRecovery.validUntil = new Date(today);
+
+      // Valid in 12h
+      newRecovery.validUntil.setHours(newRecovery.validUntil.getHours()+12);
+
+      let link="https://yamastack.com/quanlyxe/pwdrecovery?token="+token+"&id="+currentUser.id;
+      await newRecovery.save();
+
+      // Send Email
+      var outlookSMTP = mailer.createTransport({
+        host: "smtp-mail.outlook.com", // hostname
+        secureConnection: false, // TLS requires secureConnection to be false
+        port: 587, // port for secure SMTP
+        auth: {
+            user: "sansanjav@hotmail.com",
+            pass: "toiyeujapan57"},
+        tls: {ciphers:'SSLv3'}
+      });
+
+      var mail = {
+          from: "QuanLyXe",
+          //from: '"Our Code World " <mymail@outlook.com>',
+          to: "sontm.uet.vnu@gmail.com",
+          subject: "[QuanLyXe] Phục Hồi Mật Khẩu",
+          html: "<b><h3>Xin Chào "+newRecovery.email+".<h3></b>.<br/>" + 
+          "Có vẻ như bạn đang mong muốn phục hồi lại mật khẩu để sử dụng ứng dụng QuanLyXe.<br/> Xin hãy truy "+
+          "cập vào đường link dưới đây và điền mật khẩu mới.<br/>" +
+          link + "<br/><br/>" +
+          "Nếu bạn không phải là người yêu cầu, xin hãy bỏ qua email này.<br/>"+
+          "Xin cảm ơn.<br/>"
+      }
+
+      outlookSMTP.sendMail(mail, function(error, response){
+          if(error){
+              console.log(error);
+              res.status(500).send("Error")
+          }else{
+              console.log("Message sent: " + response.message);
+              res.status(200).send({msg:"OK"})
+          }
+          outlookSMTP.close();
+      });
+  } catch (err) {
+    console.log("PWD Recoveyry Error")
+    console.log(err)
+    res.status(500).send("Error2")
+  }
+  },
+
   sendEmailForgotPassword(req, res) {
     // Use Smtp Protocol to send Email
     //var smtpTransport = mailer.createTransport("SMTP",{
@@ -405,7 +484,7 @@ module.exports = {
       tls: {
           ciphers:'SSLv3'
       }
-  });
+    });
 
     var mail = {
         from: "QuanLyXe",

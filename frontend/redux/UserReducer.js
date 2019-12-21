@@ -585,7 +585,7 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
         })
     },error => {
         console.log("  Error Got Notificationt:")
-        console.log(error)
+        console.log(error.response)
     })
 }
 

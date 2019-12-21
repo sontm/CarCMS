@@ -3,6 +3,8 @@ require('dotenv').config()
 import bodyParser from 'body-parser'
 import mongoose from "mongoose";
 import Joi from "joi"
+const cors = require('cors');
+
 const passport = require('passport');
 const rateLimit = require("express-rate-limit");
 
@@ -17,21 +19,55 @@ const startServer = async () => {
     windowMs: 20 * 60 * 1000, // 20 minutes
     max: 100 // limit each IP to 100 requests per windowMs
   });
-   
+
   //  apply to all requests
   app.use(limiter);
+   
+  // Add headers Middle Ware
+  app.use(function (req, res, next) {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request headers you wish to allow
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    // Set to true if you need the website to include cookies in the requests sent
+    // to the API (e.g. in case you use sessions)
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    // Pass to next layer of middleware
+    next();
+  });
+
+  // CORS check for specific ORIGIN because we use Cookie
+  var allowedOrigins = ['http://localhost:8000','https://yamastack.com'];
+  app.use(cors({
+    origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    // from Mobile, origin is undefined
+    //console.log("origin:"+origin)
+    if(!origin) return callback(null, true);
+
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+      'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+      return callback(null, true);
+    }
+  }));
+
 
   // Simple API Check only
   var myAPIChecker = function (req, res, next) {
     let apiKey = req.header("APIKEY");
-    //console.log(apiKey)
-    if (apiKey && apiKey == "S1E9C9R0E0T5K0E7Y-qlx") {
+    console.log(apiKey)
+    if (apiKey && (apiKey == "S1E9C9R0E0T5K0E7Y-qlx" || apiKey == "WEB-S1E9C9R0E0T5K0E7Y-QLXGW")) {
       next()
     } else {
       res.status(501).send({msg: "UnAuthorizedAPI!"})
     }
   }
-
   app.use(myAPIChecker)
 
   //Add headers Middle Ware

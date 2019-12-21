@@ -97,6 +97,8 @@ class ProfileScreen extends React.Component {
         }
     }
     render() {
+        console.log("this.props.userData.userProfile")
+        console.log(this.props.userData.userProfile)
         return (
             <Container>
             <Content>
@@ -144,14 +146,30 @@ class ProfileScreen extends React.Component {
                         </Item>
                     </View>
 
+                    {this.props.userData.userProfile.type == "facebook" ? 
+                    <View style={{flexDirection: "row", justifyContent:"flex-start",
+                        marginLeft: -10, marginTop: 15, marginBottom: 10}}>
+                        <Icon type="Ionicons" name="logo-facebook" style={{fontSize: 22, color: AppConstants.COLOR_FACEBOOK, marginRight: 10}} />
+                        <Text style={{...styles.textNormal, color: AppConstants.COLOR_FACEBOOK}}>{"Tài Khoản liên kết Facebook"}</Text>
+                    </View>: null}
+
+                    {this.props.userData.userProfile.type == "google" ? 
+                    <View style={{flexDirection: "row", justifyContent:"flex-start",
+                        marginLeft: -10, marginTop: 15, marginBottom: 10}}>
+                        <Icon type="AntDesign" name="google" style={{fontSize: 22, color: AppConstants.COLOR_GOOGLE, marginRight: 10}} />
+                        <Text style={{...styles.textNormal, color: AppConstants.COLOR_GOOGLE,}}>{"Tài Khoản liên kết Google"}</Text>
+                    </View> : null}
+
+                    {(this.props.userData.userProfile.type != "facebook" && this.props.userData.userProfile.type != "google") ? (
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
                         marginLeft: -10, marginTop: 15, marginBottom: 10}}>
                         <CheckBox checked={this.state.isChangePwd}
                             onPress={() => this.togglePwdChange()}/>
                         <Text onPress={() => this.togglePwdChange()} style={{marginLeft: 12}}>{AppLocales.t("USER_CHANGEPWD")}</Text>
-                    </View>
+                    </View> ): null}
 
-                    {this.state.isChangePwd ? (
+                    {(this.props.userData.userProfile.type != "facebook" && 
+                        this.props.userData.userProfile.type != "google" && this.state.isChangePwd) ? (
                     <View>
                     <View style={styles.rowContainer}>
                         <Item stackedLabel>
@@ -272,6 +290,8 @@ const styles = StyleSheet.create({
   },
   rowButton: {
     marginTop: 20,
+    width: 150,
+    alignItems: "center",
     alignSelf: "center",
   },
   btnSubmit: {

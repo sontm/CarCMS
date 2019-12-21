@@ -160,7 +160,9 @@ export default {
     SETTING_LBL_LOGIN: "Đăng Nhập",
     SETTING_LBL_LOGIN_DESC: "Đăng Nhập để Đồng Bộ Dữ Liệu và Quản Lý Nhóm",
     SETTING_LBL_REGISTER: "Tạo Tài Khoản",
+    SETTING_LBL_PWD_FORGOT: "Quên Mật Khẩu",
     SETTING_LBL_PROFILE: "Thông Tin Cá Nhân",
+    SETTING_LBL_PWD_FORGOT_DESC: "Chúng tôi sẽ gửi Email đến hòm thư của bạn để khôi phục mật khẩu.",
     
     SETTING_LBL_LOGOUT: "Đăng Xuất",
     SETTING_LBL_PRO_UPGRADE: "Nâng Cấp",

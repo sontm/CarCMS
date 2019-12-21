@@ -2,6 +2,8 @@ import dbuser from "../database/models/dbuser";
 import dbteam from "../database/models/dbteam";
 import dbnotification from "../database/models/dbnotification";
 import dbjointeam from "../database/models/dbjointeam";
+import dbpwdrecovery from "../database/models/dbpwdrecovery";
+
 import apputil from "../components/AppUtil";
 import axios from 'axios';
 const bcrypt = require('bcrypt')
@@ -118,6 +120,46 @@ module.exports = {
         phone: result.phone,
         token: token
       })
+    }
+  },
+
+
+  //body 
+  async resetPassword(req, res) {
+    console.log("resetPassword of USERID:")
+    if (req.body.userId && req.body.token && req.body.password) {
+      // Find current User record contain Vehicle data
+      const theRecord = await dbpwdrecovery.findOne({
+        userId: req.body.userId,
+        token:req.body.token});
+      
+      if (theRecord) {
+        // Check the valid current Date
+        let nowDate = new Date();
+        if (nowDate.getTime() < new Date(theRecord.validUntil).getTime()) {
+          // Valid TOken, Now CHange the PWD
+          const currentUser = await dbuser.findById(req.body.userId);
+          if (currentUser) {
+            const newHashed = await bcrypt.hash(req.body.password, 10)
+            currentUser.passwordR = req.body.password;
+            currentUser.password = newHashed;
+            await currentUser.save();
+
+            res.status(200).send({msg: "OK"})
+          } else {
+            res.status(400).send({msg: "User Not Found!"})
+          }
+        } else {
+          // Time Out Request
+          res.status(400).send({msg: "Time Out Reset Token!"})
+        }
+      } else {
+        res.status(500).send({msg: "No PWD Record Exist!"})
+      }
+      return;
+    } else {
+      res.status(500).send({msg: "Invalid Request Param!"})
+      return;
     }
   },
 

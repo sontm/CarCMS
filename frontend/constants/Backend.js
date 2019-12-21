@@ -89,7 +89,14 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
-    
+    requestResetPwd(data, onOK, onError) {
+        axios.post("/app/recovermail",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
     // ------------------ data: {teamId}
     getAllUserOfTeam(data, token, onOK, onError) {
         axios.post("/team/users",
