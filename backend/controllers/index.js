@@ -38,6 +38,13 @@ app.get('/api/team/createdbyme', passport.authenticate('jwt', {session: false}),
 app.post('/api/team/rejointeam', passport.authenticate('jwt', {session: false}), 
   team.rejoinTeamCreatedByMe);
 
+app.get('/api/team/latest', passport.authenticate('jwt', {session: false}), 
+  team.getLatestTeamInfoOfUser);
+app.get('/api/team/request/mine/:id', passport.authenticate('jwt', {session: false}), 
+  team.getMyJoinRequest);
+app.post('/api/team/request/cancel', passport.authenticate('jwt', {session: false}), 
+  team.cancelMyJoinRequest);
+
 //app.get('/api/app/services', passport.authenticate('jwt', {session: false}), appData.getDataServiceTypes);
 // app.get('/api/app/services', appData.getDataServiceTypes);
 // app.get('/api/app/expenses', appData.getDataExpenseTypes);

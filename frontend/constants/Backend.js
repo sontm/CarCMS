@@ -139,8 +139,37 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+    // get join request to my team
     getAllJoinTeamRequest(token, onOK, onError) {
         axios.get("/team/join",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    getLatestTeamInfoOfMe(token, onOK, onError) {
+        axios.get("/team/latest",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    // get my join request and status to other team
+    // if id is not NULL,, set it
+    getMyJoinRequest(token, id, onOK, onError) {
+        let str = "/team/request/mine";
+        if (id) {
+            str+= "/"+id;
+        }
+        axios.get(str,
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+    // Cancel My Join Request
+    cancelMyJoinRequest(token, onOK, onError) {
+        axios.post("/team/request/cancel",null,
            // { headers: this.createHeader(), withCredentials: true})
             { headers: this.createHeader(token),})
             .then((response) => {onOK(response);})

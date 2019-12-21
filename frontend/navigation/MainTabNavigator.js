@@ -28,6 +28,7 @@ import VehicleDetailHistory from '../screens/VehicleDetailHistory';
 import SettingsScreen from '../screens/SettingsScreen';
 import VehicleSettingScreen from '../screens/setting/VehicleSettingScreen';
 import ServiceMaintainSettingScreen from '../screens/setting/ServiceMaintainSettingScreen';
+import CheckJoinTeamScreen from '../screens/setting/CheckJoinTeamScreen';
 
 import LoginScreen from '../screens/setting/LoginScreen';
 import ProfileScreen from '../screens/setting/ProfileScreen';
@@ -75,19 +76,6 @@ const MyVehicleStack = createStackNavigator(
   config
 );
 
-const DetailStack = createStackNavigator(
-  {
-    VehicleDetail: VehicleDetailReport,
-    VehicleHistory: VehicleDetailHistory,
-    NewVehicle: RegisterVehicleScreen,
-    FillGas: FillGasScreen,
-    //FillOil: FillOilScreen,
-    CarAuthorize: CarAuthorizeScreen,
-    PayExpense: PayExpenseScreen,
-    PayService: PayServiceScreen
-  },
-  config
-);
 const BUTTONS = [
   { text: "Đổ Xăng", icon: "color-fill", iconColor: AppConstants.COLOR_FILL_FUEL },//1
   //{ text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
@@ -118,6 +106,7 @@ const SettingsStack = createStackNavigator(
     ServiceMaintainSetting: ServiceMaintainSettingScreen,
     ServiceModulesSetting: SettingServiceScreenModules,
     ServiceModuleCreate: ServiceModuleCreateScreen,
+    CheckJoinTeamScreen: CheckJoinTeamScreen,
     DebugScreen: DebugScreen
   },
   config
@@ -144,6 +133,8 @@ const TeamStack = createStackNavigator(
     MemberVehicles: MemberVehicleListScreen,
     VehicleDetail: VehicleDetailReport,
     VehicleHistory: VehicleDetailHistory,
+    CreateTeam: CreateTeamScreen,
+    JoinTeam: JoinTeamScreen,
   },
   config
 );

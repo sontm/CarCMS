@@ -68,6 +68,38 @@ module.exports = {
     }
   },
 
+  // An User want to Join a team
+  async getLatestTeamInfoOfUser(req, res) {
+    console.log("getLatestTeamInfoOfUser USERID:" + req.user.id + ",code:" + req.body.code)
+    try {
+      //Find the User informationi of Request
+      const requestUser = await new Promise((resolve, reject) => {
+        dbuser.findById(req.user.id, function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+
+      if (requestUser && requestUser.teamCode) {
+        const result = await dbteam.findOne({code: requestUser.teamCode});
+        console.log("    getTeam with Code OK:" + requestUser.teamCode)
+
+        // If the TEam is same with User ID
+        if (result) {
+          res.status(200).send(result)
+        } else {
+          res.status(401).send({msg: "Cannot Find Team of User"})
+        }
+      } else {
+        res.status(400).send({msg: "Not Found User"})
+      }
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({msg: "Inter Server Error "})
+      throw error;
+    }
+  },
+
   // ONE USER CAN ONLY Have MAx 3 Team
   // TODO. Need return new JWT token contain teamId and TeamCode of this User
   async createTeamOfUser(req, res) {
@@ -165,23 +197,56 @@ module.exports = {
       });
 
       if (requestUser) {
-        // Create new Request. If Found, Update status to requested
-        let item = {
-          teamCode: req.body.teamCode,
-          userId: req.user.id,
-          status: "requested",
-          fullName: requestUser.fullName,
-          email: requestUser.email,
-          phone: requestUser.phone
-        };
-        await new Promise((resolve, reject) => {
-          dbjointeam.findOneAndUpdate({ teamCode: item.teamCode, userId: item.id }, item, 
-              {upsert:true, useFindAndModify: false}, function(err, doc){
-            err ? reject(err) : resolve(doc);
-          });
-        });
+        // Find if the teamCode is Valid
+        const theTeam = await dbteam.findOne({code: req.body.teamCode});
+        if (!theTeam) {
+          res.status(400).send({msg: "Mã Nhóm Không Tồn Tại!"})
+          return;
+        }
 
-        res.status(200).send({msg: "OK"})
+        // Create new Request. If Found, Update status to requested
+        let theRequest = await dbjointeam.findOne({ teamCode: req.body.teamCode, userId: req.user.id });
+        if (theRequest) {
+          // Existed Request, update
+          // If Status is "blocked", mean Team Dont Want User to Join
+          if (theRequest.status =="blocked") {
+            res.status(400).send({msg: "Bạn đã bị chặn gia nhập từ nhóm '"+theTeam.name+"'!"})
+          } else {
+            // Update
+            theRequest.teamCode= req.body.teamCode;
+            theRequest.teamName= theTeam.name;
+            theRequest.userId= req.user.id;
+            theRequest.status= "requested";
+            theRequest.fullName= requestUser.fullName;
+            theRequest.email= requestUser.email;
+            theRequest.phone= requestUser.phone;
+            theRequest.updatedOn= new Date();
+
+            await theRequest.save();
+            res.status(200).send(theRequest)
+          }
+        } else {
+          // Save New
+          theRequest= new dbjointeam();
+          theRequest.teamCode= req.body.teamCode;
+          theRequest.teamName= theTeam.name;
+          theRequest.userId= req.user.id;
+          theRequest.status= "requested";
+          theRequest.fullName= requestUser.fullName;
+          theRequest.email= requestUser.email;
+          theRequest.phone= requestUser.phone;
+          theRequest.updatedOn= new Date();
+
+          await theRequest.save();
+          res.status(200).send(theRequest)
+        }
+
+        // let joinRequest = await new Promise((resolve, reject) => {
+        //   dbjointeam.findOneAndUpdate({ teamCode: item.teamCode, userId: item.userId }, item, 
+        //       {upsert:true, useFindAndModify: false, new:true}, function(err, doc){
+        //     err ? reject(err) : resolve(doc);
+        //   });
+        // });
       } else {
         res.status(400).send({msg: "Not Found User "})
       }
@@ -245,11 +310,78 @@ module.exports = {
           });
         });
         res.status(200).send(allRequests)
+      } else {
+        // if user is not manager, return empty
+        res.status(200).send([])
       }
     } catch (error) {
       console.log(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
+    }
+  },
+
+  async cancelMyJoinRequest(req, res) {
+    console.log("TeamCtrl, cancelMyJoinRequest")
+    console.log(req.user)
+    if (req.user && req.user.id) {
+      try {
+        // Find all Request with teamCode which User is Manager and status is "requested"
+        const allRequests = await new Promise((resolve, reject) => {
+          dbjointeam.find({userId: req.user.id, status: "requested"}, function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
+        if (allRequests && allRequests.length > 0) {
+          // Save Request with new Type status
+          for (let i = 0; i < allRequests.length; i++) {
+            allRequests[i].status = "cancelByUser";
+            await allRequests[i].save();
+          }
+
+          res.status(200).send([])
+        } else {
+          // no Requests
+          res.status(200).send([])
+        }
+        
+
+      } catch (error) {
+        console.log(error);
+        res.status(500).send({msg: "Inter Server Error "})
+        throw error;
+      }
+    } else {
+      res.status(500).send({msg: "Unauthorized!"})
+    }
+  },
+  async getMyJoinRequest(req, res) {
+    console.log("TeamCtrl, getMyJoinRequest, ID")
+    console.log(req.params.id)
+    let queryObj = {userId: req.user.id, status: "requested"};
+    if (req.params.id) {
+      var ObjectId = require('mongoose').Types.ObjectId;
+      queryObj = {userId: req.user.id, "_id": new ObjectId(req.params.id )};
+    }
+    console.log("queryObj---")
+    console.log(queryObj)
+    if (req.user && req.user.id) {
+      try {
+        // Find all Request with teamCode which User is Manager and status is "requested"
+        const allRequests = await new Promise((resolve, reject) => {
+          dbjointeam.findOne(queryObj, function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
+        console.log(allRequests)
+        res.status(200).send(allRequests)
+      } catch (error) {
+        console.log(error);
+        res.status(500).send({msg: "Inter Server Error "})
+        throw error;
+      }
+    } else {
+      res.status(500).send({msg: "Unauthorized!"})
     }
   },
 
@@ -324,6 +456,7 @@ module.exports = {
       throw error;
     }
   },
+
 
   // TODO for Edit Team. Only User of that Team can Edit
   getAll(req, res) {

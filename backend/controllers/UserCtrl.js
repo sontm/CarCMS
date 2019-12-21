@@ -1,6 +1,7 @@
 import dbuser from "../database/models/dbuser";
 import dbteam from "../database/models/dbteam";
 import dbnotification from "../database/models/dbnotification";
+import dbjointeam from "../database/models/dbjointeam";
 import apputil from "../components/AppUtil";
 import axios from 'axios';
 const bcrypt = require('bcrypt')
@@ -449,6 +450,8 @@ module.exports = {
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
     // teamInfo: teamInfo
+    // notifications
+    // myJoinRequest
   async syncFromServer(req, res) {
     console.log("Vehicle Get OF USER ID:" + req.user.id)
     // Find current User record contain Vehicle data
@@ -491,6 +494,13 @@ module.exports = {
         notiInfo = [];
       }
 
+      // Load my Join Requests
+      const myJoinRequest = await new Promise((resolve, reject) => {
+        dbjointeam.findOne({userId: req.user.id, status: "requested"}, function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+
       //console.log(currentUser.vehicleList[0])
       res.status(200).send({
         vehicleList: currentUser.vehicleList,
@@ -499,7 +509,8 @@ module.exports = {
         settings: currentUser.settings,
         settingService: currentUser.settingService,
         teamInfo: teamInfo,
-        notifications: notiInfo
+        notifications: notiInfo,
+        myJoinRequest: myJoinRequest
       }
       )
     } else {

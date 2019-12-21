@@ -28,7 +28,7 @@ const startServer = async () => {
     if (apiKey && apiKey == "S1E9C9R0E0T5K0E7Y-qlx") {
       next()
     } else {
-      res.status(501).send({msg: "UnAuthorized!"})
+      res.status(501).send({msg: "UnAuthorizedAPI!"})
     }
   }
 

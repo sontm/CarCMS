@@ -16,8 +16,12 @@ const JoinTeamSchema = new Schema({
         type: String,
         required: false
     },
+    teamName: {
+        type: String,
+        required: false
+    },
     status: {
-        type: String, // requested/approved/rejected/blocked
+        type: String, // requested/approved/rejected/blocked/cancelByUser
         required: false
     },
     fullName: {
@@ -30,6 +34,10 @@ const JoinTeamSchema = new Schema({
     },
     phone: {
         type: String,
+        required: false
+    },
+    updatedOn: {
+        type: Date,
         required: false
     },
 });

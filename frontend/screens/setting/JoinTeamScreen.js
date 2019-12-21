@@ -1,12 +1,14 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, 
-    Button, Text, Input, Label, Card, CardItem } from 'native-base';
+    Button, Text, Input, Label, Card, CardItem, Alert, Toast } from 'native-base';
 
 import AppConstants from '../../constants/AppConstants'
 import { HeaderText } from '../../components/StyledText';
 import { connect } from 'react-redux';
-import {actUserCreateTeamOK} from '../../redux/UserReducer'
+import {actUserCreateTeamOK, actUserGotMyJoinRequest} from '../../redux/UserReducer'
+import {actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal} from '../../redux/UserReducer'
+
 import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../../redux/TeamReducer'
 
 import Backend from '../../constants/Backend'
@@ -19,22 +21,26 @@ class JoinTeamScreen extends React.Component {
         super(props);
         this.state = {
             code: "ZU2YE8yE",
-            teamsByMe: []
+            teamsByMe: [],
         };
 
         this.handleSubmit = this.handleSubmit.bind(this)
     }
     componentWillMount() {
+
         // Get all team created by this User
+        // TODO, send teamCode here......
         Backend.getTeamsCreatedByMe(this.props.userData.token,
-            response => {
-                console.log(response.data)
+            response2 => {
+                console.log(response2.data)
                 this.setState({
-                    teamsByMe: response.data
+                    teamsByMe: response2.data
                 })
             }, error => {
                 console.log("getTeamsCreatedByMe ERROR")
             })
+
+        
     }
     onReJoinTeamOfMe(item) {
         if (item && item.code) {
@@ -47,11 +53,12 @@ class JoinTeamScreen extends React.Component {
                             // Rejoin team can ReUse Create Team
                             this.props.actUserCreateTeamOK(response.data)
                             // Sync Team Data heare also
-                            Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
+                            // TODO Message of Syncing here
+                            Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token,
                             response2 => {
                                 console.log("GEt all Member in Team OK")
     
-                                this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData)
+                                this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
                             },
                             error => {
                                 console.log("GEt all Member in Team ERROR")
@@ -68,7 +75,7 @@ class JoinTeamScreen extends React.Component {
                                 this.props.actTeamGetJoinRequestOK(response3.data)
                             },
                             error => {
-                                console.log("GEt all JoinRequest ERROR")
+                                console.log("GEt all JoinRequest JoinTeam ERROR")
                                 console.log(JSON.stringify(error))
                                 this.setState({
                                     message: "Login Error!"
@@ -101,7 +108,7 @@ class JoinTeamScreen extends React.Component {
                         console.log(response.data)
                         //this.props.actUserCreateTeamOK(response.data)
                         //this.props.navigation.navigate("Settings")
-                        
+                        this.props.actUserGotMyJoinRequest(response.data)
                         
 
 
@@ -109,9 +116,12 @@ class JoinTeamScreen extends React.Component {
                     },
                     error => {
                         console.log("Join Team ERROR")
-                        console.log((error))
-                        this.setState({
-                            message: "Register Error!"
+                        console.log((error.response.data))
+                        Toast.show({
+                            text: error.response.data.msg,
+                            //buttonText: "Okay",
+                            position: "top",
+                            type: "danger"
                         })
                     }
                 );
@@ -119,13 +129,13 @@ class JoinTeamScreen extends React.Component {
               Toast.show({
                 text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
                 //buttonText: "Okay",
+                position: "top",
                 type: "danger"
               })
             }
           });
-        
-       
     }
+    
     render() {
         console.log("---------------------this.props.userData.teamInfo")
         console.log(this.props.userData.teamInfo)
@@ -147,7 +157,7 @@ class JoinTeamScreen extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        block primary
+                        rounded primary
                         onPress={() => this.handleSubmit()}
                         ><Text>{AppLocales.t("SETTING_LBL_JOIN_TEAM")}</Text></Button>
                     </View>
@@ -179,8 +189,6 @@ class JoinTeamScreen extends React.Component {
                     </Card>
                     </TouchableOpacity>
                     ))}
-
-
                 </View>
             </Content>
             </Container>
@@ -241,7 +249,9 @@ const mapStateToProps = (state) => ({
     teamData: state.teamData
 });
 const mapActionsToProps = {
-    actUserCreateTeamOK, actTeamGetDataOK, actTeamGetJoinRequestOK
+    actUserCreateTeamOK, actTeamGetDataOK, actTeamGetJoinRequestOK,
+    actUserGotMyJoinRequest,
+    actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal
 };
   
 export default connect(

@@ -333,9 +333,8 @@ class SettingsScreen extends React.Component {
                 <Body style={{flexDirection:"column", justifyContent:"center", alignItems:"center"}}>
                   <ActivityIndicator size="large" color="green" />
                   <Text style={{fontSize: 17, color: AppConstants.COLOR_TEXT_DARKDER_INFO, marginTop: 10}}>
-                    {this.props.userData.modalState > 1 ? 
-                      AppLocales.t("INFO_SYNCING_PRIVATE_DATA") : AppLocales.t("INFO_SYNCING_TEAM_DATA")}
-                    </Text>
+                    {AppLocales.t("INFO_SYNCING_PRIVATE_DATA")}
+                  </Text>
                   
                 </Body>
               </CardItem>
@@ -514,7 +513,8 @@ class SettingsScreen extends React.Component {
                 {AppLocales.t("SETTING_H1_ACCOUNT")}
                 </Text>
             </View>
-            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.code)) ? (
+            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.code)
+              && (!this.props.userData.myJoinRequest || !this.props.userData.myJoinRequest.teamCode)) ? (
             <TouchableOpacity 
                   onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})}>
                 <View style={styles.rowContainerNoBorder}>
@@ -527,7 +527,8 @@ class SettingsScreen extends React.Component {
             </TouchableOpacity>
             ) : null }
 
-            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.code)) ? (
+            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.code)
+              && (!this.props.userData.myJoinRequest || !this.props.userData.myJoinRequest.teamCode)) ? (
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("JoinTeam")}>
               <View style={styles.rowContainer}>
@@ -539,6 +540,21 @@ class SettingsScreen extends React.Component {
               </View>
             </TouchableOpacity>
             ) : null }
+
+            {(this.props.userData.isLogined && (!this.props.userData.teamInfo || !this.props.userData.teamInfo.code)
+            && this.props.userData.myJoinRequest && this.props.userData.myJoinRequest.teamCode) ? (
+            <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("CheckJoinTeamScreen")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="MaterialIcons" name="person-add" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_CHECK_TEAM_JOINREQUEST")}</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+            ) : null }
+
 
             {(this.props.userData.isLogined && this.props.userData.teamInfo && 
                 this.props.userData.teamInfo.code && this.props.userData.userProfile.roleInTeam=="manager") ? (

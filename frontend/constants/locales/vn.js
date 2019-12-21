@@ -40,8 +40,12 @@ export default {
     GENERAL_HISTORY: "Lịch Sử",
     GENERAL_EDIT_SHORT: "Sửa",
     GENERAL_DELETE_SHORT: "Xoá",
+    GENERAL_CANCEL_SHORT: "Huỷ",
     GENERAL_CONFIRM: "Xác Nhận",
     GENERAL_NOTIFICATION:"Thông Báo",
+    GENERAL_STATUS:"Trạng Thái",
+    GENERAL_YES: "Đồng Ý",
+    GENERAL_NO: "Không",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",
@@ -125,12 +129,16 @@ export default {
     SETTING_LBL_JOIN_TEAM: "Gia Nhập Nhóm",
     SETTING_LBL_EDIT_TEAM: "Chỉnh Sửa Nhóm",
     SETTING_LBL_LEAVE_TEAM: "Rời Nhóm",
+    SETTING_LBL_CHECK_TEAM_JOINREQUEST: "Trạng Thái Gia Nhập Nhóm",
     SETTING_LBL_JOIN_TEAM_CODE: "Mã Nhóm Muốn Gia Nhập",
     SETTING_LBL_JOIN_CREATEDTEAM: "Hoặc vào lại các nhóm đã tạo",
+    SETTING_LBL_CHECK_JOIN_STATUS: "Kiểm Tra Trạng Thái Mới Nhất",
+
     SETTING_LBL_CREATE_TEAM_MEM_CANVIEWREPORT: "Cho Phép Thành Viên Xem Báo Cáo Nhóm",
     SETTING_LBL_CREATE_TEAM_EXCLUDE_MYCAR: "Bỏ Xe Của Tôi Trong Báo Cáo Nhóm",
     SETTING_LBL_MEM_CAN_VIEWREPORT: "Thành Viên Có Thể Xem Báo Cáo Nhóm",
     SETTING_LBL_MEM_CANNOT_VIEWREPORT: "Thành Viên KHÔNG Thể Xem Báo Cáo Nhóm",
+    SETTING_LBL_MY_JOINREQUEST: "Đang Gửi Yêu Cầu Gia Nhập Đến",
 
     SETTING_LBL_SYNC_FROM: "Đồng Bộ Từ Máy Chủ",
     SETTING_LBL_SYNC_TO: "Đồng Bộ Lên Máy Chủ",
@@ -233,11 +241,16 @@ export default {
     MSG_LEAVE_TEAM: "Bạn có chắc muốn rời Nhóm?",
     MSG_LOGOUT: "Bạn có chắc muốn Đăng Xuất?",
 
+    MSG_REQUEST_CANCELING: "Huỷ yêu cầu gia nhập?",
+    MSG_REQUEST_APPROVED: "Yêu Cầu gia nhập đã được Chấp Nhận.",
+    MSG_REQUEST_REJECTED: "Yêu Cầu gia nhập đã bị Từ Chối.",
+    MSG_REQUEST_BLOCKED: "Yêu Cầu gia nhập đã bị Chặn Lại.",
+
     NOTIFICATION_AUTH: "Sắp Đến Ngày Đăng Kiểm",
     NOTIFICATION_INSURANCE: "Sắp Đến Ngày Đóng Bảo Hiểm Dân Sự",
     NOTIFICATION_ROADFEE: "Sắp Đến Ngày Phí Bảo Trì Đường Bộ",
 
-    INFO_SYNCING_PRIVATE_DATA:"Đang đồng bộ dữ liệu Cá Nhân...",
+    INFO_SYNCING_PRIVATE_DATA:"Đang đồng bộ dữ liệu...",
     INFO_SYNCING_TEAM_DATA:"Đang đồng bộ dữ liệu Nhóm...",
 
     NOTE_VALIDFOR_OIL: "Chung Toi De mac dinh la \n 1000KM for Oto. What Are You Thinasd k sdfis my work dsdfnot allasdfk jasdf ",
@@ -251,4 +264,5 @@ export default {
     TOAST_NEWSERVICEMODULE_EXIST: "Tên Đã Tồn Tại, Hãy Điền Tên Khác!",
     TOAST_NEED_FILL_ENOUGH: "Hãy nhập đủ thông tin cần thiết!",
     TOAST_NEED_INTERNET_CON: "Chức Năng Này Cần Kết Nối Mạng!",
+    TOAST_NO_NEW_INFO: "Không có thông tin mới.",
 };

@@ -23,6 +23,9 @@ import AppLocales from '../constants/i18n'
 import AppUtils from '../constants/AppUtils'
 import NetInfo from "@react-native-community/netinfo";
 import Layout from '../constants/Layout'
+import { HeaderText } from '../components/StyledText';
+
+import CheckMyJoinRequest from  '../components/CheckMyJoinRequest'
 
 import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
 import {actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal} from '../redux/UserReducer'
@@ -89,7 +92,7 @@ class TeamScreen extends React.Component {
                 this.props.actTeamGetJoinRequestOK(response.data)
 
                 Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
-                  response => {
+                  response2 => {
                       console.log("GEt all Member in Team OK")
                       // console.log(response.data)
                       //this.props.actUserLoginOK(response.data)
@@ -97,7 +100,7 @@ class TeamScreen extends React.Component {
                       // this.setState({
                       //   members: response.data
                       // })
-                      this.props.actTeamGetDataOK(response.data, this.props.userData, this.props.teamData, this.props)
+                      this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
                   },
                   error => {
                       this.props.actUserStartSyncTeamDone();
@@ -112,10 +115,7 @@ class TeamScreen extends React.Component {
             error => {
                 this.props.actUserStartSyncTeamDone();
                 console.log("GEt all JoinRequest ERROR")
-                console.log(JSON.stringify(error))
-                this.setState({
-                    message: "Login Error!"
-                })
+                console.log(error.response)
             }
           );
         } else {
@@ -148,8 +148,10 @@ class TeamScreen extends React.Component {
   }
   renderComponent = () => {
     if(this.state.activePage === 0) {
+      console.log("this.state.activePage 0 Car Listssssssssss")
       let allVehicles = [];
       this.props.teamData.members.forEach(item=> {
+        console.log("       item:id:" + item.id)
         if (this.props.userData.teamInfo.excludeMyCar && 
             item.id == this.props.userData.userProfile.id) {
               // Skip my cars
@@ -159,6 +161,7 @@ class TeamScreen extends React.Component {
           }
         }
       })
+      
       let viewDisplay = [];
       viewDisplay.push(
         <View key={"lastSyncTeam"} style={{flexDirection:"row", justifyContent: "center", marginTop: 3, marginBottom: -3}}>
@@ -240,6 +243,7 @@ class TeamScreen extends React.Component {
           navigation={this.props.navigation} requestDisplay={this.state.sortType} isTeamDisplay={true}
         />
       )}))
+      console.log(" allVehicles" + allVehicles.length)
       if (allVehicles.length > 0) {
         return viewDisplay;
       } else {
@@ -250,6 +254,7 @@ class TeamScreen extends React.Component {
     } else if(this.state.activePage === 1) {
       return null;
     } else {
+      console.log("this.state.activePage 3 of THANH VIENnnnnnnnnnnnnnnnnnn")
       return (
         <View>
           {this.props.teamData.lastSyncFromServerOn ? (
@@ -273,10 +278,20 @@ class TeamScreen extends React.Component {
   }
 
   render() {
-    console.log("TeamScreen Render")
+    
+    let stateTeam = 0; // 0: NotJoinTeam, 1: RequestingJoin, 2: joined
+    if (this.props.userData.teamInfo && this.props.userData.teamInfo.id) {
+      stateTeam = 2;
+    } else if (this.props.userData.myJoinRequest && this.props.userData.myJoinRequest.teamCode) {
+      stateTeam = 1;
+    }
+    console.log("TeamScreen Render:" + stateTeam)
+    console.log(this.props.userData.teamInfo)
+    console.log(this.props.userData.myJoinRequest)
     return (
       <Container>
         
+        {stateTeam == 2 ? (
         <Header hasTabs style={{justifyContent: "space-between", backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
         <Left style={{flex:1, marginRight: 0}}>
             <TouchableOpacity onPress={this.fetchTeamData} >
@@ -312,6 +327,25 @@ class TeamScreen extends React.Component {
         <Right style={{flex:1}}>
         </Right>
         </Header>
+        ) : ((stateTeam == 1) ? (
+          <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+            <Left style={{flex: 1}}>
+            </Left>
+            <Body  style={{flex: 5, alignItems: "center"}}>
+            <Title><HeaderText>{AppLocales.t("GENERAL_TEAM")}</HeaderText></Title>
+            </Body>
+            <Right style={{flex: 1}}/>
+          </Header>
+        ) : 
+           <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+             <Left style={{flex: 1}}>
+             </Left>
+             <Body  style={{flex: 5, alignItems: "center"}}>
+               <Title><HeaderText>{AppLocales.t("GENERAL_TEAM")}</HeaderText></Title>
+             </Body>
+             <Right style={{flex: 1}}/>
+           </Header>
+        )}
 
         <Modal
           animationType="none"
@@ -335,7 +369,7 @@ class TeamScreen extends React.Component {
           </View>
         </Modal>
 
-        {this.state.activePage === 1? (
+        {stateTeam == 2 && this.state.activePage === 1? (
         <Tabs style={{flex: 1}} locked={true}>
           <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")}
               tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
@@ -357,6 +391,7 @@ class TeamScreen extends React.Component {
           </Tab>
         </Tabs>
         ) : (
+        (stateTeam == 2) ? (
         <Content>
           <View style={styles.container}>
             <ScrollView
@@ -368,7 +403,38 @@ class TeamScreen extends React.Component {
             </ScrollView>
           </View>
         </Content>
+        ) : (
+          (stateTeam ==1) ? (
+            <CheckMyJoinRequest key={"inTeam"} navigation={this.props.navigation}/>
+          ) : (
+            <View style={{alignItems: "center", padding: 10}}>
+              <Text style={{fontSize: 16, color: AppConstants.COLOR_TEXT_DARKDER_INFO, fontStyle: "italic"}}>{
+                AppLocales.t("GENERAL_STATUS") + ": " + 
+                AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
+              </Text>
+
+              <Button block onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})} 
+                  style={{width: "80%", marginTop: 20, justifyContent: "center", alignSelf: "center"}}>
+                <Text style={{fontSize: 18}}>{AppLocales.t("SETTING_LBL_CREATE_TEAM")}</Text>
+              </Button>
+
+              <Text style={{fontSize: 13, color: AppConstants.COLOR_TEXT_DARKDER_INFO, fontStyle: "italic", marginTop: 10}}>{
+                AppLocales.t("GENERAL_OR")}
+              </Text>
+
+              <Button block onPress={() => this.props.navigation.navigate("JoinTeam")} 
+                  style={{width: "80%", marginTop: 10, justifyContent: "center", alignSelf: "center"}}>
+                <Text style={{fontSize: 18}}>{AppLocales.t("SETTING_LBL_JOIN_TEAM")}</Text>
+              </Button>
+
+            </View>
+          )
+        )
         )}
+
+        
+
+        
       </Container>
     );
   }

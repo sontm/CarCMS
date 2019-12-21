@@ -55,6 +55,8 @@ const USER_SYNC_TEAM_DONE = 'USER_SYNC_TEAM_DONE';
 const USER_INIT_DATA = 'USER_INIT_DATA';
 const USER_FORCE_CLOSE_MODAL = 'USER_FORCE_CLOSE_MODAL';
 
+const USER_GOT_MY_JOINREQUEST = 'USER_GOT_MY_JOINREQUEST';
+
 const CUSTOM_ADD_SERVICEMODULE = 'CUSTOM_ADD_SERVICEMODULE';
 const CUSTOM_ADD_SERVICEMODULE_BIKE = 'CUSTOM_ADD_SERVICEMODULE_BIKE';
 const CUSTOM_DEL_SERVICEMODULE = 'CUSTOM_DEL_SERVICEMODULE';
@@ -81,6 +83,8 @@ const initialState = {
     isLogined: false,
     token: "",
     defaultVehicleId: "",
+
+
     // Below will Sync
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]/
                     // Each item: maxMeter ...
@@ -99,6 +103,9 @@ const initialState = {
 
     // WIll Sync from Server
     notifications: [], //  "content","enable","forAll","id","issueDate","teamId",title",userId". Will add notSeen Locally
+    // WIll Sync from Server
+    myJoinRequest: {}, // "email" "fullName" "id" "phone" "status" "teamCode""teamName""updatedOn" "userId"
+
     countNotSeenNoti: 0,
 
     modalState: 0, // 1: syncPrivate, 2: syncTeam, 0: close. ++ when start each sync, -- when done each
@@ -588,6 +595,15 @@ export const actUserSawAllNotifications = () => (dispatch) => {
     })
 }
 
+export const actUserGotMyJoinRequest = (data) => (dispatch) => {
+    console.log("  actUserGotMyJoinRequest" )
+    dispatch({
+        type: USER_GOT_MY_JOINREQUEST,
+        payload: data
+    })
+}
+
+
 function checkNameExistInServiceModule(arr, value) {
     if (arr && arr.length > 0) {
         for (let i = 0; i < arr.length; i++) {
@@ -614,7 +630,8 @@ export default function(state = initialState, action) {
                 teamId: action.payload.id,
                 teamCOde: action.payload.code,
                 roleInTeam: "manager"
-            }
+            },
+            myJoinRequest: {},
         };
     case USER_LEAVE_TEAM_OK:
         let prevStateLeaveTEam = {...state};
@@ -622,6 +639,7 @@ export default function(state = initialState, action) {
         prevStateLeaveTEam.userProfile.teamId = null;
         prevStateLeaveTEam.userProfile.teamCode = null;
         prevStateLeaveTEam.userProfile.roleInTeam = null;
+        prevStateLeaveTEam.myJoinRequest= {};
 
         return prevStateLeaveTEam;
     case USER_LOGIN_OK:
@@ -630,6 +648,7 @@ export default function(state = initialState, action) {
             userProfile: action.payload.user,
             token: action.payload.token,
             teamInfo: action.payload.teamInfo,
+            myJoinRequest: {},
             isLogined: true
         };
     case USER_LOGOUT:
@@ -645,6 +664,7 @@ export default function(state = initialState, action) {
             settings: DEFAULT_SETTING_REMIND,
             settingService: DEFAULT_SETTING_SERVICE,
             notifications: [],
+            myJoinRequest: {},
             countNotSeenNoti: 0,
 
             lastSyncFromServerOn: null, // date of last sync
@@ -684,6 +704,7 @@ export default function(state = initialState, action) {
             settings: action.payload.settings,
             settingService: action.payload.settingService,
             notifications: newNotis0,
+            myJoinRequest: action.payload.myJoinRequest,
             countNotSeenNoti: 0,
 
             teamInfo: action.payload.teamInfo,
@@ -1170,6 +1191,11 @@ export default function(state = initialState, action) {
             ...state,
             notifications: newNotis2,
             countNotSeenNoti: 0
+        }
+    case USER_GOT_MY_JOINREQUEST:
+        return {
+            ...state,
+            myJoinRequest: action.payload
         }
 
     case USER_SYNC_PRIVATE_START:

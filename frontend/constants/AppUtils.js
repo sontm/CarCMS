@@ -614,8 +614,6 @@ class AppUtils {
                     } 
                 }
             })
-            console.log("objTotalKmMonthly:::::::::::::::")
-            console.log(objTotalKmMonthly)
             let objQuarter = {};
             let objYear = {};
             let objQuarterMoney = {};
@@ -1785,7 +1783,7 @@ class AppUtils {
             response => {
                 console.log("Sync Vehicle From Server OK");
                 //this.props.actVehicleAddVehicle(response.data, true)
-                //console.log(response.data.teamInfo)
+                //console.log(response.data.myJoinRequest)
                 props.actVehicleSyncAllFromServer(response.data, props)
             },
             error => {console.log("Sync Vehicle From Server Error");console.log(error);}
@@ -1828,7 +1826,7 @@ class AppUtils {
             },
             error => {
                 props.actUserStartSyncTeamDone(); // close Dialog also when Error
-                console.log("GEt all JoinRequest ERROR")
+                console.log("GEt all JoinRequest AppUtils ERROR")
                 console.log(JSON.stringify(error))
             }
             );
