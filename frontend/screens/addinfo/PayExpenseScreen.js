@@ -104,8 +104,10 @@ class PayExpenseScreen extends React.Component {
                 //         maxId = item.id
                 //     }
                 // })
-                newData.id = apputils.uuidv4();
+                newData.id = "exp-"+this.state.vehicleId+"-"+apputils.uuidv4();
                 console.log(newData)
+                // set Current VE ID so can ComeBack VehicleDetail
+                AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
                 this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
 
                 this.props.navigation.navigate('VehicleDetail')

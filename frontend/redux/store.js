@@ -39,10 +39,12 @@ const persistConfig = {
 // Middleware: Redux Persist Persisted Reducer
 const persistedReducer = persistReducer(persistConfig, reducers);
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 // Redux: Store
 const store = createStore(
     persistedReducer,
-    applyMiddleware(...middleware),
+    composeEnhancers(applyMiddleware(...middleware)),
 );
 // Middleware: Redux Persist Persister
 let persistor = persistStore(store);

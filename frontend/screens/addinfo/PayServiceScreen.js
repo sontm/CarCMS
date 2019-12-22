@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, 
     Picker, Button, Text, Input,Label, DatePicker, CheckBox, ListItem, Toast } from 'native-base';
 
@@ -46,6 +46,7 @@ class PayServiceScreen extends React.Component {
         this.removeMaintainModule = this.removeMaintainModule.bind(this)
 
         this.actualSave = this.actualSave.bind(this)
+        this.onChooseVehicle = this.onChooseVehicle.bind(this)
         
         this.currentVehileIsBike = false;
     }
@@ -133,8 +134,10 @@ class PayServiceScreen extends React.Component {
             //         maxId = item.id
             //     }
             // })
-            newData.id = apputils.uuidv4();
+            newData.id = "ser-"+this.state.vehicleId+"-"+apputils.uuidv4();
             console.log(newData)
+            // set Current VE ID so can ComeBack VehicleDetail
+            AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
 
@@ -291,6 +294,14 @@ class PayServiceScreen extends React.Component {
             }
         }
     }
+    onChooseVehicle(veId) {
+        console.log("onChoose:" + veId)
+        this.currentVehicle = this.props.userData.vehicleList.find(item => item.id == veId);
+
+        this.setState({
+            vehicleId: veId
+        })
+    }
     render() {
         if (!this.currentVehicle) {
             // No Car Associated,
@@ -349,8 +360,8 @@ class PayServiceScreen extends React.Component {
                             placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.vehicleId}
-                            onValueChange={(itemValue, itemIndex) =>
-                                this.setState({vehicleId: itemValue})
+                            onValueChange={(itemValue) =>
+                                this.onChooseVehicle(itemValue)
                             }
                         >
                             {this.props.userData.vehicleList.map(item => (

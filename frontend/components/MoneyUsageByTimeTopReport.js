@@ -545,9 +545,9 @@ class MoneyUsageByTimeTopReport extends React.Component {
                             data={arrTotalEachCarsAllCategory}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             labelRadius={({ radius }) => radius + 10 }
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />
                     </View>
                 </View>
@@ -564,9 +564,9 @@ class MoneyUsageByTimeTopReport extends React.Component {
                             ]}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => datum.y > 0 ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
+                            labels={({ datum }) => (datum&&datum.y > 0) ? ? (datum.x + "\n(" + datum.y/1000 + "K)") : ""}
                             labelRadius={({ radius }) => radius+10 }
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />
                     </View>
                 </View>

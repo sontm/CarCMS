@@ -266,7 +266,7 @@ class TeamScreen extends React.Component {
           </View>
           ) : null }
 
-          <TeamMembers navigation={this.props.navigation}/>
+          <TeamMembers navigation={this.props.navigation} fetchTeamData={this.fetchTeamData}/>
 
         </View>
       )
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
   notifyBadgeText: {
     position:"relative",
     top: -2,
-    fontSize: 11,
+    fontSize: 12,
   },
 
   filterInfoContainer: {

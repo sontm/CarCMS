@@ -113,6 +113,7 @@ class MyVehicleScreen extends React.Component {
 
   render() {
     console.log("MyVehicleScreen Render")
+    console.log(Object.keys(this.props.userData.carReports))
     if (this.state.activePage==1) {
       var viewPage1 = (
           <Tabs style={{flex: 1}}>

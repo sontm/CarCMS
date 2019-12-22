@@ -542,7 +542,7 @@ class MoneyUsageByTimeReport extends React.Component {
                         <View>
                             <VictoryContainer
                                 width={Layout.window.width}
-                                height={35*legendLabels.length/4}
+                                height={35*Math.ceil(legendLabels.length/4)}
                             >
                             <VictoryLegend standalone={false}
                                 x={15} y={5}
@@ -551,7 +551,7 @@ class MoneyUsageByTimeReport extends React.Component {
                                 orientation="horizontal"
                                 gutter={5}
                                 symbolSpacer={5}
-                                labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                                labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                                 data={legendLabels}
                             />
                             </VictoryContainer>
@@ -650,7 +650,7 @@ class MoneyUsageByTimeReport extends React.Component {
                                 orientation="horizontal"
                                 gutter={5}
                                 symbolSpacer={5}
-                                labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                                labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                                 data={AppConstants.LEGEND_CHITIEU}
                             />
                             </VictoryContainer>
@@ -670,6 +670,7 @@ class MoneyUsageByTimeReport extends React.Component {
                 {(arrTotalEachCarsAllCategory&&arrTotalEachCarsAllCategory.length>0) ? (
                 <View style={styles.statRow}>
                     <View style={styles.moneyUsagePieContainer}>
+                        <View style={{justifyContent: "center",alignItems: "center",alignSelf: "center", height: 250}}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={arrTotalEachCarsAllCategory}
@@ -679,17 +680,19 @@ class MoneyUsageByTimeReport extends React.Component {
                                 AppUtils.formatMoneyToK(datum.y) + "\n("
                                 +AppUtils.formatToPercent(datum.y, totalAllCarsAllCategory)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
                                 {AppUtils.formatMoneyToK(totalAllCarsAllCategory)}
                             </Text>
                         </View>
+                        </View>
+
                         <View>
                             <VictoryContainer
                                 width={Layout.window.width}
-                                height={35*legendLabels.length/4}
+                                height={35*Math.ceil(legendLabels.length/4)}
                             >
                             <VictoryLegend standalone={false}
                                 x={15} y={5}
@@ -698,7 +701,7 @@ class MoneyUsageByTimeReport extends React.Component {
                                 orientation="horizontal"
                                 gutter={5}
                                 symbolSpacer={5}
-                                labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                                labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                                 data={legendLabels}
                             />
                             </VictoryContainer>
@@ -714,7 +717,7 @@ class MoneyUsageByTimeReport extends React.Component {
                 </View>
                 {(totalAllSpendPrivate>0) ? (
                 <View style={styles.statRow}>
-                    <View style={styles.moneyUsagePieContainer}>
+                    <View style={{...styles.moneyUsagePieContainer, height: 270}}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={[
@@ -730,7 +733,7 @@ class MoneyUsageByTimeReport extends React.Component {
                                 + AppUtils.formatMoneyToK(datum.y) + ", \n"
                                 +AppUtils.formatToPercent(datum.y, totalAllSpendPrivate)+")") : ""}
                             labelRadius={({ radius }) => radius+10 }
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                         />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
@@ -762,12 +765,12 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       flexDirection: "column",
-      borderWidth: 0.5,
+      borderWidth: 0.3,
       borderColor: "grey",
       justifyContent: "space-between",
       marginBottom: 20,
-      borderRadius: 7,
-      paddingBottom: 20
+    //   borderRadius: 7,
+      paddingBottom: 15
     },
 
 
@@ -816,7 +819,7 @@ const styles = StyleSheet.create({
     },
 
     moneyUsageStackContainer: {
-        //height: 280,
+        //height: 400,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",

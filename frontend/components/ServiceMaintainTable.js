@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     textSmallFirstCol: { textAlign: 'center', fontSize: 12, color: AppConstants.COLOR_HEADER_BG},
     textHeader: {textAlign: 'center', fontSize: 13, color: "white"},
     textHeaderMedium: {textAlign: 'center', fontSize: 12, color: "white"},
-    textHeaderSmall: {textAlign: 'center', fontSize: 11, color: "white"},
+    textHeaderSmall: {textAlign: 'center', fontSize: 12, color: "white"},
     dataWrapper: { marginTop: -1 },
     row: { height: 25, backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG }
 

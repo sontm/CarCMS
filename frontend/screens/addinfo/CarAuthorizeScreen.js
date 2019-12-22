@@ -114,9 +114,12 @@ class CarAuthorizeScreen extends React.Component {
                 //         maxId = item.id
                 //     }
                 // })
-                newData.id = apputils.uuidv4();
+                newData.id = "aut-"+this.state.vehicleId+"-"+apputils.uuidv4();
                 
                 console.log(newData)
+
+                // set Current VE ID so can ComeBack VehicleDetail
+                AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
 
                 this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
 

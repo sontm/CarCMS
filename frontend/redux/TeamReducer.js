@@ -72,14 +72,35 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (disp
     let teamCarReportsAll = {};
     let needProcessCount = 0;
     let doneProcessCount = 0;
+    let isSomeCarRemoved = false;
+    let isAlreadyDispatch = false;
+
+    let newCarIds = [];
+
+    // Got New Cars IDs first
+    for (let idxMem = 0; idxMem < data.length; idxMem++) {
+        let mem = data[idxMem];
+        for (let idx = 0; idx < mem.vehicleList.length; idx++) {
+            let item = mem.vehicleList[idx];
+            newCarIds.push(item.id);
+        }
+    }
+
+    // compare with Currrent Length of teamCarReports, if teamCar Larger, mean some Care removed, so Need reload
+    if (Object.keys(oldTeamData.teamCarReports).length > newCarIds.length) {
+        isSomeCarRemoved = true;
+    }
+
     for (let idxMem = 0; idxMem < data.length; idxMem++) {
         let mem = data[idxMem];
     //data.forEach ((mem, idxMem )=> {
         // if (mem.id == userData.userProfile.id) {
         //     // nothing
         // } else 
+        
         for (let idx = 0; idx < mem.vehicleList.length; idx++) {
             let item = mem.vehicleList[idx];
+
         //mem.vehicleList.forEach((item, idx) => {
             // If Exclude My Car, NoNeed
             if (userData.teamInfo.excludeMyCar && myCarIdArr.indexOf(item.id) >= 0 ) {
@@ -102,6 +123,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (disp
                        }
                     }
                 }
+                
                 if (isSameData && oldTeamData.teamCarReports[""+item.id]) {
                     console.log("&&&&&&&&&&&&&&^^^^^^ TEAM Yeah Same Data when sync from Server, No need Reports:"+ item.licensePlate)
                     teamCarReportsAll[""+item.id] = oldTeamData.teamCarReports[""+item.id]
@@ -115,6 +137,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (disp
 
                         //if ( idxMem == data.length -1 && idx == mem.vehicleList.length-1) {
                         if ( doneProcessCount == needProcessCount) {
+                            isAlreadyDispatch = true;
                             oldProps.actUserStartSyncTeamDone();
                             dispatch({
                                 type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
@@ -130,7 +153,15 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (disp
             }
         }
     }
-    if (needProcessCount == 0) {
+    if (isSomeCarRemoved && !isAlreadyDispatch) {
+        // We still Force to ReCalculate Reports when some Car Removed
+        oldProps.actUserStartSyncTeamDone();
+        dispatch({
+            type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
+            payload: teamCarReportsAll
+        })
+    } else
+    if (needProcessCount == 0 ) {
        oldProps.actUserStartSyncTeamDone();
     }
 }

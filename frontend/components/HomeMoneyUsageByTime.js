@@ -107,7 +107,11 @@ class HomeMoneyUsageByTime extends React.Component {
         var {arrTotalMerge, tickXLabels} 
             = this.calculateAllVehicleTotalMoney(true);
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
-        if (arrTotalMerge && arrTotalMerge.length > 0) {
+
+        // If Area Chart, it need 2 Points to DRAW, otherwise Chart will Error
+        if (arrTotalMerge && arrTotalMerge.length > 1) {
+            console.log("arrTotalMerge-----------")
+            console.log(arrTotalMerge)
         return (
             <View style={styles.container}>
                 
@@ -134,7 +138,7 @@ class HomeMoneyUsageByTime extends React.Component {
                                     fill: "#2ca02c", fillOpacity: 0.2, stroke: "#2ca02c", strokeWidth: 1
                                 }
                             }}
-                            labels={({ datum }) => AppUtils.formatMoneyToK(datum.y)}
+                            labels={({ datum }) => (datum&&datum.y > 0) ? AppUtils.formatMoneyToK(datum.y) : ""}
                             labelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         />

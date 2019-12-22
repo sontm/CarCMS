@@ -191,6 +191,16 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+
+    // data: teamId, userId
+    removeMemFromTeam(data, token, onOK, onError) {
+        axios.post("/team/join/remove",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(token),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
     // getUserProfile(onOK, onError) {
     //     axios.get("/users/profile",
     //         { headers: this.createHeader()})

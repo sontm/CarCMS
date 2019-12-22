@@ -70,7 +70,7 @@ class DebugScreen extends React.Component {
                             <Text style={{fontSize: 14}}>
                                 {item.vehiclePlate+ "," + item.type + ": " + item.notificationId}
                             </Text>
-                            <Text style={{fontSize: 11}}>
+                            <Text style={{fontSize: 12}}>
                                 {"remindOn:"+apputils.formatDateTimeFullVN(item.remindDate) + ",on:" + 
                                     apputils.formatDateMonthDayYearVNShort(item.onDate)}
                             </Text>

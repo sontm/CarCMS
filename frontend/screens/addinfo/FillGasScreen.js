@@ -29,6 +29,8 @@ class FillGasScreen extends React.Component {
 
         this.save = this.save.bind(this)
         this.actualSave = this.actualSave.bind(this)
+        this.onChooseVehicle = this.onChooseVehicle.bind(this)
+        
     }
     componentWillMount() {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
@@ -109,8 +111,11 @@ class FillGasScreen extends React.Component {
                 newData.maxMeter = curMaxMeter;
             }
 
-            newData.id = apputils.uuidv4();
+            newData.id = "gas-"+this.state.vehicleId+"-"+apputils.uuidv4();
             console.log(JSON.stringify(newData))
+            // set Current VE ID so can ComeBack VehicleDetail
+            AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
+
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
 
             this.props.navigation.navigate('VehicleDetail')
@@ -202,10 +207,15 @@ class FillGasScreen extends React.Component {
             } else {
                 this.actualSave(currentVehicle.maxMeter)
             }
-
-
-            
         }
+    }
+    onChooseVehicle(veId) {
+        console.log("onChoose:" + veId)
+        this.currentVehicle = this.props.userData.vehicleList.find(item => item.id == veId);
+
+        this.setState({
+            vehicleId: veId
+        })
     }
 
     render() {
@@ -239,9 +249,7 @@ class FillGasScreen extends React.Component {
                         placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                         placeholderIconColor="#007aff"
                         selectedValue={this.state.vehicleId}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({vehicleId: itemValue})
-                        }
+                        onValueChange={(item) => this.onChooseVehicle(item)}
                     >
                         {this.props.userData.vehicleList.map(item => (
                             <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}

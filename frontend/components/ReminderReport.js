@@ -370,7 +370,7 @@ const styles = StyleSheet.create({
     notifyBadgeText: {
         position:"relative",
         top: -2,
-        fontSize: 11,
+        fontSize: 12,
     },
 
     reminderItemContainer: {

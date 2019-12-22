@@ -336,7 +336,7 @@ class MoneyUsageReport extends React.Component {
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
                                 +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
@@ -364,7 +364,7 @@ class MoneyUsageReport extends React.Component {
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
                                 +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 15 }
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>

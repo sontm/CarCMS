@@ -92,3 +92,18 @@ BeetleDune Elegance Jetta Luxury Passat Polo Premium Scirocco Sharan Tiguan Toua
 208 2008 308 3008 408 508 5008 Luxury Premium RCZ
 
 \n
+
+Accessing the In-App Developer Menu
+You can access the developer menu by shaking your device or by selecting "Shake Gesture" inside the Hardware menu in the iOS Simulator. You can also use the ⌘D keyboard shortcut when your app is running in the iOS Simulator, or ⌘M when running in an Android emulator on Mac OS and Ctrl+M on Windows and Linux. Alternatively for Android, you can run the command adb shell input keyevent 82 to open the dev menu (82 being the Menu key code).
+
+RNDebugger will try connect to debugger proxy, use port 8081 by default, you can create a new debugger window (macOS: Command+T, Linux/Windows: Ctrl+T) to specify the port if you want.
+Enable Debug JS Remotely of developer menu on your app
+
+Test Case:
+# When Not Logined
+## Add 1 New Car
+
+
+
+# When Car Over MaxMeter
+

@@ -107,7 +107,7 @@ class RegisterVehicleScreen extends React.Component {
                 //     }
                 // })
 
-                newVehicle.id = apputils.uuidv4();
+                newVehicle.id = "ve-"+apputils.uuidv4()+"-"+apputils.makeRandomAlphaNumeric(10);
                 console.log(JSON.stringify(newVehicle))
                 this.props.actVehicleAddVehicle(newVehicle, this.props.userData)
                 this.props.navigation.navigate("MyVehicle")
@@ -226,7 +226,7 @@ class RegisterVehicleScreen extends React.Component {
                             </View>
                             <Input 
                                 style={styles.rowForm}
-                                onChangeText={(licensePlate) => this.setState({licensePlate})}
+                                onChangeText={(licensePlate) => this.setState({licensePlate:licensePlate.toUpperCase()})}
                                 value={this.state.licensePlate}
                             />
                         </Item>

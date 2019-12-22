@@ -423,7 +423,7 @@ class SettingsScreen extends React.Component {
               <View style={{alignSelf: "center"}}>
                 <H3>{AppLocales.t("SETTING_LBL_LOGIN")}</H3>
               </View>
-              <View style={styles.rowForm}>
+              <View style={{...styles.rowForm, width: Layout.window.width * 0.86}}>
                   <Item>
                     <Input
                         onChangeText={(email) => this.setState({email})}
@@ -433,7 +433,7 @@ class SettingsScreen extends React.Component {
                     />
                   </Item>
               </View>
-              <View style={styles.rowForm}>
+              <View style={{...styles.rowForm, width: Layout.window.width * 0.86}}>
                   <Item>
                     {/* <Label>{AppLocales.t("GENERAL_PWD")}</Label> */}
                     <Input
@@ -451,18 +451,18 @@ class SettingsScreen extends React.Component {
 
               <View style={{...styles.rowContainerNoBorder, marginTop: 8, paddingTop: 2, paddingBottom: 2, flexDirection: "column"}}>
                 <Button rounded onPress={() => this.handleLogin()} 
-                    style={{backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG, width: 270, justifyContent:"center"}}>
-                  <Icon type="AntDesign" name="login" style={{color: "rgb(80,80,80)", fontSize: 16, marginRight: -4}} />
+                    style={{backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG, width: 280, justifyContent:"center"}}>
+                  <Icon type="AntDesign" name="login" style={{color: AppConstants.COLOR_GREY_MIDDLE, fontSize: 16, marginRight: -4}} />
                   <Text style={{...styles.textNormal, fontSize: 14}}>{AppLocales.t("SETTING_LBL_LOGIN_BTN")}</Text>
                 </Button>
-                <Text style={{fontSize: 13, fontStyle: "italic", marginTop: 2}}>{AppLocales.t("SETTING_LBL_LOGIN_DESC")}</Text>
+                <Text style={{fontSize: 12, fontStyle: "italic", marginTop: 4}}>{AppLocales.t("SETTING_LBL_LOGIN_DESC")}</Text>
               </View>
-              <View style={{...styles.rowContainerNoBorder, marginTop: -6, paddingTop: 0, paddingBottom: 0, justifyContent:"space-between"}}>
+              <View style={{...styles.rowContainerNoBorder, marginTop: -6, paddingTop: 0, paddingBottom: 0, justifyContent:"space-evenly"}}>
                 <Button transparent onPress={() => this.props.navigation.navigate("RegisterUser")} >
-                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 17, marginLeft: -4}}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text>
+                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 16}}>{AppLocales.t("SETTING_LBL_REGISTER")}</Text>
                 </Button>
                 <Button transparent onPress={() => this.props.navigation.navigate("ForgotPasswordScreen")} >
-                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 17, marginLeft: -4}}>{AppLocales.t("SETTING_LBL_PWD_FORGOT")}</Text>
+                  <Text style={{color: AppConstants.COLOR_PICKER_TEXT, fontSize: 16}}>{AppLocales.t("SETTING_LBL_PWD_FORGOT")}</Text>
                 </Button>
               </View>
 
@@ -472,14 +472,14 @@ class SettingsScreen extends React.Component {
 
               <View style={{...styles.rowContainerNoBorder, marginTop: 5, paddingTop: 2, paddingBottom: 2}}>
                 <Button rounded onPress={() => this.doLoginGoogle()} 
-                    style={{backgroundColor: AppConstants.COLOR_GOOGLE, color: "white", width: 270, justifyContent:"center"}}>
+                    style={{backgroundColor: AppConstants.COLOR_GOOGLE, color: "white", width: 280, justifyContent:"center"}}>
                   <Icon type="AntDesign" name="google" style={{fontSize: 20, color: "white", marginRight: 0}} />
                   <Text style={{...styles.textNormal, color: "white"}}>{AppLocales.t("SETTING_LBL_LOGIN_GOOGLE")+"    "}</Text>
                 </Button>
               </View>
               <View style={{...styles.rowContainerNoBorder, margin: 4, paddingTop: 2, paddingBottom: 2}}>
                 <Button rounded onPress={() => this.doLoginFacebook()} 
-                    style={{backgroundColor: AppConstants.COLOR_FACEBOOK, color: "white", width: 270, justifyContent:"center"}}>
+                    style={{backgroundColor: AppConstants.COLOR_FACEBOOK, color: "white", width: 280, justifyContent:"center"}}>
                   <Icon type="Ionicons" name="logo-facebook" style={{fontSize: 20, color: "white", marginRight: 0}} />
                   <Text style={{...styles.textNormal, color: "white"}}>{AppLocales.t("SETTING_LBL_LOGIN_FB")}</Text>
                 </Button>
@@ -638,7 +638,7 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("ServiceMaintainSetting")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="MaterialCommunityIcons" name="timeline-text" style={styles.iconLeft} /></View>
+                  <Icon type="MaterialCommunityIcons" name="timeline-text" style={{...styles.iconLeft, width: 25}} /></View>
                 <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_MAINTAIN")}</Text></View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
   },
   textNormalSmallDate: {
     color: AppConstants.COLOR_TEXT_LIGHT_INFO,
-    fontSize: 11
+    fontSize: 12
   },
   textNormalSmallRed: {
     color: "red",

@@ -4,7 +4,7 @@ import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpac
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, TabHeading, ScrollableTab } from 'native-base';
 import Layout from '../constants/Layout'
-import {HeaderText} from '../components/StyledText'
+import {HeaderText, NoDataText} from '../components/StyledText'
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
@@ -27,24 +27,15 @@ class VehicleDetailReport extends React.Component {
     };
 
   }
-  componentWillMount() {
-    // Set Current Vehicle ID if not Set
-    if (!AppConstants.CURRENT_VEHICLE_ID) {
-        AppConstants.CURRENT_VEHICLE_ID = this.props.userData.defaultVehicleId;
-    }
-  }
+
   componentDidMount() {
-    //console.log("DetailReport DidMount:" + this.props.navigation.state.params.vehicleId)
-
-    //AppConstants.CURRENT_VEHICLE_ID = this.props.navigation.state.params.vehicleId;
+    console.log("~~~~~~~~~~~~DetailReport DidMount:" + AppConstants.CURRENT_VEHICLE_ID)
   }
-
-  componentWillReceiveProps(nextProps) {
-    console.log("DetailReport WillReceiveProps")
+  componentDidUpdate() {
+    console.log("~~~~~~~~~~~~DetailReport DidUpdate:" + AppConstants.CURRENT_VEHICLE_ID)
   }
-
   render() {
-    console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
+    console.log("~~~~~~~~~~~~DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
     
     if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
         var currentVehicle = this.props.navigation.state.params.vehicle;
@@ -53,6 +44,7 @@ class VehicleDetailReport extends React.Component {
     }
 
     if (currentVehicle) {
+        AppConstants.CURRENT_VEHICLE_ID = currentVehicle.id;
         //console.log("CALL actTempCalculateCarReport from Detail Report:")
         //this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
         //console.log("END actTempCalculateCarReport:")
@@ -101,11 +93,60 @@ class VehicleDetailReport extends React.Component {
             var totalNeedService = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
             var unitService = "Km";
         }
+        let isHaveRemindData = false;
+        if ((this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService) ||
+                (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor) ||
+                (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance) ||
+                (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee)) {
+            isHaveRemindData = true;
+        }
         return (
             <Container>
+            <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
+            <Left style={{flex:1}}>
+                <Button transparent onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back" />
+                </Button>
+            </Left>
+            <Body  style={{flex:5}}>
+                <Title><HeaderText>{currentVehicle.brand + " " +
+                     currentVehicle.model + " " + currentVehicle.licensePlate}</HeaderText></Title>
+            </Body>
+            <Right style={{flex:1}}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate("VehicleHistory", 
+                    {vehicle: currentVehicle, isMyVehicle:this.props.navigation.state.params.isMyVehicle})}>
+                    <View style={styles.rightHistoryView}>
+                    <Icon type="MaterialCommunityIcons" name="file-document-outline" style={styles.rightHistoryIcon}/>
+                    <Text style={styles.rightHistoryText}>{AppLocales.t("GENERAL_HISTORY")}</Text>
+                    </View>
+                </TouchableOpacity>
+                
+            </Right>
+            </Header>
+
             {this.props.userData.carReports[currentVehicle.id] ? (
             // <Tabs locked={true} renderTabBar={()=> <ScrollableTab tabsContainerStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}/>}>
             <Tabs locked={true}>
+                <Tab heading={AppLocales.t("GENERAL_MONEYUSAGE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                        activeTextStyle={{fontSize: 14,color: "white"}}>
+                    <Content>
+                    <ScrollView>
+                    <MoneyUsageByTimeReport currentVehicle={currentVehicle}/>
+                    <MoneyUsageReport currentVehicle={currentVehicle}/>
+                    <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle}/>
+                    </ScrollView>
+                    </Content>
+                </Tab>
+                <Tab heading={AppLocales.t("GENERAL_GAS")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                        activeTextStyle={{fontSize: 14,color: "white"}}>
+                    <Content>
+                    <GasUsageReport currentVehicle={currentVehicle}/>
+                    </Content>
+                </Tab>
                 <Tab heading={AppLocales.t("CARDETAIL_REMINDER")}
                         tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
@@ -248,30 +289,13 @@ class VehicleDetailReport extends React.Component {
                             ) : null}
 
                         </View>
+                        {!isHaveRemindData ? 
+                        (<NoDataText />) : null}
                     </View>
                     </View>
                     </Content>
                 </Tab>
-                <Tab heading={AppLocales.t("GENERAL_GAS")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
-                        activeTextStyle={{fontSize: 14,color: "white"}}>
-                    <Content>
-                    <GasUsageReport currentVehicle={currentVehicle}/>
-                    </Content>
-                </Tab>
-                <Tab heading={AppLocales.t("GENERAL_MONEYUSAGE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
-                        activeTextStyle={{fontSize: 14,color: "white"}}>
-                    <Content>
-                    <ScrollView>
-                    <MoneyUsageByTimeReport currentVehicle={currentVehicle}/>
-                    <MoneyUsageReport currentVehicle={currentVehicle}/>
-                    <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle}/>
-                    </ScrollView>
-                    </Content>
-                </Tab>
+                
                 <Tab heading={AppLocales.t("CARDETAIL_SERVICE_TABLE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
@@ -299,28 +323,7 @@ class VehicleDetailReport extends React.Component {
 }
 
 VehicleDetailReport.navigationOptions = ({navigation}) => ({
-    header: (
-        <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
-            <Button transparent onPress={() => navigation.goBack()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title><HeaderText>{AppLocales.t("CARDETAIL_HEADER")}</HeaderText></Title>
-          </Body>
-          <Right>
-            <TouchableOpacity onPress={() => navigation.navigate("VehicleHistory", 
-                {vehicle: navigation.state.params.vehicle, isMyVehicle:navigation.state.params.isMyVehicle})}>
-                <View style={styles.rightHistoryView}>
-                <Icon type="MaterialCommunityIcons" name="file-document-outline" style={styles.rightHistoryIcon}/>
-                <Text style={styles.rightHistoryText}>{AppLocales.t("GENERAL_HISTORY")}</Text>
-                </View>
-            </TouchableOpacity>
-            
-          </Right>
-        </Header>
-    )
+    header: null
 });
 
 const styles = StyleSheet.create({

@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   },
 
   smallerText: {
-      fontSize: 11
+      fontSize: 12
   },
 
   activeSegment2: {
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   },
   inActiveSegmentText2: {
         color:AppConstants.COLOR_PICKER_TEXT,
-      fontSize: 11,
+      fontSize: 12,
       padding: 0,
       margin: 0,
       marginLeft: 3,

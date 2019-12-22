@@ -79,7 +79,8 @@ const initialState = {
     // Below will Sync. Special when User Leave Team, Join Team...
     teamInfo: {},//"code": "bfOdOi7L", "id": "","name": "PhuPhuong", canMemberViewReport
     // Below will Sync; Updated in Login
-    userProfile: {},//"email": "tester3","fullName": "Test3","id": "","phone": "","type": "local", teamId, teamCode, class:"freeUser", pictureUrl, roleInTeam
+    userProfile: {},//"email": "tester3","fullName": "Test3","id": "","phone": "","type": "local", teamId, teamCode, 
+                        //class:"freeUser", pictureUrl, roleInTeam
     isLogined: false,
     token: "",
     defaultVehicleId: "",
@@ -427,6 +428,20 @@ export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
     let allCarReports = {};
     let needProcess = 0;
     let doneProcess = 0;
+    let newCarIds = [];
+    let isSomeCarRemoved = false;
+    let isAlreadyDispatch = false;
+
+    if (data.vehicleList && data.vehicleList.length > 0) {
+        data.vehicleList.forEach ((vehicle, index) => {
+            newCarIds.push(vehicle.id);
+        })
+    }
+    // compare with Currrent Length of CarReports, if Larger, mean some Care removed, so Need reload
+    if (Object.keys(oldProps.userData.carReports).length > newCarIds.length) {
+        isSomeCarRemoved = true;
+    }
+
     if (data.vehicleList && data.vehicleList.length > 0) {
         data.vehicleList.forEach ((vehicle, index) => {
             // Deep Compare Object here
@@ -454,7 +469,7 @@ export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
                     //if (index == data.vehicleList.length - 1) {
                     if (doneProcess == needProcess) {
                         oldProps.actUserStartSyncPrivateDone();
-
+                        isAlreadyDispatch = true;
                         console.log("======================= Final Dispatch User Reports:")
                         dispatch({
                             type: TEMP_CALCULATE_CARREPORT_ALL,
@@ -469,6 +484,15 @@ export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
             }
         })
     }
+
+    if (isSomeCarRemoved && !isAlreadyDispatch) {
+        // We still Force to ReCalculate Reports when some Car Removed
+        oldProps.actUserStartSyncTeamDone();
+        dispatch({
+            type: TEMP_CALCULATE_CARREPORT_ALL,
+            payload: allCarReports
+        })
+    } else
     if (needProcess == 0) {
         // Nothing New,
         oldProps.actUserStartSyncPrivateDone();
@@ -585,7 +609,6 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
         })
     },error => {
         console.log("  Error Got Notificationt:")
-        console.log(error.response)
     })
 }
 

@@ -79,7 +79,7 @@ export default {
     ADD_MAX_METER_HEADER: "Công tơ Mét",
     ADD_MAX_METER_LBL: "Số Lớn Nhất Công tơ Mét",
 
-    CARDETAIL_HEADER: "Báo Cáo Chi Tiết",
+    CARDETAIL_HEADER: "Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",
     CARDETAIL_H1_GAS_USAGE: "Biểu Đồ Xăng",
     CARDETAIL_H1_MONEY_USAGE_BYTIME: "Chi Tiêu Theo Thời Gian",
@@ -158,7 +158,7 @@ export default {
     SETTING_LBL_LOGIN_FB: "Đăng Nhập Với Facebook",
     SETTING_LBL_LOGIN_BTN: "Đăng Nhập với Tài Khoản Đã Tạo",
     SETTING_LBL_LOGIN: "Đăng Nhập",
-    SETTING_LBL_LOGIN_DESC: "Đăng Nhập để Đồng Bộ Dữ Liệu và Quản Lý Nhóm",
+    SETTING_LBL_LOGIN_DESC: "Hãy Đăng Nhập để Đồng Bộ Dữ Liệu và Quản Lý Nhóm",
     SETTING_LBL_REGISTER: "Tạo Tài Khoản",
     SETTING_LBL_PWD_FORGOT: "Quên Mật Khẩu",
     SETTING_LBL_PROFILE: "Thông Tin Cá Nhân",
@@ -242,6 +242,8 @@ export default {
 
     MSG_LEAVE_TEAM: "Bạn có chắc muốn rời Nhóm?",
     MSG_LOGOUT: "Bạn có chắc muốn Đăng Xuất?",
+    MSG_REMOVE_MEMBER: "Bạn có chắc muốn Xoá thành viên khỏi Nhóm ?",
+    MSG_REMOVE_CONFIRM: "Bạn có chắc muốn Xoá ?",
 
     MSG_REQUEST_CANCELING: "Huỷ yêu cầu gia nhập?",
     MSG_REQUEST_APPROVED: "Yêu Cầu gia nhập đã được Chấp Nhận.",

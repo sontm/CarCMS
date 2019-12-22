@@ -3,12 +3,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   Image,
-  Platform,
+  Alert,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
-  AsyncStorage
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, ListItem, H2, H3, H1 } from 'native-base';
@@ -26,6 +25,8 @@ class JoinRequestScreen extends React.Component {
     super(props);
 
     this.handleJoin = this.handleJoin.bind(this)
+    this.handleDeleteMember = this.handleDeleteMember.bind(this)
+    
   }
 
   handleJoin(item, type) {
@@ -47,16 +48,52 @@ class JoinRequestScreen extends React.Component {
             // this.setState({
             //     joins: response.data
             // })
-            this.props.actTeamGetJoinRequestOK(response.data)
+            if (type == "approved") {
+              this.props.fetchTeamData();
+            } else {
+              this.props.actTeamGetJoinRequestOK(response.data)
+            }
+            
         },
         error => {
             console.log("Approve or Reject ERROR:" + type)
             console.log(JSON.stringify(error))
-            this.setState({
-                message: "Login Error!"
-            })
         }
     );
+  }
+  handleDeleteMember(item) {
+    Alert.alert(
+      AppLocales.t("GENERAL_CONFIRM"),
+      AppLocales.t("MSG_REMOVE_MEMBER"),
+      [
+          {
+            text: AppLocales.t("GENERAL_NO"),
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {
+              console.log('Delete Pressed')
+              Backend.removeMemFromTeam(
+                {
+                    teamId: item.teamId,
+                    userId: item.id
+                },
+                this.props.userData.token, 
+                response => {
+                    console.log("removeMemFromTeam OK:")
+                    console.log(response.data)
+                    
+                  this.props.fetchTeamData();
+                },
+                error => {
+                    console.log("removeMemFromTeam ERROR:")
+                    console.log(JSON.stringify(error))
+                }
+              )
+          }},
+      ],
+      {cancelable: true}
+    )
   }
   componentDidMount() {
     console.log("JoinRequestScreen componentDidMount:")
@@ -132,6 +169,13 @@ class JoinRequestScreen extends React.Component {
                     </TouchableOpacity>
                 </Body>
                 <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center"}}>
+                  <TouchableOpacity 
+                        onPress={() => this.handleDeleteMember(item)}>
+                    <View style={{alignItems: "center", marginLeft: 10}}>
+                      <Icon type="MaterialIcons" name="delete" style={styles.listItemBlockIcon2}/>
+                      <Text style={{fontSize: 12, alignSelf:"center"}}>{AppLocales.t("GENERAL_DELETE_SHORT")}</Text>
+                    </View>
+                  </TouchableOpacity>
                   <Icon name="arrow-forward" style={{alignSelf: "center"}}/>
                 </Right>
             </ListItem>
@@ -191,6 +235,10 @@ const styles = StyleSheet.create({
   listItemBlockIcon: {
     color: AppConstants.COLOR_GOOGLE,
     fontSize: 30
+  },
+  listItemBlockIcon2: {
+    color: AppConstants.COLOR_GOOGLE,
+    fontSize: 24
   }
 });
 

@@ -43,15 +43,15 @@ class VehicleBasicReport extends Component {
     }
     handleDeleteVehicle() {
         Alert.alert(
-            'Do You Want to Delete?',
+            AppLocales.t("MSG_REMOVE_CONFIRM"),
             this.props.vehicle.brand + " " + this.props.vehicle.model + ", " + this.props.vehicle.licensePlate,
             [
                 {
-                  text: 'Cancel',
+                  text: AppLocales.t("GENERAL_NO"),
                   onPress: () => console.log('Cancel Pressed'),
                   style: 'cancel',
                 },
-                {text: 'Delete', style: 'destructive' , 
+                {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
                     onPress: () => this.props.handleDeleteVehicle(this.props.vehicle.id, this.props.vehicle.licensePlate)},
             ],
             {cancelable: true}

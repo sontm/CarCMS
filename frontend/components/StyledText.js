@@ -11,7 +11,7 @@ export function MonoText(props) {
 
 export function HeaderText(props) {
   return (
-    <Text {...props} style={[props.style, { color: 'white' }]} />
+    <Text {...props} style={[props.style, { color: 'white', fontWeight:"normal" }]} />
   );
 }
 

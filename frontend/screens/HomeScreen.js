@@ -213,7 +213,7 @@ class HomeScreen extends React.Component {
                   <CardItem header>
                       <View style={{alignItems: "center"}}>
                         <Body>
-                          <Text style={{alignSelf: "center", fontSize: 11+addedFontSize, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                          <Text style={{alignSelf: "center", fontSize: 12+addedFontSize, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
                           {AppLocales.t("HOME_TOTAL_PRIVATE_THISMONTH")}
                           </Text>
                         </Body>
@@ -243,7 +243,7 @@ class HomeScreen extends React.Component {
                   <CardItem header>
                       <View style={{alignItems: "center"}}>
                       <Body>
-                        <Text style={{alignSelf: "center", fontSize: 11, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                        <Text style={{alignSelf: "center", fontSize: 12, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
                         {AppLocales.t("HOME_TOTAL_TEAM_THISMONTH")}
                         </Text>
                       </Body>
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
   notifyBadgeText: {
     position:"relative",
     top: -1,
-    fontSize: 11,
+    fontSize: 12,
   },
 });
 

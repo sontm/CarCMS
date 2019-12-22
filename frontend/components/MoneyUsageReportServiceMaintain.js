@@ -142,7 +142,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                                 AppUtils.formatMoneyToK(datum.y) + "\n"
                                 +"("+AppUtils.formatToPercent(datum.y, theTotal)+")") : ""}
                             labelRadius={({ radius }) => radius+3 }
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />                      
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
@@ -153,7 +153,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                     <View>
                         <VictoryContainer
                             width={Layout.window.width}
-                            height={30*legendLabels.length/2}
+                            height={35*Math.ceil(legendLabels.length/2)}
                         >
                         <VictoryLegend standalone={false}
                             x={15} y={5}
@@ -162,7 +162,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                             orientation="horizontal"
                             gutter={5}
                             symbolSpacer={5}
-                            labelComponent={<VictoryLabel style={{fontSize: 11}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             data={legendLabels}
                             style={{paddingBottom: 20}}
                         />

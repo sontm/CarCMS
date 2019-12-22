@@ -176,7 +176,9 @@ class AppUtils {
 
     // format to K or Million
     formatMoneyToK(v) {
-        if (v < 1000000) {
+        if (v < 1000) {
+            return (v/1000).toFixed(0) + "đ";
+        } else if (v < 1000000) {
             return (v/1000).toFixed(0) + "N";
         } else {
             return (v/1000000).toFixed(2) + "Tr";
