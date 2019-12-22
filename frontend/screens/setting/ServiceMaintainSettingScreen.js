@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
+
+import { View, StyleSheet, TextInput, AsyncStorage, Platform } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
     Item, Picker, Button, Text, Input, Label, H2, Tabs, Tab, TabHeading} from 'native-base';
 import {HeaderText} from '../../components/StyledText'
@@ -191,7 +192,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     </View>
 
                 </View>
-                    </Content>
+                </Content>
                 </Tab>
 
 

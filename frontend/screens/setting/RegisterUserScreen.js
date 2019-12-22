@@ -90,7 +90,7 @@ class RegisterUserScreen extends React.Component {
                         </Item>
                     </View>
                     
-                    <View style={styles.rowForm}>
+                    <View style={styles.rowContainer}>
                         <Item stackedLabel>
                         <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
                             <Label>{AppLocales.t("GENERAL_PWD")}</Label>
@@ -98,7 +98,7 @@ class RegisterUserScreen extends React.Component {
                             <Label style={{color: "red"}}>*</Label>
                             : null}
                         </View>
-                        <Item style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <Item style={{...styles.rowForm, borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             {/* <Label>{AppLocales.t("GENERAL_PWD")}</Label> */}
                             <Input
                                 secureTextEntry={this.state.isShowPwd ? false : true}
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingTop: 15,
-    paddingHorizontal: 15,
+    paddingHorizontal: 0,
     backgroundColor: '#fff',
     flexDirection: "column"
   },

@@ -93,12 +93,12 @@ class VehicleDetailHistory extends React.Component {
         let displayDatas = [...this.currentVehicle.authorizeCarList, ...this.currentVehicle.fillGasList,
             ...this.currentVehicle.expenseList, ...this.currentVehicle.serviceList];
         // Sort this data as Time order
-        // displayDatas.sort(function(a, b) {
-        //     let aDate = new Date(a.fillDate);
-        //     let bDate = new Date(b.fillDate);
+        displayDatas.sort(function(a, b) {
+            let aDate = new Date(a.fillDate);
+            let bDate = new Date(b.fillDate);
 
-        //     return bDate - aDate;
-        // })
+            return bDate - aDate;
+        })
 
         let dataByYear= {};
         displayDatas.forEach(item => {
@@ -112,93 +112,95 @@ class VehicleDetailHistory extends React.Component {
         })
         let orderedKeys = [];
         Object.keys(dataByYear).sort().reverse().forEach(function(key) {
-            console.log("-------key:" + key)
             orderedKeys.push(key)
         });
 
-        console.log("---------orderedKeys")
-        console.log(Object.keys(orderedKeys))
         let historyView = [];
-        orderedKeys.forEach(prop => {
-            historyView.push(<Tab heading={prop} key={prop} 
-                tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
-            <Content>
-            {dataByYear[""+prop].map(item => {
-                return (
-                    <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                        <Left style={{marginLeft: -10}}>
-                            {item.type == AppConstants.FILL_ITEM_GAS ? (
-                                <Button style={{ backgroundColor: AppConstants.COLOR_FILL_FUEL }}>
-                                    <Icon active type="MaterialCommunityIcons" name="fuel" style={{fontSize: 15}}/>
-                                </Button>
-                            ) :
-                            (item.type == AppConstants.FILL_ITEM_OIL) ? (
-                                <Button style={{ backgroundColor: "#007AFF" }}>
-                                    <Icon active type="MaterialCommunityIcons" name="oil" style={{fontSize: 15}} />
-                                </Button>
-                            ) :
-                            (item.type == AppConstants.FILL_ITEM_AUTH) ? (
-                                <Button style={{ backgroundColor: "#3cc97b" }}>
-                                    <Icon active type="Octicons" name="verified" style={{fontSize: 15}} />
-                                </Button>
-                            ) : (item.type == AppConstants.FILL_ITEM_EXPENSE) ? (
-                                <Button style={{ backgroundColor: "gold" }}>
-                                    <Icon active type="MaterialIcons" name="attach-money" style={{fontSize: 15}}/>
-                                </Button>
-                            ) : (item.type == AppConstants.FILL_ITEM_SERVICE) ? (
-                                <Button style={{ backgroundColor: "#df43fa" }}>
-                                    <Icon active type="Octicons" name="tools" style={{fontSize: 15}}/>
-                                </Button>
-                            ) :null
-                            }
-                        </Left>
-                        
-                        <Body>
-                        <TouchableOpacity onPress={() => this.handleEditItem(item.id, item.type)} key={item.id}>
-                            <Text style={styles.listMainText}>{AppUtils.getNameOfFillItemType(item.type, item.isConstantFix, item)}
-                            {". " + AppUtils.formatDateMonthDayYearVN(item.fillDate)}</Text>
-                            <Text style={styles.listSubText}>{item.price + " đ. " + 
-                                ((item.serviceModule) ? AppUtils.objNameToStringSequence(item.serviceModule) 
-                                    : (item.currentKm ? (item.currentKm + "Km, ")
-                                    : ((item.subType && item.subType.length>0) ? item.subType : ""
-                                    )))}</Text>
-                        </TouchableOpacity>
-                        </Body>
-                        <Right style={{marginRight: -10}}>
-                            {this.props.navigation.state.params.isMyVehicle ? (
-                            <TouchableOpacity 
-                                    onPress={() => this.handleEditItem(item.id, item.type)}>
-                                <View style={{alignItems: "center"}}>
-                                <Icon type="Feather" name="edit-3" style={styles.listItemEditIcon}/>
-                                <Text style={{fontSize: 10, alignItems: "center"}}>{AppLocales.t("GENERAL_EDIT_SHORT")}</Text>
-                                </View>
+        if (orderedKeys.length > 0) {
+            orderedKeys.forEach(prop => {
+                historyView.push(<Tab heading={prop} key={prop} 
+                    tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                    activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                <Content>
+                {dataByYear[""+prop].map(item => {
+                    return (
+                        <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
+                            <Left style={{marginLeft: -10}}>
+                                {item.type == AppConstants.FILL_ITEM_GAS ? (
+                                    <Button style={{ backgroundColor: AppConstants.COLOR_FILL_FUEL }}>
+                                        <Icon active type="MaterialCommunityIcons" name="fuel" style={{fontSize: 15}}/>
+                                    </Button>
+                                ) :
+                                (item.type == AppConstants.FILL_ITEM_OIL) ? (
+                                    <Button style={{ backgroundColor: "#007AFF" }}>
+                                        <Icon active type="MaterialCommunityIcons" name="oil" style={{fontSize: 15}} />
+                                    </Button>
+                                ) :
+                                (item.type == AppConstants.FILL_ITEM_AUTH) ? (
+                                    <Button style={{ backgroundColor: AppConstants.COLOR_FILL_AUTH }}>
+                                        <Icon active type="Octicons" name="verified" style={{fontSize: 15}} />
+                                    </Button>
+                                ) : (item.type == AppConstants.FILL_ITEM_EXPENSE) ? (
+                                    <Button style={{ backgroundColor: AppConstants.COLOR_FILL_EXPENSE}}>
+                                        <Icon active type="MaterialIcons" name="attach-money" style={{fontSize: 15}}/>
+                                    </Button>
+                                ) : (item.type == AppConstants.FILL_ITEM_SERVICE) ? (
+                                    <Button style={{ backgroundColor: AppConstants.COLOR_FILL_SERVICE }}>
+                                        <Icon active type="Octicons" name="tools" style={{fontSize: 15}}/>
+                                    </Button>
+                                ) :null
+                                }
+                            </Left>
+                            
+                            <Body>
+                            <TouchableOpacity onPress={() => this.handleEditItem(item.id, item.type)} key={item.id}>
+                                <Text style={styles.listMainText}>{AppUtils.getNameOfFillItemType(item.type, item.isConstantFix, item)}
+                                {". " + AppUtils.formatDateMonthDayYearVN(item.fillDate)}</Text>
+                                <Text style={styles.listSubText}>{item.price + " đ. " + 
+                                    ((item.serviceModule) ? AppUtils.objNameToStringSequence(item.serviceModule) 
+                                        : (item.currentKm ? (item.currentKm + "Km, ")
+                                        : ((item.subType && item.subType.length>0) ? item.subType : ""
+                                        )))}</Text>
                             </TouchableOpacity>
-                            ) : null }
-                            {this.props.navigation.state.params.isMyVehicle ? (
-                            <TouchableOpacity 
-                                    onPress={() => this.handleDeleteItem(item.id, item.type)}>
-                                <View style={{alignItems: "center"}}>
-                                <Icon type="MaterialIcons" name="delete" style={styles.listItemDeleteIcon}/>
-                                <Text style={{fontSize: 10, alignItems: "center"}}>{AppLocales.t("GENERAL_DELETE_SHORT")}</Text>
-                                </View>
-                            </TouchableOpacity>
-                            ) : null }
-                        </Right>
-                    </ListItem>
-                    )
-                }
-            )}
-            </Content>
-            </Tab>
+                            </Body>
+                            <Right style={{marginRight: -10}}>
+                                {this.props.navigation.state.params.isMyVehicle ? (
+                                <TouchableOpacity 
+                                        onPress={() => this.handleEditItem(item.id, item.type)}>
+                                    <View style={{alignItems: "center"}}>
+                                    <Icon type="Feather" name="edit-3" style={styles.listItemEditIcon}/>
+                                    <Text style={{fontSize: 10, alignItems: "center"}}>{AppLocales.t("GENERAL_EDIT_SHORT")}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                ) : null }
+                                {this.props.navigation.state.params.isMyVehicle ? (
+                                <TouchableOpacity 
+                                        onPress={() => this.handleDeleteItem(item.id, item.type)}>
+                                    <View style={{alignItems: "center"}}>
+                                    <Icon type="MaterialIcons" name="delete" style={styles.listItemDeleteIcon}/>
+                                    <Text style={{fontSize: 10, alignItems: "center"}}>{AppLocales.t("GENERAL_DELETE_SHORT")}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                ) : null }
+                            </Right>
+                        </ListItem>
+                        )
+                    }
+                )}
+                </Content>
+                </Tab>
+                )
+            })
+            return (
+                <Tabs renderTabBar={()=> <ScrollableTab tabsContainerStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}/>}>
+                    {historyView}
+                </Tabs>
             )
-        })
-
-        return (
-            <Tabs renderTabBar={()=> <ScrollableTab tabsContainerStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}/>}>
-                {historyView}
-            </Tabs>
-        )
+        } else {
+            return (
+                <NoDataText />
+            )
+        }
     }
 
   render() {

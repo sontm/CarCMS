@@ -296,7 +296,7 @@ class VehicleDetailReport extends React.Component {
                     </Content>
                 </Tab>
                 
-                <Tab heading={AppLocales.t("CARDETAIL_SERVICE_TABLE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                <Tab heading={AppLocales.t("CARDETAIL_SERVICE_TABLE_SHORT")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
                         activeTextStyle={{fontSize: 14,color: "white"}}>

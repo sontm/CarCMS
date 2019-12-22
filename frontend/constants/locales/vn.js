@@ -91,6 +91,7 @@ export default {
     CARDETAIL_AVERAGE_ALL: "Trung Bình Tổng Thời Gian",
     CARDETAIL_HISTORY_HEADER: "Lịch Sử Sử Dụng",
     CARDETAIL_SERVICE_TABLE:"Sổ Bảo Dưỡng",
+    CARDETAIL_SERVICE_TABLE_SHORT:"Bảo Dưỡng",
 
     TEAM_HEADER_CAR: "  Xe  ",
     TEAM_HEADER_REPORT: "Báo Cáo",

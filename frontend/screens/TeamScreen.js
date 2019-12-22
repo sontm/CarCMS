@@ -413,8 +413,8 @@ class TeamScreen extends React.Component {
                 AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
               </Text>
 
-              <Button block onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})} 
-                  style={{width: "80%", marginTop: 20, justifyContent: "center", alignSelf: "center"}}>
+              <Button rounded onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})} 
+                  style={{width: "80%", marginTop: 20, justifyContent: "center", alignSelf: "center", backgroundColor: AppConstants.COLOR_BUTTON_BG,}}>
                 <Text style={{fontSize: 18}}>{AppLocales.t("SETTING_LBL_CREATE_TEAM")}</Text>
               </Button>
 
@@ -422,8 +422,8 @@ class TeamScreen extends React.Component {
                 AppLocales.t("GENERAL_OR")}
               </Text>
 
-              <Button block onPress={() => this.props.navigation.navigate("JoinTeam")} 
-                  style={{width: "80%", marginTop: 10, justifyContent: "center", alignSelf: "center"}}>
+              <Button rounded onPress={() => this.props.navigation.navigate("JoinTeam")} 
+                  style={{width: "80%", marginTop: 10, justifyContent: "center", alignSelf: "center",backgroundColor: AppConstants.COLOR_BUTTON_BG,}}>
                 <Text style={{fontSize: 18}}>{AppLocales.t("SETTING_LBL_JOIN_TEAM")}</Text>
               </Button>
 
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
     borderColor: "white"
   },
   inActiveSegment: {
-    backgroundColor: "#aec7e8",
+    backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER,
     color:AppConstants.COLOR_PICKER_TEXT,
     borderColor: "white"
   },
@@ -506,7 +506,8 @@ const styles = StyleSheet.create({
       fontSize: 12
   },
   inActiveSegmentText: {
-      color: "black",
+      color: "white",
+      //color: "black",
       fontSize: 12
   },
 

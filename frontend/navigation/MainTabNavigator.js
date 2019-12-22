@@ -80,7 +80,7 @@ const MyVehicleStack = createStackNavigator(
 const BUTTONS = [
   { text: "Đổ Xăng", icon: "color-fill", iconColor: AppConstants.COLOR_FILL_FUEL },//1
   //{ text: "Thay Dầu", icon: "analytics", iconColor: "#f42ced" },//2
-  { text: "Phụ Chi", icon: "ios-more", iconColor: "#007AFF" },//3
+  { text: "Phụ Chi", icon: "ios-more", iconColor: AppConstants.COLOR_FILL_EXPENSE },//3
   { text: "Sửa Chữa/Bảo Trì", icon: "construct", iconColor: AppConstants.COLOR_FILL_SERVICE },//4
   { text: "Pháp Lý/Đăng Kiểm/Bảo Hiểm", icon: "paper", iconColor: AppConstants.COLOR_FILL_AUTH },//5
   { text: "Thêm Xe", icon: "car", iconColor: AppConstants.COLOR_FILL_CAR },//0
@@ -226,7 +226,7 @@ const tabNavigator = createBottomTabNavigator({
                 })
               }>
               <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: 2, marginLeft: 3, marginRight: 3, 
-                color: "#2980b9"}}/>
+                color: AppConstants.COLOR_HEADER_BG_LIGHT}}/>
             </TouchableOpacity>
             
             <Button
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   iconActive: {
     fontSize: 24,
-    color: "#2980b9"
+    color: AppConstants.COLOR_HEADER_BG_LIGHT
   },
   iconInActive: {
     fontSize: 24,
@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   },
   textActive: {
     fontSize: 9,
-    color: "#2980b9"
+    color: AppConstants.COLOR_HEADER_BG_LIGHT
   },
   textInActive: {
     fontSize: 9,

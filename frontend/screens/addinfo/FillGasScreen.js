@@ -40,18 +40,23 @@ class FillGasScreen extends React.Component {
             console.log(AppConstants.CURRENT_VEHICLE_ID)
             let currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             this.currentVehicle = currentVehicle;
-
+            
             for (let i = 0; i < currentVehicle.fillGasList.length; i++) {
                 if (currentVehicle.fillGasList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
+                    this.isEditing = true;
                     this.setState({
                         ...currentVehicle.fillGasList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
                         id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.fillGasList[i].fillDate,
+                        currentKm: (currentVehicle.maxMeter>0 && currentVehicle.fillGasList[i].currentKm > currentVehicle.maxMeter) ? 
+                            (currentVehicle.fillGasList[i].currentKm - currentVehicle.maxMeter - 1):
+                            currentVehicle.fillGasList[i].currentKm
                     })
                 }
             }
         } else {
+            this.isEditing = false;
             // If There is No Current Vehicle ID, Set to the First 
             if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
@@ -144,7 +149,7 @@ class FillGasScreen extends React.Component {
 
             let prevItem = null;
             let currentKm = Number(this.state.currentKm);
-            // Only check if isBike
+
             if (currentVehicle.fillGasList && currentVehicle.fillGasList.length > 0) {
                 for (let l = currentVehicle.fillGasList.length -1; l >= 0; l--) {
                     // if the Date is Smaller than this date, that is the Previous
@@ -157,9 +162,12 @@ class FillGasScreen extends React.Component {
             }
             if (prevItem) {
                 // Bike Odometer ussually 99999, Car is 999999
-                console.log("currentKm:" + currentKm)
-                console.log("prevItem.currentKm:" + prevItem.currentKm)
-                if (!theMaxMeter && currentKm < 5000 && prevItem.currentKm > 80000) {
+                let limitKm = 95000; // bike
+                if (currentVehicle.type == "car") {
+                    limitKm = 990000;
+                }
+
+                if (!theMaxMeter && currentKm < 5000 && prevItem.currentKm > limitKm) {
                     // Validate Current KM if Over Max Odometer. 
                     Alert.alert(
                         "Km hiện tại (" + currentKm + ") nhỏ hơn lần trước (" + prevItem.currentKm + ") rất nhiều.",
@@ -351,14 +359,15 @@ class FillGasScreen extends React.Component {
                     />
                     </Item>
                 </View>
+
+                <View style={styles.rowButton}>
+                    <Button rounded
+                        style={styles.btnSubmit}
+                        onPress={() => this.save(this.state)}
+                    ><Text>{this.isEditing ? AppLocales.t("GENERAL_EDITDATA") : AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+                </View>
             </View>
             </Content>
-            <View style={styles.rowButton}>
-                <Button rounded
-                    style={styles.btnSubmit}
-                    onPress={() => this.save(this.state)}
-                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-            </View>
             </Container>
         );
     }
@@ -417,6 +426,13 @@ const styles = StyleSheet.create({
     width: AppConstants.DEFAULT_FORM_WIDTH,
   },
   rowButton: {
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: 15,
+    marginBottom: 30
+  },
+  rowButtonAbsolute: {
     alignItems: "center",
     alignSelf: "center",
     position: 'absolute',

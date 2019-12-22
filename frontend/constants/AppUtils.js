@@ -184,6 +184,9 @@ class AppUtils {
             return (v/1000000).toFixed(2) + "Tr";
         }
     }
+    formatDistanceToKm(v) {
+        return (v/1000).toFixed(0) + "N";
+    }
     formatToPercent(v, total) {
         return (v*100/total).toFixed(0) + "%";
     }
@@ -216,7 +219,7 @@ class AppUtils {
       }
       return result;
     }
-    pushInDateLabelsIfNotExist(arr, val) {
+    pushInDateLabelsIfNotExist(arr, val, forcePush = false) {
         let isExist = false;
         for (let i = 0; i < arr.length; i++) {
             let cur = arr[i];
@@ -1180,6 +1183,7 @@ class AppUtils {
         let objAuthSpend = {};
         if (theVehicle.authorizeCarList && theVehicle.authorizeCarList.length > 0) {
             theVehicle.authorizeCarList.forEach(item => {
+
                 let itemDate = this.normalizeFillDate(new Date(item.fillDate));
                 if (itemDate >= CALCULATE_START_DATE && itemDate <= CALCULATE_END_DATE) {
                     let dateKey = "" + itemDate.getFullYear() + "/" + (itemDate.getMonth() + 1) ;
@@ -1208,6 +1212,7 @@ class AppUtils {
                 }
             })
         }
+
         // convert to Array for Chart
         for (var prop in objAuthSpend) {
             if (Object.prototype.hasOwnProperty.call(objAuthSpend, prop)) {
@@ -1239,7 +1244,7 @@ class AppUtils {
                         }
                     }
                 } else {
-                    arrGasSpend.push(objAuthSpend[""+prop])
+                    arrAuthSpend.push(objAuthSpend[""+prop])
                 }
             }
         }

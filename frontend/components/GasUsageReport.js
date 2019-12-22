@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
+import {TypoH5} from '../components/StyledText';
 // import { LineChart, Grid } from 'react-native-svg-charts'
 
 import AppLocales from '../constants/i18n'
@@ -77,6 +78,7 @@ class GasUsageReport extends React.Component {
     let arrGasMoneyThisCar = [];
     let arrGasMoneyPerKmThisCar = [];
     let tickXLabels = [];
+    let theBarWidth = 10;
 
     if (this.props.currentVehicle && this.props.currentVehicle.id &&  this.props.userData.carReports[this.props.currentVehicle.id]) {
         var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
@@ -87,6 +89,14 @@ class GasUsageReport extends React.Component {
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
+        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+            d = new Date(d.setMonth(d.getMonth() + 1))
+        }
+
+        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
+
         if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
             arrTotalKmMonthly.forEach((item, idx) => {
                 let xDate = new Date(item.x);
@@ -95,7 +105,7 @@ class GasUsageReport extends React.Component {
                     //item.xDate = xDate;
                     item.x = xDate;
                     arrGasKmThisCar.push(item)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                 }
             })
         }
@@ -120,7 +130,7 @@ class GasUsageReport extends React.Component {
             })
         }
     }
-    return {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar, tickXLabels};
+    return {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar, tickXLabels, theBarWidth};
   }
 
 
@@ -129,6 +139,7 @@ class GasUsageReport extends React.Component {
     let arrGasMoneyAllCars = [];
     let arrGasMoneyPerKmAllCars = [];
     let tickXLabels = [];
+    let theBarWidth = 10;
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
 
@@ -140,6 +151,14 @@ class GasUsageReport extends React.Component {
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
+        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+            d = new Date(d.setMonth(d.getMonth() + 1))
+        }
+
+        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
+
         if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
             let filterArr = [];
             arrTotalKmMonthly.forEach(item => {
@@ -147,10 +166,11 @@ class GasUsageReport extends React.Component {
                 if (xDate >= CALCULATE_START_DATE) {
                     item.x = xDate;
                     filterArr.push(item)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                 }
             })
-            arrGasKmAllCars.push(filterArr)
+            if (filterArr.length > 0)
+                arrGasKmAllCars.push(filterArr)
         }
         
         if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
@@ -162,7 +182,8 @@ class GasUsageReport extends React.Component {
                     filterArr.push(item)
                 }
             })
-            arrGasMoneyAllCars.push(filterArr)
+            if (filterArr.length > 0)
+                arrGasMoneyAllCars.push(filterArr)
         }
 
         if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
@@ -174,11 +195,12 @@ class GasUsageReport extends React.Component {
                     filterArr.push(item)
                 }
             })
-            arrGasMoneyPerKmAllCars.push(filterArr)
+            if (filterArr.length > 0)
+                arrGasMoneyPerKmAllCars.push(filterArr)
         }
       }
     })
-    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels};
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth};
   }
 
   calculateAllVehicleGasUsageTeam(isMergeData = true) {
@@ -190,12 +212,22 @@ class GasUsageReport extends React.Component {
     let objGasMoneyAllCars = {};
     let objGasMoneyPerKmAllCars = {};
     let tickXLabels = [];
+    let theBarWidth = 10;
+
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         // End date is ENd of This Month  
         var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+            d = new Date(d.setMonth(d.getMonth() + 1))
+        }
+
+        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
 
         var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
           = this.props.teamData.teamCarReports[element.id].gasReport;
@@ -214,7 +246,7 @@ class GasUsageReport extends React.Component {
                         } else {
                             objGasKmAllCars[""+item.x] = item.y;
                         }
-                        AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
+                        //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
                     }
                 })
             }
@@ -226,7 +258,7 @@ class GasUsageReport extends React.Component {
                     if (xDate >= CALCULATE_START_DATE) {
                         item.x = xDate;
                         filterArr.push(item)
-                        AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                       //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                     }
                 })
 
@@ -311,7 +343,7 @@ class GasUsageReport extends React.Component {
             }
         }
     }
-    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels};
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth};
   }
 
   render() {
@@ -320,10 +352,10 @@ class GasUsageReport extends React.Component {
     if (this.props.currentVehicle || this.props.isTotalReport) { //props
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
-                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels} = this.calculateAllVehicleGasUsageTeam();
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth} = this.calculateAllVehicleGasUsageTeam();
             } else {
                 // Individual All Cars
-                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels} = this.calculateAllVehicleGasUsage();
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth} = this.calculateAllVehicleGasUsage();
             }
             var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
             var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
@@ -338,7 +370,7 @@ class GasUsageReport extends React.Component {
             var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         } else {
             // this is One Vehicle in Detail Report
-            var {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar, tickXLabels} =
+            var {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar, tickXLabels, theBarWidth} =
                 this.calculateOneVehicleGasUsage();
             if (this.state.activeDisplay == 1) {
                 var dataToDisplay = arrGasMoneyThisCar;
@@ -376,6 +408,8 @@ class GasUsageReport extends React.Component {
         //       strokeWidth: 2 // optional
         //     }]
         // }
+        let arrLabelY = ["Km", "đ", "đ/Km"];
+        console.log(arrLabelY[this.state.activeDisplay])
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>
@@ -410,7 +444,7 @@ class GasUsageReport extends React.Component {
                         <Picker.Item label="12 Tháng" value={12} />
                         <Picker.Item label="18 Tháng" value={18} />
                         <Picker.Item label="24 Tháng" value={24} />
-                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
+                        {/* <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} /> */}
                     </Picker>
                     {/* <Picker
                         mode="dropdown"
@@ -447,9 +481,9 @@ class GasUsageReport extends React.Component {
                     <View style={styles.gasUsageContainer}>
                         <VictoryChart
                             width={Layout.window.width}
-                            height={300}
-                            padding={{top:10,bottom:40,left:3,right:10}}
-                            domainPadding={{y: [0, 0], x: [50, 10]}}
+                            height={260}
+                            padding={{top:20,bottom:40,left:3,right:10}}
+                            domainPadding={{y: [0, 10], x: [50, 20]}}
                         >
                         {/* TODO, Date X axis not Match */}
                         <VictoryStack
@@ -461,12 +495,14 @@ class GasUsageReport extends React.Component {
                             dataToDisplay.map((item, idx) => ( // Individual All Cars
                                 <VictoryBar
                                 key={idx}
+                                barWidth={theBarWidth}
                                 data={item}
                                 />
                             ))
                         ) : (
                             <VictoryBar
                                 data={dataToDisplay}
+                                barWidth={theBarWidth}
                             />
                         )}
                         </VictoryStack>
@@ -488,12 +524,15 @@ class GasUsageReport extends React.Component {
                         />
                         <VictoryAxis
                             dependentAxis
+                            label={arrLabelY[this.state.activeDisplay]}
+                            axisLabelComponent={<VictoryLabel dy={40} dx={130} style={{fontSize: 13}}/>}
                             standalone={false}
-                            tickFormat={(t) => `${this.state.activeDisplay!= 0 ? AppUtils.formatMoneyToK(t) :t}`}
+                            tickFormat={(t) => `${this.state.activeDisplay!= 0 ? AppUtils.formatMoneyToK(t) :
+                                AppUtils.formatDistanceToKm(t)}`}
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 10, padding: -30}
+                                tickLabels: {fontSize: 10, padding: -8,textAnchor:"start"}
                             }}
                         />
 
@@ -533,20 +572,18 @@ class GasUsageReport extends React.Component {
 
                 {this.state.duration != AppLocales.t("GENERAL_ALL") ? (
                 <View>
-                <View style={styles.textRow}>
-                    <Text><H2>
+                <View style={{...styles.textRow, paddingTop: 0}}>
+                    <TypoH5>
                     {AppLocales.t("CARDETAIL_AVERAGE_IN")}{this.state.duration + " " + durationTypeToVietnamese(this.state.durationType)}
-                    </H2></Text>
+                    </TypoH5>
                 </View>
                 <View style={styles.statRow}>
                     <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H2>{avgKmMonthly ? 
-                                avgKmMonthly.toFixed(1) : "-"}</H2></Text>
-                        </CardItem>
                         <CardItem>
                         <Body>
-                            <Text>
+                            <Text><H3>{avgKmMonthly ? 
+                                avgKmMonthly.toFixed(0) : "-"}</H3></Text>
+                            <Text style={{fontSize: 14, color: AppConstants.COLOR_TEXT_LIGHT_INFO, marginTop: 10}}>
                             Km/{AppLocales.t("GENERAL_MONTH")}
                             </Text>
                         </Body>
@@ -554,25 +591,21 @@ class GasUsageReport extends React.Component {
                     </Card>
 
                     <Card style={styles.equalStartRow}>
-                        <CardItem header>
-                            <Text><H2>{avgMoneyMonthly ?
-                             (avgMoneyMonthly).toFixed(0): "-"}</H2></Text>
-                        </CardItem>
                         <CardItem>
                         <Body>
-                            <Text>đ/{AppLocales.t("GENERAL_MONTH")}</Text>
+                            <Text><H3>{avgMoneyMonthly ?
+                             (avgMoneyMonthly).toFixed(0): "-"}</H3></Text>
+                            <Text style={{fontSize: 14, color: AppConstants.COLOR_TEXT_LIGHT_INFO, marginTop: 10}}>đ/{AppLocales.t("GENERAL_MONTH")}</Text>
                         </Body>
                         </CardItem>
                     </Card>
 
                     <Card style={styles.equalStartRow}>
-                        <CardItem header  style={{flexDirection: "row", alignItems: "center"}}>
-                            <Text><H2>{avgMoneyPerKmMonthly ?
-                             (avgMoneyPerKmMonthly).toFixed(0) : "-"}</H2></Text>
-                        </CardItem>
                         <CardItem>
                         <Body>
-                            <Text>đ/Km</Text>
+                            <Text><H3>{avgMoneyPerKmMonthly ?
+                             (avgMoneyPerKmMonthly).toFixed(0) : "-"}</H3></Text>
+                            <Text style={{fontSize: 14, color: AppConstants.COLOR_TEXT_LIGHT_INFO, marginTop: 10}}>đ/Km</Text>
                         </Body>
                         </CardItem>
                     </Card>

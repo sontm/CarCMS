@@ -40,13 +40,11 @@ class CarAuthorizeScreen extends React.Component {
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             for (let i = 0; i < currentVehicle.authorizeCarList.length; i++) {
                 if (currentVehicle.authorizeCarList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
-                    console.log("WIllMOUNTTTTTTTTTTTTTTT:" +  currentVehicle.authorizeCarList[i].fillDate.toLocaleString())
                     let theSubType = currentVehicle.authorizeCarList[i].subType;
                     if (!theSubType || theSubType.length<= 0) {
                         theSubType = this.props.appData.typeAuth[0].name;
                     }
-                    console.log("   theSubTypeArr:" + currentVehicle.authorizeCarList[i].subTypeArr)
-                    console.log("   theSubType:" + theSubType)
+                    this.isEditing = true;
                     this.setState({
                         ...currentVehicle.authorizeCarList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
@@ -59,6 +57,7 @@ class CarAuthorizeScreen extends React.Component {
             }
         } else {
             // If There is No Current Vehicle ID, Set to the First 
+            this.isEditing = false;
             if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
                 console.log(this.props.userData.vehicleList)
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
@@ -294,18 +293,16 @@ class CarAuthorizeScreen extends React.Component {
                         </Card>
                     </View>
 
+                    <View style={styles.rowButton}>
+                        <Button rounded
+                            style={styles.btnSubmit}
+                            onPress={() => this.save(this.state)}
+                        ><Text>
+                        {this.isEditing ? AppLocales.t("GENERAL_EDITDATA") : AppLocales.t("GENERAL_ADDDATA")}
+                        </Text></Button>
+                    </View>
                 </View>
             </Content>
-            <View style={styles.rowButton}>
-                    <Button rounded
-                        style={styles.btnSubmit}
-                        onPress={() => this.save(this.state)}
-                    ><Text>
-                    {((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? 
-                        AppLocales.t("GENERAL_EDITDATA") : 
-                        AppLocales.t("GENERAL_ADDDATA")}
-                    </Text></Button>
-            </View>
             </Container>
         );
     }
@@ -375,13 +372,20 @@ const styles = StyleSheet.create({
         width: AppConstants.DEFAULT_FORM_WIDTH,
     },
     rowButton: {
-      alignItems: "center",
-      alignSelf: "center",
-      position: 'absolute',
-      justifyContent: "center",
-      bottom: 3,
-      left: 0,
-      right: 0,
+        alignItems: "center",
+        alignSelf: "center",
+        justifyContent: "center",
+        marginTop: 15,
+        marginBottom: 30
+    },
+    rowButtonAbsolute: {
+        alignItems: "center",
+        alignSelf: "center",
+        position: 'absolute',
+        justifyContent: "center",
+        bottom: 3,
+        left: 0,
+        right: 0,
     },
     btnSubmit: {
       width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,

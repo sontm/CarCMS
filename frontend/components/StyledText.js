@@ -21,6 +21,22 @@ export function WhiteText(props) {
   );
 }
 
+export function TypoH4(props) {
+  return (
+    <Text {...props} style={[props.style, { fontSize: 20 }]} />
+  );
+}
+export function TypoH5(props) {
+  return (
+    <Text {...props} style={[props.style, { fontSize: 18 }]} />
+  );
+}
+export function TypoH6(props) {
+  return (
+    <Text {...props} style={[props.style, { fontSize: 16 }]} />
+  );
+}
+
 export function NoDataText(props) {
   return (
     <View style={styles.containerNoData}>

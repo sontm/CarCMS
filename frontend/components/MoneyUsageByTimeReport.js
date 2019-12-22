@@ -27,14 +27,12 @@ class MoneyUsageByTimeReport extends React.Component {
     this.setState({
         duration: value
     });
-    this.displayByFilter = true;
   }
 
   onValueChangeDurationType(value) {
     this.setState({
         durationType: value
     });
-    this.displayByFilter = true;
   }
   // TODO for change Date
   onSetDateOption(newDate) {
@@ -53,7 +51,7 @@ class MoneyUsageByTimeReport extends React.Component {
     let arrTotalServiceOneCar = [];
     let legendLabels = [];
     let tickXLabels = [];
-    // TODO for Testing and with Time selected
+    let theBarWidth = 10;
     
     // this.props.teamData.teamCarList.forEach((element, carIdx) => {
     //   if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
@@ -69,7 +67,14 @@ class MoneyUsageByTimeReport extends React.Component {
         var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
-           
+        
+        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+            d = new Date(d.setMonth(d.getMonth() + 1))
+        }
+
+        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
         
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
@@ -78,46 +83,13 @@ class MoneyUsageByTimeReport extends React.Component {
                 if (xDate > CALCULATE_START_DATE) {
                     thisCarGasItem.y += item.y;
                     thisCarGasItem.x = xDate;
-                    console.log("    XGas:" + item.x)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                     arrTotalGasOneCar.push(thisCarGasItem);
                 }
             })
            if (arrTotalGasOneCar.length > 0) {
             legendLabels.push({name:AppLocales.t("GENERAL_GAS")})
            }
-        }
-        
-        if (arrOilSpend && arrOilSpend.length) {
-            arrOilSpend.forEach(item => {
-                let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
-                    let thisCarOilItem = {x: xValue, y: 0};
-                    thisCarOilItem.y += item.y;
-                    thisCarOilItem.x = xDate;
-                    console.log("    X Oil:" + item.x)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
-
-                    arrTotalOilOneCar.push(thisCarOilItem);
-                }
-            })
-        }
-        
-        if (arrAuthSpend && arrAuthSpend.length) {
-            arrAuthSpend.forEach(item => {
-                let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
-                    let thisCarAuthItem = {x: xValue, y: 0};
-                    thisCarAuthItem.y += item.y;
-                    thisCarAuthItem.x = xDate;
-                    console.log("    X Auth:" + item.x)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
-                    arrTotalAuthOneCar.push(thisCarAuthItem);
-                }
-            })
-            if (arrTotalAuthOneCar.length > 0) {
-                legendLabels.push({name:AppLocales.t("GENERAL_AUTHROIZE")})
-            }
         }
         
         if (arrExpenseSpend && arrExpenseSpend.length) {
@@ -128,17 +100,31 @@ class MoneyUsageByTimeReport extends React.Component {
 
                     thisCarExpenseItem.y += item.y;
                     thisCarExpenseItem.x = xDate;
-                    console.log("    X Exp:" + item.x)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                     arrTotalExpenseOneCar.push(thisCarExpenseItem);
                 }
             })
             if (arrTotalExpenseOneCar.length > 0) {
                 legendLabels.push({name:AppLocales.t("GENERAL_EXPENSE")})
             }
-            
         }
         
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    let thisCarAuthItem = {x: xValue, y: 0};
+                    thisCarAuthItem.y += item.y;
+                    thisCarAuthItem.x = xDate;
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    arrTotalAuthOneCar.push(thisCarAuthItem);
+                }
+            })
+            if (arrTotalAuthOneCar.length > 0) {
+                legendLabels.push({name:AppLocales.t("GENERAL_AUTHROIZE")})
+            }
+        }
+
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 let xDate = new Date(item.x);
@@ -146,8 +132,7 @@ class MoneyUsageByTimeReport extends React.Component {
                     let thisCarServiceItem = {x: xValue, y: 0};
                     thisCarServiceItem.y += item.y;
                     thisCarServiceItem.x = xDate;
-                    console.log("    X Service:" + item.x)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                     arrTotalServiceOneCar.push(thisCarServiceItem);
                 }
             })
@@ -157,8 +142,8 @@ class MoneyUsageByTimeReport extends React.Component {
         }
     }
     //});
-    return {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
-        arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels}
+    return {arrTotalGasOneCar,arrTotalAuthOneCar,
+        arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels, theBarWidth}
   }
 
 
@@ -168,6 +153,8 @@ class MoneyUsageByTimeReport extends React.Component {
     let totalAllCarsAllCategory = 0;
     let tickXLabels = [];
     let legendLabels = [];
+    let theBarWidth = 10;
+
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
           // TODO* arrTotalMoneySpend is Wrong....
@@ -179,6 +166,14 @@ class MoneyUsageByTimeReport extends React.Component {
 
         let filteredArrTotalMoneySpend = [];
 
+        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+            d = new Date(d.setMonth(d.getMonth() + 1))
+        }
+
+        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
+
         // Only Keep numberOfMonth
         if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
             arrTotalMoneySpend.forEach(item => {
@@ -186,7 +181,7 @@ class MoneyUsageByTimeReport extends React.Component {
                 if (xDate > CALCULATE_START_DATE) {
                     item.x = xDate;
                     filteredArrTotalMoneySpend.push(item)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
                 }
             })
         }
@@ -209,7 +204,7 @@ class MoneyUsageByTimeReport extends React.Component {
         }
       }
     });
-    return {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels, legendLabels};
+    return {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels, legendLabels, theBarWidth};
   }
   calculateAllVehicleTotalMoneyPercentPrivate() {
     let totalGasSpendPrivate = 0, totalOilSpendPrivate = 0, totalAuthSpendPrivate = 0, 
@@ -241,14 +236,6 @@ class MoneyUsageByTimeReport extends React.Component {
                 }
             })
         }
-        if (arrAuthSpend && arrAuthSpend.length) {
-            arrAuthSpend.forEach(item => {
-                let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
-                    totalAuthSpendPrivate += item.y;
-                }
-            })
-        }
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 let xDate = new Date(item.x);
@@ -257,6 +244,16 @@ class MoneyUsageByTimeReport extends React.Component {
                 }
             })
         }
+
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalAuthSpendPrivate += item.y;
+                }
+            })
+        }
+
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 let xDate = new Date(item.x);
@@ -279,6 +276,8 @@ class MoneyUsageByTimeReport extends React.Component {
     let arrTotalAllCars = [];
     let tickXLabels = [];
     let legendLabels = [];
+    let theBarWidth = 10;
+
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         let {arrTotalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
@@ -286,6 +285,14 @@ class MoneyUsageByTimeReport extends React.Component {
         var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+            d = new Date(d.setMonth(d.getMonth() + 1))
+        }
+
+        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
 
         let filteredArrTotalMoneySpend = [];
         // Only Keep numberOfMonth
@@ -295,7 +302,7 @@ class MoneyUsageByTimeReport extends React.Component {
                 if (xDate > CALCULATE_START_DATE) {
                     item.x = xDate;
                     filteredArrTotalMoneySpend.push(item)
-                    AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                 }
             })
         }
@@ -304,7 +311,7 @@ class MoneyUsageByTimeReport extends React.Component {
             legendLabels.push({name: element.licensePlate})
       }
     });
-    return {arrTotalAllCars, tickXLabels, legendLabels};
+    return {arrTotalAllCars, tickXLabels, legendLabels, theBarWidth};
   }
   calculateEachVehicleTotalMoneyTeam(numberOfMonth) {
     let arrTotalGasEachCars = [];
@@ -334,13 +341,6 @@ class MoneyUsageByTimeReport extends React.Component {
             })
             arrTotalOilEachCars.push(thisCarOilItem);
         }
-        let thisCarAuthItem = {x: xValue, y: 0};
-        if (arrAuthSpend && arrAuthSpend.length) {
-            arrAuthSpend.forEach(item => {
-                thisCarAuthItem.y += item.y;
-            })
-            arrTotalAuthEachCars.push(thisCarAuthItem);
-        }
         let thisCarExpenseItem = {x: xValue, y: 0};
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
@@ -348,6 +348,15 @@ class MoneyUsageByTimeReport extends React.Component {
             })
             arrTotalExpenseEachCars.push(thisCarExpenseItem);
         }
+        
+        let thisCarAuthItem = {x: xValue, y: 0};
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                thisCarAuthItem.y += item.y;
+            })
+            arrTotalAuthEachCars.push(thisCarAuthItem);
+        }
+
         let thisCarServiceItem = {x: xValue, y: 0};
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
@@ -365,27 +374,28 @@ class MoneyUsageByTimeReport extends React.Component {
     if (this.props.currentVehicle || this.props.isTotalReport) {
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
-                var {arrTotalAllCars, tickXLabels, legendLabels} = this.calculateAllVehicleTotalMoneyTeam(6);
+                var {arrTotalAllCars, tickXLabels, legendLabels, theBarWidth} = this.calculateAllVehicleTotalMoneyTeam();
                 var {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
                     arrTotalExpenseEachCars, arrTotalServiceEachCars}
                     = this.calculateEachVehicleTotalMoneyTeam();
             } else {
                 // Tong Quan of Current User
-                var {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels, legendLabels} 
-                    = this.calculateAllVehicleTotalMoney(6);
+                var {arrTotalAllCars, arrTotalEachCarsAllCategory, totalAllCarsAllCategory, tickXLabels, legendLabels, theBarWidth} 
+                    = this.calculateAllVehicleTotalMoney();
                 var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
                     totalExpenseSpendPrivate, totalServiceSpendPrivate, totalAllSpendPrivate}
                     = this.calculateAllVehicleTotalMoneyPercentPrivate();
             }
         } else {
-            var {arrTotalGasOneCar,arrTotalOilOneCar,arrTotalAuthOneCar,
+            // Detail Report each Car
+            var {arrTotalGasOneCar,theBarWidth,arrTotalAuthOneCar,
                 arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels}
                 = this.calculateOneVehicleTotalMoneyPrivate();
         }
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         let isHasData = true;
         if ((this.props.isTotalReport && arrTotalAllCars.length <= 0) || 
-        (!this.props.isTotalReport && !arrTotalGasOneCar.length && !arrTotalOilOneCar.length && !arrTotalAuthOneCar.length
+        (!this.props.isTotalReport && !arrTotalGasOneCar.length && !arrTotalAuthOneCar.length
         && !arrTotalExpenseOneCar.length && !arrTotalServiceOneCar.length) ) {
             isHasData = false;
         }
@@ -394,8 +404,8 @@ class MoneyUsageByTimeReport extends React.Component {
             !arrTotalExpenseEachCars.length && !arrTotalServiceEachCars.length) {
             isHasTeamData = false;
         }
-        console.log("¥¥¥¥¥¥¥¥¥¥¥arrTotalAllCars¥¥¥¥¥¥¥¥")
-        console.log(arrTotalAllCars)
+        console.log("¥¥¥¥¥¥¥¥¥¥¥a arrTotalAuthOneCar ¥¥¥¥¥¥¥¥")
+        console.log(arrTotalAuthOneCar)
         return (
             <View style={styles.container}>
                 
@@ -421,8 +431,8 @@ class MoneyUsageByTimeReport extends React.Component {
                         <Picker.Item label="12 Tháng" value={12} />
                         <Picker.Item label="18 Tháng" value={18} />
                         <Picker.Item label="24 Tháng" value={24} />
-                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} 
-                            value={AppLocales.t("GENERAL_ALL")} />
+                        {/* <Picker.Item label={AppLocales.t("GENERAL_ALL")} 
+                            value={AppLocales.t("GENERAL_ALL")} /> */}
                     </Picker>
                     {/* <Picker
                         mode="dropdown"
@@ -462,7 +472,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             width={Layout.window.width}
                             height={250}
                             padding={{top:10,bottom:30,left:3,right:10}}
-                            domainPadding={{y: [0, 10], x: [40, 10]}}
+                            domainPadding={{y: [0, 10], x: [40, 20]}}
                         >
                         {/* TODO, Date X axis not Match */}
                         {this.props.isTotalReport ? (
@@ -473,6 +483,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             >
                             {arrTotalAllCars.map((item, idx) => (
                                 <VictoryBar
+                                barWidth={theBarWidth}
                                 key={idx}
                                 data={item}
                                 />
@@ -488,25 +499,28 @@ class MoneyUsageByTimeReport extends React.Component {
                             {arrTotalGasOneCar && arrTotalGasOneCar.length ?
                             <VictoryBar
                                 data={arrTotalGasOneCar}
-                                interpolation="linear"
-                            /> : null}
-
-
-                            {arrTotalAuthOneCar && arrTotalAuthOneCar.length ?
-                            <VictoryBar
-                                data={arrTotalAuthOneCar}
+                                barWidth={theBarWidth}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalExpenseOneCar && arrTotalExpenseOneCar.length ?
                             <VictoryBar
                                 data={arrTotalExpenseOneCar}
+                                barWidth={theBarWidth}
+                                interpolation="linear"
+                            /> : null}
+
+                            {arrTotalAuthOneCar && arrTotalAuthOneCar.length ?
+                            <VictoryBar
+                                data={arrTotalAuthOneCar}
+                                barWidth={theBarWidth}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalServiceOneCar && arrTotalServiceOneCar.length ?
                             <VictoryBar
                                 data={arrTotalServiceOneCar}
+                                barWidth={theBarWidth}
                                 interpolation="linear"
                             /> : null}
                         
@@ -533,7 +547,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             //offSetX={400}
                             style={{
                                 ticks: {stroke: "grey", size: 3},
-                                tickLabels: {fontSize: 10, padding: -32}
+                                tickLabels: {fontSize: 10, padding: -8,textAnchor:"start"}
                             }}
                         />
                         </VictoryChart>
@@ -574,7 +588,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             width={Layout.window.width}
                             height={250}
                             padding={{top:20,bottom:30,left:3,right:10}}
-                            domainPadding={{y: [0, 0], x: [40, 10]}}
+                            domainPadding={{y: [0, 0], x: [40, 20]}}
                         >
                         <VictoryStack
                             width={Layout.window.width}
@@ -584,30 +598,28 @@ class MoneyUsageByTimeReport extends React.Component {
                             {arrTotalGasEachCars && arrTotalGasEachCars.length ?
                             <VictoryBar
                                 data={arrTotalGasEachCars}
-                                interpolation="linear"
-                            /> : null}
-
-                            {arrTotalOilEachCars && arrTotalOilEachCars.length ?
-                            <VictoryBar
-                                data={arrTotalOilEachCars}
+                                barWidth={theBarWidth}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalAuthEachCars && arrTotalAuthEachCars.length ?
                             <VictoryBar
                                 data={arrTotalAuthEachCars}
+                                barWidth={theBarWidth}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalExpenseEachCars && arrTotalExpenseEachCars.length ?
                             <VictoryBar
                                 data={arrTotalExpenseEachCars}
+                                barWidth={theBarWidth}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalServiceEachCars && arrTotalServiceEachCars.length ?
                             <VictoryBar
                                 data={arrTotalServiceEachCars}
+                                barWidth={theBarWidth}
                                 interpolation="linear"
                             /> : null}
                         
@@ -633,7 +645,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 10, padding: -35},
+                                tickLabels: {fontSize: 10, padding: -8,textAnchor:"start"},
                             }}
                         />
                         </VictoryChart>

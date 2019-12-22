@@ -41,6 +41,7 @@ class PayExpenseScreen extends React.Component {
                         id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.expenseList[i].fillDate,
                     })
+                    this.isEditing = true;
                 }
             }
         } else {
@@ -57,12 +58,14 @@ class PayExpenseScreen extends React.Component {
                         vehicleId: this.props.userData.vehicleList[0].id,
                         subType: defaultType
                     })
+                    this.isEditing = false;
                 }
             } else {
                 this.setState({
                     vehicleId: AppConstants.CURRENT_VEHICLE_ID,
                     subType: defaultType
                 })
+                this.isEditing = false;
             }
         }
     }
@@ -225,15 +228,15 @@ class PayExpenseScreen extends React.Component {
                         </Item>
                     </View>
 
+                    <View style={styles.rowButton}>
+                        <Button primary rounded
+                            style={styles.btnSubmit}
+                            onPress={() => this.save(this.state)}
+                        ><Text>{this.isEditing ? AppLocales.t("GENERAL_EDITDATA") : AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+                    </View>
 
                 </View>
             </Content>
-            <View style={styles.rowButton}>
-                <Button primary rounded
-                    style={styles.btnSubmit}
-                    onPress={() => this.save(this.state)}
-                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-            </View>
             </Container>
         );
     }
@@ -292,14 +295,21 @@ const styles = StyleSheet.create({
       width: AppConstants.DEFAULT_FORM_WIDTH,
     },
     rowButton: {
-      alignItems: "center",
-      alignSelf: "center",
-      position: 'absolute',
-      justifyContent: "center",
-      bottom: 3,
-      left: 0,
-      right: 0,
-    },
+        alignItems: "center",
+        alignSelf: "center",
+        justifyContent: "center",
+        marginTop: 15,
+        marginBottom: 30
+      },
+      rowButtonAbsolute: {
+        alignItems: "center",
+        alignSelf: "center",
+        position: 'absolute',
+        justifyContent: "center",
+        bottom: 3,
+        left: 0,
+        right: 0,
+      },
     btnSubmit: {
       width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
       backgroundColor: AppConstants.COLOR_BUTTON_BG,

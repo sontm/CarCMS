@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
+import { NoDataText } from '../../components/StyledText';
 
 function renderMaintainModuleItem(item, onRemove) {
     return (
@@ -61,7 +62,7 @@ class PayServiceScreen extends React.Component {
             for (let i = 0; i < currentVehicle.serviceList.length; i++) {
                 if (currentVehicle.serviceList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES = currentVehicle.serviceList[i].serviceModule;
-
+                    this.isEditing = true;
                     this.setState({
                         ...currentVehicle.serviceList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
@@ -73,6 +74,7 @@ class PayServiceScreen extends React.Component {
         } else {
            
             AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES = {};
+            this.isEditing = false;
             // If There is No Current Vehicle ID, Set to the First 
             if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
@@ -514,14 +516,15 @@ class PayServiceScreen extends React.Component {
                         />
                         </Item>
                     </View>
+
+                    <View style={styles.rowButton}>
+                        <Button rounded
+                            style={styles.btnSubmit}
+                            onPress={() => this.save(this.state)}
+                        ><Text>{this.isEditing ? AppLocales.t("GENERAL_EDITDATA") : AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+                    </View>
                 </View>
             </Content>
-            <View style={styles.rowButton}>
-                <Button rounded
-                    style={styles.btnSubmit}
-                    onPress={() => this.save(this.state)}
-                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
-            </View>
             </Container>
         );
     }
@@ -595,13 +598,20 @@ const styles = StyleSheet.create({
         width: AppConstants.DEFAULT_FORM_WIDTH,
     },
     rowButton: {
-      alignItems: "center",
-      alignSelf: "center",
-      position: 'absolute',
-      justifyContent: "center",
-      bottom: 3,
-      left: 0,
-      right: 0,
+        alignItems: "center",
+        alignSelf: "center",
+        justifyContent: "center",
+        marginTop: 15,
+        marginBottom: 30
+    },
+    rowButtonAbsolute: {
+        alignItems: "center",
+        alignSelf: "center",
+        position: 'absolute',
+        justifyContent: "center",
+        bottom: 3,
+        left: 0,
+        right: 0,
     },
     btnSubmit: {
       width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,

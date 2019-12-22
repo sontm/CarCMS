@@ -25,7 +25,6 @@ class MoneyUsageReport extends React.Component {
     this.setState({
         duration: value
     });
-    this.displayByFilter = true;
   }
 
   // TODO for change Date
@@ -33,7 +32,6 @@ class MoneyUsageReport extends React.Component {
     this.setState({
         tillDate: newDate
     });
-    this.displayByFilter = true;
   }
   
   calculateAllVehicleTotalMoneyPercentTeam(numberOfMonth) {
@@ -64,13 +62,6 @@ class MoneyUsageReport extends React.Component {
                 }
             })
         }
-        if (arrAuthSpend && arrAuthSpend.length) {
-            arrAuthSpend.forEach(item => {
-                if (new Date(item.x) > CALCULATE_START_DATE) {
-                    totalAuthSpendTeam += item.y;
-                }
-            })
-        }
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 if (new Date(item.x) > CALCULATE_START_DATE) {
@@ -78,6 +69,14 @@ class MoneyUsageReport extends React.Component {
                 }
             })
         }
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                if (new Date(item.x) > CALCULATE_START_DATE) {
+                    totalAuthSpendTeam += item.y;
+                }
+            })
+        }
+
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 if (new Date(item.x) > CALCULATE_START_DATE) {
@@ -119,14 +118,6 @@ class MoneyUsageReport extends React.Component {
                 }
             })
         }
-        if (arrAuthSpend && arrAuthSpend.length) {
-            arrAuthSpend.forEach(item => {
-                let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
-                    totalAuthSpendPrivate += item.y;
-                }
-            })
-        }
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 let xDate = new Date(item.x);
@@ -135,6 +126,15 @@ class MoneyUsageReport extends React.Component {
                 }
             })
         }
+        if (arrAuthSpend && arrAuthSpend.length) {
+            arrAuthSpend.forEach(item => {
+                let xDate = new Date(item.x);
+                if (xDate > CALCULATE_START_DATE) {
+                    totalAuthSpendPrivate += item.y;
+                }
+            })
+        }
+
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 let xDate = new Date(item.x);
@@ -288,15 +288,14 @@ class MoneyUsageReport extends React.Component {
                         selectedValue={this.state.duration}
                         onValueChange={this.onValueChangeDuration.bind(this)}
                         textStyle={{ color: "#1f77b4", fontSize: 16 }}
-                        style={{width: 80}}
+                        style={{width: 75}}
                         >
-                        <Picker.Item label="3 Tháng" value={3} />
                         <Picker.Item label="6 Tháng" value={6} />
                         <Picker.Item label="9 Tháng" value={9} />
                         <Picker.Item label="12 Tháng" value={12} />
                         <Picker.Item label="18 Tháng" value={18} />
                         <Picker.Item label="24 Tháng" value={24} />
-                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
+                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={240} />
                     </Picker>
 
                     <Text style={{fontSize: 15, marginLeft: 10}}>Gần Nhất Đến</Text>
@@ -325,9 +324,8 @@ class MoneyUsageReport extends React.Component {
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={[
                                 { x: AppLocales.t("GENERAL_GAS"), y: totalGasSpend },
-                                { x: AppLocales.t("GENERAL_OIL"), y: totalOilSpend },
-                                { x: AppLocales.t("GENERAL_AUTHROIZE"), y: totalAuthSpend },
                                 { x: AppLocales.t("GENERAL_EXPENSE"), y: totalExpenseSpend },
+                                { x: AppLocales.t("GENERAL_AUTHROIZE"), y: totalAuthSpend },
                                 { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpend },
                             ]}
                             innerRadius={80}

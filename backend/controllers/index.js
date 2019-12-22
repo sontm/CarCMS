@@ -32,13 +32,18 @@ app.post('/api/team', passport.authenticate('jwt', {session: false}), team.creat
 app.post('/api/team/join', passport.authenticate('jwt', {session: false}), team.joinTeam);
 app.get('/api/team/join', passport.authenticate('jwt', {session: false}), team.getAllJoinRequestWhichUserIsManager);
 app.get('/api/team/leave', passport.authenticate('jwt', {session: false}), team.leaveTeam);
-app.post('/api/team/join/action', passport.authenticate('jwt', {session: false}), team.approveOrRejectJoinRequest);
+app.post('/api/team/join/action', passport.authenticate('jwt', {session: false}), 
+  team.approveOrRejectJoinRequest);
+app.post('/api/team/join/remove', passport.authenticate('jwt', {session: false}), 
+  team.removeMemFromTeam);
+  
 app.post('/api/team/users', passport.authenticate('jwt', {session: false}), team.getAllUserOfTeam);
 app.get('/api/team/createdbyme', passport.authenticate('jwt', {session: false}), 
   team.getAllTeamCreatedByUser);
 app.post('/api/team/rejointeam', passport.authenticate('jwt', {session: false}), 
   team.rejoinTeamCreatedByMe);
 
+  
 app.get('/api/team/latest', passport.authenticate('jwt', {session: false}), 
   team.getLatestTeamInfoOfUser);
 app.get('/api/team/request/mine/:id', passport.authenticate('jwt', {session: false}), 

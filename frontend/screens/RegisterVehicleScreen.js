@@ -93,6 +93,10 @@ class RegisterVehicleScreen extends React.Component {
                     type: this.state.type ? this.state.type : "car",
                     isDefault: this.state.isDefault
                 }
+                // 
+                if (this.state.maxMeter > 0) {
+                    newVehicle.maxMeter = Number(this.state.maxMeter)
+                }
 
                 console.log(JSON.stringify(newVehicle))
                 this.props.actVehicleEditVehicle(newVehicle, this.props.userData)
@@ -249,7 +253,13 @@ class RegisterVehicleScreen extends React.Component {
                         />
                         </Item>
                     </View> : null}
-  
+                                
+                    <View style={styles.rowButton}>
+                        <Button rounded style={styles.btnSubmit}
+                            style={styles.btnSubmit}
+                            onPress={() => this.save(this.state)}
+                        ><Text>{((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
+                    </View>
 
                     {/* <View style={styles.rowContainer}>
                         <View style={styles.rowLabel}>
@@ -264,12 +274,6 @@ class RegisterVehicleScreen extends React.Component {
                      */}
                 </View>
                 </Content>
-                <View style={styles.rowButton}>
-                    <Button rounded
-                        style={styles.btnSubmit}
-                        onPress={() => this.save(this.state)}
-                    ><Text>{((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) ? "Sửa Đổi" : "Tạo Mới" }</Text></Button>
-                </View>
             </Container>
         );
     }
@@ -321,6 +325,13 @@ const styles = StyleSheet.create({
   },
   
   rowButton: {
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: 15,
+    marginBottom: 30
+  },
+  rowButtonAbsolute: {
     alignItems: "center",
     alignSelf: "center",
     position: 'absolute',

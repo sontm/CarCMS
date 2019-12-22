@@ -58,7 +58,7 @@ class SetMaxOdometer extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        block primary
+                        rounded style={styles.btnSubmit}
                         onPress={() => this.handleSubmit()}
                         ><Text>{AppLocales.t("GENERAL_CONFIRM")}</Text></Button>
                     </View>
@@ -114,7 +114,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   btnSubmit: {
-
+    width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+    backgroundColor: AppConstants.COLOR_BUTTON_BG,
+    justifyContent: "center",
   }
 });
 

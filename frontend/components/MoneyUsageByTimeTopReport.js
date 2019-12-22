@@ -447,7 +447,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0}
+                                tickLabels: {fontSize: 12, padding: -8,textAnchor:"start"}
                             }}
                         />
 
@@ -527,7 +527,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 12, padding: 0},
+                                tickLabels: {fontSize: 12, padding: -8,textAnchor:"start"},
                             }}
                         />
                         </VictoryChart>

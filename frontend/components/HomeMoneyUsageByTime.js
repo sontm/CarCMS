@@ -163,7 +163,7 @@ class HomeMoneyUsageByTime extends React.Component {
                             // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                             style={{
                                 ticks: {stroke: "grey", size: 5},
-                                tickLabels: {fontSize: 10, padding: -35}
+                                tickLabels: {fontSize: 10, padding: -8,textAnchor:"start"}
                             }}
                         />
 

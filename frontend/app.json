@@ -1,5 +1,8 @@
 {
   "expo": {
+    "androidStatusBar": {
+      "backgroundColor": "#1565c0"
+    },
     "name": "VehicleManagement",
     "slug": "VehicleCMS",
     "privacy": "public",

@@ -62,6 +62,7 @@ class App extends React.Component {
     // });
     // this.setState({ loading: false });
   }
+
   render() {
     //StatusBar.setBarStyle('light-content', true);
     //const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -76,12 +77,14 @@ class App extends React.Component {
     } else {
       //https://stackoverflow.com/questions/45044941/react-native-expo-stacknavigator-overlaps-notification-bar
       // Add a view to take the space of Statusbar
+
+      // BUT To Keyboard Not HIDE the Text box, we need to set a StatusBar in app.json. Color has no meaning
       return (
         <View style={styles.container}>
           {Platform.OS == "ios" ? 
             <MyStatusBar backgroundColor={AppConstants.COLOR_HEADER_BG} barStyle="light-content" /> : 
             <StatusBar barStyle="light-content"/>}
-          <View style={{ backgroundColor: AppConstants.COLOR_HEADER_BG , height: StatusBar.currentHeight }} />
+          {/* <View style={{ backgroundColor: AppConstants.COLOR_HEADER_BG , height: StatusBar.currentHeight }} /> */}
           <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Root>

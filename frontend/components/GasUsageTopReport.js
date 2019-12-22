@@ -201,7 +201,7 @@ class GasUsageTopReport extends React.Component {
                         width={Layout.window.width}
                         height={300}
                         padding={{top:10,bottom:30,left:3,right:10}}
-                        domainPadding={{y: [0, 0], x: [50, 10]}}
+                        domainPadding={{y: [0, 0], x: [50, 20]}}
                     >
                     <VictoryStack
                         width={Layout.window.width}
@@ -231,7 +231,7 @@ class GasUsageTopReport extends React.Component {
                         // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                         style={{
                             ticks: {stroke: "grey", size: 5},
-                            tickLabels: {fontSize: 10, padding: -32}
+                            tickLabels: {fontSize: 10, padding: -8,textAnchor:"start"}
                         }}
                     />
 

@@ -14,8 +14,8 @@ export default {
     IS_DEBUG_MODE: true,
 
     DEFAULT_BOTTOM_NAV_HEIGHT: 50,
-    DEFAULT_FORM_WIDTH: Layout.window.width*0.9,
-    DEFAULT_FORM_PADDING_HORIZON: Layout.window.width*0.05,
+    DEFAULT_FORM_WIDTH: Layout.window.width*1.0 - 10,
+    DEFAULT_FORM_PADDING_HORIZON: 5,// Layout.window.width*0.05,
     DEFAULT_FORM_BUTTON_WIDTH: 150,
 
     ADS_BANNERID: BANNER_ID,
@@ -60,17 +60,18 @@ export default {
     //SERVER_API:  "http://localhost:3000/api", // why localhost here (not OK when on LAN setting of Expo)
     //SERVER_API:  "http://172.20.10.2:3000/api",
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
-    COLOR_PICKER_TEXT: "#1f77b4",
+    COLOR_PICKER_TEXT: "#1565c0",//"#1f77b4",
 
     COLOR_GREY_DARK: "rgb(80, 80, 80)",
     COLOR_GREY_MIDDLE: "rgb(150, 150, 150)",
     COLOR_GREY_BG: "rgb(200, 200, 200)",
     COLOR_GREY_LIGHT_BG: "rgb(240, 240, 240)",
 
-    COLOR_HEADER_BG: "#3b5998", // MainThemeColor
-    COLOR_HEADER_BG_DARKER: "#2c4885",
+    COLOR_HEADER_BG: "#1565c0", // MainThemeColor
+    COLOR_HEADER_BG_LIGHT: "#3488d1",//"#5e92f3", 
+    COLOR_HEADER_BG_DARKER: "#003c8f",
     COLOR_HEADER_BUTTON: "white",
-    COLOR_BUTTON_BG: "#3b5998", // FB color
+    COLOR_BUTTON_BG: "#1565c0", // Main Theme color 3488d1
     COLOR_FACEBOOK: "#3b5998", // FB color
     COLOR_GOOGLE: "#DB4437",
     COLOR_D3_LIGHT_BLUE: "#1f77b4",
@@ -81,10 +82,10 @@ export default {
     COLOR_TEXT_DARKEST_INFO: "rgb(90,90,90)",
     COLOR_TEXT_INACTIVE_TAB: "#a6b8de",
 
-    COLOR_FILL_FUEL: "#FF9501",
-    COLOR_FILL_AUTH: "#3cc97b",
-    COLOR_FILL_EXPENSE: "gold",
-    COLOR_FILL_SERVICE: "#df43fa",
+    COLOR_FILL_FUEL: "#2c8ef4", // blue
+    COLOR_FILL_AUTH: "#3cc97b", // green
+    COLOR_FILL_EXPENSE: "#FF9501", // orange
+    COLOR_FILL_SERVICE: "#df43fa", // purple
     COLOR_FILL_CAR: "#2c8ef4"
 };
 

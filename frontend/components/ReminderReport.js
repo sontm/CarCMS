@@ -322,6 +322,7 @@ const styles = StyleSheet.create({
       flexDirection: "column",
       //borderRadius: 7,
       justifyContent: "space-between",
+      paddingBottom: 10,
       marginBottom: 20
     },
 

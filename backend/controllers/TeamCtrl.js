@@ -509,5 +509,51 @@ module.exports = {
     } else {
       res.status(501).send({msg: "Require Authentication."})
     }
-  }
+  },
+
+
+  // An User want to Join a team
+  // body.userId, body.teamId
+  async removeMemFromTeam(req, res) {
+    console.log("removeMemFromTeam USERID:" + req.user.id)
+    try {
+      //Find the User informationi of Request
+      const requestUser = await dbuser.findById(req.user.id);
+
+      // Only if User is Manager of that team
+      if (requestUser && requestUser.teamId == req.body.teamId && requestUser.roleInTeam=="manager") {
+        // Find the User requested to Remove
+        const willRemoveUser = await dbuser.findById(req.body.userId);
+        if (willRemoveUser) {
+          willRemoveUser.teamCode=null;
+          willRemoveUser.teamId=null;
+          willRemoveUser.roleInTeam=null;
+
+          // Create new Request. If Found, Update status to requested
+          await willRemoveUser.save();
+
+          res.status(200).send({msg: "OK"})
+          // Later, if App need new, please Fetch new Data
+
+
+          // // Then Return New Users Data in Team
+          // const allUsers = await new Promise((resolve, reject) => {
+          //   dbuser.find({teamId: req.body.teamId}, function(err, doc){
+          //     err ? reject(err) : resolve(doc);
+          //   });
+          // });
+          // res.status(200).send(allUsers)
+        } else {
+          res.status(400).send({msg: "Cannot Found User to Remove"})
+        }
+      } else {
+        res.status(400).send({msg: "Not Found User"})
+      }
+
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({msg: "Inter Server Error "})
+      throw error;
+    }
+  },
 };

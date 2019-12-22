@@ -405,7 +405,7 @@ module.exports = {
       // Valid in 12h
       newRecovery.validUntil.setHours(newRecovery.validUntil.getHours()+12);
 
-      let link="https://yamastack.com/quanlyxe/pwdrecovery?token="+token+"&id="+currentUser.id;
+      let link="https://yamastack.com/quanlyxe/pwdrecovery/?token="+token+"&id="+currentUser.id;
       await newRecovery.save();
 
       // Send Email

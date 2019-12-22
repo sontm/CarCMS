@@ -248,12 +248,12 @@ const styles = StyleSheet.create({
     //backgroundColor: AppConstants.COLOR_BUTTON_BG,
     backgroundColor: "white",
     color:AppConstants.COLOR_BUTTON_BG,
-    borderColor: "white"
+    //borderColor: "white"
   },
   inActiveSegment: {
-    backgroundColor: "#aec7e8",
+    backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER,
     color:AppConstants.COLOR_PICKER_TEXT,
-    borderColor: "white"
+    //borderColor: "white"
   },
   activeSegmentText: {
       //color:"white",
@@ -261,7 +261,8 @@ const styles = StyleSheet.create({
       fontSize: 12
   },
   inActiveSegmentText: {
-      color: "black",
+      color: "white",
+      //color: "black",
       fontSize: 12
   },
 });
