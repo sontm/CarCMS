@@ -2,7 +2,7 @@ import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity, ScrollView } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
-    Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, DatePicker, Picker } from 'native-base';
+    Card, CardItem, Body, H1, H2, H3, CheckBox, Tab, Tabs, DatePicker, Picker } from 'native-base';
 import Layout from '../constants/Layout'
 
 import AppUtils from '../constants/AppUtils'
@@ -19,7 +19,8 @@ class ServiceMaintainTable extends React.Component {
     super(props);
 
     this.state = {
-        vehicleId: 0
+        vehicleId: 0,
+        onlyShowDataRow: false
     }
   }
 
@@ -48,13 +49,13 @@ class ServiceMaintainTable extends React.Component {
     if (customArr) {
         customArr.forEach(item => {
             objTableData[""+item.name] = [];
-            firstCol.push([item.name]);
         })
     }
     serviceArr.forEach(item => {
         objTableData[""+item.name] = [];
-        firstCol.push([item.name]);
     })
+
+    let itemHaveData = [];
 
     if (theVehicle.serviceList && theVehicle.serviceList.length > 0) {
         theVehicle.serviceList.forEach(item => {
@@ -94,6 +95,7 @@ class ServiceMaintainTable extends React.Component {
                     if (item.serviceModule[""+prop]) {
                         // this time, this Module is in Maintain
                         objTableData[""+prop].push(item.serviceModule[""+prop][0]);
+                        itemHaveData.push(prop)
                     } else {
                         // Not in Service list, add empty
                         objTableData[""+prop].push("");
@@ -109,13 +111,17 @@ class ServiceMaintainTable extends React.Component {
         if (Object.prototype.hasOwnProperty.call(objTableData, prop) && 
                 Object.prototype.hasOwnProperty.call(objTableData, prop)) {
 
-            let rowData = [];
-            rowData.push(...objTableData[""+prop])
+            if (!this.state.onlyShowDataRow || itemHaveData.indexOf(prop) >= 0) {
+                let rowData = [];
+                rowData.push(...objTableData[""+prop])
 
-            tableData.push(rowData)
+                tableData.push(rowData)
+
+                firstCol.push([prop]);
+            }
         }
     }
-    return {tableData, arrCurrentKm, arrDiffKm, arrCurrentDate, arrDiffDay, arrMaintainType, widthArr, firstCol};
+    return {tableData, arrCurrentKm, arrDiffKm, arrCurrentDate, arrDiffDay, arrMaintainType, widthArr, firstCol, itemHaveData};
   }
 
   
@@ -164,7 +170,7 @@ class ServiceMaintainTable extends React.Component {
         // }
         // tableData.push(rowData);
         // }
-        var {tableData, arrCurrentKm, arrDiffKm, arrCurrentDate, arrDiffDay, arrMaintainType, widthArr, firstCol} = 
+        var {tableData, arrCurrentKm, arrDiffKm, arrCurrentDate, arrDiffDay, arrMaintainType, widthArr, firstCol, itemHaveData} = 
             this.parseMaintainTableData(currentVehicle, baseWidth)
     }
     var dropdownView = [];
@@ -201,9 +207,17 @@ class ServiceMaintainTable extends React.Component {
             {baseWidth ? (
             <View>
             <View style={{...styles.textRow, marginTop: 7, marginBottom: 7}}>
-                <Text><H2>
+                <Text><H3>
                 {AppLocales.t("CARDETAIL_SERVICE_TABLE")}
-                </H2></Text>
+                </H3></Text>
+            </View>
+
+            <View style={{flexDirection: "row", marginTop: 7, marginLeft: 15, marginBottom: 10}}>
+                <CheckBox checked={this.state.onlyShowDataRow} 
+                    onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}/>
+                <Text style={{marginLeft: 18, fontSize: 15}} onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}>
+                    {"Chỉ hiển thị dòng có dữ liệu"}
+                </Text>
             </View>
 
             <View style={{flexDirection: "row"}}>
@@ -258,8 +272,9 @@ class ServiceMaintainTable extends React.Component {
             <View style={styles.textRow}>
                 <Text style={{fontSize: 14, fontStyle: "italic"}}>
                     {AppLocales.t("GENERAL_MAINTAIN_THAYTHE")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_THAYTHE") + ". "}
-                    {AppLocales.t("GENERAL_MAINTAIN_BAODUONG")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + ". "}
                     {AppLocales.t("GENERAL_MAINTAIN_KIEMTRA")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_KIEMTRA") + ". "}
+                    {AppLocales.t("GENERAL_MAINTAIN_BAODUONG")[0]+": " + AppLocales.t("GENERAL_MAINTAIN_BAODUONG") + " (Sửa Chữa Nhỏ)."}
+                    
                 </Text>
             </View>
             </View>
@@ -308,14 +323,14 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         flexGrow: 100
     },
-    header: { height: 30, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER},
-    headerHigh: {height: 40, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER},
-    headerFirst: { height: 30, backgroundColor: AppConstants.COLOR_HEADER_BG },
-    headerHighFirst: {height: 40, backgroundColor: AppConstants.COLOR_HEADER_BG},
+    header: { height: 30, backgroundColor: AppConstants.COLOR_HEADER_BG},
+    headerHigh: {height: 40, backgroundColor: AppConstants.COLOR_HEADER_BG},
+    headerFirst: { height: 30, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER },
+    headerHighFirst: {height: 40, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER},
 
     text: { textAlign: 'center', fontWeight: '100' },
     textSmall: { textAlign: 'center', fontSize: 12, },
-    textSmallFirstCol: { textAlign: 'center', fontSize: 12, color: AppConstants.COLOR_HEADER_BG},
+    textSmallFirstCol: { textAlign: 'center', fontSize: 12, color: AppConstants.COLOR_HEADER_BG_DARKER},
     textHeader: {textAlign: 'center', fontSize: 13, color: "white"},
     textHeaderMedium: {textAlign: 'center', fontSize: 12, color: "white"},
     textHeaderSmall: {textAlign: 'center', fontSize: 12, color: "white"},

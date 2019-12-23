@@ -79,7 +79,7 @@ class ProfileScreen extends React.Component {
                         response => {
                             console.log(response.data)
                             this.props.actUserUpdateProfileOK(response.data)
-                            //this.props.navigation.goBack();
+                            this.props.navigation.goBack();
                         }, error => {
                             console.log(error)
                             console.log("Update Profile Error!")

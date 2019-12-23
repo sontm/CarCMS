@@ -11,7 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
-import { NoDataText } from './StyledText';
+import { NoDataText, TypoH4, TypoH6, TypoH5 } from './StyledText';
 
 class MoneyUsageReport extends React.Component {
   constructor(props) {
@@ -50,28 +50,32 @@ class MoneyUsageReport extends React.Component {
         // Only Keep numberOfMonth
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
-                if (new Date(item.x) > CALCULATE_START_DATE) {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalGasSpendTeam += item.y;
                 }
             })
         }
         if (arrOilSpend && arrOilSpend.length) {
             arrOilSpend.forEach(item => {
-                if (new Date(item.x) > CALCULATE_START_DATE) {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalOilSpendTeam += item.y;
                 }
             })
         }
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
-                if (new Date(item.x) > CALCULATE_START_DATE) {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalExpenseSpendTeam += item.y;
                 }
             })
         }
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
-                if (new Date(item.x) > CALCULATE_START_DATE) {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalAuthSpendTeam += item.y;
                 }
             })
@@ -79,7 +83,8 @@ class MoneyUsageReport extends React.Component {
 
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
-                if (new Date(item.x) > CALCULATE_START_DATE) {
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalServiceSpendTeam += item.y;
                 }
             })
@@ -105,7 +110,7 @@ class MoneyUsageReport extends React.Component {
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalGasSpendPrivate += item.y;
                 }
             })
@@ -113,7 +118,7 @@ class MoneyUsageReport extends React.Component {
         if (arrOilSpend && arrOilSpend.length) {
             arrOilSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalOilSpendPrivate += item.y;
                 }
             })
@@ -121,7 +126,7 @@ class MoneyUsageReport extends React.Component {
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalExpenseSpendPrivate += item.y;
                 }
             })
@@ -129,7 +134,7 @@ class MoneyUsageReport extends React.Component {
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalAuthSpendPrivate += item.y;
                 }
             })
@@ -138,7 +143,7 @@ class MoneyUsageReport extends React.Component {
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalServiceSpendPrivate += item.y;
                 }
             })
@@ -171,7 +176,7 @@ class MoneyUsageReport extends React.Component {
                     if (arrSub && arrSub.length) {
                         arrSub.forEach(e => {
                             let xDate = new Date(e.x);
-                            if (xDate > CALCULATE_START_DATE) {
+                            if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                                 yVal += e.y;
                             }
                         })
@@ -213,7 +218,7 @@ class MoneyUsageReport extends React.Component {
                     if (arrSub && arrSub.length) {
                         arrSub.forEach(e => {
                             let xDate = new Date(e.x);
-                            if (xDate > CALCULATE_START_DATE) {
+                            if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                                 yVal += e.y;
                             }
                         })
@@ -277,9 +282,9 @@ class MoneyUsageReport extends React.Component {
             <View style={styles.container}>
                 
                 <View style={styles.textRow}>
-                    <Text><H2>
+                    <Text><H3>
                     {AppLocales.t("CARDETAIL_H1_MONEY_USAGE")}
-                    </H2></Text>
+                    </H3></Text>
                 </View>
                 <View style={styles.textRowOption}>
                     <Picker
@@ -345,12 +350,12 @@ class MoneyUsageReport extends React.Component {
                 </View>
 
                 <View>
-                <View style={{...styles.textRow, marginTop: 15}}>
-                    <Text><H3>
-                    {AppLocales.t("CARDETAIL_H1_EXPENSE_USAGE")}
-                    </H3></Text>
+                <View style={{...styles.textRow, marginTop: 15, alignSelf:"center"}}>
+                    <Text><TypoH5>
+                    {AppLocales.t("CARDETAIL_H1_EXPENSE_USAGE")+" ("+this.state.duration+" Tháng)"}
+                    </TypoH5></Text>
                 </View>
-                <View style={styles.statRow}>
+                <View style={{...styles.statRow, marginTop: 10}}>
                     {totalExpenseSpend > 0 ? (
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
@@ -397,7 +402,7 @@ const styles = StyleSheet.create({
         borderColor: "grey",
         justifyContent: "space-between",
         marginBottom: 20,
-        borderRadius: 7,
+        // borderRadius: 7,
         paddingBottom: 20
     },
 

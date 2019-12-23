@@ -2,7 +2,7 @@ import React from 'react';
 
 import { View, StyleSheet, TextInput, AsyncStorage, Platform } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
-    Item, Picker, Button, Text, Input, Label, H2, Tabs, Tab, TabHeading} from 'native-base';
+    Item, Picker, Button, Text, Input, Label, H3, Tabs, Tab, TabHeading} from 'native-base';
 import {HeaderText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
@@ -82,7 +82,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L1")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L1")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -103,7 +103,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L2")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L2")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -124,7 +124,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L3")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L3")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -145,7 +145,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L4")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L4")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -166,7 +166,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L5")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L5")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -205,7 +205,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                 <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L1_BIKE")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L1_BIKE")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -226,7 +226,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L2_BIKE")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L2_BIKE")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -247,7 +247,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L3_BIKE")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L3_BIKE")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -268,7 +268,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
-                                <H2>{AppLocales.t("SETTING_MAINTAIN_L4_BIKE")}</H2></Label>
+                                <H3>{AppLocales.t("SETTING_MAINTAIN_L4_BIKE")}</H3></Label>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}

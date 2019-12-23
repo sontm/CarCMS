@@ -856,27 +856,32 @@ class AppUtils {
         let nextEstimatedDateForMaintain = 0;
         let passedKmFromPreviousMaintain = 0;
 
-        
+        console.log(")))))))))))))))))) getRemindForMaintain")
         if (serviceList && serviceList.length > 0) {
             for (let index = serviceList.length -1; index >= 0; index--) {
                 let item = serviceList[index];
-                if (!item.isContantFix) {
+                console.log("  )))))))))))))))))) item")
+                console.log(item)
+                if (!item.isConstantFix) {
                     lastKmMaintain = item.currentKm;
                     lastDateMaintain = this.normalizeFillDate(new Date(item.fillDate));
 
-                    nextEstimatedKmForMaintain = item.currentKm + settingService.Km[0];
-                    lastMaintainKmValidFor = settingService.Km[0];
+                    nextEstimatedKmForMaintain = item.currentKm + item.validFor;
+                    lastMaintainKmValidFor = + item.validFor;
                     
                     // Plus Month of Bao DUong Nho
                     nextEstimatedDateForMaintain = this.normalizeFillDate(
                         new Date(lastDateMaintain.getFullYear(),
-                            lastDateMaintain.getMonth()+settingService.Month[0],
+                            lastDateMaintain.getMonth()+settingService.Month[item.validForIndex],
                             lastDateMaintain.getDate()))
 
                     passedKmFromPreviousMaintain = lastKm - lastKmMaintain;
                 }
             }
             let totalNextDay = this.calculateDiffDayOf2Date(lastDateMaintain, nextEstimatedDateForMaintain);
+            console.log("))))))))) Result");
+            console.log({lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+                nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay})
 
             return {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
                 nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay}

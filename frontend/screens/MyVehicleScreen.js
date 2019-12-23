@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     //borderColor: "white"
   },
   inActiveSegment: {
-    backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER,
+    backgroundColor: AppConstants.COLOR_HEADER_BG,
     color:AppConstants.COLOR_PICKER_TEXT,
     //borderColor: "white"
   },

@@ -175,7 +175,7 @@ class CreateTeamScreen extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        rounded primary
+                        rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         onPress={() => this.handleCreate()}
                     >
                         <Text>

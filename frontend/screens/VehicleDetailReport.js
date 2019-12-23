@@ -156,51 +156,12 @@ class VehicleDetailReport extends React.Component {
                     <View style={styles.container}>
                         <View style={styles.reminderContainer}>
                         <View style={styles.textRow}>
-                            <Text><H2>
+                            <Text><H3>
                                 {AppLocales.t("CARDETAIL_REMINDER")}
-                            </H2></Text>
+                            </H3></Text>
                         </View>
                         
                         <View style={styles.statRow}>
-                            {(this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService )? (
-                            <View style={styles.remindItemContainer}>
-                            <View style={styles.progressContainer}>
-                            <VictoryPie
-                                colorScale={["tomato", "silver"]}
-                                data={[
-                                    { x: "", y: passService },
-                                    { x: "", y: (totalNeedService - passService) },
-                                ]}
-                                height={140}
-                                innerRadius={58}
-                                radius={65}
-                                labels={() => null}
-                                labelComponent={<VictoryLabel style={{fontSize: 10}}/>}
-                                />
-                            <View style={styles.labelProgress}>
-                                <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_SERVICE") + ": "}</Text>
-                                <Text style={styles.labelProgressText}>
-                                    {passService}/
-                                    {totalNeedService}
-                                </Text>
-                                <Text>{unitService}</Text>
-                            </View>
-                            {nextDateService ? 
-                            <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}
-                                {AppUtils.formatDateMonthDayYearVNShort(nextDateService)}
-                            </Text> : null}
-                            </View>
-                            <Text style={{fontSize: 13}}>{"(Nếu Theo "+ unitServiceSub + ": "}
-                                {passServiceSub+"/"+ totalNeedServiceSub+ unitServiceSub}
-                                {!nextDateServiceSub ? ")" : ""}
-                            </Text>
-                            {nextDateServiceSub ? 
-                            <Text style={{fontSize: 13}}>{AppLocales.t("GENERAL_NEXT") + ": "}
-                                {AppUtils.formatDateMonthDayYearVNShort(nextDateServiceSub)+")"}
-                            </Text> : null}
-                            </View>
-                            ) : null }
-
                             {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor ? 
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
@@ -217,7 +178,7 @@ class VehicleDetailReport extends React.Component {
                                     labels={() => null}
                                     />
                                 <View style={styles.labelProgress}>
-                                    <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_AUTH") + ": "}</Text>
+                                    <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_AUTH")}</Text>
                                     <Text style={styles.labelProgressText}>
                                         {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
                                         {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor}
@@ -246,7 +207,7 @@ class VehicleDetailReport extends React.Component {
                                     labels={() => null}
                                     />
                                 <View style={styles.labelProgress}>
-                                    <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_INSURANCE") + ": "}</Text>
+                                    <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_INSURANCE")}</Text>
                                     <Text style={styles.labelProgressText}>
                                         {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance}/
                                         {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance}
@@ -274,7 +235,7 @@ class VehicleDetailReport extends React.Component {
                                     labels={() => null}
                                     />
                                 <View style={styles.labelProgress}>
-                                    <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_ROADFEE") + ": "}</Text>
+                                    <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_ROADFEE")}</Text>
                                     <Text style={styles.labelProgressText}>
                                         {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee}/
                                         {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee}
@@ -287,6 +248,45 @@ class VehicleDetailReport extends React.Component {
                                 </Text>
                             </View></View>
                             ) : null}
+
+{(this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService )? (
+                            <View style={styles.remindItemContainer}>
+                            <View style={styles.progressContainer}>
+                            <VictoryPie
+                                colorScale={["tomato", "silver"]}
+                                data={[
+                                    { x: "", y: passService },
+                                    { x: "", y: (totalNeedService - passService) },
+                                ]}
+                                height={140}
+                                innerRadius={58}
+                                radius={65}
+                                labels={() => null}
+                                labelComponent={<VictoryLabel style={{fontSize: 10}}/>}
+                                />
+                            <View style={styles.labelProgress}>
+                                <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_SERVICE")}</Text>
+                                <Text style={{fontSize: 20}}>
+                                    {passService}/
+                                    {totalNeedService}
+                                </Text>
+                                <Text>{unitService}</Text>
+                            </View>
+                            {nextDateService ? 
+                            <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}
+                                {AppUtils.formatDateMonthDayYearVNShort(nextDateService)}
+                            </Text> : null}
+                            </View>
+                            <Text style={{fontSize: 12, textAlign:"center", alignSelf:"center"}}>{"(Nếu Theo "+ unitServiceSub + ": "}
+                                {passServiceSub+"/"+ totalNeedServiceSub+ unitServiceSub+")"}
+                                {/* {!nextDateServiceSub ? ")" : ""} */}
+                            </Text>
+                            {/* {nextDateServiceSub ? 
+                            <Text style={{fontSize: 13}}>{AppLocales.t("GENERAL_NEXT") + ": "}
+                                {AppUtils.formatDateMonthDayYearVNShort(nextDateServiceSub)+")"}
+                            </Text> : null} */}
+                            </View>
+                            ) : null }
 
                         </View>
                         {!isHaveRemindData ? 

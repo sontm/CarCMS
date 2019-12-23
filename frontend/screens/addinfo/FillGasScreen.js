@@ -44,6 +44,11 @@ class FillGasScreen extends React.Component {
             for (let i = 0; i < currentVehicle.fillGasList.length; i++) {
                 if (currentVehicle.fillGasList[i].id == AppConstants.CURRENT_EDIT_FILL_ID) {
                     this.isEditing = true;
+
+                    this.isEditOverMaxMeter = false;
+                    if (currentVehicle.maxMeter>0 && currentVehicle.fillGasList[i].currentKm > currentVehicle.maxMeter) {
+                        this.isEditOverMaxMeter = true;
+                    }
                     this.setState({
                         ...currentVehicle.fillGasList[i],
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
@@ -62,7 +67,7 @@ class FillGasScreen extends React.Component {
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
                     let currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.userData.vehicleList[0].id);
                     this.currentVehicle = currentVehicle;
-
+                    
                     this.setState({
                         vehicleId: this.props.userData.vehicleList[0].id
                     })
@@ -86,6 +91,9 @@ class FillGasScreen extends React.Component {
         }
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             console.log("WIll Edit FillGas:")
+            if (!this.isEditOverMaxMeter) {
+                curMaxMeter = 0;
+            }
             let newData = {
                 ...this.state,
 
@@ -243,6 +251,8 @@ class FillGasScreen extends React.Component {
         } else {
             var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
         }
+
+        console.log("000000000 this.isEditing && this.initialEditKm:" + this.isEditing +","+ this.initialEditKm)
         return (
             <Container>
             <Content>
@@ -333,7 +343,8 @@ class FillGasScreen extends React.Component {
                         : null}
                     </View>
                     <Label>
-                        {(this.currentVehicle&&this.currentVehicle.maxMeter>0) ? 
+                        {(this.currentVehicle&&this.currentVehicle.maxMeter>0&&
+                        (!this.isEditing || (this.isEditing && this.isEditOverMaxMeter))) ? 
                             "(Đã qua vòng Công tơ mét "+ this.currentVehicle.maxMeter + "Km)" : null}
                     </Label>
 

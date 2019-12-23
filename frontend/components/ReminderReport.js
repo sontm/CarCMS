@@ -50,7 +50,7 @@ function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, lic
                 ) : (
                 <Text style={{color: "tomato"}}>{text}{" "}{passed}/{target} ({unit})</Text>
                 )}
-                <Text style={{fontSize: 13}}>{car}{" "}{licensePlate}{" "}{owner}</Text>
+                <Text style={{fontSize: 13}}>{car}{" "}{licensePlate}{" "}{"("+owner+")"}</Text>
                 {nextDate ?
                 <Text style={{fontSize: 13}}>
                     {AppLocales.t("GENERAL_NEXT") + ": "}
@@ -233,22 +233,48 @@ class ReminderReport extends React.Component {
             = this.props.teamData.teamCarReports[element.id].authReport;
 
         
+        var authArr = [];
+        authArr.push({
+            type: AppLocales.t("GENERAL_AUTHROIZE_AUTH"),
+            diffDayFromLast: diffDayFromLastAuthorize,
+            lastDaysValidFor: lastAuthDaysValidFor,
+            nextDate: nextAuthorizeDate
+        })
+        authArr.push({
+            type: AppLocales.t("GENERAL_AUTHROIZE_INSURANCE"),
+            diffDayFromLast: diffDayFromLastAuthorizeInsurance,
+            lastDaysValidFor: lastAuthDaysValidForInsurance,
+            nextDate: nextAuthorizeDateInsurance
+        })
+        authArr.push({
+            type: AppLocales.t("GENERAL_AUTHROIZE_ROADFEE"),
+            diffDayFromLast: diffDayFromLastAuthorizeRoadFee,
+            lastDaysValidFor: lastAuthDaysValidForRoadFee,
+            nextDate: nextAuthorizeDateRoadFee
+        })
 
-        resultView.push(
-            renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_AUTH"), diffDayFromLastAuthorize, lastAuthDaysValidFor, 
-            nextAuthorizeDate, AppLocales.t("GENERAL_DAY"),
-            element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-        )
-        resultView.push(
-            renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_INSURANCE"), diffDayFromLastAuthorizeInsurance, lastAuthDaysValidForInsurance, 
-            nextAuthorizeDateInsurance, AppLocales.t("GENERAL_DAY"),
-            element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-        )
-        resultView.push(
-            renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_ROADFEE"), diffDayFromLastAuthorizeRoadFee, lastAuthDaysValidForRoadFee, 
-            nextAuthorizeDateRoadFee, AppLocales.t("GENERAL_DAY"),
-            element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-        )
+        let ret = this.combineAuthType(authArr);
+        ret.forEach(item => {
+            resultView.push(
+                renderRemindItem(false, item.type, item.diffDayFromLast, item.lastDaysValidFor, 
+                    item.nextDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate)
+            )
+        })
+        // resultView.push(
+        //     renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_AUTH"), diffDayFromLastAuthorize, lastAuthDaysValidFor, 
+        //     nextAuthorizeDate, AppLocales.t("GENERAL_DAY"),
+        //     element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
+        // )
+        // resultView.push(
+        //     renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_INSURANCE"), diffDayFromLastAuthorizeInsurance, lastAuthDaysValidForInsurance, 
+        //     nextAuthorizeDateInsurance, AppLocales.t("GENERAL_DAY"),
+        //     element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
+        // )
+        // resultView.push(
+        //     renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_ROADFEE"), diffDayFromLastAuthorizeRoadFee, lastAuthDaysValidForRoadFee, 
+        //     nextAuthorizeDateRoadFee, AppLocales.t("GENERAL_DAY"),
+        //     element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
+        // )
       }
     })
     resultView = resultView.filter(item => {
@@ -376,7 +402,7 @@ const styles = StyleSheet.create({
 
     reminderItemContainer: {
         flexDirection: "row",
-        height: 64,
+        minHeight: 64,
         // borderWidth: 0.5,
         // borderColor: "grey",
         marginLeft: 5,

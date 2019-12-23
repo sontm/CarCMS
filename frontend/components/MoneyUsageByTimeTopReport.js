@@ -118,7 +118,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
         if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
             arrTotalMoneySpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     filteredArrTotalMoneySpend.push(item)
                 }
@@ -157,7 +157,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalGasSpendPrivate += item.y;
                 }
             })
@@ -165,7 +165,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
         if (arrOilSpend && arrOilSpend.length) {
             arrOilSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalOilSpendPrivate += item.y;
                 }
             })
@@ -173,7 +173,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalAuthSpendPrivate += item.y;
                 }
             })
@@ -181,7 +181,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalExpenseSpendPrivate += item.y;
                 }
             })
@@ -189,7 +189,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalServiceSpendPrivate += item.y;
                 }
             })
@@ -217,7 +217,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
         if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
             arrTotalMoneySpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     filteredArrTotalMoneySpend.push(item)
                 }
@@ -313,11 +313,11 @@ class MoneyUsageByTimeTopReport extends React.Component {
             <View style={styles.container}>
                 
                 <View style={styles.textRow}>
-                    <Text><H2>
+                    <Text><H3>
                     {this.props.isTotalReport ? 
                             AppLocales.t("HOME_MONEY_SPEND") :
                             AppLocales.t("CARDETAIL_H1_MONEY_USAGE_BYTIME")}
-                    </H2></Text>
+                    </H3></Text>
                 </View>
 
                 <View style={styles.textRowOption}>

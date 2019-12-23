@@ -7,7 +7,7 @@ import Layout from '../constants/Layout'
 import { connect } from 'react-redux';
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
-import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
+import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryContainer, VictoryLegend, VictoryAxis} from 'victory-native';
 import {TypoH5} from '../components/StyledText';
 // import { LineChart, Grid } from 'react-native-svg-charts'
 
@@ -100,7 +100,7 @@ class GasUsageReport extends React.Component {
         if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
             arrTotalKmMonthly.forEach((item, idx) => {
                 let xDate = new Date(item.x);
-                if (xDate >= CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     //item.x = idx;
                     //item.xDate = xDate;
                     item.x = xDate;
@@ -113,7 +113,7 @@ class GasUsageReport extends React.Component {
         if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
             arrTotalMoneyMonthly.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate >= CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     arrGasMoneyThisCar.push(item)
                 }
@@ -123,7 +123,7 @@ class GasUsageReport extends React.Component {
         if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
             arrTotalMoneyPerKmMonthly.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate >= CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     arrGasMoneyPerKmThisCar.push(item)
                 }
@@ -140,6 +140,8 @@ class GasUsageReport extends React.Component {
     let arrGasMoneyPerKmAllCars = [];
     let tickXLabels = [];
     let theBarWidth = 10;
+    let legendLabels = [];
+
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
 
@@ -163,21 +165,23 @@ class GasUsageReport extends React.Component {
             let filterArr = [];
             arrTotalKmMonthly.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate >= CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     filterArr.push(item)
                     //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                 }
             })
-            if (filterArr.length > 0)
+            if (filterArr.length > 0) {
                 arrGasKmAllCars.push(filterArr)
+                legendLabels.push({name: element.licensePlate})
+            }
         }
         
         if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
             let filterArr = [];
             arrTotalMoneyMonthly.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate >= CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     filterArr.push(item)
                 }
@@ -190,7 +194,7 @@ class GasUsageReport extends React.Component {
             let filterArr = [];
             arrTotalMoneyPerKmMonthly.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate >= CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     filterArr.push(item)
                 }
@@ -200,7 +204,7 @@ class GasUsageReport extends React.Component {
         }
       }
     })
-    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth};
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth, legendLabels};
   }
 
   calculateAllVehicleGasUsageTeam(isMergeData = true) {
@@ -213,7 +217,26 @@ class GasUsageReport extends React.Component {
     let objGasMoneyPerKmAllCars = {};
     let tickXLabels = [];
     let theBarWidth = 10;
+    let legendLabels = [];
 
+    let avgKmMonthly = 0;
+    let avgMoneyMonthly = 0;
+    let avgMoneyPerKmMonthly = 0;
+    let sum1 = 0;
+    let count1 = 0;
+    let sum2 = 0;
+    let count2 = 0;
+    let sum3 = 0;
+    let count3 = 0;
+
+    let teamNotMerge = false;
+    if (this.props.teamData.teamCarList.length > 8) {
+        isMergeData = true;
+        teamNotMerge = false;
+    } else {
+        isMergeData = false;
+        teamNotMerge = true;
+    }
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         // End date is ENd of This Month  
@@ -237,15 +260,21 @@ class GasUsageReport extends React.Component {
         
         // arrGasAllCars.push(dataChartKitLine)
         if (isMergeData) {
+            
             if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
                 arrTotalKmMonthly.forEach(item => {
-                    if (new Date(item.x) >= CALCULATE_START_DATE) {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                         if (objGasKmAllCars[""+item.x]) {
                             // exist
                             objGasKmAllCars[""+item.x]+= item.y;
                         } else {
                             objGasKmAllCars[""+item.x] = item.y;
                         }
+                        if (item.y > 0) {
+                            sum1 += item.y;
+                        }
+                        count1++;
                         //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
                     }
                 })
@@ -255,28 +284,35 @@ class GasUsageReport extends React.Component {
                 let filterArr = [];
                 arrTotalKmMonthly.forEach(item => {
                     let xDate = new Date(item.x);
-                    if (xDate >= CALCULATE_START_DATE) {
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                         item.x = xDate;
                         filterArr.push(item)
                        //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
                     }
                 })
 
-                if (filterArr.length)
+                if (filterArr.length>0) {
                     arrGasKmAllCars.push(filterArr)
+                    legendLabels.push({name: element.licensePlate})
+                }
             }
         }
 
         if (isMergeData) {
-            if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
-                arrTotalKmMonthly.forEach(item => {
-                    if (new Date(item.x) >= CALCULATE_START_DATE) {
+            if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length > 0) {
+                arrTotalMoneyMonthly.forEach(item => {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                         if (objGasMoneyAllCars[""+item.x]) {
                             // exist
                             objGasMoneyAllCars[""+item.x]+= item.y;
                         } else {
                             objGasMoneyAllCars[""+item.x] = item.y;
                         }
+                        if (item.y > 0) {
+                            sum2 += item.y;
+                        }
+                        count2++;
                     }
                 })
             }
@@ -285,26 +321,31 @@ class GasUsageReport extends React.Component {
                 let filterArr = [];
                 arrTotalMoneyMonthly.forEach(item => {
                     let xDate = new Date(item.x);
-                    if (xDate >= CALCULATE_START_DATE) {
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                         item.x = xDate;
                         filterArr.push(item)
                     }
                 })
-                if (filterArr.length)
+                if (filterArr.length>0)
                     arrGasMoneyAllCars.push(filterArr)
             }
         }
 
         if (isMergeData) {
-            if (arrTotalKmMonthly && arrTotalKmMonthly.length > 0) {
-                arrTotalKmMonthly.forEach(item => {
-                    if (new Date(item.x) >= CALCULATE_START_DATE) {
+            if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length > 0) {
+                arrTotalMoneyPerKmMonthly.forEach(item => {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                         if (objGasMoneyPerKmAllCars[""+item.x]) {
                             // exist
                             objGasMoneyPerKmAllCars[""+item.x]+= item.y;
                         } else {
                             objGasMoneyPerKmAllCars[""+item.x] = item.y;
                         }
+                        if (item.y > 0) {
+                            sum3 += item.y;
+                        }
+                        count3++;
                     }
                 })
             }
@@ -313,12 +354,12 @@ class GasUsageReport extends React.Component {
                 let filterArr = [];
                 arrTotalMoneyPerKmMonthly.forEach(item => {
                     let xDate = new Date(item.x);
-                    if (xDate >= CALCULATE_START_DATE) {
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                         item.x = xDate;
                         filterArr.push(item)
                     }
                 })
-                if (filterArr.length)
+                if (filterArr.length>0)
                     arrGasMoneyPerKmAllCars.push(filterArr)
             }
         }
@@ -342,8 +383,15 @@ class GasUsageReport extends React.Component {
                 arrGasMoneyPerKmAllCars.push({x: new Date(prop), y: objGasMoneyPerKmAllCars[""+prop]})
             }
         }
-    }
-    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth};
+        
+        avgKmMonthly = sum1/count1;
+        avgMoneyMonthly = sum2/count2;
+        avgMoneyPerKmMonthly = sum3/count3;
+    } 
+    console.log("############### arrGasKmAllCars")
+    console.log(arrGasKmAllCars)
+    return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth, legendLabels, teamNotMerge,
+        avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly};
   }
 
   render() {
@@ -352,14 +400,23 @@ class GasUsageReport extends React.Component {
     if (this.props.currentVehicle || this.props.isTotalReport) { //props
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
-                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth} = this.calculateAllVehicleGasUsageTeam();
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth, legendLabels, 
+                    teamNotMerge, avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly} 
+                = this.calculateAllVehicleGasUsageTeam();
+                if (teamNotMerge) {
+                    var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
+                    var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
+                    var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
+                }
             } else {
                 // Individual All Cars
-                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth} = this.calculateAllVehicleGasUsage();
+                var {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth, legendLabels} = 
+                    this.calculateAllVehicleGasUsage();
+                var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
+                var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
+                var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
             }
-            var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
-            var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
-            var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
+            
             if (this.state.activeDisplay == 1) {
                 var dataToDisplay = arrGasMoneyAllCars;
             } else if (this.state.activeDisplay == 2) {
@@ -384,6 +441,9 @@ class GasUsageReport extends React.Component {
             var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyThisCar, 1).avg;
             var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmThisCar, 1).avg;
             var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
+        }
+        if (theBarWidth && theBarWidth > 36) {
+            theBarWidth = 36;
         }
 
         // } else {
@@ -481,8 +541,8 @@ class GasUsageReport extends React.Component {
                     <View style={styles.gasUsageContainer}>
                         <VictoryChart
                             width={Layout.window.width}
-                            height={260}
-                            padding={{top:20,bottom:40,left:3,right:10}}
+                            height={265}
+                            padding={{top:25,bottom:40,left:3,right:10}}
                             domainPadding={{y: [0, 10], x: [50, 20]}}
                         >
                         {/* TODO, Date X axis not Match */}
@@ -491,7 +551,7 @@ class GasUsageReport extends React.Component {
                             // domainPadding={{y: [0, 0], x: [0, 0]}}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         >
-                        {(this.props.isTotalReport && !this.props.isTeamDisplay) ? (
+                        {(this.props.isTotalReport && (!this.props.isTeamDisplay || teamNotMerge)) ? (
                             dataToDisplay.map((item, idx) => ( // Individual All Cars
                                 <VictoryBar
                                 key={idx}
@@ -525,7 +585,7 @@ class GasUsageReport extends React.Component {
                         <VictoryAxis
                             dependentAxis
                             label={arrLabelY[this.state.activeDisplay]}
-                            axisLabelComponent={<VictoryLabel dy={40} dx={130} style={{fontSize: 13}}/>}
+                            axisLabelComponent={<VictoryLabel dy={40} dx={120} style={{fontSize: 13}}/>}
                             standalone={false}
                             tickFormat={(t) => `${this.state.activeDisplay!= 0 ? AppUtils.formatMoneyToK(t) :
                                 AppUtils.formatDistanceToKm(t)}`}
@@ -537,6 +597,25 @@ class GasUsageReport extends React.Component {
                         />
 
                         </VictoryChart>
+
+                        {(legendLabels&&legendLabels.length>0) ?
+                        <View>
+                            <VictoryContainer
+                                width={Layout.window.width}
+                                height={40*Math.ceil(legendLabels.length/4)}
+                            >
+                            <VictoryLegend standalone={false}
+                                x={15} y={5}
+                                itemsPerRow={4}
+                                colorScale={AppConstants.COLOR_SCALE_10}
+                                orientation="horizontal"
+                                gutter={5}
+                                symbolSpacer={5}
+                                labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                                data={legendLabels}
+                            />
+                            </VictoryContainer>
+                        </View> : null}
                     </View>
                 ) : <NoDataText />}
 
@@ -637,7 +716,7 @@ const styles = StyleSheet.create({
       borderColor: "grey",
       justifyContent: "space-between",
       marginBottom: 20,
-      borderRadius: 7,
+    //   borderRadius: 7,
     },
 
     activeSegment: {
@@ -697,7 +776,7 @@ const styles = StyleSheet.create({
 
     gasUsageContainer: {
         width: "96%",
-        height: 350,
+        //height: 350,
         justifyContent: "center",
         alignItems: "center",
         alignSelf: "center",

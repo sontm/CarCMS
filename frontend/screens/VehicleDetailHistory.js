@@ -156,8 +156,8 @@ class VehicleDetailHistory extends React.Component {
                             <TouchableOpacity onPress={() => this.handleEditItem(item.id, item.type)} key={item.id}>
                                 <Text style={styles.listMainText}>{AppUtils.getNameOfFillItemType(item.type, item.isConstantFix, item)}
                                 {". " + AppUtils.formatDateMonthDayYearVN(item.fillDate)}</Text>
-                                <Text style={styles.listSubText}>{item.price + " đ. " + 
-                                    ((item.serviceModule) ? AppUtils.objNameToStringSequence(item.serviceModule) 
+                                <Text style={styles.listSubText}>{AppUtils.formatMoneyToK(item.price) + " đ. " + 
+                                    ((item.serviceModule) ? ((item.currentKm ? (item.currentKm + "Km, "): "") + AppUtils.objNameToStringSequence(item.serviceModule) )
                                         : (item.currentKm ? (item.currentKm + "Km, ")
                                         : ((item.subType && item.subType.length>0) ? item.subType : ""
                                         )))}</Text>

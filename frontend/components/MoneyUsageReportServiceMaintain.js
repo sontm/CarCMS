@@ -11,7 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
-import { NoDataText } from './StyledText';
+import { NoDataText, TypoH4, TypoH5 } from './StyledText';
 
 class MoneyUsageReportServiceMaintain extends React.Component {
   constructor(props) {
@@ -116,19 +116,24 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                 var {arrServiceTypeSpend, totalServiceSpend2} = 
                     this.props.userData.carReports[this.props.currentVehicle.id].serviceReport;
                 var legendLabels =[];
+                if (arrServiceTypeSpend && arrServiceTypeSpend.length > 0) {
+                    arrServiceTypeSpend.forEach(item => {
+                        legendLabels.push({name: item.x})
+                    })
+                }
                 var theArr = arrServiceTypeSpend;
                 var theTotal = totalServiceSpend2;
             }
         }
-
         return (
             <View style={styles.container}>
                 {theArr ? (
                 <View>
                 <View style={{...styles.textRow, marginTop: 15}}>
-                    <Text><H3>
-                    {AppLocales.t("CARDETAIL_H1_SERVICE_USAGE")}
-                    </H3></Text>
+                    <Text><TypoH5>
+                    {this.props.isTotalReport ? (AppLocales.t("CARDETAIL_H1_SERVICE_USAGE_TOTAL")+" (Tất Cả Các Tháng)") : 
+                    AppLocales.t("CARDETAIL_H1_SERVICE_USAGE")+" (Tất Cả Các Tháng)"}
+                    </TypoH5></Text>
                 </View>
                 {theTotal > 0 ? (
                 <View style={styles.statRow}>
@@ -141,8 +146,8 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                             labels={({ datum }) => (datum&&datum.y > 0) ? ( 
                                 AppUtils.formatMoneyToK(datum.y) + "\n"
                                 +"("+AppUtils.formatToPercent(datum.y, theTotal)+")") : ""}
-                            labelRadius={({ radius }) => radius+3 }
-                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            labelRadius={({ radius }) => radius+5 }
+                            labelComponent={<VictoryLabel style={{fontSize: 13}}/>}
                             />                      
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>

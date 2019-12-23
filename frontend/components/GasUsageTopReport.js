@@ -15,7 +15,7 @@ import AppLocales from '../constants/i18n'
 import {
     LineChart
   } from "react-native-chart-kit";
-import { NoDataText } from './StyledText';
+import { NoDataText, TypoH5 } from './StyledText';
 
 const MYDATA = [ 50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80 ]
 
@@ -128,13 +128,13 @@ class GasUsageTopReport extends React.Component {
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>
-                    <Text><H3>
+                    <Text><TypoH5>
                         {this.state.activeDisplay == 1 ? 
                             AppLocales.t("TEAM_REPORT_TOP_CAR_GASUSAGE_MONEY") :
                         (this.state.activeDisplay == 2 ?  
                             AppLocales.t("TEAM_REPORT_TOP_CAR_GASUSAGE_MONEYKM") :
                             AppLocales.t("TEAM_REPORT_TOP_CAR_GASUSAGE_KM"))}
-                    </H3></Text>
+                    </TypoH5></Text>
                     <Segment small style={{backgroundColor:"rgba(0,0,0,0)"}}>
                         <Button small first onPress={() => this.setState({activeDisplay: 0})}
                             style={this.state.activeDisplay === 0 ? styles.activeSegment : styles.inActiveSegment}>
@@ -215,7 +215,7 @@ class GasUsageTopReport extends React.Component {
                     <VictoryAxis
                         crossAxis
                         standalone={false}
-                        //tickFormat={(t) => `${AppUtils.formatDateMonthYearVN(new Date(t))}`}
+                        //tickFormat={(t,idx) => `${AppUtils.formatDateMonthYearVN(t)}`}
                         tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                         // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                         style={{
@@ -227,7 +227,8 @@ class GasUsageTopReport extends React.Component {
                     <VictoryAxis
                         dependentAxis
                         standalone={false}
-                        //tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
+                        tickFormat={(t) => `${this.state.activeDisplay!= 0 ? AppUtils.formatMoneyToK(t) :
+                            AppUtils.formatDistanceToKm(t)}`}
                         // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
                         style={{
                             ticks: {stroke: "grey", size: 5},
@@ -252,7 +253,8 @@ const styles = StyleSheet.create({
       borderColor: "grey",
       justifyContent: "space-between",
       marginBottom: 20,
-      borderRadius: 7,
+      paddingBottom: 20,
+    //   borderRadius: 7,
     },
 
     activeSegment: {

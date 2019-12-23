@@ -11,7 +11,7 @@ import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, Victor
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
-import { NoDataText } from './StyledText';
+import { NoDataText, TypoH5 } from './StyledText';
 
 class MoneyUsageByTimeReport extends React.Component {
   constructor(props) {
@@ -80,7 +80,7 @@ class MoneyUsageByTimeReport extends React.Component {
             arrGasSpend.forEach(item => {
                 let thisCarGasItem = {x: xValue, y: 0};
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     thisCarGasItem.y += item.y;
                     thisCarGasItem.x = xDate;
                     //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
@@ -95,7 +95,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     let thisCarExpenseItem = {x: xValue, y: 0};
 
                     thisCarExpenseItem.y += item.y;
@@ -112,7 +112,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     let thisCarAuthItem = {x: xValue, y: 0};
                     thisCarAuthItem.y += item.y;
                     thisCarAuthItem.x = xDate;
@@ -128,7 +128,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     let thisCarServiceItem = {x: xValue, y: 0};
                     thisCarServiceItem.y += item.y;
                     thisCarServiceItem.x = xDate;
@@ -178,7 +178,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
             arrTotalMoneySpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     filteredArrTotalMoneySpend.push(item)
                     //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, new Date(item.x))
@@ -223,7 +223,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalGasSpendPrivate += item.y;
                 }
             })
@@ -231,7 +231,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrOilSpend && arrOilSpend.length) {
             arrOilSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalOilSpendPrivate += item.y;
                 }
             })
@@ -239,7 +239,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalExpenseSpendPrivate += item.y;
                 }
             })
@@ -248,7 +248,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalAuthSpendPrivate += item.y;
                 }
             })
@@ -257,7 +257,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     totalServiceSpendPrivate += item.y;
                 }
             })
@@ -299,7 +299,7 @@ class MoneyUsageByTimeReport extends React.Component {
         if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
             arrTotalMoneySpend.forEach(item => {
                 let xDate = new Date(item.x);
-                if (xDate > CALCULATE_START_DATE) {
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
                     item.x = xDate;
                     filteredArrTotalMoneySpend.push(item)
                     //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
@@ -392,6 +392,10 @@ class MoneyUsageByTimeReport extends React.Component {
                 arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels}
                 = this.calculateOneVehicleTotalMoneyPrivate();
         }
+        if (theBarWidth && theBarWidth > 36) {
+            theBarWidth = 36;
+        }
+        
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         let isHasData = true;
         if ((this.props.isTotalReport && arrTotalAllCars.length <= 0) || 
@@ -404,8 +408,7 @@ class MoneyUsageByTimeReport extends React.Component {
             !arrTotalExpenseEachCars.length && !arrTotalServiceEachCars.length) {
             isHasTeamData = false;
         }
-        console.log("¥¥¥¥¥¥¥¥¥¥¥a arrTotalAuthOneCar ¥¥¥¥¥¥¥¥")
-        console.log(arrTotalAuthOneCar)
+
         return (
             <View style={styles.container}>
                 
@@ -576,9 +579,9 @@ class MoneyUsageByTimeReport extends React.Component {
                 {(this.props.isTotalReport && this.props.isTeamDisplay) ? (
                 <View>
                 <View style={{...styles.textRow, marginTop: 5}}>
-                    <Text><H3>
+                    <Text><TypoH5>
                     {AppLocales.t("TEAM_REPORT_TOP_CAR_MONEYUSAGE")}
-                    </H3></Text>
+                    </TypoH5></Text>
                 </View>
 
                 <View style={styles.statRow}>
@@ -675,9 +678,9 @@ class MoneyUsageByTimeReport extends React.Component {
                 {(this.props.isTotalReport && !this.props.isTeamDisplay) ? (
                 <View>
                     <View style={{...styles.textRow, marginTop: 5}}>
-                    <Text><H3>
-                    {AppLocales.t("CARDETAIL_H1_MONEY_USAGE_CARs")}
-                    </H3></Text>
+                    <Text><TypoH5>
+                    {AppLocales.t("CARDETAIL_H1_MONEY_USAGE_CARs")+" (" +this.state.duration+" Tháng)"}
+                    </TypoH5></Text>
                 </View>
                 {(arrTotalEachCarsAllCategory&&arrTotalEachCarsAllCategory.length>0) ? (
                 <View style={styles.statRow}>
@@ -723,9 +726,9 @@ class MoneyUsageByTimeReport extends React.Component {
                 ) : <NoDataText /> }
 
                 <View style={{...styles.textRow, marginTop: 5}}>
-                    <Text><H3>
-                    {AppLocales.t("CARDETAIL_H1_MONEY_USAGE")}
-                    </H3></Text>
+                    <Text><TypoH5>
+                    {AppLocales.t("CARDETAIL_H1_MONEY_USAGE")+" (" +this.state.duration+" Tháng)"}
+                    </TypoH5></Text>
                 </View>
                 {(totalAllSpendPrivate>0) ? (
                 <View style={styles.statRow}>
