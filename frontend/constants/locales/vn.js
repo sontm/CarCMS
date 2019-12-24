@@ -102,7 +102,7 @@ export default {
     TEAM_MEM_LIST:"Danh Sách Thành Viên",
     TEAM_MEMBER_CAR_HEADER:"Xe Của Thành Viên",
 
-    TEAM_REPORT_TOP_CAR_MONEYUSAGE: "Top Chi Tiêu Nhiều",
+    TEAM_REPORT_TOP_CAR_MONEYUSAGE: "Top Xe Chi Tiêu Nhiều",
     TEAM_REPORT_TOP_CAR_GASUSAGE_KM: "Top Đi Nhiều",
     TEAM_REPORT_TOP_CAR_GASUSAGE_MONEY: "Top Chi Tiêu Xăng Nhiều",
     TEAM_REPORT_TOP_CAR_GASUSAGE_MONEYKM: "Top Hiệu Suất Xăng Cao",

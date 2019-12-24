@@ -334,7 +334,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
                         <Picker.Item label="12" value={12} />
                         <Picker.Item label="18" value={18} />
                         <Picker.Item label="24" value={24} />
-                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
+                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={240} />
                     </Picker>
                     <Picker
                         mode="dropdown"

@@ -21,6 +21,8 @@ class MoneyUsageByTimeReport extends React.Component {
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),
+        durationTopCarTeam: 6,
+        tillDateTopCarTeam: new Date(),
     };
   }
   onValueChangeDuration(value) {
@@ -28,6 +30,13 @@ class MoneyUsageByTimeReport extends React.Component {
         duration: value
     });
   }
+  onValueChangeDurationTopCarTeam(value) {
+    this.setState({
+        durationTopCarTeam: value
+    });
+  }
+
+  
 
   onValueChangeDurationType(value) {
     this.setState({
@@ -40,8 +49,16 @@ class MoneyUsageByTimeReport extends React.Component {
     this.setState({
         tillDate: newDate
     });
-    this.displayByFilter = true;
   }
+  // TODO for change Date
+  onSetDateOptionTopCarTeam(newDate) {
+    console.log(newDate)
+    this.setState({
+        tillDateTopCarTeam: newDate
+    });
+  }
+
+  
 
   calculateOneVehicleTotalMoneyPrivate() {
     let arrTotalGasOneCar = [];
@@ -52,6 +69,20 @@ class MoneyUsageByTimeReport extends React.Component {
     let legendLabels = [];
     let tickXLabels = [];
     let theBarWidth = 10;
+
+    // End date is ENd of This Month  
+    var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+    var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+        CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+    
+    for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+        tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+        d = new Date(d.setMonth(d.getMonth() + 1))
+    }
+
+    // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+    theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
+    
     
     // this.props.teamData.teamCarList.forEach((element, carIdx) => {
     //   if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
@@ -63,19 +94,7 @@ class MoneyUsageByTimeReport extends React.Component {
             = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
         //let xValue = carIdx + 1;
         let xValue = 1;
-        // End date is ENd of This Month  
-        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
-        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
-            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
-        
-        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
-            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
-            d = new Date(d.setMonth(d.getMonth() + 1))
-        }
 
-        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
-        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
-        
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
                 let thisCarGasItem = {x: xValue, y: 0};
@@ -155,21 +174,22 @@ class MoneyUsageByTimeReport extends React.Component {
     let legendLabels = [];
     let theBarWidth = 10;
 
+    // End date is ENd of This Month  
+    var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+    var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+        CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+    for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+        tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+        d = new Date(d.setMonth(d.getMonth() + 1))
+    }
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
           // TODO* arrTotalMoneySpend is Wrong....
         let {arrTotalMoneySpend} = this.props.userData.carReports[element.id].moneyReport;
-        // End date is ENd of This Month  
-        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
-        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
-            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
         let filteredArrTotalMoneySpend = [];
 
-        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
-            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
-            d = new Date(d.setMonth(d.getMonth() + 1))
-        }
 
         // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
         theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
@@ -210,15 +230,18 @@ class MoneyUsageByTimeReport extends React.Component {
     let totalGasSpendPrivate = 0, totalOilSpendPrivate = 0, totalAuthSpendPrivate = 0, 
         totalExpenseSpendPrivate = 0, totalServiceSpendPrivate = 0;
     let totalAllSpendPrivate = 0;
+
+    // End date is ENd of This Month  
+    var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+    var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+        CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+           
+                
     this.props.userData.vehicleList.forEach(element => {
       if (this.props.userData.carReports && this.props.userData.carReports[element.id]) {
         var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
         = this.props.userData.carReports[element.id].moneyReport;
-        // End date is ENd of This Month  
-        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
-        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
-            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
-           
+
         // Only Keep numberOfMonth
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
@@ -272,53 +295,114 @@ class MoneyUsageByTimeReport extends React.Component {
 
 
 
-  calculateAllVehicleTotalMoneyTeam(numberOfMonth) {
+  calculateAllVehicleTotalMoneyTeam() {
     let arrTotalAllCars = [];
     let tickXLabels = [];
     let legendLabels = [];
     let theBarWidth = 10;
 
+    // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
+    theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
+    if (theBarWidth && theBarWidth > 36) {
+        theBarWidth = 36;
+    }
+
+    let teamNotMerge = false;
+    if (this.props.teamData.teamCarList.length > 10) {
+        // Will Merge
+        teamNotMerge = false;
+    } else {
+        teamNotMerge = true;
+    }
+    let objTotalMoneySpend = {};
+    // End date is ENd of This Month  
+    var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+    var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+        CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
+    for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+        tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
+        d = new Date(d.setMonth(d.getMonth() + 1))
+    }
+
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         let {arrTotalMoneySpend} = this.props.teamData.teamCarReports[element.id].moneyReport;
-        // End date is ENd of This Month  
-        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
-        var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
-            CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
-        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
-            tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
-            d = new Date(d.setMonth(d.getMonth() + 1))
+        if (teamNotMerge) {
+            // Not Merge, display for Each Car
+            let filteredArrTotalMoneySpend = [];
+            // Only Keep numberOfMonth
+            if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
+                arrTotalMoneySpend.forEach(item => {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                        item.x = xDate;
+                        filteredArrTotalMoneySpend.push(item)
+                        //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
+                    }
+                })
+            }
+            if (filteredArrTotalMoneySpend && filteredArrTotalMoneySpend.length > 0) {
+                arrTotalAllCars.push(filteredArrTotalMoneySpend)
+                legendLabels.push({name: element.licensePlate})
+            }
+        } else {
+            // WIll Merge
+            if (arrTotalMoneySpend && arrTotalMoneySpend.length > 0) {
+                arrTotalMoneySpend.forEach(item => {
+                    let xDate = new Date(item.x);
+                    if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                        if (objTotalMoneySpend[""+item.x]) {
+                            // exist
+                            objTotalMoneySpend[""+item.x]+= item.y;
+                        } else {
+                            objTotalMoneySpend[""+item.x] = item.y;
+                        }
+                    }
+                })
+            }
         }
-
-        // Calculate bar Width, Given Chart Width is  100% - 80px; Leave 20% space for Gap
-        theBarWidth = ((Layout.window.width - 80) / this.state.duration) * 0.8;
-
-        let filteredArrTotalMoneySpend = [];
-        // Only Keep numberOfMonth
-        if (arrTotalMoneySpend && arrTotalMoneySpend.length) {
-            arrTotalMoneySpend.forEach(item => {
-                let xDate = new Date(item.x);
-                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
-                    item.x = xDate;
-                    filteredArrTotalMoneySpend.push(item)
-                    //AppUtils.pushInDateLabelsIfNotExist(tickXLabels, xDate)
-                }
-            })
-        }
-        if (filteredArrTotalMoneySpend && filteredArrTotalMoneySpend.length > 0)
-            arrTotalAllCars.push(filteredArrTotalMoneySpend)
-            legendLabels.push({name: element.licensePlate})
       }
     });
-    return {arrTotalAllCars, tickXLabels, legendLabels, theBarWidth};
+    if (!teamNotMerge) {
+        // convert to Array for Chart
+        for (var prop in objTotalMoneySpend) {
+            if (Object.prototype.hasOwnProperty.call(objTotalMoneySpend, prop)) {
+                arrTotalAllCars.push({x: new Date(prop), y: objTotalMoneySpend[""+prop]})
+            }
+        }
+        arrTotalAllCars.sort(function(a, b) {
+            let aDate = new Date(a.x);
+            let bDate = new Date(b.x);
+
+            return aDate - bDate;
+        })
+    }
+
+    return {arrTotalAllCars, tickXLabels, legendLabels, theBarWidth, teamNotMerge};
   }
-  calculateEachVehicleTotalMoneyTeam(numberOfMonth) {
+  calculateEachVehicleTotalMoneyTeam() {
+      // {x: indexOfcar in teamcarlist, y: valueMoney}
     let arrTotalGasEachCars = [];
     let arrTotalOilEachCars = [];
     let arrTotalAuthEachCars = [];
     let arrTotalExpenseEachCars = [];
     let arrTotalServiceEachCars = [];
+
+    let arrTotalGasEachCarsTmp = [];
+    let arrTotalOilEachCarsTmp = [];
+    let arrTotalAuthEachCarsTmp = [];
+    let arrTotalExpenseEachCarsTmp = [];
+    let arrTotalServiceEachCarsTmp = [];
+
+    let arrTotalAll = [];
+    let tickXLabelsIdx =[];
+    let theBarWidthTop = 10;
+
+    var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDateTopCarTeam.getFullYear(),this.state.tillDateTopCarTeam.getMonth()+1,0));
+    var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+        CALCULATE_END_DATE.getMonth() - this.state.durationTopCarTeam + 1, 1));
 
     this.props.teamData.teamCarList.forEach((element, carIdx) => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
@@ -328,55 +412,112 @@ class MoneyUsageByTimeReport extends React.Component {
         //let xValue = element.licensePlate;
         //let xValue = element.licensePlate;
         let thisCarGasItem = {x: xValue, y: 0};
+        let totalGas = 0;
         if (arrGasSpend && arrGasSpend.length) {
             arrGasSpend.forEach(item => {
-                thisCarGasItem.y += item.y;
+                // TODO Fillter Date
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                    thisCarGasItem.y += item.y;
+                    totalGas += item.y;
+                }
             })
-            arrTotalGasEachCars.push(thisCarGasItem);
         }
-        let thisCarOilItem = {x: xValue, y: 0};
-        if (arrOilSpend && arrOilSpend.length) {
-            arrOilSpend.forEach(item => {
-                thisCarOilItem.y += item.y;
-            })
-            arrTotalOilEachCars.push(thisCarOilItem);
-        }
+        arrTotalGasEachCarsTmp.push(thisCarGasItem);
+        // let thisCarOilItem = {x: xValue, y: 0};
+        // if (arrOilSpend && arrOilSpend.length) {
+        //     arrOilSpend.forEach(item => {
+        //         thisCarOilItem.y += item.y;
+        //     })
+        //     arrTotalOilEachCars.push(thisCarOilItem);
+        // }
         let thisCarExpenseItem = {x: xValue, y: 0};
+        let totalExpense = 0;
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
-                thisCarExpenseItem.y += item.y;
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                    thisCarExpenseItem.y += item.y;
+                    totalExpense += item.y;
+                }
             })
-            arrTotalExpenseEachCars.push(thisCarExpenseItem);
         }
+        arrTotalExpenseEachCarsTmp.push(thisCarExpenseItem);
         
         let thisCarAuthItem = {x: xValue, y: 0};
+        let totalAuth = 0;
         if (arrAuthSpend && arrAuthSpend.length) {
             arrAuthSpend.forEach(item => {
-                thisCarAuthItem.y += item.y;
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                    thisCarAuthItem.y += item.y;
+                    totalAuth += item.y;
+                }
             })
-            arrTotalAuthEachCars.push(thisCarAuthItem);
         }
+        arrTotalAuthEachCarsTmp.push(thisCarAuthItem);
 
         let thisCarServiceItem = {x: xValue, y: 0};
+        let totalService = 0;
         if (arrServiceSpend && arrServiceSpend.length) {
             arrServiceSpend.forEach(item => {
-                thisCarServiceItem.y += item.y;
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                    thisCarServiceItem.y += item.y;
+                    totalService += item.y;
+                }
             })
-            arrTotalServiceEachCars.push(thisCarServiceItem);
         }
+        arrTotalServiceEachCarsTmp.push(thisCarServiceItem);
+
+        let totalMoney = totalGas + totalAuth + totalExpense + totalService;
+        arrTotalAll.push({x: xValue, y: totalMoney, licensePlate: element.licensePlate})
       }
     });
+    // Only Keep first 10 Vehicle
+    arrTotalAll.sort(function(a, b) {
+        return b.y - a.y;
+    })
+    let countCar = arrTotalAll.length;
+    if (countCar > 10) {
+        countCar = 10;
+    }
+    theBarWidthTop = ((Layout.window.width - 100) / countCar) * 0.8;
+    if (theBarWidthTop && theBarWidthTop > 36) {
+        theBarWidthTop = 36;
+    }
+    for (let l = 0; l < countCar; l++) {
+        let {x, licensePlate} = arrTotalAll[l];
+        tickXLabelsIdx.push(licensePlate)
+
+        arrTotalGasEachCars.push({...arrTotalGasEachCarsTmp.filter(item => {
+            return (item.x == x);
+        })[0], x: (l+1)})
+        arrTotalAuthEachCars.push({...arrTotalAuthEachCarsTmp.filter(item => {
+            return (item.x == x);
+        })[0], x: (l+1)})
+
+        arrTotalExpenseEachCars.push({...arrTotalExpenseEachCarsTmp.filter(item => {
+            return (item.x == x);
+        })[0], x: (l+1)})
+
+        arrTotalServiceEachCars.push({...arrTotalServiceEachCarsTmp.filter(item => {
+            return (item.x == x);
+        })[0], x: (l+1)})
+        
+    }
+
     return {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
-        arrTotalExpenseEachCars, arrTotalServiceEachCars}
+        arrTotalExpenseEachCars, arrTotalServiceEachCars, tickXLabelsIdx, theBarWidthTop}
   }
 
   render() {
     if (this.props.currentVehicle || this.props.isTotalReport) {
         if (this.props.isTotalReport) {
             if (this.props.isTeamDisplay) {
-                var {arrTotalAllCars, tickXLabels, legendLabels, theBarWidth} = this.calculateAllVehicleTotalMoneyTeam();
+                var {arrTotalAllCars, tickXLabels, legendLabels, theBarWidth, teamNotMerge} = this.calculateAllVehicleTotalMoneyTeam();
                 var {arrTotalGasEachCars,arrTotalOilEachCars,arrTotalAuthEachCars,
-                    arrTotalExpenseEachCars, arrTotalServiceEachCars}
+                    arrTotalExpenseEachCars, arrTotalServiceEachCars, tickXLabelsIdx, theBarWidthTop}
                     = this.calculateEachVehicleTotalMoneyTeam();
             } else {
                 // Tong Quan of Current User
@@ -391,9 +532,6 @@ class MoneyUsageByTimeReport extends React.Component {
             var {arrTotalGasOneCar,theBarWidth,arrTotalAuthOneCar,
                 arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels}
                 = this.calculateOneVehicleTotalMoneyPrivate();
-        }
-        if (theBarWidth && theBarWidth > 36) {
-            theBarWidth = 36;
         }
         
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
@@ -437,18 +575,6 @@ class MoneyUsageByTimeReport extends React.Component {
                         {/* <Picker.Item label={AppLocales.t("GENERAL_ALL")} 
                             value={AppLocales.t("GENERAL_ALL")} /> */}
                     </Picker>
-                    {/* <Picker
-                        mode="dropdown"
-                        iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
-                        selectedValue={this.state.durationType}
-                        onValueChange={this.onValueChangeDurationType.bind(this)}
-                        textStyle={{ color: "#1f77b4", fontSize: 14 }}
-                        style={{width: 75}}
-                        >
-                        <Picker.Item label="Tháng" value="month" />
-                        <Picker.Item label="Quý" value="quarter" />
-                        <Picker.Item label="Năm" value="year" />
-                    </Picker> */}
                     <Text style={{fontSize: 13, marginLeft: 5}}>Gần Nhất Đến</Text>
                     <DatePicker
                         defaultDate={new Date()}
@@ -477,20 +603,26 @@ class MoneyUsageByTimeReport extends React.Component {
                             padding={{top:10,bottom:30,left:3,right:10}}
                             domainPadding={{y: [0, 10], x: [40, 20]}}
                         >
-                        {/* TODO, Date X axis not Match */}
                         {this.props.isTotalReport ? (
                             <VictoryStack
                                 width={Layout.window.width}
                                 // domainPadding={{y: [0, 10], x: [10, 0]}}
                                 colorScale={AppConstants.COLOR_SCALE_10}
                             >
-                            {arrTotalAllCars.map((item, idx) => (
+                            {(this.props.isTeamDisplay && !teamNotMerge) ? (
                                 <VictoryBar
-                                barWidth={theBarWidth}
-                                key={idx}
-                                data={item}
+                                    barWidth={theBarWidth}
+                                    data={arrTotalAllCars}
                                 />
-                            ))}
+                            ) : (
+                                arrTotalAllCars.map((item, idx) => (
+                                    <VictoryBar
+                                    barWidth={theBarWidth}
+                                    key={idx}
+                                    data={item}
+                                    />
+                                ))
+                            )}
                             </VictoryStack>
                         ) : (
                         <VictoryStack
@@ -555,7 +687,7 @@ class MoneyUsageByTimeReport extends React.Component {
                         />
                         </VictoryChart>
 
-
+                        {legendLabels&&legendLabels.length>0 ? 
                         <View>
                             <VictoryContainer
                                 width={Layout.window.width}
@@ -572,7 +704,7 @@ class MoneyUsageByTimeReport extends React.Component {
                                 data={legendLabels}
                             />
                             </VictoryContainer>
-                        </View>
+                        </View> : null}
                     </View> ) : <NoDataText /> }
                 </View>
 
@@ -580,8 +712,44 @@ class MoneyUsageByTimeReport extends React.Component {
                 <View>
                 <View style={{...styles.textRow, marginTop: 5}}>
                     <Text><TypoH5>
-                    {AppLocales.t("TEAM_REPORT_TOP_CAR_MONEYUSAGE")}
+                    {AppLocales.t("TEAM_REPORT_TOP_CAR_MONEYUSAGE")+" (" +this.state.durationTopCarTeam+" Tháng)"}
                     </TypoH5></Text>
+                </View>
+
+                <View style={styles.textRowOption}>
+                    <Picker
+                        mode="dropdown"
+                        iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
+                        selectedValue={this.state.durationTopCarTeam}
+                        onValueChange={this.onValueChangeDurationTopCarTeam.bind(this)}
+                        textStyle={{ color: "#1f77b4", fontSize: 14 }}
+                        style={{width: 75}}
+                        >
+                        <Picker.Item label="6 Tháng" value={6} />
+                        <Picker.Item label="9 Tháng" value={9} />
+                        <Picker.Item label="12 Tháng" value={12} />
+                        <Picker.Item label="18 Tháng" value={18} />
+                        <Picker.Item label="24 Tháng" value={24} />
+                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} 
+                            value={240} />
+                    </Picker>
+                    <Text style={{fontSize: 13, marginLeft: 5}}>Gần Nhất Đến</Text>
+                    <DatePicker
+                        defaultDate={new Date()}
+                        minimumDate={new Date(2010, 1, 1)}
+                        maximumDate={new Date(2100, 12, 31)}
+                        locale={"vi"}
+                        timeZoneOffsetInMinutes={undefined}
+                        modalTransparent={false}
+                        animationType={"fade"}
+                        androidMode={"default"}
+                        placeHolderText={"Hôm Nay"}
+                        textStyle={{ color: "#1f77b4", fontSize: 14 }}
+                        placeHolderTextStyle={{ color: "#1f77b4" }}
+                        onDateChange={this.onSetDateOptionTopCarTeam.bind(this)}
+                        disabled={false}
+                        iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
+                    />
                 </View>
 
                 <View style={styles.statRow}>
@@ -591,7 +759,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             width={Layout.window.width}
                             height={250}
                             padding={{top:20,bottom:30,left:3,right:10}}
-                            domainPadding={{y: [0, 0], x: [40, 20]}}
+                            domainPadding={{y: [0, 0], x: [60, 20]}}
                         >
                         <VictoryStack
                             width={Layout.window.width}
@@ -601,28 +769,28 @@ class MoneyUsageByTimeReport extends React.Component {
                             {arrTotalGasEachCars && arrTotalGasEachCars.length ?
                             <VictoryBar
                                 data={arrTotalGasEachCars}
-                                barWidth={theBarWidth}
+                                barWidth={theBarWidthTop}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalAuthEachCars && arrTotalAuthEachCars.length ?
                             <VictoryBar
                                 data={arrTotalAuthEachCars}
-                                barWidth={theBarWidth}
+                                barWidth={theBarWidthTop}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalExpenseEachCars && arrTotalExpenseEachCars.length ?
                             <VictoryBar
                                 data={arrTotalExpenseEachCars}
-                                barWidth={theBarWidth}
+                                barWidth={theBarWidthTop}
                                 interpolation="linear"
                             /> : null}
 
                             {arrTotalServiceEachCars && arrTotalServiceEachCars.length ?
                             <VictoryBar
                                 data={arrTotalServiceEachCars}
-                                barWidth={theBarWidth}
+                                barWidth={theBarWidthTop}
                                 interpolation="linear"
                             /> : null}
                         
@@ -630,11 +798,12 @@ class MoneyUsageByTimeReport extends React.Component {
                         <VictoryAxis
                             crossAxis
                             standalone={false}
-                            tickFormat={(t) => `${(this.props.teamData.teamCarList && this.props.teamData.teamCarList[t-1])? 
-                                this.props.teamData.teamCarList[t-1].licensePlate : t}`}
+                            // tickFormat={(t) => `${(this.props.teamData.teamCarList && this.props.teamData.teamCarList[t-1])? 
+                            //     this.props.teamData.teamCarList[t-1].licensePlate : t}`}
+                            //tickFormat={(t) => t}
                             tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
-                            tickLabels={tickXLabels}
-                            // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                            tickValues={tickXLabelsIdx}
+                            //tickCount={5}
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 5},

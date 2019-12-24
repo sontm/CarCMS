@@ -32,7 +32,7 @@ class GasUsageTopReport extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        duration: 12,
+        duration: 6,
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),
@@ -62,10 +62,31 @@ class GasUsageTopReport extends React.Component {
     });
     this.displayByFilter = true;
   }
-  calculateEachVehicleGasUsageTeam(numberOfMonth) {
+  calculateEachVehicleGasUsageTeam() {
     let arrGasKmEachCars = [];
     let arrGasMoneyEachCars = [];
     let arrGasMoneyPerKmEachCars = [];
+
+    let arrGasKmEachCarsTmp = [];
+    let arrGasMoneyEachCarsTmp = [];
+    let arrGasMoneyPerKmEachCarsTmp = [];
+
+    let arrTotalKm = [];
+    let theBarWidthKm = 10;
+    let tickXLabelsKm = [];
+
+    let arrTotalMoney = [];
+    let theBarWidthMoney = 10;
+    let tickXLabelsMoney = [];
+
+    let arrTotalMoneyPerKm = [];
+    let theBarWidthMoneyPerKm = 10;
+    let tickXLabelsMoneyPerKm = [];
+
+    var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+    var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
+        CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
+
     this.props.teamData.teamCarList.forEach((element, carIdx) => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
         var {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
@@ -73,41 +94,92 @@ class GasUsageTopReport extends React.Component {
           avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
           = this.props.teamData.teamCarReports[element.id].gasReport;
 
-        //let xValue = carIdx + 1;
-        let xValue = element.licensePlate;
+        let xValue = carIdx + 1;
+        //let xValue = element.licensePlate;
         let thisKm = {x: xValue, y: 0};
         if (arrTotalKmMonthly && arrTotalKmMonthly.length) {
             arrTotalKmMonthly.forEach(item => {
-                thisKm.y += item.y;
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                    thisKm.y += item.y;
+                }
             })
-            if (thisKm.y > 0) {
-                arrGasKmEachCars.push(thisKm);
-            }
+            arrGasKmEachCarsTmp.push(thisKm);
         }
+        arrTotalKm.push({x: xValue, y: thisKm.y, licensePlate: element.licensePlate})
+
         let thisMoney = {x: xValue, y: 0};
         if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length) {
             arrTotalMoneyMonthly.forEach(item => {
-                thisMoney.y += item.y;
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                    thisMoney.y += item.y;
+                }
             })
-            if (thisMoney.y > 0) {
-                arrGasMoneyEachCars.push(thisMoney);
-            }
+            arrGasMoneyEachCarsTmp.push(thisMoney);
         }
+        arrTotalMoney.push({x: xValue, y: thisMoney.y, licensePlate: element.licensePlate})
+
+
         let thisMoneyPerKm = {x: xValue, y: 0};
         if (arrTotalMoneyPerKmMonthly && arrTotalMoneyPerKmMonthly.length) {
             let countAvg = 0;
             arrTotalMoneyPerKmMonthly.forEach(item => {
-                thisMoneyPerKm.y += item.y;
-                countAvg++;
+                let xDate = new Date(item.x);
+                if (xDate >= CALCULATE_START_DATE && xDate <= CALCULATE_END_DATE) {
+                    thisMoneyPerKm.y += item.y;
+                    countAvg++;
+                }
             })
             thisMoneyPerKm.y = thisMoneyPerKm.y/countAvg;
-            if (thisMoneyPerKm.y > 0) {
-                arrGasMoneyPerKmEachCars.push(thisMoneyPerKm);
-            }
+            arrGasMoneyPerKmEachCarsTmp.push(thisMoneyPerKm);
         }
+        arrTotalMoneyPerKm.push({x: xValue, y: thisMoneyPerKm.y, licensePlate: element.licensePlate})
       }
     })
-    return {arrGasKmEachCars, arrGasMoneyEachCars, arrGasMoneyPerKmEachCars};
+
+    // Only Keep first 10 Vehicle
+    arrTotalKm.sort(function(a, b) {return b.y - a.y;})
+    let countKm = arrTotalKm.length;
+    if (countKm > 10) {countKm = 10;}
+    theBarWidthKm = ((Layout.window.width - 100) / countKm) * 0.8;
+    if (theBarWidthKm && theBarWidthKm > 36) {theBarWidthKm = 36;}
+    for (let l = 0; l < countKm; l++) {
+        let {x, licensePlate} = arrTotalKm[l];
+        tickXLabelsKm.push(licensePlate)
+        arrGasKmEachCars.push({...arrGasKmEachCarsTmp.filter(item => {
+            return (item.x == x);
+        })[0], x: (l+1)})
+    }
+
+    arrTotalMoney.sort(function(a, b) {return b.y - a.y;})
+    let countMoney = arrTotalMoney.length;
+    if (countMoney > 10) {countMoney = 10;}
+    theBarWidthMoney = ((Layout.window.width - 100) / countMoney) * 0.8;
+    if (theBarWidthMoney && theBarWidthMoney > 36) {theBarWidthMoney = 36;}
+    for (let l = 0; l < countMoney; l++) {
+        let {x, licensePlate} = arrTotalMoney[l];
+        tickXLabelsMoney.push(licensePlate)
+        arrGasMoneyEachCars.push({...arrGasMoneyEachCarsTmp.filter(item => {
+            return (item.x == x);
+        })[0], x: (l+1)})
+    }
+
+    arrTotalMoneyPerKm.sort(function(a, b) {return b.y - a.y;})
+    let countMoneyPerKm = arrTotalMoneyPerKm.length;
+    if (countMoneyPerKm > 10) {countMoneyPerKm = 10;}
+    theBarWidthMoneyPerKm = ((Layout.window.width - 100) / countMoneyPerKm) * 0.8;
+    if (theBarWidthMoneyPerKm && theBarWidthMoneyPerKm > 36) {theBarWidthMoneyPerKm = 36;}
+    for (let l = 0; l < countMoneyPerKm; l++) {
+        let {x, licensePlate} = arrTotalMoneyPerKm[l];
+        tickXLabelsMoneyPerKm.push(licensePlate)
+        arrGasMoneyPerKmEachCars.push({...arrGasMoneyPerKmEachCarsTmp.filter(item => {
+            return (item.x == x);
+        })[0], x: (l+1)})
+    }
+
+    return {arrGasKmEachCars, arrGasMoneyEachCars, arrGasMoneyPerKmEachCars, 
+        theBarWidthKm, tickXLabelsKm,theBarWidthMoney,tickXLabelsMoney,theBarWidthMoneyPerKm,tickXLabelsMoneyPerKm};
   }
 
   render() {
@@ -115,15 +187,22 @@ class GasUsageTopReport extends React.Component {
     //isTotalReport mean this is used in Home screen or Team screen
     if (this.props.isTotalReport) {
         if (this.props.isTeamDisplay) {
-            var {arrGasKmEachCars, arrGasMoneyEachCars, arrGasMoneyPerKmEachCars}
-                = this.calculateEachVehicleGasUsageTeam(12);
+            var {arrGasKmEachCars, arrGasMoneyEachCars, arrGasMoneyPerKmEachCars, 
+                theBarWidthKm, tickXLabelsKm,theBarWidthMoney,tickXLabelsMoney,theBarWidthMoneyPerKm,tickXLabelsMoneyPerKm}
+                = this.calculateEachVehicleGasUsageTeam();
         }
         if (this.state.activeDisplay == 1) {
             var dataTopToDisplay = arrGasMoneyEachCars;
+            var theBarWidth = theBarWidthMoney;
+            var tickXLabels = tickXLabelsMoney;
         } else if (this.state.activeDisplay == 2) {
             var dataTopToDisplay = arrGasMoneyPerKmEachCars;
+            var theBarWidth = theBarWidthMoneyPerKm;
+            var tickXLabels = tickXLabelsMoneyPerKm;
         } else {
             var dataTopToDisplay = arrGasKmEachCars;
+            var theBarWidth = theBarWidthKm;
+            var tickXLabels = tickXLabelsKm;
         }
         return (
             <View style={styles.container}>
@@ -162,20 +241,8 @@ class GasUsageTopReport extends React.Component {
                         <Picker.Item label="12 Tháng" value={12} />
                         <Picker.Item label="18 Tháng" value={18} />
                         <Picker.Item label="24 Tháng" value={24} />
-                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={AppLocales.t("GENERAL_ALL")} />
+                        <Picker.Item label={AppLocales.t("GENERAL_ALL")} value={240} />
                     </Picker>
-                    {/* <Picker
-                        mode="dropdown"
-                        iosIcon={<Icon name="arrow-down" style={{fontSize: 16, color: "grey"}}/>}
-                        selectedValue={this.state.durationType}
-                        onValueChange={this.onValueChangeDurationType.bind(this)}
-                        textStyle={{ color: "#1f77b4", fontSize: 14 }}
-                        style={{width: 75}}
-                        >
-                        <Picker.Item label="Tháng" value="month" />
-                        <Picker.Item label="Quý" value="quarter" />
-                        <Picker.Item label="Năm" value="year" />
-                    </Picker> */}
                     <Text style={{fontSize: 13, marginLeft: 10}}>Gần Nhất Đến</Text>
                     <DatePicker
                         defaultDate={new Date()}
@@ -209,6 +276,7 @@ class GasUsageTopReport extends React.Component {
                         colorScale={AppConstants.COLOR_SCALE_10}
                     >
                         <VictoryBar
+                            barWidth={theBarWidth}
                             data={dataTopToDisplay}
                         />
                     </VictoryStack>
@@ -218,6 +286,7 @@ class GasUsageTopReport extends React.Component {
                         //tickFormat={(t,idx) => `${AppUtils.formatDateMonthYearVN(t)}`}
                         tickLabelComponent={<VictoryLabel style={{fontSize: 10}}/>}
                         // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
+                        tickValues={tickXLabels}
                         style={{
                             // grid: {stroke: "rgb(240,240,240)"},
                             ticks: {stroke: "grey", size: 5},

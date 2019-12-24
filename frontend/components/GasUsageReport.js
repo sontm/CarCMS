@@ -230,7 +230,7 @@ class GasUsageReport extends React.Component {
     let count3 = 0;
 
     let teamNotMerge = false;
-    if (this.props.teamData.teamCarList.length > 8) {
+    if (this.props.teamData.teamCarList.length > 10) {
         isMergeData = true;
         teamNotMerge = false;
     } else {
@@ -383,13 +383,27 @@ class GasUsageReport extends React.Component {
                 arrGasMoneyPerKmAllCars.push({x: new Date(prop), y: objGasMoneyPerKmAllCars[""+prop]})
             }
         }
+        arrGasKmAllCars.sort(function(a, b) {
+            let aDate = new Date(a.x);
+            let bDate = new Date(b.x);
+            return aDate - bDate;
+        })
+        arrGasMoneyAllCars.sort(function(a, b) {
+            let aDate = new Date(a.x);
+            let bDate = new Date(b.x);
+            return aDate - bDate;
+        })
+        arrGasMoneyPerKmAllCars.sort(function(a, b) {
+            let aDate = new Date(a.x);
+            let bDate = new Date(b.x);
+            return aDate - bDate;
+        })
         
         avgKmMonthly = sum1/count1;
         avgMoneyMonthly = sum2/count2;
         avgMoneyPerKmMonthly = sum3/count3;
     } 
-    console.log("############### arrGasKmAllCars")
-    console.log(arrGasKmAllCars)
+
     return {arrGasKmAllCars, arrGasMoneyAllCars, arrGasMoneyPerKmAllCars, tickXLabels, theBarWidth, legendLabels, teamNotMerge,
         avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly};
   }
