@@ -249,7 +249,7 @@ class VehicleDetailReport extends React.Component {
                             </View></View>
                             ) : null}
 
-{(this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService )? (
+                            {(this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService )? (
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                             <VictoryPie

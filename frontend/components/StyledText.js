@@ -39,7 +39,7 @@ export function TypoH6(props) {
 
 export function NoDataText(props) {
   return (
-    <View style={styles.containerNoData}>
+    <View style={props.noBg ? styles.containerNoDataNoBg : styles.containerNoData}>
       <Text style={{fontSize: 18, color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
         {props.content ? props.content : AppLocales.t("GENERAL_NODATA")}
       </Text>
@@ -53,7 +53,15 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 0,
+    marginBottom: 20,
+    minHeight: 100
+  },
+  containerNoDataNoBg: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 0,
     marginBottom: 20,
     minHeight: 100
   }

@@ -18,6 +18,7 @@ import AppLocales from '../../constants/i18n'
 
 import {actTeamGetJoinRequestOK} from '../../redux/TeamReducer'
 import { NoDataText } from '../../components/StyledText';
+import apputils from '../../constants/AppUtils';
 
 // navigation is passed from Parent
 class JoinRequestScreen extends React.Component {
@@ -112,18 +113,21 @@ class JoinRequestScreen extends React.Component {
     console.log("JoinRequestScreen Render:")
     return (
         <View style={styles.container}>
+
+          {this.props.teamData.joinRequests.length > 0 ?
           <View style={styles.textRow}>
             <H3>{AppLocales.t("TEAM_MEM_JOIN_REQUEST")}</H3>
-          </View>
+          </View> : null }
+
           {this.props.teamData.joinRequests.length > 0 ? this.props.teamData.joinRequests.map(item => (
               <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                  <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                  <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", flex: 1}}>
                   </Left>
-                  <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                  <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", flex: 2}}>
                     <Text style={{fontSize: 16, fontWeight: "bold", marginTop: 5}}>{item.fullName}</Text>
                     <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
                   </Body>
-                  <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center"}}>
+                  <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center", flex: 1}}>
                       <TouchableOpacity 
                             onPress={() => this.handleJoin(item, "approved")}>
                           <View style={{alignItems: "center"}}>
@@ -149,21 +153,24 @@ class JoinRequestScreen extends React.Component {
                   </Right>
               </ListItem>
           )) : (
-            <NoDataText />
+            null
           )}
 
           <View style={styles.textRow}>
             <H3>{AppLocales.t("TEAM_MEM_LIST")}</H3>
           </View>
-          {this.props.teamData.members.length > 0 ? this.props.teamData.members.map(item => (
+          {this.props.teamData.members.length > 0 ? this.props.teamData.members.map((item, idx) => (
             <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", width: 0}}>
+                <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", width: 54, marginLeft: 10}}>
+                  <View style={{...styles.avatarView, marginLeft: 0, backgroundColor: apputils.getColorForIndex(idx)}}>
+                    <Text style={{color: "white"}}>{apputils.getFirstCharacterInname(item.fullName)}</Text>
+                  </View>
                 </Left>
-                <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", marginLeft: -7}}>
+                <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", marginLeft: -5}}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate("MemberVehicles", {member: item})} key={item.id}>
-                    <Text style={{fontSize: 16, fontWeight: "bold", marginTop: 5}}>{item.fullName}</Text>
+                    <Text style={{fontSize: 16, marginTop: 5}}>{item.fullName}</Text>
                     <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
-                    <Text style={{fontSize: 13, fontStyle: "italic", marginTop: 3, marginBottom: 5}}>
+                    <Text style={{fontSize: 13, fontStyle: "italic", marginTop: 3, marginBottom: 5, color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
                       {AppLocales.t("TEAM_MEM_TOTALCAR") + ": " + item.vehicleList.length}
                     </Text>
                     </TouchableOpacity>
@@ -209,13 +216,14 @@ const styles = StyleSheet.create({
 
   listItemRow: {
     height: 70,
-    marginLeft: 7,
-    marginRight: 7,
+    marginLeft: 0,
+    marginRight: 0,
     marginTop: 5,
     backgroundColor:"white",
-    borderRadius: 3,
-    borderColor: "rgb(220, 220, 220)",
-    borderWidth: 0.7,
+    borderRadius: 0,
+    //borderColor: "rgb(220, 220, 220)",
+    borderColor: "rgba(0,0,0,0)",
+    borderWidth: 0.3,
     shadowColor: "#777777",
     shadowOpacity: 0.4,
     shadowRadius: 2,
@@ -239,6 +247,13 @@ const styles = StyleSheet.create({
   listItemBlockIcon2: {
     color: AppConstants.COLOR_GOOGLE,
     fontSize: 24
+  },
+
+  avatarView: {
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 

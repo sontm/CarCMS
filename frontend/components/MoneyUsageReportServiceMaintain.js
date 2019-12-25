@@ -161,7 +161,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                             height={35*Math.ceil(legendLabels.length/2)}
                         >
                         <VictoryLegend standalone={false}
-                            x={15} y={5}
+                            x={5} y={5}
                             itemsPerRow={2}
                             colorScale={AppConstants.COLOR_SCALE_10}
                             orientation="horizontal"

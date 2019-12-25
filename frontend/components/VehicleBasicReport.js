@@ -79,6 +79,7 @@ class VehicleBasicReport extends Component {
     // props: isMyVehicle: is display my vehicle, can Edit/Delete
     render() {
         // console.log("VehicleReport Render")
+    
         if (this.props.vehicle) {
             var currentVehicle = this.props.vehicle;
         } else {
@@ -165,7 +166,7 @@ class VehicleBasicReport extends Component {
                         ) : null}
                     </View>
 
-                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="oil") && currentData && currentData.maintainRemind) ? (
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="service") && currentData && currentData.maintainRemind) ? (
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
                         <ProgressViewIOS 
@@ -179,15 +180,18 @@ class VehicleBasicReport extends Component {
                             />
                         ) : (
                         <ProgressBarAndroid
+                            style={styles.progressBarRemind}
+                            color={AppConstants.COLOR_HEADER_BG}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.maintainRemind.passedKmFromPreviousMaintain? 
-                                currentData.maintainRemind.passedKmFromPreviousMaintain/
-                                currentData.maintainRemind.lastMaintainKmValidFor : 0}
+                                ((currentData.maintainRemind.passedKmFromPreviousMaintain>0 ? currentData.maintainRemind.passedKmFromPreviousMaintain : 0)
+                                /
+                                currentData.maintainRemind.lastMaintainKmValidFor) : 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                            {currentData.maintainRemind.passedKmFromPreviousMaintain}/
+                            {currentData.maintainRemind.passedKmFromPreviousMaintain>0?currentData.maintainRemind.passedKmFromPreviousMaintain:0}/
                             {currentData.maintainRemind.lastMaintainKmValidFor} Km
                             ({AppLocales.t("GENERAL_SERVICE")})
                         </Text>
@@ -212,6 +216,8 @@ class VehicleBasicReport extends Component {
                             />
                         ) : (
                         <ProgressBarAndroid
+                            style={styles.progressBarRemind}
+                            color={AppConstants.COLOR_HEADER_BG}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.authReport.diffDayFromLastAuthorize ?
@@ -226,7 +232,7 @@ class VehicleBasicReport extends Component {
                     </View>
                     ): null }
 
-                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="auth") && 
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="insurance") && 
                             currentData) ? (
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
@@ -244,6 +250,8 @@ class VehicleBasicReport extends Component {
                             />
                         ) : (
                         <ProgressBarAndroid
+                            style={styles.progressBarRemind}
+                            color={AppConstants.COLOR_HEADER_BG}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.authReport.diffDayFromLastAuthorizeInsurance ?
@@ -258,7 +266,7 @@ class VehicleBasicReport extends Component {
                     </View>
                     ): null }
 
-                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="auth") && 
+                    {((this.props.requestDisplay=="all"||this.props.requestDisplay=="roadfee") &&  //roadfee
                             currentData) ? (
                     <View style={styles.statRowRemind}>
                         {Platform.OS === 'ios' ? (
@@ -276,6 +284,8 @@ class VehicleBasicReport extends Component {
                             />
                         ) : (
                         <ProgressBarAndroid
+                            style={styles.progressBarRemind}
+                            color={AppConstants.COLOR_HEADER_BG}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.authReport.diffDayFromLastAuthorizeRoadFee ?
@@ -297,12 +307,10 @@ class VehicleBasicReport extends Component {
                             <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
                                     {currentData.gasReport.avgKmMonthly ? 
-                                        currentData.gasReport.avgKmMonthly.toFixed(1) : ""}
+                                        currentData.gasReport.avgKmMonthly.toFixed(1) : "--"}
                                 </Text>
-                                <Text style={styles.infoCardText}>{" Km/Tháng "}</Text>
-                                {this.props.isTeamDisplay? (
-                                    <Text style={styles.infoCardText}>{"("+AppLocales.t("TEAM_VEHICLE_SORT_KM_DETAIL")+")"}</Text>
-                                ): null}
+                                <Text style={styles.infoCardText}>{"Km/Tháng"}</Text>
+                                <Text style={styles.infoCardText}>{"(Di chuyển)"}</Text>
                             </Body>
                         </View>
                         ): null }
@@ -313,12 +321,10 @@ class VehicleBasicReport extends Component {
                             <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
                                     {currentData.gasReport.avgMoneyPerKmMonthly ? 
-                                    (currentData.gasReport.avgMoneyPerKmMonthly).toFixed(0): ""}
+                                    AppUtils.formatMoneyToK((currentData.gasReport.avgMoneyPerKmMonthly).toFixed(0)): "--"}
                                 </Text>
-                                <Text style={styles.infoCardText}>{" đ/Km Xăng"}</Text>
-                                {this.props.isTeamDisplay? (
-                                    <Text style={styles.infoCardText}>{"("+AppLocales.t("TEAM_VEHICLE_SORT_GAS_EFF_DETAIL")+")"}</Text>
-                                ): null}
+                                <Text style={styles.infoCardText}>{"đ/Km"}</Text>
+                                <Text style={styles.infoCardText}>{"(Hiệu suất Xăng)"}</Text>
                             </Body>
                         </View>
                         ): null }
@@ -329,12 +335,10 @@ class VehicleBasicReport extends Component {
                             <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
                                     {currentData.moneyReport.totalMoneySpend ? 
-                                    (currentData.moneyReport.totalMoneySpend/AppConstants.DEFAULT_REPORT_RANGE).toFixed(0) : ""}
+                                    AppUtils.formatMoneyToK((currentData.moneyReport.totalMoneySpend).toFixed(0)) : "--"}
                                 </Text>
-                                <Text style={styles.infoCardText}>{" đ/Tháng "}</Text>
-                                {this.props.isTeamDisplay? (
-                                    <Text style={styles.infoCardText}>{"("+AppLocales.t("TEAM_VEHICLE_SORT_MONEYTOTAL_DETAIL")+")"}</Text>
-                                ): null}
+                                <Text style={styles.infoCardText}>{"đ"}</Text>
+                                <Text style={styles.infoCardText}>{"(Tổng Chi Tiêu)"}</Text>
                             </Body>
                         </View>
                         ): null }
@@ -440,8 +444,8 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     progressBarRemind: {
-        transform: [{ scaleX: 1.0 }, { scaleY: 2.5 }],
-        width: "40%",
+        transform: [{ scaleX: 1.0 }, { scaleY: 1.5 }],
+        width: "30%",
         alignSelf: "center"
     },
     textRemind: {
@@ -464,7 +468,8 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     infoCardText: {
-        fontSize: 14
+        color: AppConstants.COLOR_TEXT_LIGHT_INFO,
+        fontSize: 12
     },
     horizontalCard: {
         flexDirection: "row",

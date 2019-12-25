@@ -102,6 +102,23 @@ class AppUtils {
             return v.toString(16);
         });
     }
+    getColorForIndex(idx) {
+        let valueOffset = idx % 10;
+        return AppConstants.COLOR_SCALE_10[valueOffset];
+
+    }
+
+    // example, Le Van Nam; return LVN
+    getFirstCharacterInname(name) {
+        // Remove Redundatn Spaces
+        let newName = name.replace(/\s+/g, ' ');
+        let nameArr = newName.split(" ");
+        let result= "";
+        nameArr.forEach(item => {
+            result += item[0].toUpperCase();
+        })
+        return result;
+    }
     // Co Dau thanh Khong Dau
     changeVietnameseToNonSymbol(alias) {
         var str = alias;

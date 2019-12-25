@@ -37,7 +37,9 @@ import { NoDataText, WhiteText } from '../components/StyledText';
 
 function getNameOfSortType(type) {
   if (type == "auth") return AppLocales.t("TEAM_VEHICLE_SORT_AUTH");
-  if (type == "service") return AppLocales.t("TEAM_VEHICLE_SORT_OIL");
+  if (type == "insurance") return AppLocales.t("TEAM_VEHICLE_SORT_INSURANCE");
+  if (type == "roadfee") return AppLocales.t("TEAM_VEHICLE_SORT_ROADFEE");
+  if (type == "service") return AppLocales.t("TEAM_VEHICLE_SORT_SERVICE");
   if (type == "km") return AppLocales.t("TEAM_VEHICLE_SORT_KM");
   if (type == "gasEffective") return AppLocales.t("TEAM_VEHICLE_SORT_GAS_EFF");
   if (type == "moneyTotal") return AppLocales.t("TEAM_VEHICLE_SORT_MONEYTOTAL");
@@ -147,6 +149,7 @@ class TeamScreen extends React.Component {
     //this.fetchTeamData()
   }
   renderComponent = () => {
+    console.log(Layout.window.width)
     if(this.state.activePage === 0) {
       console.log("this.state.activePage 0 Car Listssssssssss")
       let allVehicles = [];
@@ -174,6 +177,7 @@ class TeamScreen extends React.Component {
       viewDisplay.push(
         <View style={styles.sortContainer} key="sorting">
           <Text style={{fontSize: 12, margin: 0, marginRight: -2}}>Sắp Xếp:</Text>
+          <View style={{flexDirection:"row", width: 180}}>
           <Picker
             mode="dropdown"
             iosIcon={<Icon type="FontAwesome5" name="caret-down" style={{fontSize: 14, color: "grey"}}/>}
@@ -182,14 +186,18 @@ class TeamScreen extends React.Component {
             textStyle={{ color: AppConstants.COLOR_PICKER_TEXT, fontSize: 15}}
           >
             <Picker.Item label={getNameOfSortType("auth")} value="auth" />
+            <Picker.Item label={getNameOfSortType("insurance")} value="insurance" />
+            <Picker.Item label={getNameOfSortType("roadfee")} value="roadfee" />
             <Picker.Item label={getNameOfSortType("service")} value="service" />
             <Picker.Item label={getNameOfSortType("km")} value="km" />
             <Picker.Item label={getNameOfSortType("gasEffective")} value="gasEffective" />
             <Picker.Item label={getNameOfSortType("moneyTotal")} value="moneyTotal" />
           </Picker>
+          </View>
 
-          <Text style={{fontSize: 12, margin: 0, marginRight: -2}}>Giảm Dần</Text>
-          <CheckBox checked={this.state.sortAscending==true} onPress={() => this.setState({sortAscending: !this.state.sortAscending})} />
+          <CheckBox checked={this.state.sortAscending==true} style={{marginLeft: -10}}
+            onPress={() => this.setState({sortAscending: !this.state.sortAscending})} />
+          <Text style={{fontSize: 12, margin: 0, marginLeft: 11}} onPress={() => this.setState({sortAscending: !this.state.sortAscending})}>Giảm Dần</Text>
           {/* <Segment small>
               <Button small first onPress={() => this.setState({sortAscending: true})}
                   style={this.state.sortAscending ? styles.activeSegment2 : styles.inActiveSegment2}>
@@ -217,9 +225,15 @@ class TeamScreen extends React.Component {
         if (this.state.sortType == "auth") {
           return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorize - 
             this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorize
+        } else  if (this.state.sortType == "insurance") {
+          return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorizeInsurance - 
+            this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorizeInsurance
+        } else if (this.state.sortType == "roadfee") {
+          return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorizeRoadFee - 
+            this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorizeRoadFee
         } else if (this.state.sortType == "service") {
           if (this.props.teamData.teamCarReports[bId].maintainRemind) {
-          return this.props.teamData.teamCarReports[bId].maintainRemind.passedKmFromPreviousMaintain - 
+            return this.props.teamData.teamCarReports[bId].maintainRemind.passedKmFromPreviousMaintain - 
             this.props.teamData.teamCarReports[aId].maintainRemind.passedKmFromPreviousMaintain
           } else {
             return true;
@@ -412,6 +426,9 @@ class TeamScreen extends React.Component {
                 AppLocales.t("GENERAL_STATUS") + ": " + 
                 AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
               </Text>
+              <Text style={{fontSize: 13, color: AppConstants.COLOR_TEXT_DARKDER_INFO, fontStyle: "italic", flexWrap: "wrap", textAlign: "justify"}}>{
+                "(Hãy Gia Nhập Nhóm giúp quản lý dữ liệu theo từng thành viên)"
+              }</Text>
 
               <Button rounded onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})} 
                   style={{width: "80%", marginTop: 20, justifyContent: "center", alignSelf: "center", backgroundColor: AppConstants.COLOR_BUTTON_BG,}}>
@@ -538,8 +555,8 @@ const styles = StyleSheet.create({
   },
   modalDialog: {
     marginTop: Layout.window.height / 2 - 100,
-    marginLeft: Layout.window.width * 0.05,
-    width: Layout.window.width * 0.9
+    marginLeft: Layout.window.width * 0.12,
+    width: Layout.window.width * 0.76
   },
 });
 

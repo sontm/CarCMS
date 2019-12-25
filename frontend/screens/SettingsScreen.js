@@ -909,8 +909,8 @@ const styles = StyleSheet.create({
 
   modalDialog: {
     marginTop: Layout.window.height / 2 - 100,
-    marginLeft: Layout.window.width * 0.05,
-    width: Layout.window.width * 0.9
+    marginLeft: Layout.window.width * 0.12,
+    width: Layout.window.width * 0.76
   },
 })
 

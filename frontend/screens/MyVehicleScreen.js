@@ -144,6 +144,13 @@ class MyVehicleScreen extends React.Component {
           </Tabs>
       )
     } else {
+      if (this.props.userData.vehicleList.length==1) {
+        var isNoFillItem = false;
+        let theCar = this.props.userData.vehicleList[0];
+        if (theCar.fillGasList.length==0 && theCar.authorizeCarList.length==0&& theCar.expenseList.length==0&& theCar.serviceList.length==0) {
+          isNoFillItem = true;
+        }
+      }
       var viewPage0 = (
         <Content>
           <View style={styles.container}>
@@ -157,7 +164,7 @@ class MyVehicleScreen extends React.Component {
                     navigation={this.props.navigation} {...this.state} requestDisplay={"all"} isTeamDisplay={false} isMyVehicle={true}
                   />
                 ))
-               ) : <NoDataText />}
+               ) : <NoDataText noBg={true}/>}
 
             </ScrollView>
           </View>
@@ -190,6 +197,22 @@ class MyVehicleScreen extends React.Component {
         ): (
           viewPage0
         ) }
+        {isNoFillItem ?
+        <View style={styles.blurViewBot}></View> : null }
+        {isNoFillItem ? (
+            <View style={styles.guideViewAddNewCar}>
+              <View style={{flexDirection: "row",alignItems: "center",justifyContent: "center", flexWrap: "wrap"}}>
+                <Text>Hãy nhấn </Text>
+                <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: 2, marginLeft: 3, marginRight: 3, 
+                    color: AppConstants.COLOR_HEADER_BG_LIGHT}}/>
+                <Text> để thêm dữ liệu Xăng, Chi Tiêu, Bảo Dưỡng..,</Text>
+              </View>
+
+              <Icon type="Entypo" name="arrow-down" 
+                  style={{color: AppConstants.COLOR_GREY_MIDDLE, fontSize: 25, width: 25}} />
+
+            </View>
+          ) : null}
       </Container>
     );
   }
@@ -202,7 +225,8 @@ MyVehicleScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    minHeight: Layout.window.height
   },
   contentContainer: {
   },
@@ -264,6 +288,27 @@ const styles = StyleSheet.create({
       color: "white",
       //color: "black",
       fontSize: 12
+  },
+
+  blurViewBot: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(80, 80, 80, 0.6)",
+    height: 150
+  },
+  guideViewAddNewCar: {
+    alignItems: "center",
+    alignSelf: "center",
+    position: 'absolute',
+    justifyContent: "center",
+    bottom: 20,
+    left: 0,
+    right: 0,
+    backgroundColor: "white",
+    paddingTop: 10,
+    paddingBottom: 10
   },
 });
 

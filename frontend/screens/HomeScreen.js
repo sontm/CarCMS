@@ -272,13 +272,32 @@ class HomeScreen extends React.Component {
               ) : null}
             </View>
 
+            {(this.props.userData.vehicleList && this.props.userData.vehicleList.length >0) ?
+            <View>
             <ReminderReport/>
-
             <HomeMoneyUsageByTime isTotalReport={true} />
             <HomeMoneyUsageByTimeTeam isTotalReport={true} />
+            </View>
+            : null }
 
           </ScrollView>
         </Content>
+
+        {(!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
+        <View style={styles.blurViewTop}></View> : null }
+        {(!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
+        <View style={styles.guideViewAddNewCar}>
+          <View style={{flexDirection: "row",alignItems: "center",justifyContent: "center",}}>
+            <Text>{"    "}Để bắt đầu, nhấn </Text>
+            <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: 2, marginLeft: 3, marginRight: 3, 
+                color: AppConstants.COLOR_HEADER_BG_LIGHT}}/>
+            <Text> và chọn "Thêm Xe" </Text>
+          </View>
+
+          <Icon type="Entypo" name="arrow-down" 
+              style={{color: AppConstants.COLOR_GREY_MIDDLE, fontSize: 25, width: 25}} />
+
+        </View> : null }
       </Container>
     );
   }
@@ -291,10 +310,11 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    minHeight: Layout.window.height - 100
   },
   contentContainer: {
-
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
   },
   gapRow: {
     backgroundColor: AppConstants.COLOR_HEADER_BG,
@@ -412,6 +432,28 @@ const styles = StyleSheet.create({
     position:"relative",
     top: -1,
     fontSize: 12,
+  },
+
+  blurViewTop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "rgba(80, 80, 80, 0.6)",
+    height: Layout.window.height - 40
+  },
+
+  guideViewAddNewCar: {
+    alignItems: "center",
+    alignSelf: "center",
+    position: 'absolute',
+    justifyContent: "center",
+    bottom: 20,
+    left: 0,
+    right: 0,
+    backgroundColor: "white",
+    paddingTop: 10,
+    paddingBottom: 10
   },
 });
 
