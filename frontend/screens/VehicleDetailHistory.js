@@ -54,6 +54,7 @@ class VehicleDetailHistory extends React.Component {
   handleEditItem(id, type) {
     if (this.props.navigation.state.params.isMyVehicle) {
         AppConstants.CURRENT_EDIT_FILL_ID = id;
+        AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
         if (type == AppConstants.FILL_ITEM_GAS) {
             this.props.navigation.navigate("FillGas");
         } else if (type == AppConstants.FILL_ITEM_OIL) {

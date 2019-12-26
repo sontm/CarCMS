@@ -1,8 +1,12 @@
 import dbnotification from "../database/models/dbnotification";
+import dbcustomervoice from "../database/models/dbcustomervoice";
 import dbuser from "../database/models/dbuser";
 import dbpwdrecovery from "../database/models/dbpwdrecovery";
 import apputil from "../components/AppUtil";
 import { date } from "joi";
+require('dotenv').config()
+const AWS = require('aws-sdk');
+const ses = new AWS.SES()
 
 var mailer = require("nodemailer");
 var xoauth2 = require('xoauth2');
@@ -295,7 +299,7 @@ module.exports = {
     } catch (error) {
       console.log("Create Notificatioiin MSG error")
       console.log(error)
-      res.status(200).send(newNotification)
+      res.status(500).send({msg: "Internal error"})
     }
   },
 
@@ -367,7 +371,46 @@ module.exports = {
       } else {
           console.log("    Get All Notification OK")
           // object of all the users
-          console.log(result);
+          res.status(200).send(result)
+      }
+    });
+  },
+
+
+
+  async addNewCustomerVoice(req, res) {
+    console.log("App addNewCustomerVoice")
+    console.log(req.body)
+    //if (req.user) {
+    try {
+      var item = new dbcustomervoice({
+        ...req.body,
+        status:"new",
+        receiveDate: new Date()
+      });
+
+      let newRecord = await new Promise((resolve, reject) => {
+        item.save(function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      res.status(200).send({msg: "OK"})
+    } catch (error) {
+      console.log("Create addNewCustomerVoice MSG error")
+      console.log(error)
+      res.status(500).send({msg: "Internal Error"})
+    }
+  },
+  getAllCustomerVoice(req, res) {
+    console.log("App getAllCustomerVoice")
+    dbcustomervoice.find({}, function(err, result) {
+      if (err) {
+          console.log("    getAllCustomerVoice Error")
+          console.log(err);
+          res.status(500).send(err)
+      } else {
+          console.log("    getAllCustomerVoice OK")
+          // object of all the users
           res.status(200).send(result)
       }
     });
@@ -449,62 +492,7 @@ module.exports = {
   }
   },
 
-  sendEmailForgotPassword(req, res) {
-    // Use Smtp Protocol to send Email
-    //var smtpTransport = mailer.createTransport("SMTP",{
-    // var smtpTransport1 = mailer.createTransport({
-    //   // service: "Gmail",
-    //   host: 'smtp.gmail.com',
-    //   port: 465,
-    //   secure: true, // use SS
-    //   auth: {
-    //       user: "son.tranminh.vn@gmail.com",
-    //       pass: "xxx"
-    //   }
-    // });
-    // var smtpTransport = mailer.createTransport({
-    //   service: 'Gmail',
-    //   auth: {
-    //     xoauth2: xoauth2.createXOAuth2Generator({
-    //         user: 'son.tranminh.vn@gmail.com',
-    //         clientId: '-' ,
-    //         clientSecret: '-' ,
-    //         refreshToken: '-'
-    //     })
-    //    }
-    // });
-    var outlookSMTP = mailer.createTransport({
-      host: "smtp-mail.outlook.com", // hostname
-      secureConnection: false, // TLS requires secureConnection to be false
-      port: 587, // port for secure SMTP
-      auth: {
-          user: "sansanjav@hotmail.com",
-          pass: "XXX"
-      },
-      tls: {
-          ciphers:'SSLv3'
-      }
-    });
-
-    var mail = {
-        from: "QuanLyXe",
-        //from: '"Our Code World " <mymail@outlook.com>',
-        to: "sontm.uet.vnu@gmail.com",
-        subject: "Send Email Using Node.js",
-        text: "Node.js New world for me",
-        html: "<b>Node.js New world for me</b>"
-    }
-
-    outlookSMTP.sendMail(mail, function(error, response){
-        if(error){
-            console.log(error);
-            res.status(500).send(error)
-        }else{
-            console.log("Message sent: " + response.message);
-            res.status(200).send("OK")
-        }
-
-        outlookSMTP.close();
-    });
-  }
+  async sendEmailWithSES(req, res) {
+    
+  },
 };

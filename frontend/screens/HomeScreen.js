@@ -25,7 +25,7 @@ import HomeMoneyUsageByTime from '../components/HomeMoneyUsageByTime'
 import HomeMoneyUsageByTimeTeam from '../components/HomeMoneyUsageByTimeTeam'
 import ReminderReport from '../components/ReminderReport'
 
-import {actVehicleDeleteVehicle, actVehicleAddVehicle, actUserGetNotifications} from '../redux/UserReducer'
+import {actVehicleDeleteVehicle, actVehicleAddVehicle, actUserGetNotifications, actUserSyncPartlyOK} from '../redux/UserReducer'
 import {actTempCalculateCarReport} from '../redux/UserReducer'
 
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
@@ -66,12 +66,29 @@ class HomeScreen extends React.Component {
     //this.clearAsyncStorage()
   }
   clearAsyncStorage = async() => {
-    AsyncStorage.clear();
+    //AsyncStorage.clear();
   }
 
   componentDidUpdate() {
     console.log("HOMESCreen DIDUpdate")
-    // Check Notification Count
+    // Sync Some Data to Server if Edit Count >=3
+    if (this.props.userData.isLogined) {
+      // Try to Sync with Any New Data
+      if (this.props.userData.modifiedInfo && this.props.userData.modifiedInfo.changedItemCount > 0) {
+        if (this.props.appData.countOpen < 10) {
+          // SYnc every 3 time
+          if (this.props.userData.modifiedInfo.changedItemCount >= 3) {
+            // RUn method after 7s so that Newest Data is Re-Updated
+            setTimeout(() => AppUtils.syncDataPartlyToServer(this.props), 7000)
+            //AppUtils.syncDataPartlyToServer(this.props)
+          }
+        } else {
+          // sync every 1 time
+          setTimeout(() => AppUtils.syncDataPartlyToServer(this.props), 7000)
+          //AppUtils.syncDataPartlyToServer(this.props)
+        }
+      }
+    }
 
   }
   componentWillReceiveProps(nextProps) {
@@ -272,7 +289,8 @@ class HomeScreen extends React.Component {
               ) : null}
             </View>
 
-            {(this.props.userData.vehicleList && this.props.userData.vehicleList.length >0) ?
+            {this.props.userData.modifiedInfo.countOpen > 10 || 
+              (this.props.userData.vehicleList && this.props.userData.vehicleList.length >0) ?
             <View>
             <ReminderReport/>
             <HomeMoneyUsageByTime isTotalReport={true} />
@@ -283,9 +301,9 @@ class HomeScreen extends React.Component {
           </ScrollView>
         </Content>
 
-        {(!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
+        {this.props.userData.modifiedInfo.countOpen < 10 && (!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
         <View style={styles.blurViewTop}></View> : null }
-        {(!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
+        {this.props.userData.modifiedInfo.countOpen < 10 && (!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
         <View style={styles.guideViewAddNewCar}>
           <View style={{flexDirection: "row",alignItems: "center",justifyContent: "center",}}>
             <Text>{"    "}Để bắt đầu, nhấn </Text>
@@ -459,11 +477,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   userData: state.userData,
-  teamData: state.teamData
+  teamData: state.teamData,
+  appData: state.appData
 });
 const mapActionsToProps = {
   actVehicleDeleteVehicle, actVehicleAddVehicle,
-  actTempCalculateCarReport, actUserGetNotifications
+  actTempCalculateCarReport, actUserGetNotifications,
+  actUserSyncPartlyOK
 };
 
 export default connect(

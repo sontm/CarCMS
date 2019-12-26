@@ -38,6 +38,8 @@ const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 const USER_LEAVE_TEAM_OK = 'USER_LEAVE_TEAM_OK';
 
+const USER_SYNC_PARTLY_OK = 'USER_SYNC_PARTLY_OK';
+
 const USER_SET_MAX_METER = 'USER_SET_MAX_METER';
 const USER_GET_APPNOTIFICATION = 'USER_GET_APPNOTIFICATION';
 const USER_SAW_ALL_APPNOTIFICATION = 'USER_SAW_ALL_APPNOTIFICATION';
@@ -86,12 +88,13 @@ const initialState = {
     defaultVehicleId: "",
 
 
+    carReports:{}, // {vehicleid: {gasReport,authReport,moneyReport,maintainRemind, scheduledNotification}}
+
     // Below will Sync
     vehicleList:[],//fillGasList:[],fillOilList:[],authorizeCarList:[],expenseList:[],serviceList:[]/
                     // Each item: maxMeter ...
                     // "id":"isDefault": false,"licensePlate","model": "CRV","ownerFullName", userId":, maxMeter
-    carReports:{}, // {vehicleid: {gasReport,authReport,moneyReport,maintainRemind, scheduledNotification}}
-
+    
     // Below will Sync
     customServiceModules: [],
     // Below will Sync
@@ -110,6 +113,13 @@ const initialState = {
     countNotSeenNoti: 0,
 
     modalState: 0, // 1: syncPrivate, 2: syncTeam, 0: close. ++ when start each sync, -- when done each
+
+    // Object of store information to server
+    // if vehicleIds.lengt > 0, mean only update in some information
+    // changedAllVehicles true mean All need update all Vehicles, 
+    // changedSetting/changedCustom true mean setting/custom service need update
+    // changedItemCount mean number of item changed
+    modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
 
     lastSyncFromServerOn: null, // date of last sync
     lastSyncToServerOn: null,
@@ -627,6 +637,13 @@ export const actUserGotMyJoinRequest = (data) => (dispatch) => {
 }
 
 
+export const actUserSyncPartlyOK = () => (dispatch) => {
+    console.log("  actUserSyncPartlyOK" )
+    dispatch({
+        type: USER_SYNC_PARTLY_OK,
+    })
+}
+
 function checkNameExistInServiceModule(arr, value) {
     if (arr && arr.length > 0) {
         for (let i = 0; i < arr.length; i++) {
@@ -672,6 +689,8 @@ export default function(state = initialState, action) {
             token: action.payload.token,
             teamInfo: action.payload.teamInfo,
             myJoinRequest: {},
+
+            modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
             isLogined: true
         };
     case USER_LOGOUT:
@@ -689,6 +708,8 @@ export default function(state = initialState, action) {
             notifications: [],
             myJoinRequest: {},
             countNotSeenNoti: 0,
+
+            modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
 
             lastSyncFromServerOn: null, // date of last sync
             lastSyncToServerOn: null,
@@ -731,6 +752,9 @@ export default function(state = initialState, action) {
             countNotSeenNoti: 0,
 
             teamInfo: action.payload.teamInfo,
+
+            modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
+
             //carReports: {},// this will be updated during Caluclation,because some may not need to Re-calculate
             lastSyncFromServerOn: new Date()
         }
@@ -763,6 +787,13 @@ export default function(state = initialState, action) {
                 }
             } 
         }
+
+        // All Vehicles should be Updated 
+        newStateVehicleAdd.modifiedInfo= {
+            ...newStateVehicleAdd.modifiedInfo,
+            changedAllVehicles: true,
+            changedItemCount: newStateVehicleAdd.modifiedInfo.changedItemCount+1
+        }
         return newStateVehicleAdd;
     case VEHICLE_EDIT:
         let newStateVehicle = {...state}
@@ -781,6 +812,20 @@ export default function(state = initialState, action) {
                 }
             } 
         }
+
+        // Information to Sync should be only this vehicle
+        // All Vehicles should be Updated 
+        let oldIds = newStateVehicle.modifiedInfo.vehicleIds;
+        if (oldIds.indexOf(action.payload.id) < 0){
+            oldIds.push(action.payload.id)
+        }
+
+        newStateVehicle.modifiedInfo= {
+            ...newStateVehicle.modifiedInfo,
+            vehicleIds: oldIds,
+            changedItemCount: newStateVehicle.modifiedInfo.changedItemCount+1
+        }
+
         return newStateVehicle;
     case VEHICLE_DEL:
         // Remove element from array
@@ -795,6 +840,13 @@ export default function(state = initialState, action) {
         // Remove from carReports
         if (newState.carReports[""+action.payload.id]) {
             delete newState.carReports[""+action.payload.id];
+        }
+
+        // All Vehicles should be Updated 
+        newState.modifiedInfo= {
+            ...newState.modifiedInfo,
+            changedAllVehicles: true,
+            changedItemCount: newState.modifiedInfo.changedItemCount+1
         }
 
         return newState;
@@ -818,6 +870,19 @@ export default function(state = initialState, action) {
                 break;
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsGas = newStateAddGas.modifiedInfo.vehicleIds;
+        if (oldIdsGas.indexOf(action.payload.vehicleId) < 0){
+            oldIdsGas.push(action.payload.vehicleId)
+        }
+
+        newStateAddGas.modifiedInfo= {
+            ...newStateAddGas.modifiedInfo,
+            vehicleIds: oldIdsGas,
+            changedItemCount: newStateAddGas.modifiedInfo.changedItemCount+1
+        }
+
         return newStateAddGas;
         
     case VEHICLE_FILL_OIL_ADD:
@@ -838,6 +903,19 @@ export default function(state = initialState, action) {
                 break;
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsOil = newStateAddOil.modifiedInfo.vehicleIds;
+        if (oldIdsOil.indexOf(action.payload.vehicleId) < 0){
+            oldIdsOil.push(action.payload.vehicleId)
+        }
+
+        newStateAddOil.modifiedInfo= {
+            ...newStateAddOil.modifiedInfo,
+            vehicleIds: oldIdsOil,
+            changedItemCount: newStateAddOil.modifiedInfo.changedItemCount+1
+        }
+        
         return newStateAddOil;
 
     case VEHICLE_CAR_AUTH_ADD:
@@ -858,6 +936,20 @@ export default function(state = initialState, action) {
                 break;
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsAuth = newStateAddAuth.modifiedInfo.vehicleIds;
+        if (oldIdsAuth.indexOf(action.payload.vehicleId) < 0){
+            oldIdsAuth.push(action.payload.vehicleId)
+        }
+        
+
+        newStateAddAuth.modifiedInfo= {
+            ...newStateAddAuth.modifiedInfo,
+            vehicleIds: oldIdsAuth,
+            changedItemCount: newStateAddAuth.modifiedInfo.changedItemCount+1
+        }
+
         return newStateAddAuth;
     case VEHICLE_EXPENSE_ADD:
         // add to Vehicle 
@@ -876,6 +968,19 @@ export default function(state = initialState, action) {
                 break;
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsExp = newStateAddExpense.modifiedInfo.vehicleIds;
+        if (oldIdsExp.indexOf(action.payload.vehicleId) < 0){
+            oldIdsExp.push(action.payload.vehicleId)
+        }
+
+        newStateAddExpense.modifiedInfo= {
+            ...newStateAddExpense.modifiedInfo,
+            vehicleIds: oldIdsExp,
+            changedItemCount: newStateAddExpense.modifiedInfo.changedItemCount+1
+        }
+
         return newStateAddExpense;
     case VEHICLE_SERVICE_ADD:
         // add to Vehicle 
@@ -895,6 +1000,19 @@ export default function(state = initialState, action) {
                 break;
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsService = newStateAddService.modifiedInfo.vehicleIds;
+        if (oldIdsService.indexOf(action.payload.vehicleId) < 0){
+            oldIdsService.push(action.payload.vehicleId)
+        }
+
+        newStateAddService.modifiedInfo= {
+            ...newStateAddService.modifiedInfo,
+            vehicleIds: oldIdsService,
+            changedItemCount: newStateAddService.modifiedInfo.changedItemCount+1
+        }
+
         return newStateAddService;
 
     case VEHICLE_FILL_GAS_DEL:
@@ -909,6 +1027,18 @@ export default function(state = initialState, action) {
                 }
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsGasDel = delState1.modifiedInfo.vehicleIds;
+        if (oldIdsGasDel.indexOf(action.payload.vehicleId) < 0){
+            oldIdsGasDel.push(action.payload.vehicleId)
+        }
+        delState1.modifiedInfo= {
+            ...delState1.modifiedInfo,
+            vehicleIds: oldIdsGasDel,
+            changedItemCount: delState1.modifiedInfo.changedItemCount+1
+        }
+
         return delState1;
 
     case VEHICLE_FILL_OIL_DEL:
@@ -923,6 +1053,17 @@ export default function(state = initialState, action) {
                 }
             }
         }
+        // Information to Sync should be only this vehicle
+        let oldIdsOilDel = delState2.modifiedInfo.vehicleIds;
+        if (oldIdsOilDel.indexOf(action.payload.vehicleId) < 0){
+            oldIdsOilDel.push(action.payload.vehicleId)
+        }
+        delState2.modifiedInfo= {
+            ...delState2.modifiedInfo,
+            vehicleIds: oldIdsOilDel,
+            changedItemCount: delState2.modifiedInfo.changedItemCount+1
+        }
+
         return delState2;
 
     case VEHICLE_CAR_AUTH_DEL:
@@ -937,6 +1078,18 @@ export default function(state = initialState, action) {
                 }
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsAuthDel = delState3.modifiedInfo.vehicleIds;
+        if (oldIdsAuthDel.indexOf(action.payload.vehicleId) < 0){
+            oldIdsAuthDel.push(action.payload.vehicleId)
+        }
+        delState3.modifiedInfo= {
+            ...delState3.modifiedInfo,
+            vehicleIds: oldIdsAuthDel,
+            changedItemCount: delState3.modifiedInfo.changedItemCount+1
+        }
+
         return delState3;
 
     case VEHICLE_FILL_GAS_EDIT:
@@ -959,6 +1112,18 @@ export default function(state = initialState, action) {
                 }
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsGasEdit= newStateVehicleGasEdit.modifiedInfo.vehicleIds;
+        if (oldIdsGasEdit.indexOf(action.payload.vehicleId) < 0){
+            oldIdsGasEdit.push(action.payload.vehicleId)
+        }
+        newStateVehicleGasEdit.modifiedInfo= {
+            ...newStateVehicleGasEdit.modifiedInfo,
+            vehicleIds: oldIdsGasEdit,
+            changedItemCount: newStateVehicleGasEdit.modifiedInfo.changedItemCount+1
+        }
+
         return newStateVehicleGasEdit;
     case VEHICLE_FILL_OIL_EDIT:
         let newStateVehicleOilEdit = {...state}
@@ -980,6 +1145,18 @@ export default function(state = initialState, action) {
                 }
             }
         }
+
+        // Information to Sync should be only this vehicle
+        let oldIdsOilEdit= newStateVehicleOilEdit.modifiedInfo.vehicleIds;
+        if (oldIdsOilEdit.indexOf(action.payload.vehicleId) < 0){
+            oldIdsOilEdit.push(action.payload.vehicleId)
+        }
+        newStateVehicleOilEdit.modifiedInfo= {
+            ...newStateVehicleOilEdit.modifiedInfo,
+            vehicleIds: oldIdsOilEdit,
+            changedItemCount: newStateVehicleOilEdit.modifiedInfo.changedItemCount+1
+        }
+
         return newStateVehicleOilEdit;
     case VEHICLE_CAR_AUTH_EDIT:
         let newStateVehicleAuthEdit = {...state}
@@ -1001,7 +1178,16 @@ export default function(state = initialState, action) {
                 }
             }
         }
-        console.log("================= End EDIT VEHICLE_CAR_AUTH_EDIT")
+        // Information to Sync should be only this vehicle
+        let oldIdsAuthEdit= newStateVehicleAuthEdit.modifiedInfo.vehicleIds;
+        if (oldIdsAuthEdit.indexOf(action.payload.vehicleId) < 0){
+            oldIdsAuthEdit.push(action.payload.vehicleId)
+        }
+        newStateVehicleAuthEdit.modifiedInfo= {
+            ...newStateVehicleAuthEdit.modifiedInfo,
+            vehicleIds: oldIdsAuthEdit,
+            changedItemCount: newStateVehicleAuthEdit.modifiedInfo.changedItemCount+1
+        }
         return newStateVehicleAuthEdit;
     
     case VEHICLE_EXPENSE_DEL:
@@ -1015,6 +1201,16 @@ export default function(state = initialState, action) {
                     break;
                 }
             }
+        }
+        // Information to Sync should be only this vehicle
+        let oldIdsExpDel= delState4.modifiedInfo.vehicleIds;
+        if (oldIdsExpDel.indexOf(action.payload.vehicleId) < 0){
+            oldIdsExpDel.push(action.payload.vehicleId)
+        }
+        delState4.modifiedInfo= {
+            ...delState4.modifiedInfo,
+            vehicleIds: oldIdsExpDel,
+            changedItemCount: delState4.modifiedInfo.changedItemCount+1
         }
         return delState4;
     case VEHICLE_EXPENSE_EDIT:
@@ -1037,6 +1233,16 @@ export default function(state = initialState, action) {
                 }
             }
         }
+        // Information to Sync should be only this vehicle
+        let oldIdsExpEdit= newStateVehicleExpenseEdit.modifiedInfo.vehicleIds;
+        if (oldIdsExpEdit.indexOf(action.payload.vehicleId) < 0){
+            oldIdsExpEdit.push(action.payload.vehicleId)
+        }
+        newStateVehicleExpenseEdit.modifiedInfo= {
+            ...newStateVehicleExpenseEdit.modifiedInfo,
+            vehicleIds: oldIdsExpEdit,
+            changedItemCount: newStateVehicleExpenseEdit.modifiedInfo.changedItemCount+1
+        }
         return newStateVehicleExpenseEdit;
 
     case VEHICLE_SERVICE_DEL:
@@ -1050,6 +1256,16 @@ export default function(state = initialState, action) {
                     break;
                 }
             }
+        }
+        // Information to Sync should be only this vehicle
+        let oldIdsServiceDel= delState5.modifiedInfo.vehicleIds;
+        if (oldIdsServiceDel.indexOf(action.payload.vehicleId) < 0){
+            oldIdsServiceDel.push(action.payload.vehicleId)
+        }
+        delState5.modifiedInfo= {
+            ...delState5.modifiedInfo,
+            vehicleIds: oldIdsServiceDel,
+            changedItemCount: delState5.modifiedInfo.changedItemCount+1
         }
         return delState5;
 
@@ -1073,8 +1289,25 @@ export default function(state = initialState, action) {
                 }
             }
         }
+        // Information to Sync should be only this vehicle
+        let oldIdsServiceEdit= newStateVehicleServiceEdit.modifiedInfo.vehicleIds;
+        if (oldIdsServiceEdit.indexOf(action.payload.vehicleId) < 0){
+            oldIdsServiceEdit.push(action.payload.vehicleId)
+        }
+        newStateVehicleServiceEdit.modifiedInfo= {
+            ...newStateVehicleServiceEdit.modifiedInfo,
+            vehicleIds: oldIdsServiceEdit,
+            changedItemCount: newStateVehicleServiceEdit.modifiedInfo.changedItemCount+1
+        }
         return newStateVehicleServiceEdit;
 
+    case USER_SYNC_PARTLY_OK:
+        // user partly done, reset
+        return {
+            ...state,
+            modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
+            lastSyncToServerOn: new Date()
+        };
     case TEMP_CALCULATE_CARREPORT:
         let newStateCarReport = {
             ...state,
@@ -1092,15 +1325,32 @@ export default function(state = initialState, action) {
         return newStateCarReportAll;
 
     case SETTING_REMIND:
-        return {
-            ...state,
-            settings: action.payload
-        };
+        let settingRemindOld = {...state};
+
+        settingRemindOld.settings = action.payload;
+
+        // Information to Sync should be only this vehicle
+        settingRemindOld.modifiedInfo= {
+            ...settingRemindOld.modifiedInfo,
+            changedSetting: true,
+            changedItemCount: settingRemindOld.modifiedInfo.changedItemCount+1
+        }
+
+        return settingRemindOld;
+
     case SETTING_MAINTAIN_TYPE:
-        return {
-            ...state,
-            settingService: action.payload
-        };
+        let settingMaintain = {...state};
+
+        settingMaintain.settingService = action.payload;
+
+        // Information to Sync should be only this vehicle
+        settingMaintain.modifiedInfo= {
+            ...settingMaintain.modifiedInfo,
+            changedSetting: true,
+            changedItemCount: settingMaintain.modifiedInfo.changedItemCount+1
+        }
+
+        return settingMaintain;
 
     case CUSTOM_ADD_SERVICEMODULE:
         let prevStateService = {...state};
@@ -1112,6 +1362,13 @@ export default function(state = initialState, action) {
         if ( idxa0 < 0) {
             // when not exist, add
             prevStateService.customServiceModules.push(action.payload)
+        }
+
+        // Information to Sync should be only this vehicle
+        prevStateService.modifiedInfo= {
+            ...prevStateService.modifiedInfo,
+            changedCustom: true,
+            changedItemCount: prevStateService.modifiedInfo.changedItemCount+1
         }
 
         return prevStateService;
@@ -1127,6 +1384,13 @@ export default function(state = initialState, action) {
             prevStateServiceBike.customServiceModulesBike.push(action.payload)
         }
 
+        // Information to Sync should be only this vehicle
+        prevStateServiceBike.modifiedInfo= {
+            ...prevStateServiceBike.modifiedInfo,
+            changedCustom: true,
+            changedItemCount: prevStateServiceBike.modifiedInfo.changedItemCount+1
+        }
+
         return prevStateServiceBike;
     case CUSTOM_DEL_SERVICEMODULE:
         let prevStateServiceDel = {...state};
@@ -1139,6 +1403,12 @@ export default function(state = initialState, action) {
             prevStateServiceDel.customServiceModules.splice(idx, 1);
         }
 
+        prevStateServiceDel.modifiedInfo= {
+            ...prevStateServiceDel.modifiedInfo,
+            changedCustom: true,
+            changedItemCount: prevStateServiceDel.modifiedInfo.changedItemCount+1
+        }
+
         return prevStateServiceDel;
     case CUSTOM_DEL_SERVICEMODULE_BIKE:
         let prevStateServiceDelBike = {...state};
@@ -1149,6 +1419,12 @@ export default function(state = initialState, action) {
             action.payload.name);
         if ( idx2 >= 0) {
             prevStateServiceDelBike.customServiceModulesBike.splice(idx2, 1);
+        }
+
+        prevStateServiceDelBike.modifiedInfo= {
+            ...prevStateServiceDelBike.modifiedInfo,
+            changedCustom: true,
+            changedItemCount: prevStateServiceDelBike.modifiedInfo.changedItemCount+1
         }
 
         return prevStateServiceDelBike;

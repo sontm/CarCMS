@@ -484,6 +484,82 @@ module.exports = {
       res.status(500).send({msg: "Error, Not Found User"})
     }
   },
+  // Input
+    // vehicleList: props.userData.vehicleList,
+    // customServiceModules: props.userData.customServiceModules,
+    // customServiceModulesBike: props.userData.customServiceModulesBike,
+    // settings: props.userData.settings,
+    // settingService: props.userData.settingService
+
+    // Or someVehicles:[]
+    async syncSomeDataToServer(req, res) {
+      console.log("Vehicle SOME DATA Sync of USERID:" + req.user.id)
+      console.log(JSON.stringify(req.body))
+      // Find current User record 
+      let currentUser = await new Promise((resolve, reject) => {
+        dbuser.findById(req.user.id, function(err, doc){
+          err ? reject(err) : resolve(doc);
+        });
+      });
+      if (currentUser) {
+
+        // Save all vehicleList, settiing, customdata if have
+        if (req.body.vehicleList && req.body.vehicleList.length > 0) {
+          currentUser.vehicleList = req.body.vehicleList;
+        }
+        if (req.body.customServiceModules && req.body.customServiceModules.length>0) {
+          currentUser.customServiceModules = req.body.customServiceModules;
+        }
+        if (req.body.customServiceModulesBike&& req.body.customServiceModulesBike.length>0) {
+          currentUser.customServiceModulesBike = req.body.customServiceModulesBike;
+        }
+        if (req.body.settings) {
+          currentUser.settings = req.body.settings;
+        }
+        if (req.body.settingService) {
+          currentUser.settingService = req.body.settingService;
+        }
+
+        // check if have someVehicles
+        if (req.body.someVehicles && req.body.someVehicles.length > 0) {
+          // loop in the DB, change if match id
+          //for (let i = 0; i < currentUser.vehicleList.length; i++) {
+          let newVeList = [];
+          currentUser.vehicleList.forEach(dbItem => {
+            let found = false;
+            for (let i = 0; i < req.body.someVehicles.length; i++) {
+              if (req.body.someVehicles[i].id == dbItem.id) {
+                newVeList.push(req.body.someVehicles[i])
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              newVeList.push(dbItem)
+            }
+          })
+          if (newVeList.length > 0) {
+            currentUser.vehicleList = newVeList;
+          }
+          //}
+        }
+
+
+        console.log(" -- Will Save User from PartlyData")
+        console.log(currentUser.vehicleList[1].fillGasList)
+  
+        await new Promise((resolve, reject) => {
+          currentUser.save(function(err, doc){
+            err ? reject(err) : resolve(doc);
+          });
+        });
+        
+        res.status(200).send({msg: "Sync To Server Vehicle OK"})
+      } else {
+        res.status(500).send({msg: "Error, Not Found User"})
+      }
+    },
+
 
   // Auth API
     // vehicleList: props.userData.vehicleList,

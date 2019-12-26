@@ -110,8 +110,6 @@ class HomeMoneyUsageByTime extends React.Component {
 
         // If Area Chart, it need 2 Points to DRAW, otherwise Chart will Error
         if (arrTotalMerge && arrTotalMerge.length > 1) {
-            console.log("arrTotalMerge-----------")
-            console.log(arrTotalMerge)
         return (
             <View style={styles.container}>
                 

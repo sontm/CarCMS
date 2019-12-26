@@ -5,6 +5,7 @@ import AppLocales from '../constants/i18n'
 import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import NetInfo from "@react-native-community/netinfo";
 
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
@@ -1748,7 +1749,62 @@ class AppUtils {
         }
     }
 
-    
+    // props contain userData
+    // Sync data based on information 
+    async syncDataPartlyToServer(props) {
+        //modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
+        NetInfo.fetch().then(state => {
+        if (state.isConnected) {
+
+            if (props.userData.modifiedInfo.changedItemCount > 0) {
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start syncDataPartlyToServer")
+                var objectToSync = {};//vehicleList, someVehicles, customServiceModules...
+                if (props.userData.modifiedInfo.changedAllVehicles) {
+                    objectToSync.vehicleList = props.userData.vehicleList;
+                } else {
+                    // if length of ids is same as vehicleList, mean all Car need update
+                    if (props.userData.modifiedInfo.vehicleIds.length > 0) {
+                        if (props.userData.modifiedInfo.vehicleIds.length == props.userData.vehicleList.length) {
+                            objectToSync.vehicleList = props.userData.vehicleList;
+                        } else {
+                            // Only add some Vehicles
+                            objectToSync.someVehicles = [];
+                            props.userData.vehicleList.forEach(item => {
+                                if (props.userData.modifiedInfo.vehicleIds.indexOf(item.id) >= 0) {
+                                    objectToSync.someVehicles.push(item)
+                                }
+                            })
+                        }
+                    }
+                }
+
+                if (props.userData.modifiedInfo.changedCustom) {
+                    objectToSync.customServiceModules = props.userData.customServiceModules;
+                    objectToSync.customServiceModulesBike = props.userData.customServiceModulesBike;
+                }
+
+                if (props.userData.modifiedInfo.changedSetting) {
+                    objectToSync.settings = props.userData.settings;
+                    objectToSync.settingService = props.userData.settingService;
+                }
+
+                // If there is data in objectToSync, sync
+                if (Object.keys(objectToSync).length > 0) {
+                    Backend.postSomeDataToServer(objectToSync, props.userData.token,
+                    response => {
+                        console.log("<<<<<<<<<<<<<<<<<<<<<<<<<< Sync Some Data OK")
+                        props.actUserSyncPartlyOK()
+                    },
+                    error => {console.log(error)}
+                    );
+                }
+            }
+        } else {
+            console.log("*** Dont have NEtwork, will Sync later")
+          }
+      });
+
+    }
 
     async syncDataToServer(props) {
         console.log("LengVehicleList:" + props.userData.vehicleList.length)

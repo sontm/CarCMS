@@ -302,8 +302,9 @@ class SettingsScreen extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
+    console.log("**********&&&&&&&&&^^^^^^^^^^ SettingScreen componentWillReceiveProps")
     if (!this.props.userData.isLogined && newProps.userData.isLogined) {
-      console.log("**********&&&&&&&&&^^^^^^^^^^%%%%%%%%User Have Just Logind^^^^6")
+      
       // This time, User have Just logined, will Sync
       AppUtils.syncDataFromServer(newProps)
     }
@@ -696,7 +697,7 @@ class SettingsScreen extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity 
-                onPress={() => {}}>
+                onPress={() => this.props.navigation.navigate("CustomerVoiceScreen")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="Foundation" name="mail" style={styles.iconLeft} /></View>

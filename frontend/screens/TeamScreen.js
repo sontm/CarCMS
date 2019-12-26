@@ -143,11 +143,15 @@ class TeamScreen extends React.Component {
   }
 
   componentDidMount() {
-    console.log("TeamScreen DidMount")
+    console.log("**********&&&&&&&&&^^^^^^^^^ TeamScreen DidMount")
 
     // TODO* whento call fetch team Data ?
     //this.fetchTeamData()
   }
+  componentDidUpdate() {
+    console.log("**********&&&&&&&&&^^^^^^^^^^ TeamScreen componentDidUpdate")
+  }
+
   renderComponent = () => {
     console.log(Layout.window.width)
     if(this.state.activePage === 0) {
@@ -310,8 +314,8 @@ class TeamScreen extends React.Component {
         <Left style={{flex:1, marginRight: 0}}>
             <TouchableOpacity onPress={this.fetchTeamData} >
             <View style={{alignItems: "center"}}>
-              <Icon name="cloud-download" style={{color: "white"}} />
-              <WhiteText style={{fontSize: 10}}>{AppLocales.t("GENERAL_EDITDATA")}</WhiteText>
+              <Icon name="cloud-download" style={{color: "white", fontSize: 22}} />
+              <WhiteText style={{fontSize: 10, marginTop: -3}}>{AppLocales.t("GENERAL_EDITDATA")}</WhiteText>
             </View>
             </TouchableOpacity>
         </Left>

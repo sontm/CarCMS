@@ -23,9 +23,12 @@ app.post('/api/users/update', passport.authenticate('jwt', {session: false}),
 app.post('/api/resetpwd', user.resetPassword);  // Reset PWD, no need Authen
 
 // Sync To Server from App
-app.post('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.syncToServer);
+app.post('/api/users/sync', passport.authenticate('jwt', {session: false}), user.syncToServer);
 // Sync From Server to App
-app.get('/api/users/vehicle', passport.authenticate('jwt', {session: false}), user.syncFromServer);
+app.get('/api/users/sync', passport.authenticate('jwt', {session: false}), user.syncFromServer);
+
+// Sync Some Data To Server from App
+app.post('/api/users/sync/some', passport.authenticate('jwt', {session: false}), user.syncSomeDataToServer);
 
 // upsert
 app.post('/api/team', passport.authenticate('jwt', {session: false}), team.createTeamOfUser);
@@ -64,8 +67,10 @@ app.post('/api/app/notification/me', passport.authenticate('jwt', {session: fals
   appData.getMyNotification);
 app.get('/api/app/notification/all', appData.getAllAppNotification);
 
-//app.get('/api/app/recovermail', appData.sendEmailForgotPassword);
-app.post('/api/app/recovermail', appData.requestEmailPasswordRecovery);
+//app.post('/api/app/recovermail', appData.requestEmailPasswordRecovery);
+app.post('/api/app/recovermail', appData.sendEmailWithSES);
+
+app.post('/api/app/customervoice', appData.addNewCustomerVoice);
 
 // app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
 // app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);

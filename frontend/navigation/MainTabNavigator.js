@@ -30,6 +30,7 @@ import VehicleSettingScreen from '../screens/setting/VehicleSettingScreen';
 import ServiceMaintainSettingScreen from '../screens/setting/ServiceMaintainSettingScreen';
 import CheckJoinTeamScreen from '../screens/setting/CheckJoinTeamScreen';
 import ForgotPasswordScreen from '../screens/setting/ForgotPasswordScreen';
+import CustomerVoiceScreen from  '../screens/setting/CustomerVoiceScreen';
 
 import LoginScreen from '../screens/setting/LoginScreen';
 import ProfileScreen from '../screens/setting/ProfileScreen';
@@ -109,6 +110,7 @@ const SettingsStack = createStackNavigator(
     ServiceModuleCreate: ServiceModuleCreateScreen,
     CheckJoinTeamScreen: CheckJoinTeamScreen,
     ForgotPasswordScreen: ForgotPasswordScreen,
+    CustomerVoiceScreen: CustomerVoiceScreen,
     DebugScreen: DebugScreen
   },
   config

@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   },
 
   smallerText: {
-      fontSize: 12
+      fontSize: 10
   },
 
   activeSegment2: {

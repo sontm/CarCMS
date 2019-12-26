@@ -64,14 +64,16 @@ class MoneyUsageReportServiceMaintain extends React.Component {
             var {arrServiceTypeSpend, totalServiceSpend2}
                 = this.props.userData.carReports[element.id].serviceReport;  
 
-            arrServiceTypeSpend.forEach(item => {
-                if (objectTemp[""+item.x]) {
-                    // Exist, increase
-                    objectTemp[""+item.x] += item.y;
-                } else {
-                    objectTemp[""+item.x] = item.y;
-                }
-            })
+                if (arrServiceTypeSpend) {
+                    arrServiceTypeSpend.forEach(item => {
+                    if (objectTemp[""+item.x]) {
+                        // Exist, increase
+                        objectTemp[""+item.x] += item.y;
+                    } else {
+                        objectTemp[""+item.x] = item.y;
+                    }
+                })
+            }
         }
     })
     // convert to Array for Chart

@@ -174,11 +174,15 @@ SETTING_LBL_LOGIN_BTN: "Đăng Nhập",
     SETTING_LBL_PRO_UPGRADE: "Nâng Cấp",
     SETTING_LBL_NOTJOINT_TEAM: "Chưa Gia Nhập Nhóm",
 
+    SETTING_LBL_CUSTOMERVOICE: "Gửi Góp Ý",
+    SETTING_LBL_CUSTOMERVOICE_TITLE: "Tiêu Đề",
+    SETTING_LBL_CUSTOMERVOICE_CONTENT: "Nội Dung",
+
     SETTING_H1_SUPPORT: "Trợ Giúp",
     SETTING_LBL_GUIDE: "Hướng Dẫn Sử Dụng",
     SETTING_LBL_REVIEW: "Đánh Giá Ứng Dụng",
     SETTING_LBL_APP_INFO: "Thông Tin Sản Phẩm",
-    SETTING_LBL_CONTACT: "Phản Hồi Tới Nhà Sản Xuất",
+    SETTING_LBL_CONTACT: "Góp Ý Tới Nhà Sản Xuất",
 
     SETTING_REMIND_HEADER: "Cài Đặt Nhắc Nhở",
     SETTING_REMIND_OIL_CAR: "Khoảng Cách Cho Đến Lần Thay Dầu Tiếp Theo",
@@ -275,4 +279,6 @@ SETTING_LBL_LOGIN_BTN: "Đăng Nhập",
     TOAST_NEED_FILL_ENOUGH: "Hãy nhập đủ thông tin cần thiết!",
     TOAST_NEED_INTERNET_CON: "Chức Năng Này Cần Kết Nối Mạng!",
     TOAST_NO_NEW_INFO: "Không có thông tin mới.",
+
+    TOAST_SEND_CUSTOMERVOICE_OK: "Rất cảm ơn vì nhận xét của bạn, chúng tôi sẽ tiếp thu và xử lý sớm nhất có thể.",
 };

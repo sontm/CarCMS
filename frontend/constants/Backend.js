@@ -24,12 +24,22 @@ class Backend {
         return headers;
     }
 
+    postSomeDataToServer(data, token, onOK, onError) {
+        console.log("Backend postSomeDataToServer:")
+        console.log(data)
+        axios.post("/users/sync/some",
+            JSON.stringify(data),
+            { headers: this.createHeader(token)})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
     // Gas, Oil, Auth, Expense, Service List
     // token is JWT token
     postFillItemList(data, token, type, onOK, onError) {
         console.log("Backend sync to Server:" + token)
         console.log(data)
-        axios.post("/users/vehicle",
+        axios.post("/users/sync",
             JSON.stringify(data),
             { headers: this.createHeader(token)})
             .then((response) => {onOK(response);})
@@ -37,7 +47,7 @@ class Backend {
     }
 
     getAllItemList(token, onOK, onError) {
-        axios.get("/users/vehicle",
+        axios.get("/users/sync",
             { headers: this.createHeader(token)})
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
@@ -201,6 +211,16 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+
+    sendCustomerVoice(data, onOK, onError) {
+        axios.post("/app/customervoice",
+            JSON.stringify(data),
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
+
     // getUserProfile(onOK, onError) {
     //     axios.get("/users/profile",
     //         { headers: this.createHeader()})

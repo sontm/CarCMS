@@ -114,7 +114,8 @@ class VehicleDetailReport extends React.Component {
             </Body>
             <Right style={{flex:1}}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("VehicleHistory", 
-                    {vehicle: currentVehicle, isMyVehicle:this.props.navigation.state.params.isMyVehicle})}>
+                    {vehicle: currentVehicle, 
+                        isMyVehicle:this.props.navigation.state.params ? this.props.navigation.state.params.isMyVehicle : false})}>
                     <View style={styles.rightHistoryView}>
                     <Icon type="MaterialCommunityIcons" name="file-document-outline" style={styles.rightHistoryIcon}/>
                     <Text style={styles.rightHistoryText}>{AppLocales.t("GENERAL_HISTORY")}</Text>
