@@ -172,16 +172,19 @@ class VehicleBasicReport extends Component {
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={currentData.maintainRemind.passedKmFromPreviousMaintain? 
-                                currentData.maintainRemind.passedKmFromPreviousMaintain/
-                                currentData.maintainRemind.lastMaintainKmValidFor : 0}
+                                ((currentData.maintainRemind.passedKmFromPreviousMaintain>0 ? currentData.maintainRemind.passedKmFromPreviousMaintain : 0)
+                                /
+                                currentData.maintainRemind.lastMaintainKmValidFor) : 0}
                             progressViewStyle = 'default'
-                            progressTintColor = "blue"
+                            progressTintColor = {AppUtils.getColorForProgress(currentData.maintainRemind.lastMaintainKmValidFor
+                                -currentData.maintainRemind.passedKmFromPreviousMaintain, "Km")}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
                         ) : (
                         <ProgressBarAndroid
                             style={styles.progressBarRemind}
-                            color={AppConstants.COLOR_HEADER_BG}
+                            color={AppUtils.getColorForProgress(currentData.maintainRemind.lastMaintainKmValidFor
+                                -currentData.maintainRemind.passedKmFromPreviousMaintain, "Km")}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.maintainRemind.passedKmFromPreviousMaintain? 
@@ -191,8 +194,8 @@ class VehicleBasicReport extends Component {
                             />
                         )}
                         <Text style={styles.textRemind}>
-                            {currentData.maintainRemind.passedKmFromPreviousMaintain>0?currentData.maintainRemind.passedKmFromPreviousMaintain:0}/
-                            {currentData.maintainRemind.lastMaintainKmValidFor} Km
+                            {currentData.maintainRemind.passedKmFromPreviousMaintain>0?currentData.maintainRemind.passedKmFromPreviousMaintain:"-"}/
+                            {currentData.maintainRemind.lastMaintainKmValidFor?currentData.maintainRemind.lastMaintainKmValidFor:"-"} Km
                             ({AppLocales.t("GENERAL_SERVICE")})
                         </Text>
                     </View>
@@ -205,29 +208,28 @@ class VehicleBasicReport extends Component {
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={currentData.authReport.diffDayFromLastAuthorize ?
-                                currentData.authReport.diffDayFromLastAuthorize/
-                                currentData.authReport.lastAuthDaysValidFor: 0}
+                                (currentData.authReport.diffDayFromLastAuthorize/
+                                currentData.authReport.lastAuthDaysValidFor): 0}
                             progressViewStyle = 'default'
-                            progressTintColor = {(currentData.authReport.diffDayFromLastAuthorize ?
-                                currentData.authReport.diffDayFromLastAuthorize/
-                                currentData.authReport.lastAuthDaysValidFor: 0) 
-                                    > 0.9 ? "red" : "blue"}
+                            progressTintColor = {AppUtils.getColorForProgress(currentData.authReport.lastAuthDaysValidFor
+                                -currentData.authReport.diffDayFromLastAuthorize, "Day")}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
                         ) : (
                         <ProgressBarAndroid
                             style={styles.progressBarRemind}
-                            color={AppConstants.COLOR_HEADER_BG}
+                            color={AppUtils.getColorForProgress(currentData.authReport.lastAuthDaysValidFor
+                                -currentData.authReport.diffDayFromLastAuthorize, "Day")}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.authReport.diffDayFromLastAuthorize ?
-                                currentData.authReport.diffDayFromLastAuthorize/
-                                currentData.authReport.lastAuthDaysValidFor: 0}
+                                (currentData.authReport.diffDayFromLastAuthorize/
+                                currentData.authReport.lastAuthDaysValidFor): 0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                        {currentData.authReport.diffDayFromLastAuthorize}/
-                        {currentData.authReport.lastAuthDaysValidFor} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_AUTH")})
+                        {currentData.authReport.diffDayFromLastAuthorize?currentData.authReport.diffDayFromLastAuthorize:"-"}/
+                        {currentData.authReport.lastAuthDaysValidFor?currentData.authReport.lastAuthDaysValidFor:"-"} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_AUTH")})
                         </Text>
                     </View>
                     ): null }
@@ -239,29 +241,28 @@ class VehicleBasicReport extends Component {
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={currentData.authReport.diffDayFromLastAuthorizeInsurance ?
-                                currentData.authReport.diffDayFromLastAuthorizeInsurance/
-                                currentData.authReport.lastAuthDaysValidForInsurance: 0}
+                                (currentData.authReport.diffDayFromLastAuthorizeInsurance/
+                                currentData.authReport.lastAuthDaysValidForInsurance):0}
                             progressViewStyle = 'default'
-                            progressTintColor = {(currentData.authReport.diffDayFromLastAuthorizeInsurance ?
-                                currentData.authReport.diffDayFromLastAuthorizeInsurance/
-                                currentData.authReport.lastAuthDaysValidForInsurance: 0) 
-                                    > 0.9 ? "red" : "blue"}
+                            progressTintColor = {AppUtils.getColorForProgress(currentData.authReport.lastAuthDaysValidForInsurance
+                                -currentData.authReport.diffDayFromLastAuthorizeInsurance, "Day")}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
                         ) : (
                         <ProgressBarAndroid
                             style={styles.progressBarRemind}
-                            color={AppConstants.COLOR_HEADER_BG}
+                            color={AppUtils.getColorForProgress(currentData.authReport.lastAuthDaysValidForInsurance
+                                -currentData.authReport.diffDayFromLastAuthorizeInsurance, "Day")}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.authReport.diffDayFromLastAuthorizeInsurance ?
-                                currentData.authReport.diffDayFromLastAuthorizeInsurance/
-                                currentData.authReport.lastAuthDaysValidForInsurance: 0}
+                                (currentData.authReport.diffDayFromLastAuthorizeInsurance/
+                                currentData.authReport.lastAuthDaysValidForInsurance):0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                        {currentData.authReport.diffDayFromLastAuthorizeInsurance}/
-                        {currentData.authReport.lastAuthDaysValidForInsurance} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_INSURANCE")})
+                        {currentData.authReport.diffDayFromLastAuthorizeInsurance?currentData.authReport.diffDayFromLastAuthorizeInsurance:"-"}/
+                        {currentData.authReport.lastAuthDaysValidForInsurance?currentData.authReport.lastAuthDaysValidForInsurance:"-"} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_INSURANCE")})
                         </Text>
                     </View>
                     ): null }
@@ -273,29 +274,28 @@ class VehicleBasicReport extends Component {
                         <ProgressViewIOS 
                             style={styles.progressBarRemind}
                             progress={currentData.authReport.diffDayFromLastAuthorizeRoadFee ?
-                                currentData.authReport.diffDayFromLastAuthorizeRoadFee/
-                                currentData.authReport.lastAuthDaysValidForRoadFee: 0}
+                                (currentData.authReport.diffDayFromLastAuthorizeRoadFee/
+                                currentData.authReport.lastAuthDaysValidForRoadFee):0}
                             progressViewStyle = 'default'
-                            progressTintColor = {(currentData.authReport.diffDayFromLastAuthorizeRoadFee ?
-                                currentData.authReport.diffDayFromLastAuthorizeRoadFee/
-                                currentData.authReport.lastAuthDaysValidForRoadFee: 0) 
-                                    > 0.9 ? "red" : "blue"}
+                            progressTintColor = {AppUtils.getColorForProgress(currentData.authReport.lastAuthDaysValidForRoadFee
+                                -currentData.authReport.diffDayFromLastAuthorizeRoadFee, "Day")}
                             trackTintColor = "rgba(230, 230, 230, 1)"
                             />
                         ) : (
                         <ProgressBarAndroid
                             style={styles.progressBarRemind}
-                            color={AppConstants.COLOR_HEADER_BG}
+                            color={AppUtils.getColorForProgress(currentData.authReport.lastAuthDaysValidForRoadFee
+                                -currentData.authReport.diffDayFromLastAuthorizeRoadFee, "Day")}
                             styleAttr="Horizontal"
                             indeterminate={false}
                             progress={currentData.authReport.diffDayFromLastAuthorizeRoadFee ?
-                                currentData.authReport.diffDayFromLastAuthorizeRoadFee/
-                                currentData.authReport.lastAuthDaysValidForRoadFee: 0}
+                                (currentData.authReport.diffDayFromLastAuthorizeRoadFee/
+                                currentData.authReport.lastAuthDaysValidForRoadFee):0}
                             />
                         )}
                         <Text style={styles.textRemind}>
-                        {currentData.authReport.diffDayFromLastAuthorizeRoadFee}/
-                        {currentData.authReport.lastAuthDaysValidForRoadFee} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_ROADFEE")})
+                        {currentData.authReport.diffDayFromLastAuthorizeRoadFee ? currentData.authReport.diffDayFromLastAuthorizeRoadFee : "-"}/
+                        {currentData.authReport.lastAuthDaysValidForRoadFee?currentData.authReport.lastAuthDaysValidForRoadFee: "-"} {AppLocales.t("GENERAL_DAY")} ({AppLocales.t("GENERAL_AUTHROIZE_ROADFEE")})
                         </Text>
                     </View>
                     ): null }
@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start"
     },
     progressBarRemind: {
-        transform: [{ scaleX: 1.0 }, { scaleY: 1.5 }],
+        transform: [{ scaleX: 1.0 }, { scaleY: 1 }],
         width: "30%",
         alignSelf: "center"
     },

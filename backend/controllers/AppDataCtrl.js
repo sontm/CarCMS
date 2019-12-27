@@ -440,7 +440,7 @@ module.exports = {
 
       let newRecovery = new dbpwdrecovery();
       newRecovery.token = token;
-      newRecovery.email = "sontm.uet.vnu@gmail.com";
+      newRecovery.email = req.body.email;
       newRecovery.userId = currentUser.id;
       newRecovery.createdAt = today;
       newRecovery.validUntil = new Date(today);
@@ -457,15 +457,15 @@ module.exports = {
         secureConnection: false, // TLS requires secureConnection to be false
         port: 587, // port for secure SMTP
         auth: {
-            user: "sansanjav@hotmail.com",
-            pass: "toiyeujapan57"},
+            user: "YYY",
+            pass: "XXX"},
         tls: {ciphers:'SSLv3'}
       });
 
       var mail = {
           from: "QuanLyXe",
           //from: '"Our Code World " <mymail@outlook.com>',
-          to: "sontm.uet.vnu@gmail.com",
+          to: req.body.email,
           subject: "[QuanLyXe] Phục Hồi Mật Khẩu",
           html: "<b><h3>Xin Chào "+newRecovery.email+".<h3></b>.<br/>" + 
           "Có vẻ như bạn đang mong muốn phục hồi lại mật khẩu để sử dụng ứng dụng QuanLyXe.<br/> Xin hãy truy "+
@@ -493,6 +493,81 @@ module.exports = {
   },
 
   async sendEmailWithSES(req, res) {
-    
+    try {
+    // FIrst, Check if there is any User with this email
+    if (!req.body.email) {
+      res.status(400).send({msg: "Email không đúng!"})
+      return;
+    }
+
+    let currentUser = await dbuser.findOne({email: req.body.email});
+    if (!currentUser) {
+      console.log("CAnnot FInd Use with Email "+req.body.email)
+      res.status(400).send({msg: "Email này chưa dùng cho tài khoản nào."})
+      return;
+    }
+    //let currentUser = {};
+
+    let randomToken = apputil.makeRandomAlphaNumeric(40);
+    let randomUuid = apputil.uuidv4();
+    let token = randomToken+"-"+randomUuid;
+    let today = new Date();
+
+    let newRecovery = new dbpwdrecovery();
+    newRecovery.token = token;
+    newRecovery.email = req.body.email;
+    newRecovery.userId = currentUser.id;
+    newRecovery.createdAt = today;
+    newRecovery.validUntil = new Date(today);
+
+    // Valid in 12h
+    newRecovery.validUntil.setHours(newRecovery.validUntil.getHours()+12);
+
+    let link="https://yamastack.com/quanlyxe/pwdrecovery/?token="+token+"&id="+currentUser.id;
+    await newRecovery.save();
+
+    const params = {
+      Destination: {
+        ToAddresses: [""+req.body.email]
+      },
+      Message: {
+        Body: {
+          Html: {
+            Charset: 'UTF-8',
+            Data:
+            "<h3>Xin Chào "+newRecovery.email+".<h3>.<br/>" + 
+            "Có vẻ như quý khách đang mong muốn phục hồi lại mật khẩu để sử dụng ứng dụng QuanLyXe.<br/><br/> Xin hãy truy "+
+            "cập vào đường link dưới đây và điền mật khẩu mới:<br/>" +
+            link + "<br/><br/>" +
+            "Nếu quý khách không phải là người yêu cầu, xin hãy bỏ qua email này.<br/><br/>"+
+            "CHÚ Ý: Đây là hệ thống trả lời email tự động, xin quý khách không gửi phản hồi đến địa chỉ này!<br/><br/>"+
+            "Xin chân thành cảm ơn.<br/>"
+          },
+        },
+        Subject: {
+          Charset: 'UTF-8',
+          Data: '[QuanLyXe] Phục Hồi Mật Khẩu'
+        }
+      },
+      //ReturnPath: 'noreply@quanlyxe.yamastack.com',
+      ReturnPath: 'hotro.quanlyxe@gmail.com',
+      Source: "QuanLyXe <noreply@quanlyxe.yamastack.com>"
+    }
+    console.log("...Start Send mail to:" + newRecovery.email)
+    ses.sendEmail(params, (err, data) => {
+      if (err) {
+        console.log(err, err.stack)
+        res.status(500).send("Error")
+      }
+      else {
+        console.log(data)
+        res.status(200).send({msg:"OK"})
+      }
+    })
+  } catch (err) {
+    console.log("PWD Recoveyry Error")
+    console.log(err)
+    res.status(500).send("ErrorException")
+  }
   },
 };

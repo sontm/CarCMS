@@ -90,6 +90,7 @@ class JoinTeamScreen extends React.Component {
                   Toast.show({
                     text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
                     //buttonText: "Okay",
+                    position: "top",
                     type: "danger"
                   })
                 }

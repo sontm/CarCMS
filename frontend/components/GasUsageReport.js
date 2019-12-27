@@ -68,6 +68,7 @@ class GasUsageReport extends React.Component {
         text: "" + AppUtils.formatDateMonthYearVN(dataToDisplay[value.index].x) + ": " + 
             dataToDisplay[value.index].y.toFixed(0),
         //buttonText: "Okay",
+        position: "top",
         type: "danger"
       })
   }

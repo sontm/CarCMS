@@ -53,6 +53,7 @@ class ProfileScreen extends React.Component {
             Toast.show({
                 text: AppLocales.t("TOAST_NEED_OLDPWD"),
                 //buttonText: "Okay",
+                position: "top",
                 type: "danger"
             })
         } else if (this.state.isChangePwd && this.state.newPwd1.length > 0 && this.state.newPwd1 != this.state.newPwd2) {
@@ -60,6 +61,7 @@ class ProfileScreen extends React.Component {
             Toast.show({
                 text: AppLocales.t("TOAST_NEWPWD_NOTMATCHED"),
                 //buttonText: "Okay",
+                position: "top",
                 type: "danger"
             })
         } else {
@@ -88,6 +90,7 @@ class ProfileScreen extends React.Component {
                   Toast.show({
                     text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
                     //buttonText: "Okay",
+                    position: "top",
                     type: "danger"
                   })
                 }

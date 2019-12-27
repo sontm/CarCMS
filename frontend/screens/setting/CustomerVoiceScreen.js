@@ -11,6 +11,7 @@ import {actUserRegisterOK} from '../../redux/UserReducer'
 import Backend from '../../constants/Backend'
 import AppLocales from '../../constants/i18n'
 import NetInfo from "@react-native-community/netinfo";
+import apputils from '../../constants/AppUtils';
 
 class CustomerVoiceScreen extends React.Component {
     constructor(props) {
@@ -19,9 +20,17 @@ class CustomerVoiceScreen extends React.Component {
             title: "",
             email: "",
             content: "",
+            codeRandom: "",
+            codeTyped: ""
         };
 
         this.handleSignup = this.handleSignup.bind(this)
+    }
+
+    componentWillMount(){
+        this.setState({
+            codeRandom: ""+apputils.makeRandomNumeric(6)
+        })
     }
 
     handleSignup() {
@@ -29,6 +38,13 @@ class CustomerVoiceScreen extends React.Component {
         if (!this.state.title || !this.state.email || !this.state.content) {
             Toast.show({
                 text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                position:"top",
+                type: "danger"
+            })
+        } else if (this.state.codeRandom != this.state.codeTyped) {
+            Toast.show({
+                text: AppLocales.t("TOAST_CONFIRM_CODE_NG"),
                 //buttonText: "Okay",
                 position:"top",
                 type: "danger"
@@ -62,6 +78,7 @@ class CustomerVoiceScreen extends React.Component {
                   Toast.show({
                     text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
                     //buttonText: "Okay",
+                    position: "top",
                     type: "danger"
                   })
                 }
@@ -108,9 +125,27 @@ class CustomerVoiceScreen extends React.Component {
                         </Item>
                     </View>
 
+
                     <View style={styles.rowContainer}>
                         <Item stackedLabel>
-                        <View style={{flexDirection:"row", alignSelf:"flex-start"}}>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start", width: AppConstants.DEFAULT_FORM_WIDTH}}>
+                        <Label>{AppLocales.t("SETTING_LBL_CUSTOMERVOICE_CODE")+"'" + this.state.codeRandom + "'"}</Label>
+                            {!this.state.codeTyped ?
+                            <Label style={{color: "red"}}>*</Label>
+                            : null}
+
+                        </View>
+                        <Input
+                            onChangeText={(codeTyped) => this.setState({codeTyped: codeTyped})}
+                            value={this.state.codeTyped}
+                        />
+                        </Item>
+                    </View>
+
+
+                    <View style={styles.rowContainer}>
+                        <Item stackedLabel>
+                        <View style={{flexDirection:"row", alignSelf:"flex-start", width: AppConstants.DEFAULT_FORM_WIDTH}}>
                             <Label>{AppLocales.t("SETTING_LBL_CUSTOMERVOICE_CONTENT")}</Label>
                             {!this.state.content ?
                             <Label style={{color: "red"}}>*</Label>
@@ -124,6 +159,7 @@ class CustomerVoiceScreen extends React.Component {
                         />
                         </Item>
                     </View>
+
 
                     <View style={styles.rowButton}>
                     <Button
@@ -162,7 +198,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     backgroundColor: '#fff',
     flexDirection: "column",
-    paddingBottom: 45,
+    paddingBottom: 80,
   },
   rowContainer: {
     flexDirection: "row",

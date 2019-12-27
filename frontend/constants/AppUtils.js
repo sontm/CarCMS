@@ -237,6 +237,15 @@ class AppUtils {
       }
       return result;
     }
+    makeRandomNumeric(length) {
+        var result           = '';
+        var characters       = '0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+      }
     pushInDateLabelsIfNotExist(arr, val, forcePush = false) {
         let isExist = false;
         for (let i = 0; i < arr.length; i++) {
@@ -249,6 +258,24 @@ class AppUtils {
         }
         if (!isExist)
             arr.push(val)
+    }
+    getColorForProgress(valueDiff, unit) {
+        console.log("getColorForProgress:" + valueDiff + "UNIT:" + unit)
+        // When Double of AppConstant Threashold, will simple Red
+        let threshold = AppConstants.SETTING_KM_SHOWWARN;
+        if (unit != "Km") {
+            threshold = AppConstants.SETTING_DAY_SHOW_WARN;
+        }
+
+        if (isNaN(valueDiff)) {
+            return AppConstants.COLOR_D3_LIGHT_GREEN;
+        } else 
+        if (valueDiff <= threshold) {
+            // Normal
+            return "tomato";
+        } else {
+            return AppConstants.COLOR_D3_LIGHT_GREEN;
+        }
     }
     reviseTickLabelsToCount(allLabels, expectedCount) {
         // SOrt first

@@ -167,7 +167,9 @@ class VehicleDetailReport extends React.Component {
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
-                                    colorScale={["tomato", "silver"]}
+                                    colorScale={[AppUtils.getColorForProgress(this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor
+                                            -this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize, "Day"), 
+                                            AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG]}
                                     data={[
                                         { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
                                         { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor -
@@ -196,7 +198,9 @@ class VehicleDetailReport extends React.Component {
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
-                                    colorScale={["tomato", "silver"]}
+                                    colorScale={[AppUtils.getColorForProgress(this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance
+                                        -this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance, "Day"), 
+                                        AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG]}
                                     data={[
                                         { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance },
                                         { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance -
@@ -224,7 +228,9 @@ class VehicleDetailReport extends React.Component {
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
-                                    colorScale={["tomato", "silver"]}
+                                    colorScale={[AppUtils.getColorForProgress(this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee
+                                        -this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee, "Day"), 
+                                        AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG]}
                                     data={[
                                         { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee },
                                         { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee -
@@ -254,7 +260,8 @@ class VehicleDetailReport extends React.Component {
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                             <VictoryPie
-                                colorScale={["tomato", "silver"]}
+                                colorScale={[AppUtils.getColorForProgress(totalNeedService - passService,unitService), 
+                                    AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG]}
                                 data={[
                                     { x: "", y: passService },
                                     { x: "", y: (totalNeedService - passService) },

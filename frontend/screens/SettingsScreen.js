@@ -66,6 +66,7 @@ class SettingsScreen extends React.Component {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
           //buttonText: "Okay",
+          position: "top",
           type: "danger"
         })
       }
@@ -81,6 +82,7 @@ class SettingsScreen extends React.Component {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
           //buttonText: "Okay",
+          position: "top",
           type: "danger"
         })
       }
@@ -129,6 +131,7 @@ class SettingsScreen extends React.Component {
                   Toast.show({
                     text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
                     //buttonText: "Okay",
+                    position: "top",
                     type: "danger"
                   })
                 }
@@ -158,6 +161,7 @@ class SettingsScreen extends React.Component {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
           //buttonText: "Okay",
+          position: "top",
           type: "danger"
         })
         return;
@@ -216,6 +220,7 @@ class SettingsScreen extends React.Component {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
           //buttonText: "Okay",
+          position: "top",
           type: "danger"
         })
       }
@@ -238,6 +243,7 @@ class SettingsScreen extends React.Component {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
           //buttonText: "Okay",
+          position: "top",
           type: "danger"
         })
         return;
@@ -397,6 +403,7 @@ class SettingsScreen extends React.Component {
                         Toast.show({
                           text: AppLocales.t("TOAST_SUCCESS_COPIED"),
                           //buttonText: "Okay",
+                          position: "top",
                           type: "success"
                         })
                         Clipboard.setString(this.props.userData.teamInfo.code)

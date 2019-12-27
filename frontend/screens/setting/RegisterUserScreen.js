@@ -32,6 +32,7 @@ class RegisterUserScreen extends React.Component {
             Toast.show({
                 text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
                 //buttonText: "Okay",
+                position: "top",
                 type: "danger"
             })
         } else {
@@ -61,6 +62,7 @@ class RegisterUserScreen extends React.Component {
                   Toast.show({
                     text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
                     //buttonText: "Okay",
+                    position: "top",
                     type: "danger"
                   })
                 }

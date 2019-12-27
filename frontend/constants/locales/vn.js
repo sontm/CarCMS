@@ -177,6 +177,7 @@ SETTING_LBL_LOGIN_BTN: "Đăng Nhập",
     SETTING_LBL_CUSTOMERVOICE: "Gửi Góp Ý",
     SETTING_LBL_CUSTOMERVOICE_TITLE: "Tiêu Đề",
     SETTING_LBL_CUSTOMERVOICE_CONTENT: "Nội Dung",
+    SETTING_LBL_CUSTOMERVOICE_CODE: "Xác Nhận Mã: ",
 
     SETTING_H1_SUPPORT: "Trợ Giúp",
     SETTING_LBL_GUIDE: "Hướng Dẫn Sử Dụng",
@@ -279,6 +280,7 @@ SETTING_LBL_LOGIN_BTN: "Đăng Nhập",
     TOAST_NEED_FILL_ENOUGH: "Hãy nhập đủ thông tin cần thiết!",
     TOAST_NEED_INTERNET_CON: "Chức Năng Này Cần Kết Nối Mạng!",
     TOAST_NO_NEW_INFO: "Không có thông tin mới.",
+    TOAST_CONFIRM_CODE_NG: "Mã Xác Nhận Không Khớp!",
 
     TOAST_SEND_CUSTOMERVOICE_OK: "Rất cảm ơn vì nhận xét của bạn, chúng tôi sẽ tiếp thu và xử lý sớm nhất có thể.",
 };

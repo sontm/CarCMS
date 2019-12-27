@@ -20,6 +20,16 @@ function shortendAuthText(text) {
 }
 function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, licensePlate, owner) {
     if (target > 0 && passed> 0) {
+        if (unit == "Km") {
+            if ((target - passed) > AppConstants.SETTING_KM_SHOWWARN) {
+                return null;
+            }
+        } else {
+            if ((target - passed) > AppConstants.SETTING_DAY_SHOW_WARN) {
+                return null;
+            }
+        }
+
         let isCombined = text.indexOf("+") >= 0;
     return (
         <View style={styles.reminderItemContainer} key={text+""+passed+"/"+target+licensePlate+isTeam}>
@@ -127,17 +137,22 @@ class ReminderReport extends React.Component {
                 this.props.userData.carReports[element.id].maintainRemind.lastMaintainKmValidFor;
             if (percentByDate > percentByKm) {
                 // Will Show by Date
-                resultView.push(
+                
+                let ret = 
                     renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), passedDay, totalDayForMaintain, 
                     this.props.userData.carReports[element.id].maintainRemind.nextEstimatedDateForMaintain,
                     AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-                )
+                if (ret) {
+                    resultView.push(ret)
+                }
             } else {
-                resultView.push(
+                let ret = 
                     renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), this.props.userData.carReports[element.id].maintainRemind.passedKmFromPreviousMaintain, 
                     this.props.userData.carReports[element.id].maintainRemind.lastMaintainKmValidFor, 
                     null, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-                )
+                if (ret) {
+                    resultView.push(ret)
+                }
             }
         }
         var {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
@@ -167,10 +182,13 @@ class ReminderReport extends React.Component {
 
         let ret = this.combineAuthType(authArr);
         ret.forEach(item => {
+            // this is calculated by days
+            if ((item.lastDaysValidFor-item.diffDayFromLast) <= AppConstants.SETTING_DAY_SHOW_WARN) {
             resultView.push(
                 renderRemindItem(false, item.type, item.diffDayFromLast, item.lastDaysValidFor, 
                     item.nextDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate)
             )
+            }
         })
       }
     })
@@ -213,17 +231,21 @@ class ReminderReport extends React.Component {
                 this.props.teamData.teamCarReports[element.id].maintainRemind.lastMaintainKmValidFor;
             if (percentByDate > percentByKm) {
                 // Will Show by Date
-                resultView.push(
+                let ret =
                     renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), passedDay, totalDayForMaintain, 
                     this.props.teamData.teamCarReports[element.id].maintainRemind.nextEstimatedDateForMaintain,
                     AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-                )
+                if (ret) {
+                    resultView.push(ret)
+                }
             } else {
-                resultView.push(
+                let ret =
                     renderRemindItem(true, AppLocales.t("GENERAL_SERVICE"), this.props.teamData.teamCarReports[element.id].maintainRemind.passedKmFromPreviousMaintain, 
                     this.props.teamData.teamCarReports[element.id].maintainRemind.lastMaintainKmValidFor, 
                     null, "Km", element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
-                )
+                if (ret) {
+                    resultView.push(ret)
+                }
             }
             
         }
@@ -255,10 +277,12 @@ class ReminderReport extends React.Component {
 
         let ret = this.combineAuthType(authArr);
         ret.forEach(item => {
+            if ((item.lastDaysValidFor-item.diffDayFromLast) <= AppConstants.SETTING_DAY_SHOW_WARN) {
             resultView.push(
                 renderRemindItem(false, item.type, item.diffDayFromLast, item.lastDaysValidFor, 
                     item.nextDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate)
             )
+            }
         })
         // resultView.push(
         //     renderRemindItem(true, AppLocales.t("GENERAL_AUTHROIZE_AUTH"), diffDayFromLastAuthorize, lastAuthDaysValidFor, 

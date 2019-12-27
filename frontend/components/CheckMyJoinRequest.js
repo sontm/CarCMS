@@ -102,6 +102,7 @@ class CheckMyJoinRequest extends React.Component {
                                 // still Requested
                                 Toast.show({
                                     text: AppLocales.t("TOAST_NO_NEW_INFO"),
+                                    position: "top",
                                     //buttonText: "Okay",
                                     //type: "danger"
                                 })

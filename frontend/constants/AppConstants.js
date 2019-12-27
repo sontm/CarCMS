@@ -12,6 +12,9 @@ const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTER
 
 export default {
     IS_DEBUG_MODE: true,
+    // TODO Enable these values
+    SETTING_KM_SHOWWARN: 100,
+    SETTING_DAY_SHOW_WARN: 260,
 
     DEFAULT_BOTTOM_NAV_HEIGHT: 50,
     DEFAULT_FORM_WIDTH: Layout.window.width*1.0 - 10,
@@ -42,10 +45,7 @@ export default {
     FILL_ITEM_EXPENSE: "expense",
     FILL_ITEM_SERVICE: "service",
 
-    SETTING_KM_NEXT_OILFILL: 1000,
-    SETTING_DAY_NEXT_AUTHORIZE_CAR: 365, // 2year
-    SETTING_DAY_NEXT_INSURANCE: 365, // 2year
-    SETTING_DAY_NEXT_ROAD_FEE: 365, // 2year
+    
 
     DEFAULT_REPORT_RANGE: 6, // 6 tháng
     DEFAULT_IOS_STATUSBAR_HEIGHT: STATUSBAR_HEIGHT, // in IOS, should set this to 20
@@ -65,6 +65,7 @@ export default {
     COLOR_GREY_DARK: "rgb(80, 80, 80)",
     COLOR_GREY_MIDDLE: "rgb(150, 150, 150)",
     COLOR_GREY_BG: "rgb(200, 200, 200)",
+    COLOR_GREY_MIDDLE_LIGHT_BG: "rgb(220, 220, 220)",
     COLOR_GREY_LIGHT_BG: "rgb(240, 240, 240)",
 
     COLOR_HEADER_BG: "#1565c0", // MainThemeColor
