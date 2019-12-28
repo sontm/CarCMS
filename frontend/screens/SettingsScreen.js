@@ -186,10 +186,41 @@ class SettingsScreen extends React.Component {
         response => {
           console.log("Backend Return OK")
           console.log(response.data)
-          this.props.actUserLoginOK(response.data)
+          if (this.props.userData.vehicleList.length > 0) {
+            Alert.alert(
+              AppLocales.t("GENERAL_WARN"),
+              AppLocales.t("MSG_CONFIRM_MERGEDATA_BEFORELOGIN"),
+              [
+                  {
+                    text: AppLocales.t("GENERAL_NO"),
+                    onPress: () => {
+                      // User dont want to Merge data
+                      this.props.actUserLoginOK(response.data)
+                    },
+                  },
+                  {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
+                    onPress: () => {
+                      // User want to Merge data
+                      this.setState({
+                        isMergeDataBeforeLogin: true
+                      })
+                      this.props.actUserLoginOK(response.data)
+                    }},
+              ],
+              {cancelable: true}
+            )
+          } else {
+            this.props.actUserLoginOK(response.data)
+          }
         },
         error => {
           console.log(JSON.stringify(error))
+          Toast.show({
+            text: AppLocales.t("TOAST_LOGIN_FAILED"),
+            //buttonText: "Okay",
+            position: "top",
+            type: "danger"
+          })
         })
         // })
       } else {
@@ -198,6 +229,12 @@ class SettingsScreen extends React.Component {
     } catch (e) {
       console.log("ERROR Google Login")
       console.log(e)
+      Toast.show({
+        text: AppLocales.t("TOAST_LOGIN_FAILED"),
+        //buttonText: "Okay",
+        position: "top",
+        type: "danger"
+      })
     }
   }
   handleLogin() {
@@ -218,7 +255,6 @@ class SettingsScreen extends React.Component {
                         onPress: () => {
                           // User dont want to Merge data
                           this.props.actUserLoginOK(response.data)
-                          this.props.navigation.navigate("Settings")
                         },
                       },
                       {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
@@ -228,22 +264,23 @@ class SettingsScreen extends React.Component {
                             isMergeDataBeforeLogin: true
                           })
                           this.props.actUserLoginOK(response.data)
-                          this.props.navigation.navigate("Settings")
                         }},
                   ],
                   {cancelable: true}
                 )
               } else {
                 this.props.actUserLoginOK(response.data)
-                this.props.navigation.navigate("Settings")
               }
 
           },
           error => {
               console.log("Login ERROR")
               console.log(error)
-              this.setState({
-                  message: "Login Error!"
+              Toast.show({
+                text: AppLocales.t("TOAST_LOGIN_FAILED"),
+                //buttonText: "Okay",
+                position: "top",
+                type: "danger"
               })
           }
         );
@@ -319,14 +356,51 @@ class SettingsScreen extends React.Component {
           response => {
             console.log("Backend Return OK")
             console.log(response.data)
-            this.props.actUserLoginOK(response.data)
+            if (this.props.userData.vehicleList.length > 0) {
+              Alert.alert(
+                AppLocales.t("GENERAL_WARN"),
+                AppLocales.t("MSG_CONFIRM_MERGEDATA_BEFORELOGIN"),
+                [
+                    {
+                      text: AppLocales.t("GENERAL_NO"),
+                      onPress: () => {
+                        // User dont want to Merge data
+                        this.props.actUserLoginOK(response.data)
+                      },
+                    },
+                    {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
+                      onPress: () => {
+                        // User want to Merge data
+                        this.setState({
+                          isMergeDataBeforeLogin: true
+                        })
+                        this.props.actUserLoginOK(response.data)
+                      }},
+                ],
+                {cancelable: true}
+              )
+            } else {
+              this.props.actUserLoginOK(response.data)
+            }
           },
           error => {
             console.log(JSON.stringify(error))
+            Toast.show({
+              text: AppLocales.t("TOAST_LOGIN_FAILED_FBGG"),
+              //buttonText: "Okay",
+              position: "top",
+              type: "danger"
+            })
           })
         })
         .catch(error => {
           console.log(error);
+          Toast.show({
+            text: AppLocales.t("TOAST_LOGIN_FAILED_FBGG"),
+            //buttonText: "Okay",
+            position: "top",
+            type: "danger"
+          })
         });
         
        
@@ -449,7 +523,7 @@ class SettingsScreen extends React.Component {
               }
             {(this.props.userData.isLogined) ? (
             <View style={styles.rowContainerNoMargin}>
-                <Button small rounded danger onPress={() => this.handleLogout()} style={{width: 150}}>
+                <Button small rounded danger onPress={() => this.handleLogout()} style={{width: 150, flexDirection:"row", justifyContent:"center"}}>
                   <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
                 </Button>
             </View>

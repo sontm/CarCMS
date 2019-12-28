@@ -85,8 +85,8 @@ class GasUsageReport extends React.Component {
         var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
             = this.props.userData.carReports[this.props.currentVehicle.id].gasReport;    
 
-        // End date is ENd of This Month  
-        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        // End date is ENd of PREVIOUS MONTH Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth(),0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
@@ -149,8 +149,8 @@ class GasUsageReport extends React.Component {
         var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
           = this.props.userData.carReports[element.id].gasReport;
 
-        // End date is ENd of This Month  
-        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        // End date is ENd of PREVIOUS Month , Gas of Last month is not Correct
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth(),0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
@@ -240,8 +240,8 @@ class GasUsageReport extends React.Component {
     }
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
-        // End date is ENd of This Month  
-        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
+        // End date is ENd of PREVIOUS Month  
+        var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth(),0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
@@ -505,11 +505,16 @@ class GasUsageReport extends React.Component {
                         <Button small  onPress={() => this.setState({activeDisplay: 1})}
                             style={this.state.activeDisplay === 1 ? styles.activeSegment : styles.inActiveSegment}>
                             <Text style={this.state.activeDisplay === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ</Text></Button>
-                        <Button small last  onPress={() => this.setState({activeDisplay: 2})}
+                        {/* <Button small last  onPress={() => this.setState({activeDisplay: 2})}
                             style={this.state.activeDisplay === 2 ? styles.activeSegment : styles.inActiveSegment}>
-                            <Text style={this.state.activeDisplay === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ/Km</Text></Button>
+                            <Text style={this.state.activeDisplay === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ/Km</Text></Button> */}
                     </Segment>
                 </View>
+                {this.props.appData.countOpen < 10 ?
+                <Text style={{flexDirection:"row", fontSize: 14, fontStyle: "italic", 
+                    justifyContent: "center", textAlign:"center", flexWrap:"wrap"}}>(Cần có ít nhất 2 lần đổ xăng để có dữ liệu.)</Text>
+                : null}
+
                 <View style={styles.textRowOption}>
                     <Picker
                         mode="dropdown"
@@ -605,7 +610,7 @@ class GasUsageReport extends React.Component {
                         <VictoryAxis
                             dependentAxis
                             label={arrLabelY[this.state.activeDisplay]}
-                            axisLabelComponent={<VictoryLabel dy={40} dx={120} style={{fontSize: 13}}/>}
+                            axisLabelComponent={<VictoryLabel dy={40} dx={110} style={{fontSize: 11}}/>}
                             standalone={false}
                             tickFormat={(t) => `${this.state.activeDisplay!= 0 ? AppUtils.formatMoneyToK(t) :
                                 AppUtils.formatDistanceToKm(t)}`}
@@ -806,7 +811,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
     userData: state.userData,
-    teamData: state.teamData
+    teamData: state.teamData,
+    appData: state.appData
 });
 const mapActionsToProps = {
 };

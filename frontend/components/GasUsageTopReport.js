@@ -222,9 +222,9 @@ class GasUsageTopReport extends React.Component {
                             style={this.state.activeDisplay === 1 ? styles.activeSegment : styles.inActiveSegment}>
                             <Text style={this.state.activeDisplay === 1 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ</Text>
                         </Button>
-                        <Button small last onPress={() => this.setState({activeDisplay: 2})}
+                        {/* <Button small last onPress={() => this.setState({activeDisplay: 2})}
                             style={this.state.activeDisplay === 2 ? styles.activeSegment : styles.inActiveSegment}>
-                            <Text style={this.state.activeDisplay === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ/Km</Text></Button>
+                            <Text style={this.state.activeDisplay === 2 ? styles.activeSegmentText : styles.inActiveSegmentText}>đ/Km</Text></Button> */}
                     </Segment>
                 </View>
                 <View style={styles.textRowOption}>

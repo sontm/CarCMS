@@ -200,7 +200,8 @@ class TeamScreen extends React.Component {
           </Picker>
           </View>
 
-          <TouchableOpacity onPress={() => this.setState({sortAscending: !this.state.sortAscending})}>
+          <TouchableOpacity onPress={() => this.setState({sortAscending: !this.state.sortAscending})} 
+            style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
           <CheckBox checked={this.state.sortAscending==true} style={{marginLeft: -10}}
             onPress={() => this.setState({sortAscending: !this.state.sortAscending})} />
           <Text style={{fontSize: 12, margin: 0, marginLeft: 11}} onPress={() => this.setState({sortAscending: !this.state.sortAscending})}>Giảm Dần</Text>
@@ -228,17 +229,53 @@ class TeamScreen extends React.Component {
           aId = bId;
           bId = tmp;
         }
-
         if (this.state.sortType == "auth") {
+          if (!this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorize) {
+            // If B NULL, return false
+            return false;
+          }
+          if (!this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorize) {
+            // If B NULL, return false
+            return true;
+          }
           return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorize - 
             this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorize
         } else  if (this.state.sortType == "insurance") {
+          if (!this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorizeInsurance) {
+            // If B NULL, return false
+            return false;
+          }
+          if (!this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorizeInsurance) {
+            // If B NULL, return false
+            return true;
+          }
+
           return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorizeInsurance - 
             this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorizeInsurance
         } else if (this.state.sortType == "roadfee") {
+          if (!this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorizeRoadFee) {
+            // If B NULL, return false
+            return false;
+          }
+          if (!this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorizeRoadFee) {
+            // If B NULL, return false
+            return true;
+          }
+
           return this.props.teamData.teamCarReports[bId].authReport.diffDayFromLastAuthorizeRoadFee - 
             this.props.teamData.teamCarReports[aId].authReport.diffDayFromLastAuthorizeRoadFee
         } else if (this.state.sortType == "service") {
+          if (!this.props.teamData.teamCarReports[bId].maintainRemind.passedKmFromPreviousMaintain || 
+              this.props.teamData.teamCarReports[bId].maintainRemind.passedKmFromPreviousMaintain <= 0) {
+            // If B NULL, return false
+            return false;
+          }
+          if (!this.props.teamData.teamCarReports[aId].maintainRemind.passedKmFromPreviousMaintain ||
+              this.props.teamData.teamCarReports[aId].maintainRemind.passedKmFromPreviousMaintain <= 0) {
+            // If B NULL, return false
+            return true;
+          }
+
           if (this.props.teamData.teamCarReports[bId].maintainRemind) {
             return this.props.teamData.teamCarReports[bId].maintainRemind.passedKmFromPreviousMaintain - 
             this.props.teamData.teamCarReports[aId].maintainRemind.passedKmFromPreviousMaintain
@@ -246,12 +283,45 @@ class TeamScreen extends React.Component {
             return true;
           }
         } else if (this.state.sortType == "km") {
+          if (!this.props.teamData.teamCarReports[bId].gasReport.avgKmMonthly || 
+              this.props.teamData.teamCarReports[bId].gasReport.avgKmMonthly <= 0) {
+            // If B NULL, return false
+            return false;
+          }
+          if (!this.props.teamData.teamCarReports[aId].gasReport.avgKmMonthly || 
+              this.props.teamData.teamCarReports[aId].gasReport.avgKmMonthly <= 0) {
+            // If B NULL, return false
+            return true;
+          }
+
           return this.props.teamData.teamCarReports[bId].gasReport.avgKmMonthly - 
             this.props.teamData.teamCarReports[aId].gasReport.avgKmMonthly
         } else if (this.state.sortType == "gasEffective") {
+          if (!this.props.teamData.teamCarReports[bId].gasReport.avgMoneyPerKmMonthly || 
+              this.props.teamData.teamCarReports[bId].gasReport.avgMoneyPerKmMonthly <= 0) {
+            // If B NULL, return false
+            return false;
+          }
+          if (!this.props.teamData.teamCarReports[aId].gasReport.avgMoneyPerKmMonthly || 
+              this.props.teamData.teamCarReports[aId].gasReport.avgMoneyPerKmMonthly <= 0) {
+            // If B NULL, return false
+            return true;
+          }
+
           return this.props.teamData.teamCarReports[bId].gasReport.avgMoneyPerKmMonthly - 
             this.props.teamData.teamCarReports[aId].gasReport.avgMoneyPerKmMonthly
         } else if (this.state.sortType == "moneyTotal") {
+          if (!this.props.teamData.teamCarReports[bId].moneyReport.totalMoneySpend  || 
+              this.props.teamData.teamCarReports[bId].moneyReport.totalMoneySpend <= 0) {
+            // If B NULL, return false
+            return false;
+          }
+          if (!this.props.teamData.teamCarReports[aId].moneyReport.totalMoneySpend || 
+              this.props.teamData.teamCarReports[aId].moneyReport.totalMoneySpend <= 0) {
+            // If B NULL, return false
+            return true;
+          }
+
           return this.props.teamData.teamCarReports[bId].moneyReport.totalMoneySpend - 
             this.props.teamData.teamCarReports[aId].moneyReport.totalMoneySpend
         }

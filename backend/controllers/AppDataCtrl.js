@@ -355,7 +355,7 @@ module.exports = {
         } else {
             console.log("    Get All Notification of Guest OK:"+result.length)
             // object of all the users
-            console.log(result);
+            //console.log(result);
             res.status(200).send(result)
         }
       });

@@ -203,7 +203,11 @@ class AppUtils {
         }
     }
     formatDistanceToKm(v) {
-        return (v/1000).toFixed(0) + "N";
+        if (v < 1000) {
+            return (v).toFixed(0);
+        } else {
+            return (v/1000).toFixed(0) + "N";
+        }
     }
     formatToPercent(v, total) {
         return (v*100/total).toFixed(0) + "%";
@@ -729,10 +733,10 @@ class AppUtils {
                             arrTotalKmMonthly.push(objTotalKmMonthly[""+prop])
                             arrTotalMoneyMonthly.push(objTotalMoneyMonthly[""+prop])
 
-                            arrTotalMoneyPerKmMonthly.push({
-                                x: objTotalMoneyMonthly[""+prop].x,
-                                y: objTotalMoneyMonthly[""+prop].y/objTotalKmMonthly[""+prop].y
-                            })
+                            // arrTotalMoneyPerKmMonthly.push({
+                            //     x: objTotalMoneyMonthly[""+prop].x,
+                            //     y: objTotalMoneyMonthly[""+prop].y/objTotalKmMonthly[""+prop].y
+                            // })
                         }
                     }
                 }
@@ -750,10 +754,10 @@ class AppUtils {
                             })
                             arrTotalMoneyMonthly.push(objQuarterMoney[""+prop])
 
-                            arrTotalMoneyPerKmMonthly.push({
-                                x: objQuarterMoney[""+prop].x,
-                                y: objQuarterMoney[""+prop].y/objQuarter[""+prop].y
-                            })
+                            // arrTotalMoneyPerKmMonthly.push({
+                            //     x: objQuarterMoney[""+prop].x,
+                            //     y: objQuarterMoney[""+prop].y/objQuarter[""+prop].y
+                            // })
                         }
                     }
                 }
@@ -769,10 +773,10 @@ class AppUtils {
                             })
                             arrTotalMoneyMonthly.push(objYearMoney[""+prop])
 
-                            arrTotalMoneyPerKmMonthly.push({
-                                x: objYearMoney[""+prop].x,
-                                y: objYearMoney[""+prop].y/objYear[""+prop].y
-                            })
+                            // arrTotalMoneyPerKmMonthly.push({
+                            //     x: objYearMoney[""+prop].x,
+                            //     y: objYearMoney[""+prop].y/objYear[""+prop].y
+                            // })
                         }
                     }
                 }
@@ -784,9 +788,9 @@ class AppUtils {
             arrTotalMoneyMonthly.sort(function (a, b) {
                 return a.x.getTime() - b.x.getTime();
             })
-            arrTotalMoneyPerKmMonthly.sort(function (a, b) {
-                return a.x.getTime() - b.x.getTime();
-            })
+            // arrTotalMoneyPerKmMonthly.sort(function (a, b) {
+            //     return a.x.getTime() - b.x.getTime();
+            // })
 
             // Calcualte Average of current selected time
             let totalKmMonthly = 0;
@@ -802,15 +806,16 @@ class AppUtils {
                 }
             })
             let totalMoneyPerKmMonthly = 0;
-            arrTotalMoneyPerKmMonthly.forEach((item, index) => {
-                if (index < arrTotalMoneyPerKmMonthly.length -1) { // Not Take the Last month because current Inprogress
-                    totalMoneyPerKmMonthly += item.y;
-                }
-            })
+            // arrTotalMoneyPerKmMonthly.forEach((item, index) => {
+            //     if (index < arrTotalMoneyPerKmMonthly.length -1) { // Not Take the Last month because current Inprogress
+            //         totalMoneyPerKmMonthly += item.y;
+            //     }
+            // })
 
             avgKmMonthly = totalKmMonthly/(arrTotalKmMonthly.length -1);
             avgMoneyMonthly = totalMonyMonthly/(arrTotalMoneyMonthly.length -1);
-            avgMoneyPerKmMonthly = totalMoneyPerKmMonthly/(arrTotalMoneyPerKmMonthly.length -1);
+            //avgMoneyPerKmMonthly = totalMoneyPerKmMonthly/(arrTotalMoneyPerKmMonthly.length -1);
+            avgMoneyPerKmMonthly = avgMoneyMonthly/avgKmMonthly;
 
             // // convert to Array for Chart
             // for (var prop in objTotalMoneyMonthly) {

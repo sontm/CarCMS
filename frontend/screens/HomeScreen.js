@@ -40,7 +40,7 @@ class HomeScreen extends React.Component {
 
   }
   componentDidMount() {
-    console.log("HOMESCreen DidMount")
+    console.log("HOMESCreen DidMount, CountOpen:" + this.props.appData.countOpen)
     //this.loadFromStorage()
     // Load Notification messages
     this.props.actUserGetNotifications(this.props.userData)
@@ -89,7 +89,6 @@ class HomeScreen extends React.Component {
         }
       }
     }
-
   }
   componentWillReceiveProps(nextProps) {
     console.log("HOMESCreen WillReceiveProps")
@@ -303,9 +302,9 @@ class HomeScreen extends React.Component {
           </ScrollView>
         </Content>
 
-        {this.props.userData.modifiedInfo.countOpen < 10 && (!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
+        {this.props.appData.countOpen < 10 && (!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
         <View style={styles.blurViewTop}></View> : null }
-        {this.props.userData.modifiedInfo.countOpen < 10 && (!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
+        {this.props.appData.countOpen < 10 && (!this.props.userData.vehicleList || this.props.userData.vehicleList.length ==0) ?
         <View style={styles.guideViewAddNewCar}>
           <View style={{flexDirection: "row",alignItems: "center",justifyContent: "center",}}>
             <Text>{"    "}Để bắt đầu, nhấn </Text>

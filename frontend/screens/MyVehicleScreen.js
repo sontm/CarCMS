@@ -291,12 +291,12 @@ const styles = StyleSheet.create({
   },
 
   blurViewBot: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(80, 80, 80, 0.6)",
-    height: 150
+    // position: 'absolute',
+    // bottom: 0,
+    // left: 0,
+    // right: 0,
+    // backgroundColor: "rgba(80, 80, 80, 0.6)",
+    // height: 150
   },
   guideViewAddNewCar: {
     alignItems: "center",

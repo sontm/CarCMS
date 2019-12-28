@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, ListItem, H2, H3, H1 } from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, Thumbnail, ListItem, H2, H3, H1 } from 'native-base';
 
 import AppConstants from '../../constants/AppConstants'
 import Backend from '../../constants/Backend'
@@ -121,13 +121,13 @@ class JoinRequestScreen extends React.Component {
 
           {this.props.teamData.joinRequests.length > 0 ? this.props.teamData.joinRequests.map(item => (
               <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                  <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", flex: 1}}>
+                  <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                   </Left>
-                  <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", flex: 2}}>
-                    <Text style={{fontSize: 16, fontWeight: "bold", marginTop: 5}}>{item.fullName}</Text>
-                    <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
+                  <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", flex: 3, marginLeft: -5}}>
+                    <Text style={{fontSize: 15, marginTop: 5}}>{item.fullName}</Text>
+                    <Text style={{fontSize: 12, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
                   </Body>
-                  <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center", flex: 1}}>
+                  <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center", flex: 2}}>
                       <TouchableOpacity 
                             onPress={() => this.handleJoin(item, "approved")}>
                           <View style={{alignItems: "center"}}>
@@ -162,11 +162,14 @@ class JoinRequestScreen extends React.Component {
           {this.props.teamData.members.length > 0 ? this.props.teamData.members.map((item, idx) => (
             <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
                 <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", width: 54, marginLeft: 10}}>
+                  {item.pictureUrl ?
+                  <Thumbnail source={{uri: item.pictureUrl }} style={{...styles.avatarView, marginLeft: 0}}/>
+                  :
                   <View style={{...styles.avatarView, marginLeft: 0, backgroundColor: apputils.getColorForIndex(idx)}}>
                     <Text style={{color: "white"}}>{apputils.getFirstCharacterInname(item.fullName)}</Text>
-                  </View>
+                  </View>}
                 </Left>
-                <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", marginLeft: -5}}>
+                <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", marginLeft: 0}}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate("MemberVehicles", {member: item})} key={item.id}>
                     <Text style={{fontSize: 16, marginTop: 5}}>{item.fullName}</Text>
                     <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
@@ -252,6 +255,7 @@ const styles = StyleSheet.create({
   avatarView: {
     width: 50,
     height: 50,
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center"
   }

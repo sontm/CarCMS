@@ -60,7 +60,7 @@ function renderRemindItem(isTeam, text, passed, target, nextDate, unit, car, lic
                 ) : (
                 <Text style={{color: "tomato"}}>{text}{" "}{passed}/{target} ({unit})</Text>
                 )}
-                <Text style={{fontSize: 13}}>{car}{" "}{licensePlate}{" "}{"("+owner+")"}</Text>
+                <Text style={{fontSize: 13}}>{car}{" "}{licensePlate}{" "}{owner? ("("+owner+")") : ""}</Text>
                 {nextDate ?
                 <Text style={{fontSize: 13}}>
                     {AppLocales.t("GENERAL_NEXT") + ": "}
@@ -214,6 +214,7 @@ class ReminderReport extends React.Component {
     let resultView = [];
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
+          console.log(element.ownerFullName)
         if (this.props.teamData.teamCarReports[element.id].maintainRemind) {
             var {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
                 nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay}
@@ -280,7 +281,7 @@ class ReminderReport extends React.Component {
             if ((item.lastDaysValidFor-item.diffDayFromLast) <= AppConstants.SETTING_DAY_SHOW_WARN) {
             resultView.push(
                 renderRemindItem(false, item.type, item.diffDayFromLast, item.lastDaysValidFor, 
-                    item.nextDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate)
+                    item.nextDate, AppLocales.t("GENERAL_DAY"), element.brand+" " +element.model, element.licensePlate, element.ownerFullName)
             )
             }
         })

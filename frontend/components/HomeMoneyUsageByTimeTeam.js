@@ -108,7 +108,6 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
                     <Text><H3>
                     {AppLocales.t("HOME_TEAM_MONEY_USAGE")}
                     </H3></Text>
-                    
                 </View>
 
                 <View style={styles.statRow}>

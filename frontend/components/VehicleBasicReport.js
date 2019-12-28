@@ -307,7 +307,7 @@ class VehicleBasicReport extends Component {
                             <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
                                     {currentData.gasReport.avgKmMonthly ? 
-                                        currentData.gasReport.avgKmMonthly.toFixed(1) : "--"}
+                                        (currentData.gasReport.avgKmMonthly.toFixed(1)+" ") : "-- "}
                                 </Text>
                                 <Text style={styles.infoCardText}>{"Km/Tháng"}</Text>
                                 <Text style={styles.infoCardText}>{"(Di chuyển)"}</Text>
@@ -321,7 +321,7 @@ class VehicleBasicReport extends Component {
                             <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
                                     {currentData.gasReport.avgMoneyPerKmMonthly ? 
-                                    AppUtils.formatMoneyToK((currentData.gasReport.avgMoneyPerKmMonthly).toFixed(0)): "--"}
+                                    (AppUtils.formatMoneyToK((currentData.gasReport.avgMoneyPerKmMonthly).toFixed(0)) +" ") : "-- "}
                                 </Text>
                                 <Text style={styles.infoCardText}>{"đ/Km"}</Text>
                                 <Text style={styles.infoCardText}>{"(Hiệu suất Xăng)"}</Text>
@@ -335,7 +335,7 @@ class VehicleBasicReport extends Component {
                             <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
                                     {currentData.moneyReport.totalMoneySpend ? 
-                                    AppUtils.formatMoneyToK((currentData.moneyReport.totalMoneySpend).toFixed(0)) : "--"}
+                                    (AppUtils.formatMoneyToK((currentData.moneyReport.totalMoneySpend).toFixed(0))+" ") : "-- "}
                                 </Text>
                                 <Text style={styles.infoCardText}>{"đ"}</Text>
                                 <Text style={styles.infoCardText}>{"(Tổng Chi Tiêu)"}</Text>
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     horizontalCard: {
         flexDirection: "row",
         justifyContent:"flex-start",
-        alignItems:"flex-end",
+        alignItems:"center",
         marginLeft: 10
     },
 
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-end",
         alignItems: "flex-start",
-        marginTop: 5,
+        marginTop: 35,
         marginRight: 5,
     },
     txtUserOwner: {
