@@ -65,6 +65,8 @@ app.get('/api/app/appdata', appData.getLatestAppData);
 app.post('/api/app/notification', appData.addAppNotification);
 app.post('/api/app/notification/me', passport.authenticate('jwt', {session: false}),
   appData.getMyNotification);
+app.post('/api/app/notification/guest', appData.getMyNotification);
+
 app.get('/api/app/notification/all', appData.getAllAppNotification);
 
 //app.post('/api/app/recovermail', appData.requestEmailPasswordRecovery);

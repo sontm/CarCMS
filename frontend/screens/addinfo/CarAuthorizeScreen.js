@@ -11,6 +11,7 @@ import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserRed
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
 import Layout from '../../constants/Layout';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class CarAuthorizeScreen extends React.Component {
     constructor(props) {
@@ -218,21 +219,27 @@ class CarAuthorizeScreen extends React.Component {
                             : null}
                         </View>
                         
+                        <TouchableOpacity onPress={() =>this.onSetSubType(0)}>
                         <View style={{flexDirection: "row", marginTop: 10}}>
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[0].name) >=0} 
                                 onPress={() =>this.onSetSubType(0)}/>
                             <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(0)}>{this.props.appData.typeAuth[0].name}</Text>
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() =>this.onSetSubType(1)}>
                         <View style={{flexDirection: "row", marginTop: 10}}>
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[1].name) >=0} 
                                 onPress={() =>this.onSetSubType(1)}/>
                             <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(1)}>{this.props.appData.typeAuth[1].name}</Text>
                         </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() =>this.onSetSubType(2)}>
                         <View style={{flexDirection: "row", marginTop: 10}}>
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[2].name) >=0} 
                                 onPress={() =>this.onSetSubType(2)}/>
                             <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(2)}>{this.props.appData.typeAuth[2].name}</Text>
                         </View>
+                        </TouchableOpacity>
                     </View>
                     
                     <View style={styles.rowContainer}>

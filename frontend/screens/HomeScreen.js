@@ -230,12 +230,13 @@ class HomeScreen extends React.Component {
                   <CardItem header>
                       <View style={{alignItems: "center"}}>
                         <Body>
-                          <Text style={{alignSelf: "center", fontSize: 12+addedFontSize, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                          <Text style={{alignSelf: "center", fontSize: 12+addedFontSize, 
+                            color: AppConstants.COLOR_D3_DARK_GREEN}}>
                           {AppLocales.t("HOME_TOTAL_PRIVATE_THISMONTH")}
                           </Text>
                         </Body>
                         <View style={{flexDirection: "row", alignItems: "center"}}>
-                          <Text style={{color: AppConstants.COLOR_FACEBOOK, fontSize: 36+addedFontSize*2}}>
+                          <Text style={{color: AppConstants.COLOR_HEADER_BG, fontSize: 36+addedFontSize*2}}>
                             {AppUtils.formatMoneyToK(totalMoneyPrivateThisMonth)}</Text>
                           {iconInfoUsage}
                         </View>
@@ -245,7 +246,7 @@ class HomeScreen extends React.Component {
                         </Text>
                         </Body>
 
-                        <Text style={{marginTop: 15, fontSize: 20+addedFontSize, color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>
+                        <Text style={{marginTop: 10, fontSize: 20+addedFontSize, color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>
                             {AppUtils.formatMoneyToK(totalMoneyPrivate)}</Text>
                         <Body>
                           <Text style={{alignSelf: "center", fontSize: 13+addedFontSize, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
@@ -260,12 +261,13 @@ class HomeScreen extends React.Component {
                   <CardItem header>
                       <View style={{alignItems: "center"}}>
                       <Body>
-                        <Text style={{alignSelf: "center", fontSize: 12, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
+                        <Text style={{alignSelf: "center", fontSize: 12, 
+                        color: AppConstants.COLOR_TOMATO}}>
                         {AppLocales.t("HOME_TOTAL_TEAM_THISMONTH")}
                         </Text>
                       </Body>
                       <View style={{flexDirection: "row", alignItems: "center"}}>
-                        <Text style={{color: AppConstants.COLOR_FACEBOOK, fontSize: 36}}>
+                        <Text style={{color: AppConstants.COLOR_HEADER_BG, fontSize: 36}}>
                           {AppUtils.formatMoneyToK(totalMoneyTeamThisMonth)}</Text>
                         {iconInfoUsageTeam}
                       </View>
@@ -276,7 +278,7 @@ class HomeScreen extends React.Component {
                         </Text>
                       </Body>
 
-                      <Text style={{marginTop: 15, fontSize: 20, color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>
+                      <Text style={{marginTop: 10, fontSize: 20, color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>
                         {AppUtils.formatMoneyToK(totalMoneyTeam)}</Text>
                       <Body>
                       <Text style={{alignSelf: "center", fontSize: 13, color: AppConstants.COLOR_TEXT_DARKDER_INFO}}>
@@ -289,7 +291,7 @@ class HomeScreen extends React.Component {
               ) : null}
             </View>
 
-            {this.props.userData.modifiedInfo.countOpen > 10 || 
+            {this.props.appData.countOpen > 10 || 
               (this.props.userData.vehicleList && this.props.userData.vehicleList.length >0) ?
             <View>
             <ReminderReport/>

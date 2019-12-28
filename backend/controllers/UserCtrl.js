@@ -14,8 +14,16 @@ const client = new OAuth2Client("654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.a
 
 module.exports = {
   // TODO for validate Email
-  registerLocalUser(req, res, next) {
+  async registerLocalUser(req, res, next) {
     console.log("[UserCtrl] Register, email, password:" + req.body.password + "," + req.body.email)
+    let currentUser = await dbuser.findOne({email: req.body.email});
+    // if There is a User associated, NG
+    if (currentUser) {
+      res.status(400).send({msg:"Địa chỉ Email đã được sử dụng!"})
+      return;
+    }
+
+
     let rawPwd = req.body.password;
     bcrypt.hash(rawPwd, 10, (err, newHashed) => {
       if(err) {

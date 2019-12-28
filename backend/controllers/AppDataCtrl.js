@@ -307,10 +307,6 @@ module.exports = {
   async getMyNotification(req, res) {
     console.log("App getMyNotification")
     console.log(req.body)
-    let notQueryIds = [];
-    if (req.body && req.body.length > 0) {
-      notQueryIds = req.body;
-    }
     if (req.user) {
       // Find All message or teamId same or userID same
       // Find the User Record
@@ -319,6 +315,10 @@ module.exports = {
           err ? reject(err) : resolve(doc);
         });
       });
+      let notQueryIds = [];
+      if (req.body && req.body.length > 0) {
+        notQueryIds = req.body;
+      }
       dbnotification.find( 
         { 
           $and: [
@@ -355,7 +355,7 @@ module.exports = {
         } else {
             console.log("    Get All Notification of Guest OK:"+result.length)
             // object of all the users
-            //console.log(result);
+            console.log(result);
             res.status(200).send(result)
         }
       });

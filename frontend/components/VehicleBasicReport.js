@@ -129,8 +129,8 @@ class VehicleBasicReport extends Component {
                                     <Text style={styles.vehicleInfoTextBrand}>
                                         {this.props.vehicle.brand + " " + this.props.vehicle.model}
                                     </Text>
-                                    {(this.props.isMyVehicle && this.props.vehicle.isDefault) ? 
-                                        <CheckBox checked={true} color={AppConstants.COLOR_D3_DARK_GREEN}/> : null}
+                                    {/* {(this.props.isMyVehicle && this.props.vehicle.isDefault) ? 
+                                        <CheckBox checked={true} color={AppConstants.COLOR_D3_DARK_GREEN}/> : null} */}
                                 </View>
                                 <Text style={styles.vehicleInfoTextPlate}>
                                         {this.props.vehicle.licensePlate}

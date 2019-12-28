@@ -242,19 +242,38 @@ class PayServiceScreen extends React.Component {
     }
     combineMaintainType(settingService) {
         let result = [];
-        console.log(" combine MainTain Type:")
+        console.log(" combine MainTain Type:" + this.currentVehileIsBike)
         if (settingService) {
-            if (settingService.Km && settingService.Km.length > 0 &&
-                    settingService.Month && settingService.Month.length > 0) {
-                settingService.Km.forEach((item, idx) => {
-                    result.push({
-                        text: settingService.Km[idx]+"Km ("+AppLocales.t("GENERAL_OR")+" "+
-                         settingService.Month[idx]+" "+AppLocales.t("GENERAL_MONTH") +")",
-                        kmValue: settingService.Km[idx],
-                        index: idx
+            if (this.currentVehileIsBike) {
+                if (settingService.KmBike && settingService.KmBike.length > 0 &&
+                        settingService.MonthBike && settingService.MonthBike.length > 0) {
+                    settingService.KmBike.forEach((item, idx) => {
+                        if (settingService.LevelBikeEnable[idx]) {
+                            result.push({
+                                text: settingService.KmBike[idx]+"Km ("+AppLocales.t("GENERAL_OR")+" "+
+                                settingService.MonthBike[idx]+" "+AppLocales.t("GENERAL_MONTH") +")",
+                                kmValue: settingService.KmBike[idx],
+                                index: idx
+                            })
+                        }
                     })
-                })
-                
+                    
+                }
+            } else {
+                if (settingService.Km && settingService.Km.length > 0 &&
+                        settingService.Month && settingService.Month.length > 0) {
+                    settingService.Km.forEach((item, idx) => {
+                        if (settingService.LevelEnable[idx]) {
+                            result.push({
+                                text: settingService.Km[idx]+"Km ("+AppLocales.t("GENERAL_OR")+" "+
+                                settingService.Month[idx]+" "+AppLocales.t("GENERAL_MONTH") +")",
+                                kmValue: settingService.Km[idx],
+                                index: idx
+                            })
+                        }
+                    })
+                    
+                }
             }
             
         }
@@ -316,6 +335,8 @@ class PayServiceScreen extends React.Component {
         } 
 
         console.log(this.state)
+        this.checkCurrentVehicleIsBikeFromSelected();
+        
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
         if (today.getFullYear() == theDate.getFullYear && today.getMonth() == theDate.getMonth() &&
@@ -348,7 +369,7 @@ class PayServiceScreen extends React.Component {
                 )
             }
         }
-        this.checkCurrentVehicleIsBikeFromSelected();
+        
         return (
             <Container>
             <Content>
@@ -403,16 +424,19 @@ class PayServiceScreen extends React.Component {
                             <Label>{AppLocales.t("NEW_SERVICE_TYPE")}</Label>
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
 
+                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: false})}>
                             <CheckBox checked={this.state.isConstantFix != true} 
                                 onPress={() =>this.setState({isConstantFix: false})}/>
                             <Text style={{...styles.smallerText, marginLeft: 12}}  onPress={() =>this.setState({isConstantFix: false})}>
                                 {AppLocales.t("NEW_SERVICE_MAINTAIN")+""}</Text>
-                            
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: true})}>
                             <CheckBox style={{marginLeft: 10}}checked={this.state.isConstantFix == true} 
                                 onPress={() =>this.setState({isConstantFix: true})}/>
                             <Text style={{...styles.smallerText, marginLeft: 12}} onPress={() =>this.setState({isConstantFix: true})}>
                                 {AppLocales.t("NEW_SERVICE_CONSANTFIX")+""}</Text>
-                            
+                            </TouchableOpacity>
                             </View>
                         </Item>
                     </View>
@@ -420,8 +444,16 @@ class PayServiceScreen extends React.Component {
                     {!this.state.isConstantFix ? 
                     <View style={styles.rowContainer}>
                         <View style={styles.rowForm}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label>{AppLocales.t("NEW_SERVICE_MAINTAIN_TYPE")}</Label>
+                            <Button primary small
+                                    onPress={() => {
+                                        this.props.navigation.navigate("ServiceMaintainSetting")
+                                }}>
+                                    <Text>{AppLocales.t("NEW_SERVICE_MAINTAIN_TYPE_SET")}</Text>
+                            </Button>
+                        </View>
+                        <Item style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="arrow-down" />}
@@ -491,7 +523,7 @@ class PayServiceScreen extends React.Component {
                             <Text style={{color: "red"}}>*</Text>
                             : null}
                             </View> 
-                            <Button success small
+                            <Button primary small
                                     onPress={() => {
                                         this.props.navigation.navigate("ServiceModules", 
                                         {onOk: this.onUpdateMaintainModules,
@@ -589,10 +621,10 @@ const styles = StyleSheet.create({
       // borderColor:"grey"
     },
     rowForm: {
-      flexDirection: "row",
       borderBottomColor: "rgb(210, 210, 210)",
       borderBottomWidth: 0.5,
       width: AppConstants.DEFAULT_FORM_WIDTH,
+      justifyContent: "center"
     },
     rowFormNoBorder: {
         flexDirection: "row",

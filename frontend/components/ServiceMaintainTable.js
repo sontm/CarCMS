@@ -212,13 +212,16 @@ class ServiceMaintainTable extends React.Component {
                 </H3></Text>
             </View>
 
+            <TouchableOpacity onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}>
             <View style={{flexDirection: "row", marginTop: 7, marginLeft: 15, marginBottom: 10}}>
+                
                 <CheckBox checked={this.state.onlyShowDataRow} 
                     onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}/>
                 <Text style={{marginLeft: 18, fontSize: 15}} onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}>
                     {"Chỉ hiển thị dòng có dữ liệu"}
                 </Text>
             </View>
+            </TouchableOpacity>
 
             <View style={{flexDirection: "row"}}>
             <View style={{width: baseWidth*1.5}}>

@@ -260,7 +260,6 @@ class AppUtils {
             arr.push(val)
     }
     getColorForProgress(valueDiff, unit) {
-        console.log("getColorForProgress:" + valueDiff + "UNIT:" + unit)
         // When Double of AppConstant Threashold, will simple Red
         let threshold = AppConstants.SETTING_KM_SHOWWARN;
         if (unit != "Km") {
@@ -268,13 +267,13 @@ class AppUtils {
         }
 
         if (isNaN(valueDiff)) {
-            return AppConstants.COLOR_D3_LIGHT_GREEN;
+            return AppConstants.COLOR_D3_MIDDLE_GREEN;
         } else 
         if (valueDiff <= threshold) {
             // Normal
             return "tomato";
         } else {
-            return AppConstants.COLOR_D3_LIGHT_GREEN;
+            return AppConstants.COLOR_D3_MIDDLE_GREEN;
         }
     }
     reviseTickLabelsToCount(allLabels, expectedCount) {
@@ -362,6 +361,19 @@ class AppUtils {
         }
         return {sum, avg};
     }
+
+    calculateTotalYFromArr(arr) {
+        let total = 0;
+        if (arr && arr.length > 0) {
+            arr.forEach(item => {
+                if (item && item.y) {
+                    total += y;
+                }
+            })
+        }
+        return total;
+    }
+
     calculateDiffDayOf2Date(pre, after) {
         let preDate = this.normalizeFillDate(new Date(pre))
         let afterDate = this.normalizeFillDate(new Date(after))
@@ -1889,14 +1901,14 @@ class AppUtils {
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
     // }
-    syncDataFromServer(props) {
+    syncDataFromServer(props, isMergeDataBefore = false) {
         props.actUserStartSyncPrivate();
         Backend.getAllItemList(props.userData.token,
             response => {
                 console.log("Sync Vehicle From Server OK");
                 //this.props.actVehicleAddVehicle(response.data, true)
                 //console.log(response.data.myJoinRequest)
-                props.actVehicleSyncAllFromServer(response.data, props)
+                props.actVehicleSyncAllFromServer(response.data, props, isMergeDataBefore)
             },
             error => {console.log("Sync Vehicle From Server Error");console.log(error);}
         );

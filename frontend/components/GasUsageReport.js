@@ -421,7 +421,8 @@ class GasUsageReport extends React.Component {
                 if (teamNotMerge) {
                     var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
                     var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
-                    var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
+                    var avgMoneyPerKmMonthly = avgMoneyMonthly/avgKmMonthly;
+                    //var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
                 }
             } else {
                 // Individual All Cars
@@ -429,7 +430,9 @@ class GasUsageReport extends React.Component {
                     this.calculateAllVehicleGasUsage();
                 var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmAllCars, 2).avg;
                 var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyAllCars, 2).avg;
-                var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
+                //var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmAllCars, 2).avg;
+                // Use Simple Formular
+                var avgMoneyPerKmMonthly = avgMoneyMonthly/avgKmMonthly;
             }
             
             if (this.state.activeDisplay == 1) {
@@ -454,7 +457,9 @@ class GasUsageReport extends React.Component {
 
             var avgKmMonthly = AppUtils.calculateAverageOfArray(arrGasKmThisCar, 1).avg;
             var avgMoneyMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyThisCar, 1).avg;
-            var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmThisCar, 1).avg;
+            //var avgMoneyPerKmMonthly = AppUtils.calculateAverageOfArray(arrGasMoneyPerKmThisCar, 1).avg;
+            var avgMoneyPerKmMonthly = avgMoneyMonthly/avgKmMonthly;
+            
             var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
         }
         if (theBarWidth && theBarWidth > 36) {

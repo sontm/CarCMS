@@ -16,6 +16,8 @@ export default {
     SETTING_KM_SHOWWARN: 100,
     SETTING_DAY_SHOW_WARN: 260,
 
+    SETTING_MAX_CAR_INDIVIDUAL: 30,
+
     DEFAULT_BOTTOM_NAV_HEIGHT: 50,
     DEFAULT_FORM_WIDTH: Layout.window.width*1.0 - 10,
     DEFAULT_FORM_PADDING_HORIZON: 5,// Layout.window.width*0.05,
@@ -56,9 +58,9 @@ export default {
 
     //SERVER_API:"https://yamastack.com/api/",
     //SERVER_API:"http://18.140.121.240:3000/api",
-    SERVER_API:  "http://192.168.1.51:3000/api",
+    //SERVER_API:  "http://192.168.1.51:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here (not OK when on LAN setting of Expo)
-    //SERVER_API:  "http://172.20.10.2:3000/api",
+    SERVER_API:  "http://172.20.10.2:3000/api",
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
     COLOR_PICKER_TEXT: "#1565c0",//"#1f77b4",
 
@@ -69,14 +71,18 @@ export default {
     COLOR_GREY_LIGHT_BG: "rgb(240, 240, 240)",
 
     COLOR_HEADER_BG: "#1565c0", // MainThemeColor
-    COLOR_HEADER_BG_LIGHT: "#3488d1",//"#5e92f3", 
+    COLOR_HEADER_BG_LIGHT: "#4093db",//"#5e92f3", 
+    COLOR_HEADER_BG_LIGHT_SUPER: "#b5e6ff",
     COLOR_HEADER_BG_DARKER: "#003c8f",
     COLOR_HEADER_BUTTON: "white",
+
     COLOR_BUTTON_BG: "#1565c0", // Main Theme color 3488d1
     COLOR_FACEBOOK: "#3b5998", // FB color
     COLOR_GOOGLE: "#DB4437",
+    COLOR_TOMATO:"#ff7f0e",
     COLOR_D3_LIGHT_BLUE: "#1f77b4",
     COLOR_D3_DARK_GREEN: "#2ca02c",
+    COLOR_D3_MIDDLE_GREEN: "#43d175", // TODO
     COLOR_D3_LIGHT_GREEN: "#98df8a",
     COLOR_TEXT_LIGHT_INFO: "rgb(150,150,150)",
     COLOR_TEXT_DARKDER_INFO: "rgb(110,110,110)",

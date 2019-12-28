@@ -98,7 +98,7 @@ class ServiceScreenModules extends React.Component {
 
                         <Body style={{flexDirection:"row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", flexGrow: 100}}>
                         <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
-                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2}}>{item.name}</Text>
+                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2, minHeight: 20}}>{item.name}</Text>
                         </TouchableOpacity>
                         {this.state.serviceModule[""+item.name] ? (
                         <View style={{flexDirection:"row", alignItems: "center", justifyContent:"flex-end", marginRight: -15}}>
@@ -142,7 +142,7 @@ class ServiceScreenModules extends React.Component {
 
                         <Body style={{flexDirection:"row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", flexGrow: 100}}>
                         <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
-                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2}}>{item.name}</Text>
+                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2, minHeight: 20}}>{item.name}</Text>
                         </TouchableOpacity>
                         {this.state.serviceModule[""+item.name] ? (
                         <View style={{flexDirection:"row", alignItems: "center", justifyContent:"flex-end", marginRight: -15}}>
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   },
 
   smallerText: {
-      fontSize: 12
+      fontSize: 10
   },
 
   activeSegment2: {

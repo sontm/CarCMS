@@ -33,7 +33,9 @@ class SettingsScreen extends React.Component {
     this.state = {
       email: "tester1",
       password: "123456",
-      isShowPwd: false
+      isShowPwd: false,
+
+      isMergeDataBeforeLogin: false
     };
 
     this.syncDataToServer = this.syncDataToServer.bind(this)
@@ -204,9 +206,38 @@ class SettingsScreen extends React.Component {
         Backend.login({email: this.state.email, password: this.state.password}, 
           response => {
               console.log("Login OK")
-              console.log(response.data)
-              this.props.actUserLoginOK(response.data)
-              this.props.navigation.navigate("Settings")
+              // Login OK, check if current have Data
+              //console.log(response.data)
+              if (this.props.userData.vehicleList.length > 0) {
+                Alert.alert(
+                  AppLocales.t("GENERAL_WARN"),
+                  AppLocales.t("MSG_CONFIRM_MERGEDATA_BEFORELOGIN"),
+                  [
+                      {
+                        text: AppLocales.t("GENERAL_NO"),
+                        onPress: () => {
+                          // User dont want to Merge data
+                          this.props.actUserLoginOK(response.data)
+                          this.props.navigation.navigate("Settings")
+                        },
+                      },
+                      {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
+                        onPress: () => {
+                          // User want to Merge data
+                          this.setState({
+                            isMergeDataBeforeLogin: true
+                          })
+                          this.props.actUserLoginOK(response.data)
+                          this.props.navigation.navigate("Settings")
+                        }},
+                  ],
+                  {cancelable: true}
+                )
+              } else {
+                this.props.actUserLoginOK(response.data)
+                this.props.navigation.navigate("Settings")
+              }
+
           },
           error => {
               console.log("Login ERROR")
@@ -312,7 +343,7 @@ class SettingsScreen extends React.Component {
     if (!this.props.userData.isLogined && newProps.userData.isLogined) {
       
       // This time, User have Just logined, will Sync
-      AppUtils.syncDataFromServer(newProps)
+      AppUtils.syncDataFromServer(newProps, this.state.isMergeDataBeforeLogin)
     }
   }
 
@@ -418,7 +449,7 @@ class SettingsScreen extends React.Component {
               }
             {(this.props.userData.isLogined) ? (
             <View style={styles.rowContainerNoMargin}>
-                <Button small block danger onPress={() => this.handleLogout()} style={{width: 150}}>
+                <Button small rounded danger onPress={() => this.handleLogout()} style={{width: 150}}>
                   <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
                 </Button>
             </View>
@@ -599,7 +630,6 @@ class SettingsScreen extends React.Component {
                     <Body style={{flexDirection:"column", justifyContent:"flex-start", alignItems:"center"}}>
                       <Icon name="cloud-upload" style={styles.iconCloudUp} />
                       <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO")}</Text>
-                      <Text style={styles.textNormalSmall}>{AppConstants.SERVER_API}</Text>
                       <Text style={styles.textNormalSmallDate}>
                         {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ":\n" + AppUtils.formatDateTimeFullVN(this.props.userData.lastSyncToServerOn)}
                       </Text>
@@ -632,7 +662,7 @@ class SettingsScreen extends React.Component {
                 {AppLocales.t("SETTING_H1_SETTING")}
                 </Text>
             </View>
-            <TouchableOpacity 
+            {/* <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("VehicleSetting")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
@@ -641,7 +671,7 @@ class SettingsScreen extends React.Component {
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("ServiceMaintainSetting")}>
               <View style={styles.rowContainer}>
@@ -682,6 +712,17 @@ class SettingsScreen extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity 
+                onPress={() => this.props.navigation.navigate("CustomerVoiceScreen")}>
+              <View style={styles.rowContainer}>
+                <View style={styles.rowIcon}>
+                  <Icon type="Foundation" name="mail" style={styles.iconLeft} /></View>
+                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_CONTACT")}</Text></View>
+                <View style={styles.rowRightIcon}>
+                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
                 onPress={() => {}}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
@@ -692,27 +733,18 @@ class SettingsScreen extends React.Component {
               </View>
             </TouchableOpacity>
             <TouchableOpacity 
-                onPress={() => {}}>
+                onPress={() => this.props.navigation.navigate("Notification")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
-                  <Icon type="Entypo" name="info-with-circle" style={{...styles.iconLeft}} /></View>
+                  <Icon name="notifications" style={{...styles.iconLeft, marginLeft: 5}} /></View>
                 <View style={styles.rowText}>
-                  <Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_APP_INFO")}</Text>
+                  <Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_APP_NOTI")}</Text>
                 </View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate("CustomerVoiceScreen")}>
-              <View style={styles.rowContainer}>
-                <View style={styles.rowIcon}>
-                  <Icon type="Foundation" name="mail" style={styles.iconLeft} /></View>
-                <View style={styles.rowText}><Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_CONTACT")}</Text></View>
-                <View style={styles.rowRightIcon}>
-                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
-              </View>
-            </TouchableOpacity>
+            
 
             {AppConstants.IS_DEBUG_MODE ? (
             <View>
@@ -725,7 +757,7 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("DebugScreen")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowText}>
-                  <Text style={styles.textNormal}>Debug Screen</Text>
+                  <Text style={styles.textNormal}>Debug Screen {" "+AppConstants.SERVER_API}</Text>
                 </View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>

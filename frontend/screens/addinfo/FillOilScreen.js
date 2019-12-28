@@ -199,7 +199,7 @@ class FillOilScreen extends React.Component {
                     
                     <View style={styles.rowButton}>
                     <Button
-                        block primary
+                        rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         onPress={() => this.save(this.state)}
                     ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
                     </View>

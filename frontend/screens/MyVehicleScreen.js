@@ -197,9 +197,9 @@ class MyVehicleScreen extends React.Component {
         ): (
           viewPage0
         ) }
-        {isNoFillItem ?
+        {(isNoFillItem && this.props.appData.countOpen <= 10)  ?
         <View style={styles.blurViewBot}></View> : null }
-        {isNoFillItem ? (
+        {(isNoFillItem && this.props.appData.countOpen <= 10) ? (
             <View style={styles.guideViewAddNewCar}>
               <View style={{flexDirection: "row",alignItems: "center",justifyContent: "center", flexWrap: "wrap"}}>
                 <Text>Hãy nhấn </Text>
@@ -313,7 +313,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => ({
-  userData: state.userData
+  userData: state.userData,
+  appData: state.appData
 });
 const mapActionsToProps = {
   actVehicleDeleteVehicle, actVehicleAddVehicle

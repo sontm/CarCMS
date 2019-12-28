@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { View, StyleSheet, TextInput, AsyncStorage, Platform } from 'react-native';
+import { View, StyleSheet, TextInput, AsyncStorage, Switch } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
     Item, Picker, Button, Text, Input, Label, H3, Tabs, Tab, TabHeading} from 'native-base';
-import {HeaderText} from '../../components/StyledText'
+import {HeaderText, TypoH4} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
@@ -17,9 +17,14 @@ class ServiceMaintainSettingScreen extends React.Component {
             Month: [6, 12, 24, 48, 96],
             KmBike: [4000, 8000, 12000, 16000, 20000],
             MonthBike: [4, 8, 12, 18, 24],
+
+            LevelEnable: [true, true, true, false, false],
+            LevelBikeEnable: [true, true, false, false, false],
         };
         this.save = this.save.bind(this)
         this.onSetValue = this.onSetValue.bind(this)
+        this.onToggleEnable = this.onToggleEnable.bind(this)
+        
     }
 
     save = async (newVehicle) => {
@@ -28,7 +33,7 @@ class ServiceMaintainSettingScreen extends React.Component {
             console.log(this.state)
             this.props.actSettingSetMaintainType(this.state)
 
-            this.props.navigation.navigate('Settings')
+            this.props.navigation.goBack()
         } catch (e) {
             console.error('Failed to save Vehicle SEtting.')
             console.log(e)
@@ -61,6 +66,19 @@ class ServiceMaintainSettingScreen extends React.Component {
             }
         }
     }
+
+    onToggleEnable(level, isBike) {
+        if (isBike) {
+            let prevState = this.state;
+            prevState.LevelBikeEnable[level-1] = !prevState.LevelBikeEnable[level-1]
+            this.setState(prevState)
+        } else {
+            let prevState = this.state;
+            prevState.LevelEnable[level-1] = !prevState.LevelEnable[level-1]
+            this.setState(prevState)
+        }
+    }
+
     componentWillMount() {
         console.log("MainainServiceSetting WillMount:")
         if (this.props.userData.settingService) {
@@ -79,10 +97,17 @@ class ServiceMaintainSettingScreen extends React.Component {
                     activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
                 <Content>
                 <View style={styles.formContainer}>
+                    <Text style={styles.noteRow}>
+                        {AppLocales.t("SETTING_MAINTAIN_NOTE")}
+                    </Text>
+
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L1")}</H3></Label>
+                                <TypoH4>{AppLocales.t("SETTING_MAINTAIN_L1")}</TypoH4></Label>
+                        </View>
+
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -101,9 +126,16 @@ class ServiceMaintainSettingScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L2")}</H3></Label>
+                                <TypoH4 style={this.state.LevelEnable[1] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L2")}</TypoH4></Label>
+                            <Switch value={this.state.LevelEnable[1]} onChange={() => this.onToggleEnable(2, false)} 
+                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                        </View>
+
+                        {this.state.LevelEnable[1] ? 
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -118,13 +150,19 @@ class ServiceMaintainSettingScreen extends React.Component {
                                 onChangeText={(val) => this.onSetValue(val, 2, true)}
                                 value={""+this.state.Month[1]}
                             />
-                        </Item>
+                        </Item> : null}
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L3")}</H3></Label>
+                                <TypoH4 style={this.state.LevelEnable[2] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L3")}</TypoH4></Label>
+                            <Switch value={this.state.LevelEnable[2]} onChange={() => this.onToggleEnable(3, false)} 
+                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                        </View>
+
+                        {this.state.LevelEnable[2] ? 
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -139,13 +177,19 @@ class ServiceMaintainSettingScreen extends React.Component {
                                 onChangeText={(val) => this.onSetValue(val, 3, true)}
                                 value={""+this.state.Month[2]}
                             />
-                        </Item>
+                        </Item> : null}
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L4")}</H3></Label>
+                                <TypoH4 style={this.state.LevelEnable[3] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L4")}</TypoH4></Label>
+                            <Switch value={this.state.LevelEnable[3]} onChange={() => this.onToggleEnable(4, false)}
+                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                        </View>
+
+                        {this.state.LevelEnable[3] ? 
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -160,13 +204,19 @@ class ServiceMaintainSettingScreen extends React.Component {
                                 onChangeText={(val) => this.onSetValue(val, 4, true)}
                                 value={""+this.state.Month[3]}
                             />
-                        </Item>
+                        </Item> : null}
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L5")}</H3></Label>
+                                <TypoH4 style={this.state.LevelEnable[4] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L5")}</TypoH4></Label>
+                            <Switch value={this.state.LevelEnable[4]} onChange={() => this.onToggleEnable(5, false)}
+                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                        </View>
+
+                        {this.state.LevelEnable[4] ? 
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -181,14 +231,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                                 onChangeText={(val) => this.onSetValue(val, 5, true)}
                                 value={""+this.state.Month[4]}
                             />
-                        </Item>
-                    </View>
-
-                    <View style={styles.rowButton}>
-                    <Button
-                        block primary
-                        onPress={() => this.save(this.state)}
-                    ><Text>{AppLocales.t("SETTING_REMIND_BTN_SAVE")}</Text></Button>
+                        </Item> : null}
                     </View>
 
                 </View>
@@ -197,11 +240,20 @@ class ServiceMaintainSettingScreen extends React.Component {
 
 
 
+
+
+
+
+
                 <Tab heading={AppLocales.t("GENERAL_BIKE")}
                         tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
                 <Content>
                 <View style={styles.formContainer}>
+                <Text style={styles.noteRow}>
+                        {AppLocales.t("SETTING_MAINTAIN_NOTE")}
+                    </Text>
+
                 <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>
@@ -224,9 +276,15 @@ class ServiceMaintainSettingScreen extends React.Component {
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L2_BIKE")}</H3></Label>
+                                <TypoH4 style={this.state.LevelBikeEnable[1] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L2_BIKE")}</TypoH4></Label>
+                            <Switch value={this.state.LevelBikeEnable[1]} onChange={() => this.onToggleEnable(2, true)} 
+                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                        </View>
+
+                        {this.state.LevelBikeEnable[1] ? 
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -241,13 +299,19 @@ class ServiceMaintainSettingScreen extends React.Component {
                                 onChangeText={(val) => this.onSetValue(val, 2, true, true)}
                                 value={""+this.state.MonthBike[1]}
                             />
-                        </Item>
+                        </Item> : null }
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L3_BIKE")}</H3></Label>
+                                <TypoH4 style={this.state.LevelBikeEnable[2] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L3_BIKE")}</TypoH4></Label>
+                            <Switch value={this.state.LevelBikeEnable[2]} onChange={() => this.onToggleEnable(3, true)} 
+                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                        </View>
+
+                        {this.state.LevelBikeEnable[2] ? 
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -262,13 +326,19 @@ class ServiceMaintainSettingScreen extends React.Component {
                                 onChangeText={(val) => this.onSetValue(val, 3, true, true)}
                                 value={""+this.state.MonthBike[2]}
                             />
-                        </Item>
+                        </Item> : null }
                     </View>
 
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label style={styles.rowLabel}>
-                                <H3>{AppLocales.t("SETTING_MAINTAIN_L4_BIKE")}</H3></Label>
+                                <TypoH4 style={this.state.LevelBikeEnable[3] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L4_BIKE")}</TypoH4></Label>
+                            <Switch value={this.state.LevelBikeEnable[3]} onChange={() => this.onToggleEnable(4, true)} 
+                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                        </View>
+
+                        {this.state.LevelBikeEnable[3] ? 
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <Label style={styles.rowLabel}>{AppLocales.t("SETTING_MAINTAIN_L1_KM")}</Label>
                             <Input
                                 style={styles.rowForm}
@@ -283,12 +353,20 @@ class ServiceMaintainSettingScreen extends React.Component {
                                 onChangeText={(val) => this.onSetValue(val, 4, true, true)}
                                 value={""+this.state.MonthBike[3]}
                             />
-                        </Item>
+                        </Item> : null }
                     </View>
+
+                    
                 </View>
                 </Content>
                 </Tab>
             </Tabs>
+            <View style={styles.rowButton}>
+                <Button
+                    rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                    onPress={() => this.save(this.state)}
+                ><Text>{AppLocales.t("SETTING_REMIND_BTN_SAVE")}</Text></Button>
+            </View>
         </Container>
         );
     }
@@ -316,11 +394,12 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
     backgroundColor: '#fff',
-    flexDirection: "column"
+    flexDirection: "column",
+    paddingBottom: 80
   },
   rowContainer: {
-    flexDirection: "row",
-    alignItems: "flex-end", // vertial align
+    //flexDirection: "row",
+    //alignItems: "flex-end", // vertial align
     justifyContent: "center",
     //height: 50,
     width: AppConstants.DEFAULT_FORM_WIDTH,
@@ -342,11 +421,27 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5
   },
   rowButton: {
-    marginTop: 20,
+    alignItems: "center",
     alignSelf: "center",
+    position: 'absolute',
+    justifyContent: "center",
+    bottom: 5,
+    left: 0,
+    right: 0,
   },
   btnSubmit: {
 
+  },
+
+  levelDisable: {
+      fontStyle: "italic",
+      color: AppConstants.COLOR_TEXT_LIGHT_INFO
+  },
+  noteRow: {
+      fontSize: 14,
+      fontStyle: "italic",
+      color: AppConstants.COLOR_TEXT_LIGHT_INFO,
+      marginBottom: 7
   }
 });
 

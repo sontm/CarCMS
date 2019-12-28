@@ -11,6 +11,7 @@ import Backend from '../../constants/Backend'
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
 import NetInfo from "@react-native-community/netinfo";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class CreateTeamScreen extends React.Component {
     constructor(props) {
@@ -156,6 +157,7 @@ class CreateTeamScreen extends React.Component {
                         </Item>
                     </View>
 
+                    <TouchableOpacity onPress={() => this.toogleMemberCanViewReport()}>
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
                         marginLeft: -10, marginTop: 15, marginBottom: 10}}>
                         <CheckBox checked={this.state.canMemberViewReport}
@@ -164,7 +166,9 @@ class CreateTeamScreen extends React.Component {
                             {AppLocales.t("SETTING_LBL_CREATE_TEAM_MEM_CANVIEWREPORT")}
                         </Text>
                     </View>
+                    </TouchableOpacity>
 
+                    <TouchableOpacity onPress={() => this.toggleExcludeMyCar()}>
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
                         marginLeft: -10, marginTop: 15, marginBottom: 10}}>
                         <CheckBox checked={this.state.excludeMyCar}
@@ -173,6 +177,7 @@ class CreateTeamScreen extends React.Component {
                             {AppLocales.t("SETTING_LBL_CREATE_TEAM_EXCLUDE_MYCAR")}
                         </Text>
                     </View>
+                    </TouchableOpacity>
 
                     <View style={styles.rowButton}>
                     <Button

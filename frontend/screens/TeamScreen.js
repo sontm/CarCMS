@@ -200,9 +200,11 @@ class TeamScreen extends React.Component {
           </Picker>
           </View>
 
+          <TouchableOpacity onPress={() => this.setState({sortAscending: !this.state.sortAscending})}>
           <CheckBox checked={this.state.sortAscending==true} style={{marginLeft: -10}}
             onPress={() => this.setState({sortAscending: !this.state.sortAscending})} />
           <Text style={{fontSize: 12, margin: 0, marginLeft: 11}} onPress={() => this.setState({sortAscending: !this.state.sortAscending})}>Giảm Dần</Text>
+          </TouchableOpacity>
           {/* <Segment small>
               <Button small first onPress={() => this.setState({sortAscending: true})}
                   style={this.state.sortAscending ? styles.activeSegment2 : styles.inActiveSegment2}>
@@ -432,7 +434,7 @@ class TeamScreen extends React.Component {
                 AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
               </Text>
               <Text style={{fontSize: 13, color: AppConstants.COLOR_TEXT_DARKDER_INFO, fontStyle: "italic", flexWrap: "wrap", textAlign: "justify"}}>{
-                "(Hãy Gia Nhập Nhóm giúp quản lý dữ liệu theo từng thành viên)"
+                "(Gia Nhập Nhóm giúp quản lý/phân tích dữ liệu tất cả thành viên)"
               }</Text>
 
               <Button rounded onPress={() => this.props.navigation.navigate("CreateTeam", {isEdit: false})} 

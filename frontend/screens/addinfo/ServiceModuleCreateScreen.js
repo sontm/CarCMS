@@ -88,7 +88,7 @@ class ServiceModuleCreateScreen extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        block primary
+                        rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         onPress={() => this.handleCreate()}
                             ><Text>{AppLocales.t("MAINTAIN_CREATE_MODULE")}</Text></Button>
                     </View>

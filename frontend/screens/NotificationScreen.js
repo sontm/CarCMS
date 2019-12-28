@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  AsyncStorage
+  Linking
 } from 'react-native';
 
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, ListItem, H2, H3, H1 } from 'native-base';
@@ -45,6 +45,18 @@ class NotificationScreen extends React.Component {
     // Will Reset all notSeen Notification
     this.props.actUserSawAllNotifications();
   }
+  handleClick (item){
+    if (item && item.url) {
+      Linking.canOpenURL(item.url).then(supported => {
+        if (supported) {
+          Linking.openURL(item.url);
+        } else {
+          console.log("Don't know how to open URI: " + item.url);
+        }
+      });
+    }
+  };
+
   // Data is Array of
 //      "email": "tester1",
 //     "fullName": "I M Tester1",
@@ -69,6 +81,7 @@ class NotificationScreen extends React.Component {
             return (
               <Card key={item.id} transparent>
                 <CardItem style={styles.bottomBorder}>
+                  <TouchableOpacity onPress={() => this.handleClick(item)} key={item.id+item.title}> 
                   <Body>
                     <Text style={titleStyle}>
                       {item.title}
@@ -76,10 +89,15 @@ class NotificationScreen extends React.Component {
                     <Text style={contentStyle}>
                       {item.content}
                     </Text>
+                    {item.url ?
+                    <Text style={styles.notiUrl}>
+                      {item.url}
+                    </Text> : null}
                     <Text style={styles.notiDate}>
                       {apputils.formatDateMonthDayYearVN(item.issueDate)}
                     </Text>
                   </Body>
+                  </TouchableOpacity>
                 </CardItem>
             </Card>)
           }): (
@@ -138,6 +156,12 @@ const styles = StyleSheet.create({
     fontSize: 17, fontWeight: "bold", marginTop: 5,flexWrap: "wrap",
     color: AppConstants.COLOR_PICKER_TEXT,
   },
+  notiUrl: {
+    fontSize: 13, flexWrap: "wrap",
+    color: AppConstants.COLOR_FACEBOOK,
+    fontStyle: "italic"
+  },
+
   notiContentNotSeen:  {
     fontSize: 15,
     marginTop: 3,

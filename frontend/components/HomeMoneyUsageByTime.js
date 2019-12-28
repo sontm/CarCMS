@@ -102,7 +102,6 @@ class HomeMoneyUsageByTime extends React.Component {
   
 
   render() {
-    if (this.props.currentVehicle || this.props.isTotalReport) {
         // Tong Quan of Current User
         var {arrTotalMerge, tickXLabels} 
             = this.calculateAllVehicleTotalMoney(true);
@@ -125,19 +124,20 @@ class HomeMoneyUsageByTime extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:30,left:10,right:10}}
-                            domainPadding={{y: [0, 10], x: [10, 10]}}
+                            padding={{top:10,bottom:30,left:0,right:0}}
+                            domainPadding={{y: [10, 40], x: [22, 22]}}
                         >
                         <VictoryArea
                             interpolation="natural"
                             data={arrTotalMerge}
                             style={{
                                 data: {
-                                    fill: "#2ca02c", fillOpacity: 0.2, stroke: "#2ca02c", strokeWidth: 1
+                                    fill: AppConstants.COLOR_D3_MIDDLE_GREEN, fillOpacity: 0.08, 
+                                    stroke: AppConstants.COLOR_D3_MIDDLE_GREEN, strokeWidth: 1.5
                                 }
                             }}
                             labels={({ datum }) => (datum&&datum.y > 0) ? AppUtils.formatMoneyToK(datum.y) : ""}
-                            labelComponent={<VictoryLabel style={{fontSize: 10}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 9}}/>}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         />
 
@@ -151,10 +151,10 @@ class HomeMoneyUsageByTime extends React.Component {
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 3},
-                                tickLabels: {fontSize: 10, padding: 5, angle: 0}
+                                tickLabels: {fontSize: 10, padding: 5, angle: 30}
                             }}
                         />
-                        <VictoryAxis
+                        {/* <VictoryAxis
                             dependentAxis
                             standalone={false}
                             tickFormat={(t) => `${AppUtils.formatMoneyToK(t)}`}
@@ -163,7 +163,7 @@ class HomeMoneyUsageByTime extends React.Component {
                                 ticks: {stroke: "grey", size: 5},
                                 tickLabels: {fontSize: 10, padding: -8,textAnchor:"start"}
                             }}
-                        />
+                        /> */}
 
                         </VictoryChart>
                     </View>
@@ -183,19 +183,6 @@ class HomeMoneyUsageByTime extends React.Component {
                 </View>
             )
         }
-    } else {
-        return (
-            <View style={styles.container}>
-                <View style={styles.textRow}>
-                    <Text><H3>
-                        {AppLocales.t("HOME_PRIVATE_MONEY_USAGE")}
-                    </H3></Text>
-                    
-                </View>
-                <NoDataText />
-            </View>
-        )
-    }
     }
 }
 

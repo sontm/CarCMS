@@ -3,13 +3,14 @@ import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppConstants from '../constants/AppConstants'
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, 
-    Card, CardItem, Picker, Form, Item, CheckBox, Label, Input } from 'native-base';
+    Card, CardItem, Picker, Form, Item, CheckBox, Label, Input, Toast } from 'native-base';
 import { connect } from 'react-redux';
 import {actVehicleAddVehicle, actVehicleEditVehicle} from '../redux/UserReducer'
 import Layout from '../constants/Layout';
 import apputils from '../constants/AppUtils';
 import AppLocales from '../constants/i18n';
 import {HeaderText} from '../components/StyledText'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class RegisterVehicleScreen extends React.Component {
     constructor(props) {
@@ -70,9 +71,9 @@ class RegisterVehicleScreen extends React.Component {
     handleToggleCheckDefault(e) {
         console.log("handleToggleCheckDefault:")
         console.log(e)
-        this.setState({
-            isDefault: !this.state.isDefault
-        })
+        // this.setState({
+        //     isDefault: !this.state.isDefault
+        // })
     }
     save(newVehicle) {
         if (!this.state.licensePlate) {
@@ -104,6 +105,18 @@ class RegisterVehicleScreen extends React.Component {
                 this.props.navigation.navigate("MyVehicle")
             } else {
                 console.log("WIll Save:")
+
+                // Check if How many Car Created,
+                if (this.props.userData.vehicleList.length >= AppConstants.SETTING_MAX_CAR_INDIVIDUAL) {
+                    Toast.show({
+                        text: AppLocales.t("TOAST_OVER_MAXCAR_CREATED") + " " + AppConstants.SETTING_MAX_CAR_INDIVIDUAL,
+                        //buttonText: "Okay",
+                        position: "top",
+                        type: "danger"
+                    })
+                    return;
+                }
+
                 console.log(this.state)
                 // let maxId = 0;
                 // this.props.userData.vehicleList.forEach(item => {
@@ -159,14 +172,17 @@ class RegisterVehicleScreen extends React.Component {
                                 <Label>{AppLocales.t("NEW_CAR_TYPE")}</Label>
                             </View>
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
-                            <CheckBox checked={this.state.type == "car"} 
-                                onPress={() =>this.setState({type: "car"})}/>
-                            <Text onPress={() =>this.setState({type: "car"})}>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
-                            
-                            <CheckBox style={{marginLeft: 20}} checked={this.state.type == "bike"} 
-                                onPress={() =>this.setState({type: "bike"})}/>
-                            <Text onPress={() =>this.setState({type: "bike"})}>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
-                            
+                            <TouchableOpacity onPress={() =>this.setState({type: "car"})} style={{flexDirection: "row"}}>
+                                <CheckBox checked={this.state.type == "car"} 
+                                    onPress={() =>this.setState({type: "car"})}/>
+                                <Text onPress={() =>this.setState({type: "car"})}>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity onPress={() =>this.setState({type: "bike"})}  style={{flexDirection: "row"}}>
+                                <CheckBox style={{marginLeft: 30}} checked={this.state.type == "bike"} 
+                                    onPress={() =>this.setState({type: "bike"})}/>
+                                <Text onPress={() =>this.setState({type: "bike"})}>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
+                            </TouchableOpacity>
                             </View>
                         </Item>
                     </View>

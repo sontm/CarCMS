@@ -95,7 +95,7 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
   }
   
   render() {
-    if (this.props.currentVehicle || this.props.isTotalReport) {
+    if (this.props.userData.teamInfo && this.props.userData.teamInfo.id) {
         var {arrTotalMerge, tickXLabels} = this.calculateAllVehicleTotalMoneyTeam(true);
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
 
@@ -116,19 +116,20 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
                         <VictoryChart
                             width={Layout.window.width}
                             height={300}
-                            padding={{top:10,bottom:30,left:10,right:10}}
-                            domainPadding={{y: [0, 10], x: [10, 10]}}
+                            padding={{top:10,bottom:30,left:0,right:0}}
+                            domainPadding={{y: [10, 40], x: [22, 22]}}
                         >
                         <VictoryArea
                             interpolation="natural"
                             data={arrTotalMerge}
                             style={{
                                 data: {
-                                    fill: "#ff7f0e", fillOpacity: 0.2, stroke: "#ff7f0e", strokeWidth: 1
+                                    fill: AppConstants.COLOR_TOMATO, fillOpacity: 0.08, 
+                                    stroke: AppConstants.COLOR_TOMATO, strokeWidth: 1.5
                                 }
                             }}
                             labels={({ datum }) => (datum&&datum.y > 0) ? AppUtils.formatMoneyToK(datum.y) : ""}
-                            labelComponent={<VictoryLabel style={{fontSize: 10}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 9}}/>}
                             colorScale={AppConstants.COLOR_SCALE_10}
                         />
                         {/* <VictoryBar
@@ -145,7 +146,7 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
                             style={{
                                 // grid: {stroke: "rgb(240,240,240)"},
                                 ticks: {stroke: "grey", size: 3},
-                                tickLabels: {fontSize: 10, padding: 5, angle: 0}
+                                tickLabels: {fontSize: 10, padding: 5, angle: 30}
                             }}
                         />
                         {/* <VictoryAxis
@@ -179,15 +180,7 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
         }
     } else {
         return (
-            <View style={styles.container}>
-                <View style={styles.textRow}>
-                    <Text><H3>
-                        {AppLocales.t("HOME_TEAM_MONEY_USAGE")}
-                    </H3></Text>
-                    
-                </View>
-                <NoDataText />
-            </View>
+            null
         )
     }
     }

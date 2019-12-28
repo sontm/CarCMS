@@ -323,6 +323,13 @@ class ReminderReport extends React.Component {
     this.numRemindTeam = 0;
     let privateView = this.renderTabPrivate();
     let teamView = this.renderTabTeam();
+    // var hasNoData = false;
+    // if (this.numRemindPrivate == 0 && this.numRemindTeam == 0) {
+    //     var hasNoData = true;
+    // }
+    // if (hasNoData) {
+    //     return null;
+    // } else
     return (
         <View style={styles.container}>
             <View style={styles.textRow}>

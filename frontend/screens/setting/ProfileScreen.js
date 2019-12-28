@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import Backend from '../../constants/Backend'
 import {actUserUpdateProfileOK} from '../../redux/UserReducer';
 import NetInfo from "@react-native-community/netinfo";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class ProfileScreen extends React.Component {
     constructor(props) {
@@ -164,12 +165,14 @@ class ProfileScreen extends React.Component {
                     </View> : null}
 
                     {(this.props.userData.userProfile.type != "facebook" && this.props.userData.userProfile.type != "google") ? (
+                    <TouchableOpacity onPress={() => this.togglePwdChange()}>
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
                         marginLeft: -10, marginTop: 15, marginBottom: 10}}>
                         <CheckBox checked={this.state.isChangePwd}
                             onPress={() => this.togglePwdChange()}/>
                         <Text onPress={() => this.togglePwdChange()} style={{marginLeft: 12}}>{AppLocales.t("USER_CHANGEPWD")}</Text>
-                    </View> ): null}
+                    </View>
+                    </TouchableOpacity>): null}
 
                     {(this.props.userData.userProfile.type != "facebook" && 
                         this.props.userData.userProfile.type != "google" && this.state.isChangePwd) ? (

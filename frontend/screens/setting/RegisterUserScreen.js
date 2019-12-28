@@ -52,10 +52,13 @@ class RegisterUserScreen extends React.Component {
                         },
                         error => {
                             console.log("Register ERROR")
-                            console.log(error)
-                            this.setState({
-                                message: "Register Error!"
-                            })
+                            console.log(error.response)
+                            Toast.show({
+                                text: error.response.data.msg,
+                                //buttonText: "Okay",
+                                position: "top",
+                                type: "danger"
+                              })
                         }
                     );
                 } else {
@@ -147,7 +150,7 @@ class RegisterUserScreen extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        block primary
+                        rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         onPress={() => this.handleSignup()}
                     ><Text>{AppLocales.t("SETTING_LBL_SIGNUP")}</Text></Button>
                     </View>

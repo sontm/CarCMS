@@ -75,6 +75,9 @@ const DEFAULT_SETTING_SERVICE = {
     Month: [6, 12, 24, 48, 96],
     KmBike: [4000, 8000, 12000, 16000, 20000],
     MonthBike: [4, 8, 12, 18, 24],
+
+    LevelEnable: [true, true, true, false, false],
+    LevelBikeEnable: [true, true, false, false, false],
 }
 // Each Item: fillDate: new Date().toLocaleString(),amount: "",price: "",currentKm: "",type: "oil",subType: "",remark: "",
 const initialState = {
@@ -422,11 +425,11 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
     // settingService: props.userData.settingService
     // teamInfo: teamInfo
 // oldProps have both userData, teamData
-export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
+export const actVehicleSyncAllFromServer = (data, oldProps, isMergeDataBeforeLogin) => (dispatch) => {
     console.log("actVehicleSyncFromServer:")
     dispatch({
         type: VEHICLE_SYNC_FROMSERVER,
-        payload: data
+        payload: {data: data, isMergeDataBeforeLogin: isMergeDataBeforeLogin}
     })
 
     // TODO for when SYnc, need re-calcualte Report
@@ -447,8 +450,12 @@ export const actVehicleSyncAllFromServer = (data, oldProps) => (dispatch) => {
             newCarIds.push(vehicle.id);
         })
     }
+
+    if (isMergeDataBeforeLogin) {
+        allCarReports = oldProps.userData.carReports;
+    }
     // compare with Currrent Length of CarReports, if Larger, mean some Care removed, so Need reload
-    if (Object.keys(oldProps.userData.carReports).length > newCarIds.length) {
+    if (!isMergeDataBeforeLogin && Object.keys(oldProps.userData.carReports).length > newCarIds.length) {
         isSomeCarRemoved = true;
     }
 
@@ -527,7 +534,8 @@ export const actUserStartSyncPrivate = () => (dispatch) => {
 export const actUserStartSyncPrivateDone = () => (dispatch) => {
     console.log("actUserStartSyncPrivate:")
     dispatch({
-        type: USER_SYNC_PRIVATE_DONE
+        type: USER_SYNC_PRIVATE_DONE,
+        
     })
 }
 export const actUserStartSyncTeam = () => (dispatch) => {
@@ -609,17 +617,32 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
             notiIds.push(item.id)
         })
     }
-    backend.getAllNotification(notiIds, prevUserProps.token,
-    response => {
-        console.log("  OK Got Notification:" )
-        console.log(response.data)
-        dispatch({
-            type: USER_GET_APPNOTIFICATION,
-            payload: response.data
+    if (prevUserProps.isLogined) {
+        backend.getAllNotification(notiIds, prevUserProps.token,
+        response => {
+            console.log("  OK Got Notification:" )
+            console.log(response.data)
+            dispatch({
+                type: USER_GET_APPNOTIFICATION,
+                payload: response.data
+            })
+        },error => {
+            console.log("  Error Got Notificationt:")
         })
-    },error => {
-        console.log("  Error Got Notificationt:")
-    })
+    } else {
+        backend.getAllNotificationGuest(notiIds,
+            response => {
+                console.log("  OK Got Notification GUeest:" )
+                console.log(response.data)
+                dispatch({
+                    type: USER_GET_APPNOTIFICATION,
+                    payload: response.data
+                })
+            },error => {
+                console.log("  Error Got Notificationt GUeest:")
+                console.log(error.response)
+            })
+    }
 }
 
 export const actUserSawAllNotifications = () => (dispatch) => {
@@ -690,6 +713,8 @@ export default function(state = initialState, action) {
             teamInfo: action.payload.teamInfo,
             myJoinRequest: {},
 
+            notifications: [],
+
             modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
             isLogined: true
         };
@@ -728,7 +753,39 @@ export default function(state = initialState, action) {
         return prevStateUpdateProfile;
     case VEHICLE_SYNC_FROMSERVER:
         // Process Notification Sync Here 
-        let receivedNotis0 = action.payload.notifications;
+        let data = action.payload.data;
+        let isMergeDataBeforeLogin = action.payload.isMergeDataBeforeLogin;
+
+        // Compare and Merge Vehicle List, if Same ID, use the Server One
+        let newVehicleList = data.vehicleList;
+        let modifiedInfo = {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0};
+        if (isMergeDataBeforeLogin) {
+            let prevVehicleList = state.vehicleList;
+            if (prevVehicleList && prevVehicleList.length > 0) {
+                // This mean have Prev data, need Sync to Server
+                modifiedInfo = {vehicleIds:[], 
+                    changedAllVehicles: true, changedCustom: false, changedSetting: false,changedItemCount: 1};
+                prevVehicleList.forEach(item => {
+                    // Check if same ID
+                    if (newVehicleList && newVehicleList.length > 0) {
+                        let isSameID = false;
+                        for(let l = 0; l < newVehicleList.length; l++) {
+                            if (newVehicleList[l].id == item.id) {
+                                // Same ID,
+                                isSameID = true;
+                                break;
+                            }
+                        }
+                        if (!isSameID) {
+                            // Add to new List if not Exist
+                            newVehicleList.push(item)
+                        }
+                    }
+                })
+            }
+        }
+
+        let receivedNotis0 = data.notifications;
         let newNotis0 = [];
         if (receivedNotis0 && receivedNotis0.length > 0) {
             newNotis0 = receivedNotis0;
@@ -742,18 +799,18 @@ export default function(state = initialState, action) {
 
         let newStateSyncFrom = {
             ...state,
-            vehicleList: action.payload.vehicleList,
-            customServiceModules: action.payload.customServiceModules,
-            customServiceModulesBike: action.payload.customServiceModulesBike,
-            settings: action.payload.settings,
-            settingService: action.payload.settingService,
+            vehicleList: newVehicleList,
+            customServiceModules: data.customServiceModules,
+            customServiceModulesBike: data.customServiceModulesBike,
+            settings: data.settings,
+            settingService: data.settingService,
             notifications: newNotis0,
-            myJoinRequest: action.payload.myJoinRequest,
+            myJoinRequest: data.myJoinRequest,
             countNotSeenNoti: 0,
 
-            teamInfo: action.payload.teamInfo,
+            teamInfo: data.teamInfo,
 
-            modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
+            modifiedInfo: modifiedInfo,
 
             //carReports: {},// this will be updated during Caluclation,because some may not need to Re-calculate
             lastSyncFromServerOn: new Date()

@@ -28,6 +28,10 @@ const NotificationSchema = new Schema({
         type:Boolean,
         required: false
     },
+    url: {
+        type:String,
+        required: false
+    },
     enable: {
         type:Boolean,
         required: false
