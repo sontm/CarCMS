@@ -1839,7 +1839,9 @@ class AppUtils {
                         console.log("<<<<<<<<<<<<<<<<<<<<<<<<<< Sync Some Data OK")
                         props.actUserSyncPartlyOK()
                     },
-                    error => {console.log(error)}
+                    error => {
+                        console.log(error.response)
+                    }
                     );
                 }
             }

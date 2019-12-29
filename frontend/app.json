@@ -3,8 +3,8 @@
     "androidStatusBar": {
       "backgroundColor": "#1565c0"
     },
-    "name": "VehicleManagement",
-    "slug": "VehicleCMS",
+    "name": "Quản Lý Xe",
+    "slug": "QuanLyXe",
     "privacy": "public",
     "sdkVersion": "35.0.0",
     "platforms": [
@@ -34,7 +34,7 @@
       }
     },
     "android": {
-      "package": "com.sansan.VehicleCMS",
+      "package": "com.yamastack.QuanLyXe",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-3940256099942544~3347511713"
       }

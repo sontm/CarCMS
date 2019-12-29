@@ -236,7 +236,7 @@ export default {
     NEW_OIL_HEADER:"Thay Dầu",
     NEW_OIL_VALIDFOR:"Giá Trị Cho(Km)(*)",
 
-    NEW_AUTH_VALIDFOR:"Giá Trị Cho(Ngày)(?)",
+    NEW_AUTH_VALIDFOR:"Thời Hạn (Ngày)",
     NEW_AUTH_TYPE:"Loại",
 
     NEW_EXPENSE_HEADER:"Thêm Chi Phí",
@@ -274,9 +274,7 @@ export default {
 
     NOTE_VALIDFOR_OIL: "Chung Toi De mac dinh la \n 1000KM for Oto. What Are You Thinasd k sdfis my work dsdfnot allasdfk jasdf ",
     NOTE_VALIDFOR_AUTH: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Oto",
-    NOTE_VALIDFOR_INSURANCE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Bao Hiem Bat Buoc",
-    NOTE_VALIDFOR_ROAD_FEE: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Phi Bao Tri Duong Bo",
-
+    
     TOAST_SUCCESS_COPIED: "Đã Sao Chép Mã Nhóm",
     TOAST_NEED_OLDPWD: "Hãy Điền Mật Khẩu Cũ",
     TOAST_NEWPWD_NOTMATCHED: "Mật Khẩu Mới Không Khớp!",

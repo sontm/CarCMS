@@ -74,7 +74,7 @@ class TeamScreen extends React.Component {
       }
     }, 20000);
   }
-  fetchTeamData() {
+  fetchTeamData(silence=false) {
     console.log("My Team IDDDDDD")
     console.log(this.props.userData.userProfile)
     console.log(this.props.userData.teamInfo)
@@ -83,7 +83,9 @@ class TeamScreen extends React.Component {
     } else {
       NetInfo.fetch().then(state => {
         if (state.isConnected) {
-          this.props.actUserStartSyncTeam();
+          if (!silence) {
+            this.props.actUserStartSyncTeam();
+          }
 
           Backend.getAllJoinTeamRequest(this.props.userData.token, 
             response => {
@@ -102,10 +104,12 @@ class TeamScreen extends React.Component {
                       // this.setState({
                       //   members: response.data
                       // })
-                      this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
+                      this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props, silence)
                   },
                   error => {
+                    if (!silence) {
                       this.props.actUserStartSyncTeamDone();
+                    }
                       console.log("GEt all Member in Team ERROR")
                       console.log(JSON.stringify(error))
                       this.setState({
@@ -115,7 +119,9 @@ class TeamScreen extends React.Component {
                 );
             },
             error => {
+              if (!silence) {
                 this.props.actUserStartSyncTeamDone();
+              }
                 console.log("GEt all JoinRequest ERROR")
                 console.log(error.response)
             }
@@ -146,8 +152,8 @@ class TeamScreen extends React.Component {
   componentDidMount() {
     console.log("**********&&&&&&&&&^^^^^^^^^ TeamScreen DidMount")
 
-    // TODO* whento call fetch team Data ?
-    //this.fetchTeamData()
+    // Ưhen First Mount, try to FetchTeamData Silencely 
+    this.fetchTeamData(true)
   }
   componentDidUpdate() {
     console.log("**********&&&&&&&&&^^^^^^^^^^ TeamScreen componentDidUpdate")

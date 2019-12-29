@@ -45,32 +45,9 @@ class HomeScreen extends React.Component {
     // Load Notification messages
     this.props.actUserGetNotifications(this.props.userData)
   }
-  loadFromStorage = async () => {
-    // const vehicleList = await AsyncStorage.getItem(AppConstants.STORAGE_VEHICLE_LIST)
-    // const fillGasList = await AsyncStorage.getItem(AppConstants.STORAGE_FILL_GAS_LIST)
-    // const fillOilList = await AsyncStorage.getItem(AppConstants.STORAGE_FILL_OIL_LIST)
-    // const authorizeCarList = await AsyncStorage.getItem(AppConstants.STORAGE_AUTHORIZE_CAR_LIST)
-    // JSON.parse(vehicleList).forEach(item => {
-    //   this.props.actVehicleAddVehicle(item)
-    // })
-    // JSON.parse(fillGasList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-    // JSON.parse(fillOilList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-    // JSON.parse(authorizeCarList).forEach(item => {
-    //   this.props.actVehicleAddFillItem(item)
-    // })
-
-    //this.clearAsyncStorage()
-  }
-  clearAsyncStorage = async() => {
-    //AsyncStorage.clear();
-  }
 
   componentDidUpdate() {
-    console.log("HOMESCreen DIDUpdate")
+    console.log("HOMESCreen DIDUpdate:"+this.props.userData.modifiedInfo.changedItemCount)
     // Sync Some Data to Server if Edit Count >=3
     if (this.props.userData.isLogined) {
       // Try to Sync with Any New Data
@@ -230,7 +207,7 @@ class HomeScreen extends React.Component {
                       <View style={{alignItems: "center"}}>
                         <Body>
                           <Text style={{alignSelf: "center", fontSize: 12+addedFontSize, 
-                            color: AppConstants.COLOR_D3_DARK_GREEN}}>
+                            color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
                           {AppLocales.t("HOME_TOTAL_PRIVATE_THISMONTH")}
                           </Text>
                         </Body>
@@ -261,7 +238,7 @@ class HomeScreen extends React.Component {
                       <View style={{alignItems: "center"}}>
                       <Body>
                         <Text style={{alignSelf: "center", fontSize: 12, 
-                        color: AppConstants.COLOR_TOMATO}}>
+                        color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
                         {AppLocales.t("HOME_TOTAL_TEAM_THISMONTH")}
                         </Text>
                       </Body>

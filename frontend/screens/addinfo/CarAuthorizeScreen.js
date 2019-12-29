@@ -289,7 +289,7 @@ class CarAuthorizeScreen extends React.Component {
                     </View>
                 
 
-                    <View style={styles.rowNote}>
+                    {/* <View style={styles.rowNote}>
                         <Card>
                             <CardItem>
                             <Body style={{flexDirection:"row", justifyContent:"center"}}>
@@ -299,7 +299,7 @@ class CarAuthorizeScreen extends React.Component {
                             </Body>
                             </CardItem>
                         </Card>
-                    </View>
+                    </View> */}
 
                     <View style={styles.rowButton}>
                         <Button rounded

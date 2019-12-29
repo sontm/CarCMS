@@ -52,7 +52,7 @@ export const actTeamUserWillLogout = () => (dispatch) => {
     })
 }
 
-export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (dispatch) => {
+export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence = false) => (dispatch) => {
     console.log("actTeamGetDataOK:")
     dispatch({
         type: TEAM_GET_OK,
@@ -138,7 +138,9 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (disp
                         //if ( idxMem == data.length -1 && idx == mem.vehicleList.length-1) {
                         if ( doneProcessCount == needProcessCount) {
                             isAlreadyDispatch = true;
-                            oldProps.actUserStartSyncTeamDone();
+                            if (!silence) {
+                                oldProps.actUserStartSyncTeamDone();
+                            }
                             dispatch({
                                 type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
                                 payload: teamCarReportsAll
@@ -155,14 +157,18 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps) => (disp
     }
     if (isSomeCarRemoved && !isAlreadyDispatch) {
         // We still Force to ReCalculate Reports when some Car Removed
-        oldProps.actUserStartSyncTeamDone();
+        if (!silence) {
+            oldProps.actUserStartSyncTeamDone();
+        }
         dispatch({
             type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
             payload: teamCarReportsAll
         })
     } else
     if (needProcessCount == 0 ) {
-       oldProps.actUserStartSyncTeamDone();
+        if (!silence) {
+            oldProps.actUserStartSyncTeamDone();
+        }
     }
 }
 

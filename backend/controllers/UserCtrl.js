@@ -502,7 +502,6 @@ module.exports = {
     // Or someVehicles:[]
     async syncSomeDataToServer(req, res) {
       console.log("Vehicle SOME DATA Sync of USERID:" + req.user.id)
-      console.log(JSON.stringify(req.body))
       // Find current User record 
       let currentUser = await new Promise((resolve, reject) => {
         dbuser.findById(req.user.id, function(err, doc){
@@ -554,7 +553,6 @@ module.exports = {
 
 
         console.log(" -- Will Save User from PartlyData")
-        console.log(currentUser.vehicleList[1].fillGasList)
   
         await new Promise((resolve, reject) => {
           currentUser.save(function(err, doc){

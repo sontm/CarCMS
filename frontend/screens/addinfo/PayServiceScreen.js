@@ -424,14 +424,16 @@ class PayServiceScreen extends React.Component {
                             <Label>{AppLocales.t("NEW_SERVICE_TYPE")}</Label>
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
 
-                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: false})}>
+                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: false})}
+                                style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
                             <CheckBox checked={this.state.isConstantFix != true} 
                                 onPress={() =>this.setState({isConstantFix: false})}/>
                             <Text style={{...styles.smallerText, marginLeft: 12}}  onPress={() =>this.setState({isConstantFix: false})}>
                                 {AppLocales.t("NEW_SERVICE_MAINTAIN")+""}</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: true})}>
+                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: true})} 
+                                style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
                             <CheckBox style={{marginLeft: 10}}checked={this.state.isConstantFix == true} 
                                 onPress={() =>this.setState({isConstantFix: true})}/>
                             <Text style={{...styles.smallerText, marginLeft: 12}} onPress={() =>this.setState({isConstantFix: true})}>
@@ -446,7 +448,7 @@ class PayServiceScreen extends React.Component {
                         <View style={styles.rowForm}>
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label>{AppLocales.t("NEW_SERVICE_MAINTAIN_TYPE")}</Label>
-                            <Button primary small
+                            <Button small style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                                     onPress={() => {
                                         this.props.navigation.navigate("ServiceMaintainSetting")
                                 }}>
@@ -523,7 +525,7 @@ class PayServiceScreen extends React.Component {
                             <Text style={{color: "red"}}>*</Text>
                             : null}
                             </View> 
-                            <Button primary small
+                            <Button small  style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                                     onPress={() => {
                                         this.props.navigation.navigate("ServiceModules", 
                                         {onOk: this.onUpdateMaintainModules,

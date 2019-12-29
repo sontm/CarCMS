@@ -214,7 +214,7 @@ class ReminderReport extends React.Component {
     let resultView = [];
     this.props.teamData.teamCarList.forEach(element => {
       if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
-          console.log(element.ownerFullName)
+
         if (this.props.teamData.teamCarReports[element.id].maintainRemind) {
             var {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
                 nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay}

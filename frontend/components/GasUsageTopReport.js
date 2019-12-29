@@ -104,9 +104,12 @@ class GasUsageTopReport extends React.Component {
                     thisKm.y += item.y;
                 }
             })
-            arrGasKmEachCarsTmp.push(thisKm);
+            if (thisKm.y > 0) {
+                arrGasKmEachCarsTmp.push(thisKm);
+                arrTotalKm.push({x: xValue, y: thisKm.y, licensePlate: element.licensePlate})
+            }
         }
-        arrTotalKm.push({x: xValue, y: thisKm.y, licensePlate: element.licensePlate})
+        
 
         let thisMoney = {x: xValue, y: 0};
         if (arrTotalMoneyMonthly && arrTotalMoneyMonthly.length) {
@@ -116,9 +119,12 @@ class GasUsageTopReport extends React.Component {
                     thisMoney.y += item.y;
                 }
             })
-            arrGasMoneyEachCarsTmp.push(thisMoney);
+            if (thisMoney.y > 0) {
+                arrGasMoneyEachCarsTmp.push(thisMoney);
+                arrTotalMoney.push({x: xValue, y: thisMoney.y, licensePlate: element.licensePlate})
+            }
         }
-        arrTotalMoney.push({x: xValue, y: thisMoney.y, licensePlate: element.licensePlate})
+        
 
 
         let thisMoneyPerKm = {x: xValue, y: 0};
@@ -131,10 +137,13 @@ class GasUsageTopReport extends React.Component {
                     countAvg++;
                 }
             })
-            thisMoneyPerKm.y = thisMoneyPerKm.y/countAvg;
-            arrGasMoneyPerKmEachCarsTmp.push(thisMoneyPerKm);
+            if (thisMoneyPerKm.y > 0) {
+                thisMoneyPerKm.y = thisMoneyPerKm.y/countAvg;
+                arrGasMoneyPerKmEachCarsTmp.push(thisMoneyPerKm);
+                arrTotalMoneyPerKm.push({x: xValue, y: thisMoneyPerKm.y, licensePlate: element.licensePlate})
+            }
         }
-        arrTotalMoneyPerKm.push({x: xValue, y: thisMoneyPerKm.y, licensePlate: element.licensePlate})
+        
       }
     })
 
@@ -204,6 +213,7 @@ class GasUsageTopReport extends React.Component {
             var theBarWidth = theBarWidthKm;
             var tickXLabels = tickXLabelsKm;
         }
+        let arrLabelY = ["Km", "đ", "đ/Km"];
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>
@@ -296,6 +306,8 @@ class GasUsageTopReport extends React.Component {
                     <VictoryAxis
                         dependentAxis
                         standalone={false}
+                        label={arrLabelY[this.state.activeDisplay]}
+                        axisLabelComponent={<VictoryLabel dy={40} dx={120} style={{fontSize: 11}}/>}
                         tickFormat={(t) => `${this.state.activeDisplay!= 0 ? AppUtils.formatMoneyToK(t) :
                             AppUtils.formatDistanceToKm(t)}`}
                         // tickCount={arrKmPerWeek ? arrKmPerWeek.length/2 : 1}
