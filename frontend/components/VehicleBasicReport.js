@@ -104,6 +104,8 @@ class VehicleBasicReport extends Component {
         //     = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
         let imgSource = AppUtils.loadImageSourceOfBrand(this.props.vehicle.brand.toLowerCase(), this.props.vehicle.type!="car")
+        console.log("currentData.gasReport.totalKmGas:" + currentData.gasReport.totalKmGas)
+        console.log("currentData.gasReport.totalMoneyGas:" + currentData.gasReport.totalMoneyGas)
         return (
             <Content>
             <TouchableOpacity 
@@ -320,8 +322,8 @@ class VehicleBasicReport extends Component {
                         <View style={styles.infoStatRow}>
                             <Body style={this.props.isTeamDisplay? styles.horizontalCard: null}>
                                 <Text style={styles.infoCardValue}>
-                                    {currentData.gasReport.avgMoneyPerKmMonthly ? 
-                                    (AppUtils.formatMoneyToK((currentData.gasReport.avgMoneyPerKmMonthly).toFixed(0)) +" ") : "-- "}
+                                    {(currentData.gasReport.totalKmGas && currentData.gasReport.totalMoneyGas) ? 
+                                    ((currentData.gasReport.totalMoneyGas/currentData.gasReport.totalKmGas).toFixed(0)) : "-- "}
                                 </Text>
                                 <Text style={styles.infoCardText}>{"đ/Km"}</Text>
                                 <Text style={styles.infoCardText}>{"(Hiệu suất Xăng)"}</Text>
@@ -465,7 +467,7 @@ const styles = StyleSheet.create({
         borderRightWidth: 0.5,
     },
     infoCardValue: {
-        fontSize: 20,
+        fontSize: 18,
     },
     infoCardText: {
         color: AppConstants.COLOR_TEXT_LIGHT_INFO,

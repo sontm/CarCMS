@@ -131,7 +131,8 @@ class FillGasScreen extends React.Component {
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
 
-            this.props.navigation.navigate('VehicleDetail')
+            this.props.navigation.navigate('VehicleDetail', 
+                {vehicleId: this.state.vehicleId, isMyVehicle: true})
         }
     }
     save() {
@@ -269,6 +270,7 @@ class FillGasScreen extends React.Component {
                         placeholderIconColor="#007aff"
                         selectedValue={this.state.vehicleId}
                         onValueChange={(item) => this.onChooseVehicle(item)}
+                        enabled={this.isEditing?false:true}
                     >
                         {this.props.userData.vehicleList.map(item => (
                             <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate}

@@ -511,6 +511,8 @@ class AppUtils {
         console.log(CALCULATE_END_DATE)
         let lastKm = 0;
         let totalMoneyGas = 0;
+        let totalKmGas = 0;
+
         let lastDate = 0;
         let todayLiter = 0;
 
@@ -577,6 +579,7 @@ class AppUtils {
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
                         let averageKMPerDay = (item.currentKm - fillGasList[index-1].currentKm)/diffDays;
+                        totalKmGas += (item.currentKm - fillGasList[index-1].currentKm);
                         // Money is from Previous Fill time
                         let averageMoneyPerDay = fillGasList[index-1].price/diffDays;
 
@@ -843,7 +846,7 @@ class AppUtils {
 
             return {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
                 arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly};
+                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly, totalKmGas};
         } else {
             return {};
         }
@@ -2125,7 +2128,7 @@ class AppUtils {
             //let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
             let {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
                 arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly}
+                avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly, totalKmGas}
                 = this.getStatForGasUsage(currentVehicle.fillGasList, 
                     options.duration, options.durationType, options.tillDate);
 
@@ -2245,7 +2248,7 @@ class AppUtils {
             let result = {
                 gasReport: {averageKmPerLiter, averageMoneyPerLiter, averageMoneyPerDay, averageKmPerDay, averageMoneyPerKmPerDay, lastDate, lastKm,
                     arrMoneyPerWeek, arrKmPerWeek, totalMoneyGas, arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly,
-                    avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly},
+                    avgKmMonthly, avgMoneyMonthly, avgMoneyPerKmMonthly, totalKmGas},
                 //oilReport: {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil, lastOilKmValidFor},
                 authReport: {diffDayFromLastAuthorize, nextAuthorizeDate, totalMoneyAuthorize, lastAuthDaysValidFor,
                     diffDayFromLastAuthorizeInsurance, nextAuthorizeDateInsurance, lastAuthDaysValidForInsurance,

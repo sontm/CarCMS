@@ -365,7 +365,7 @@ class MoneyUsageReport extends React.Component {
                             radius={90}
                             labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" 
                                 + AppUtils.formatMoneyToK(datum.y) + ", "
-                                +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
+                                +AppUtils.formatToPercent(datum.y, totalExpenseSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 15 }
                             labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />

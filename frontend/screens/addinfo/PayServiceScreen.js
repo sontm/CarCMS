@@ -143,7 +143,7 @@ class PayServiceScreen extends React.Component {
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
 
-            this.props.navigation.navigate('VehicleDetail')
+            this.props.navigation.navigate('VehicleDetail', {vehicleId: this.state.vehicleId, isMyVehicle: true})
         }
     }
     save = async (newVehicle) => {
@@ -384,6 +384,7 @@ class PayServiceScreen extends React.Component {
                             placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.vehicleId}
+                            enabled={this.isEditing?false:true}
                             onValueChange={(itemValue) =>
                                 this.onChooseVehicle(itemValue)
                             }

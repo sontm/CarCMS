@@ -87,7 +87,7 @@ class FillOilScreen extends React.Component {
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_OIL, this.props.userData)
 
-            this.props.navigation.push('VehicleDetail')
+            this.props.navigation.navigate('VehicleDetail',{vehicleId: this.state.vehicleId, isMyVehicle: true})
         }
     }
 

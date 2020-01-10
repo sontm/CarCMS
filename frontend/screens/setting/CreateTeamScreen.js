@@ -20,7 +20,7 @@ class CreateTeamScreen extends React.Component {
             name: "",
             code: "",
             id: 0,
-            canMemberViewReport: true,
+            canMemberViewReport: false,
             excludeMyCar: false
         };
 
@@ -62,56 +62,65 @@ class CreateTeamScreen extends React.Component {
     handleCreate() {
         NetInfo.fetch().then(state => {
             if (state.isConnected) {
-                if (this.props.navigation.state.params.isEdit) {
-                    // Edit TEam NAme
-                    Backend.createTeam({
-                        id: this.state.id,
-                        name: this.state.name,
-                        code: this.state.code,
-                        canMemberViewReport: this.state.canMemberViewReport,
-                        excludeMyCar: this.state.excludeMyCar
-                        }, this.props.userData.token, 
-                        response => {
-                            console.log("Edit Team OK")
-                            console.log(response.data)
-                            this.props.actUserCreateTeamOK(response.data)
-                            this.props.navigation.navigate("Settings")
-                        },
-                        error => {
-                            console.log("Edit Team ERROR")
-                            console.log((error))
-                            // TODO: Toast
-                            
-                        }
-                    );
+                if (!this.state.name || !this.state.code) {
+                    Toast.show({
+                        text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                        //buttonText: "Okay",
+                        position: "top",
+                        type: "danger"
+                    })
                 } else {
-                    // Create new Team
-                    Backend.createTeam({
-                        name: this.state.name,
-                        code: this.state.code,
-                        canMemberViewReport: this.state.canMemberViewReport,
-                        excludeMyCar: this.state.excludeMyCar
-                        }, this.props.userData.token, 
-                        response => {
-                            console.log("REgister Team OK")
-                            console.log(response.data)
-                            this.props.actUserCreateTeamOK(response.data)
-                            //this.props.navigation.navigate("Settings")
-                            this.props.navigation.goBack()
-                        },
-                        error => {
-                            console.log("Register Team ERROR")
-                            console.log((error.response.data))
-                            // TODO: Toast
-                            Toast.show({
-                                text: error.response.data.msg,
-                                position: "top",
-                                //buttonText: "Okay",
-                                type: "danger"
-                            })
-                            this.props.navigation.goBack()
-                        }
-                    );
+                    if (this.props.navigation.state.params.isEdit) {
+                        // Edit TEam NAme
+                        Backend.createTeam({
+                            id: this.state.id,
+                            name: this.state.name,
+                            code: this.state.code,
+                            canMemberViewReport: this.state.canMemberViewReport,
+                            excludeMyCar: this.state.excludeMyCar
+                            }, this.props.userData.token, 
+                            response => {
+                                console.log("Edit Team OK")
+                                console.log(response.data)
+                                this.props.actUserCreateTeamOK(response.data)
+                                this.props.navigation.navigate("Settings")
+                            },
+                            error => {
+                                console.log("Edit Team ERROR")
+                                console.log((error))
+                                // TODO: Toast
+                                
+                            }
+                        );
+                    } else {
+                        // Create new Team
+                        Backend.createTeam({
+                            name: this.state.name,
+                            code: this.state.code,
+                            canMemberViewReport: this.state.canMemberViewReport,
+                            excludeMyCar: this.state.excludeMyCar
+                            }, this.props.userData.token, 
+                            response => {
+                                console.log("REgister Team OK")
+                                console.log(response.data)
+                                this.props.actUserCreateTeamOK(response.data)
+                                //this.props.navigation.navigate("Settings")
+                                this.props.navigation.goBack()
+                            },
+                            error => {
+                                console.log("Register Team ERROR")
+                                console.log((error.response.data))
+                                // TODO: Toast
+                                Toast.show({
+                                    text: error.response.data.msg,
+                                    position: "top",
+                                    //buttonText: "Okay",
+                                    type: "danger"
+                                })
+                                this.props.navigation.goBack()
+                            }
+                        );
+                    }
                 }
             } else {
               Toast.show({

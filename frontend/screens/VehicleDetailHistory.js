@@ -69,10 +69,10 @@ class VehicleDetailHistory extends React.Component {
     }
     
   }
-  handleDeleteItem(itemId, type) {
+  handleDeleteItem(itemId, type, item) {
     Alert.alert(
         AppLocales.t("MSG_REMOVE_CONFIRM"),
-        ""+itemId + "," + type,
+        ""+AppUtils.getNameOfFillItemType(item.type, item.isConstantFix, item)+". " + AppUtils.formatDateMonthDayYearVN(item.fillDate),
         [
             {
               text: AppLocales.t("GENERAL_NO"),
@@ -176,7 +176,7 @@ class VehicleDetailHistory extends React.Component {
                                 ) : null }
                                 {this.props.navigation.state.params.isMyVehicle ? (
                                 <TouchableOpacity 
-                                        onPress={() => this.handleDeleteItem(item.id, item.type)}>
+                                        onPress={() => this.handleDeleteItem(item.id, item.type, item)}>
                                     <View style={{alignItems: "center"}}>
                                     <Icon type="MaterialIcons" name="delete" style={styles.listItemDeleteIcon}/>
                                     <Text style={{fontSize: 10, alignItems: "center"}}>{AppLocales.t("GENERAL_DELETE_SHORT")}</Text>

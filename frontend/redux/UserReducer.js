@@ -733,6 +733,10 @@ export default function(state = initialState, action) {
             notifications: [],
             myJoinRequest: {},
             countNotSeenNoti: 0,
+            modalState: 0,
+
+            customServiceModules: [],
+            customServiceModulesBike: [],
 
             modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
 

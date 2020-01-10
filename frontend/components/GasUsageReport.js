@@ -461,6 +461,9 @@ class GasUsageReport extends React.Component {
             var avgMoneyPerKmMonthly = avgMoneyMonthly/avgKmMonthly;
             
             var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
+            console.log("avgMoneyMonthly:" + avgMoneyMonthly)
+            console.log("avgKmMonthly:" + avgKmMonthly)
+            console.log("avgMoneyPerKmMonthly:" + avgMoneyPerKmMonthly)
         }
         if (theBarWidth && theBarWidth > 36) {
             theBarWidth = 36;

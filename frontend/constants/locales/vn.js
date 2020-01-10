@@ -78,7 +78,7 @@ export default {
     HOME_TEAM_MONEY_USAGE: "Chi Tiêu Nhóm Gần Đây",
     
     ADD_MAX_METER_HEADER: "Công tơ Mét",
-    ADD_MAX_METER_LBL: "Số Lớn Nhất Công tơ Mét",
+    ADD_MAX_METER_LBL: "Hãy Điền Số Lớn Nhất Công tơ Mét",
 
     CARDETAIL_HEADER: "Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",

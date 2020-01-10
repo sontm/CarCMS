@@ -124,7 +124,7 @@ class CarAuthorizeScreen extends React.Component {
 
                 this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
 
-                this.props.navigation.navigate('VehicleDetail')
+                this.props.navigation.navigate('VehicleDetail', {vehicleId: this.state.vehicleId, isMyVehicle: true})
             }
         }
     }
@@ -146,6 +146,8 @@ class CarAuthorizeScreen extends React.Component {
                 subType += item + '+';
             }
         })
+        console.log("subType:" + subType)
+        console.log(prevSubTypeArr)
         this.setState({
             subType: subType,
             subTypeArr:prevSubTypeArr
@@ -174,6 +176,7 @@ class CarAuthorizeScreen extends React.Component {
                             placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.vehicleId}
+                            enabled={this.isEditing?false:true}
                             onValueChange={(itemValue, itemIndex) =>
                                 this.setState({vehicleId: itemValue})
                             }
@@ -219,27 +222,33 @@ class CarAuthorizeScreen extends React.Component {
                             : null}
                         </View>
                         
-                        <TouchableOpacity onPress={() =>this.onSetSubType(0)}>
+                        
                         <View style={{flexDirection: "row", marginTop: 10}}>
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[0].name) >=0} 
                                 onPress={() =>this.onSetSubType(0)}/>
-                            <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(0)}>{this.props.appData.typeAuth[0].name}</Text>
+                            <TouchableOpacity onPress={() =>this.onSetSubType(0)}>
+                            <Text style={{marginLeft: 20}}>{this.props.appData.typeAuth[0].name}</Text>
+                            </TouchableOpacity>
                         </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() =>this.onSetSubType(1)}>
+
+                        
                         <View style={{flexDirection: "row", marginTop: 10}}>
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[1].name) >=0} 
                                 onPress={() =>this.onSetSubType(1)}/>
-                            <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(1)}>{this.props.appData.typeAuth[1].name}</Text>
+                            <TouchableOpacity onPress={() =>this.onSetSubType(1)}>
+                            <Text style={{marginLeft: 20}} >{this.props.appData.typeAuth[1].name}</Text>
+                            </TouchableOpacity>
                         </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() =>this.onSetSubType(2)}>
+
+                        
                         <View style={{flexDirection: "row", marginTop: 10}}>
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[2].name) >=0} 
                                 onPress={() =>this.onSetSubType(2)}/>
+                            <TouchableOpacity onPress={() =>this.onSetSubType(2)}>
                             <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(2)}>{this.props.appData.typeAuth[2].name}</Text>
+                            </TouchableOpacity>
                         </View>
-                        </TouchableOpacity>
+
                     </View>
                     
                     <View style={styles.rowContainer}>

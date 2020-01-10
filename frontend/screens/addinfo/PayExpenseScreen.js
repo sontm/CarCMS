@@ -114,7 +114,7 @@ class PayExpenseScreen extends React.Component {
                 AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
                 this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
 
-                this.props.navigation.navigate('VehicleDetail')
+                this.props.navigation.navigate('VehicleDetail', {vehicleId: this.state.vehicleId, isMyVehicle: true})
             }
         }
     }
@@ -143,6 +143,7 @@ class PayExpenseScreen extends React.Component {
                             placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                             placeholderIconColor="#007aff"
                             selectedValue={this.state.vehicleId}
+                            enabled={this.isEditing?false:true}
                             onValueChange={(itemValue, itemIndex) =>
                                 this.setState({vehicleId: itemValue})
                             }
