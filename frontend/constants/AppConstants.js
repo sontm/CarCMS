@@ -56,10 +56,10 @@ export default {
         {name:"Xăng"},{name:"Pháp Lý"},{name:"Phụ Chi"},{name:"Bảo Dưỡng"}
     ],
 
-    SERVER_API:"https://yamastack.com/api/",
+    //SERVER_API:"https://yamastack.com/api/",
     //SERVER_API:"http://18.140.121.240:3000/api",
     //SERVER_API:  "http://192.168.1.51:3000/api",
-    //SERVER_API:  "http://192.168.0.108:3000/api",
+    SERVER_API:  "http://192.168.0.108:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here (not OK when on LAN setting of Expo)
     //SERVER_API:  "http://172.20.10.2:3000/api",
     COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],

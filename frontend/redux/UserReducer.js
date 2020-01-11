@@ -38,6 +38,9 @@ const USER_LOGOUT = 'USER_LOGOUT';
 const USER_CREATE_TEAM_OK = 'USER_CREATE_TEAM_OK';
 const USER_LEAVE_TEAM_OK = 'USER_LEAVE_TEAM_OK';
 
+const USER_CREATE_VEHICLEMODEL = 'USER_CREATE_VEHICLEMODEL';
+const USER_DEL_VEHICLEMODEL = 'USER_DEL_VEHICLEMODEL';
+
 const USER_SYNC_PARTLY_OK = 'USER_SYNC_PARTLY_OK';
 
 const USER_SET_MAX_METER = 'USER_SET_MAX_METER';
@@ -102,6 +105,8 @@ const initialState = {
     customServiceModules: [],
     // Below will Sync
     customServiceModulesBike: [],
+    // Below will Sync
+    customVehicleModel: [],//{ id:!=0,name, type:"car|bike",models: [{"id":!=0,"name":"Juke"}]
 
     // Below will Sync
     settings: DEFAULT_SETTING_REMIND, //kmForOilRemind,dayForAuthRemind,dayForInsuranceRemind,dayForRoadFeeRemind
@@ -421,6 +426,7 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
 // vehicleList: props.userData.vehicleList,
     // customServiceModules: props.userData.customServiceModules,
     // customServiceModulesBike: props.userData.customServiceModulesBike,
+    //customVehicleModel:
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
     // teamInfo: teamInfo
@@ -608,6 +614,25 @@ export const actUserSetMaxOdometer = (data) => (dispatch) => {
     })
 }
 
+// data: {type, brand, model}
+export const actUserCreateNewVehicleModel = (data) => (dispatch) => {
+    console.log("actUserCreateNewVehicleModel:")
+    dispatch({
+        type: USER_CREATE_VEHICLEMODEL,
+        payload: data
+    })
+}
+
+// data: {brand, model, isBike}
+export const actUserDelNewVehicleModel = (data) => (dispatch) => {
+    console.log("actUserDelNewVehicleModel:")
+    dispatch({
+        type: USER_DEL_VEHICLEMODEL,
+        payload: data
+    })
+}
+
+
 export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
     console.log("actUserGetNotifications, token:" + prevUserProps.token)
@@ -737,6 +762,7 @@ export default function(state = initialState, action) {
 
             customServiceModules: [],
             customServiceModulesBike: [],
+            customVehicleModel: [],
 
             modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
 
@@ -811,6 +837,7 @@ export default function(state = initialState, action) {
             vehicleList: newVehicleList,
             customServiceModules: data.customServiceModules,
             customServiceModulesBike: data.customServiceModulesBike,
+            customVehicleModel: data.customVehicleModel,
             settings: data.settings,
             settingService: data.settingService,
             notifications: newNotis0,
@@ -1494,6 +1521,7 @@ export default function(state = initialState, action) {
         }
 
         return prevStateServiceDelBike;
+
     case USER_SET_MAX_METER:
         let prevStateSetMeter = {...state};
         for (let i = 0; i < prevStateSetMeter.vehicleList.length; i++) {
@@ -1504,6 +1532,88 @@ export default function(state = initialState, action) {
             }
         }
         return prevStateSetMeter;
+    case USER_CREATE_VEHICLEMODEL:
+        //action.payload: {type, brand, model}
+        //customVehicleModel: [],//[{ id:!=0,name, type:"car|bike",models: [{"id":!=0,"name":"Juke"}]]
+        let prevStateNewModel = {...state};
+        let foundInBrand = false;
+        if (!prevStateNewModel.customVehicleModel) {
+            prevStateNewModel.customVehicleModel = [];
+        }
+
+        prevStateNewModel.customVehicleModel.forEach(item => {
+            // if same brand and type
+            if (item.type == action.payload.type && item.name == action.payload.brand) {
+                foundInBrand = true;
+                // Exist, check to add new Model
+                let modelExist = false;
+                item.models.forEach(m => {
+                    if (m.name == action.payload.model) {
+                        modelExist = true;
+                    }
+                })
+                if (!modelExist) {
+                    item.models.push({id: 100, name: action.payload.model})
+                }
+            }
+        })
+        if (!foundInBrand) {
+            prevStateNewModel.customVehicleModel.push({
+                id: 100, name: action.payload.brand, type: action.payload.type,
+                models: [{id: 100, name: action.payload.model}]
+            })
+        }
+        prevStateNewModel.modifiedInfo= {
+            ...prevStateNewModel.modifiedInfo,
+            changedCustom: true,
+            changedItemCount: prevStateNewModel.modifiedInfo.changedItemCount+1
+        }
+
+        return prevStateNewModel;
+    case USER_DEL_VEHICLEMODEL:
+        //data: {brand, model, isBike}
+        let prevStateDelModel = {...state};
+        let type = "car";
+        if (action.payload.isBike) {
+            type = "bike";
+        }
+        console.log("DELETEEEEE")
+        console.log(action.payload)
+
+        if (!prevStateDelModel.customVehicleModel) {
+            prevStateDelModel.customVehicleModel = [];
+        }
+
+        let brandIdx = -1;
+        prevStateDelModel.customVehicleModel.forEach((item, bidx) => {
+            // if same brand and type
+            if (item.type == type && item.name == action.payload.brand) {
+                console.log("  FOund BRAND")
+                // Exist, check to add new Model
+                for (let idx = 0; idx < item.models.length; idx++) {
+                    let m = item.models[idx];
+                    if (m.name == action.payload.model) {
+                        item.models.splice(idx, 1);
+                        break;
+                    }
+                }
+                if (item.models.length == 0) {
+                    brandIdx = bidx;
+                }
+            }
+        })
+        // if empty models, delete
+        if (brandIdx != -1) {
+            prevStateDelModel.customVehicleModel.splice(brandIdx, 1);
+        }
+        prevStateDelModel.modifiedInfo= {
+            ...prevStateDelModel.modifiedInfo,
+            changedCustom: true,
+            changedItemCount: prevStateDelModel.modifiedInfo.changedItemCount+1
+        }
+
+        return prevStateDelModel;
+        
     case USER_GET_APPNOTIFICATION:
         let prevNotis = state.notifications;
         if (!prevNotis) {

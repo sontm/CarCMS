@@ -424,6 +424,7 @@ module.exports = {
     // vehicleList: props.userData.vehicleList,
     // customServiceModules: props.userData.customServiceModules,
     // customServiceModulesBike: props.userData.customServiceModulesBike,
+    //customVehicleModel
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
   async syncToServer(req, res) {
@@ -447,6 +448,8 @@ module.exports = {
       }
       currentUser.customServiceModules = req.body.customServiceModules;
       currentUser.customServiceModulesBike = req.body.customServiceModulesBike;
+      currentUser.customVehicleModel = req.body.customVehicleModel;
+      
       currentUser.settings = req.body.settings;
       currentUser.settingService = req.body.settingService;
 
@@ -496,6 +499,7 @@ module.exports = {
     // vehicleList: props.userData.vehicleList,
     // customServiceModules: props.userData.customServiceModules,
     // customServiceModulesBike: props.userData.customServiceModulesBike,
+    //customVehicleModel
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
 
@@ -519,6 +523,9 @@ module.exports = {
         }
         if (req.body.customServiceModulesBike&& req.body.customServiceModulesBike.length>0) {
           currentUser.customServiceModulesBike = req.body.customServiceModulesBike;
+        }
+        if (req.body.customVehicleModel&& req.body.customVehicleModel.length>0) {
+          currentUser.customVehicleModel = req.body.customVehicleModel;
         }
         if (req.body.settings) {
           currentUser.settings = req.body.settings;
@@ -571,6 +578,7 @@ module.exports = {
     // vehicleList: props.userData.vehicleList,
     // customServiceModules: props.userData.customServiceModules,
     // customServiceModulesBike: props.userData.customServiceModulesBike,
+    //customVehicleModel
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
     // teamInfo: teamInfo
@@ -630,6 +638,7 @@ module.exports = {
         vehicleList: currentUser.vehicleList,
         customServiceModules: currentUser.customServiceModules,
         customServiceModulesBike: currentUser.customServiceModulesBike,
+        customVehicleModel: currentUser.customVehicleModel,
         settings: currentUser.settings,
         settingService: currentUser.settingService,
         teamInfo: teamInfo,

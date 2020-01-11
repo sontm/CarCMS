@@ -80,6 +80,9 @@ export default {
     ADD_MAX_METER_HEADER: "Công tơ Mét",
     ADD_MAX_METER_LBL: "Hãy Điền Số Lớn Nhất Công tơ Mét",
 
+    ADD_MODEL_TITLE:"Thêm Dòng Xe",
+    ADD_MODEL_LABEL:"Điền Tên Dòng Xe",
+
     CARDETAIL_HEADER: "Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",
     CARDETAIL_H1_GAS_USAGE: "Biểu Đồ Xăng",
@@ -157,6 +160,9 @@ export default {
     SETTING_LBL_REMIND: "Cài Đặt Nhắc Nhở",
     SETTING_LBL_MAINTAIN: "Cài Đặt Mức Bảo Dưỡng",
     SETTING_LBL_MAINTAIN_MODULES: "Cài Đặt Các Bộ Phận Bảo Dưỡng",
+
+    SETTING_LBL_VEHICLE_MODELS: "Cài Đặt Dòng Xe Đã Tạo",
+    SETTING_LBL_VEHICLE_MODELS_TITLE: "Dòng Xe Đã Tạo",
 
     SETTING_H1_ACCOUNT: "Tài Khoản",
     SETTING_LBL_SIGNUP: "Đăng Ký Tài Khoản",
@@ -286,6 +292,7 @@ export default {
     TOAST_NO_NEW_INFO: "Không có thông tin mới.",
     TOAST_CONFIRM_CODE_NG: "Mã Xác Nhận Không Khớp!",
     TOAST_OVER_MAXCAR_CREATED: "Đã tạo quá số Xe cho phép, giới hạn số Xe:",
+    TOAST_NEWVEHICLEMODULE_EXIST: "Dòng Xe đã tồn tại, hãy điền tên khác!",
 
     TOAST_SEND_CUSTOMERVOICE_OK: "Rất cảm ơn vì nhận xét của bạn, chúng tôi sẽ tiếp thu và xử lý sớm nhất có thể.",
 };

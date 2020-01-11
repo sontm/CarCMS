@@ -76,7 +76,7 @@ class RegisterVehicleScreen extends React.Component {
         // })
     }
     save(newVehicle) {
-        if (!this.state.licensePlate) {
+        if (!this.state.licensePlate || !this.state.model || this.state.model == "--------------") {
             Toast.show({
                 text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
                 //buttonText: "Okay",
@@ -144,16 +144,27 @@ class RegisterVehicleScreen extends React.Component {
         return result;
     }
     getModelsOfBrand(brandNameOrId, data) {
+        let result = [];
+        if (this.props.userData.customVehicleModel && this.props.userData.customVehicleModel.length > 0) {
+            this.props.userData.customVehicleModel.forEach(item => {
+                if (this.state.type == item.type && brandNameOrId == item.name && 
+                        item.models && item.models.length > 0) {
+                    //
+                    result = result.concat([...item.models])
+                }
+            })
+        }
+
         for (let i = 0; i < data.length; i++) {
             if ( this.state.type == "bike" ) {
                 if (data[i].type == "bike" && (data[i].id == brandNameOrId || data[i].name == brandNameOrId)) {
-                    let result = [...data[i].models];
+                    result = result.concat([...data[i].models]);
                     //result.unshift({ id: 0,name: "-"+AppLocales.t("NEW_CAR_MODEL")+"-"});
                     return result;
                 }
             } else {
                 if (data[i].type == "car" && (data[i].id == brandNameOrId || data[i].name == brandNameOrId)) {
-                    let result = [...data[i].models];
+                    result = result.concat([...data[i].models]);
                     //result.unshift({ id: 0,name: "-"+AppLocales.t("NEW_CAR_MODEL")+"-"});
                     return result;
                 }
@@ -162,6 +173,8 @@ class RegisterVehicleScreen extends React.Component {
         return [{ id: -1,name: "N/A"}];
     }
     render() {
+        console.log("++++++++++++props.userData.customVehicleModel")
+        console.log(this.props.userData.customVehicleModel)
         return (
             <Container>
             <Content>
@@ -215,8 +228,18 @@ class RegisterVehicleScreen extends React.Component {
 
                     </View>
                     <View style={styles.rowContainer}>
-                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
+                        <View>
+                        <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                             <Label>{AppLocales.t("NEW_CAR_MODEL")}</Label>
+                            <Button small style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                                    onPress={() => {
+                                        this.props.navigation.navigate("CreateVehicleModel")
+                                }}>
+                                    <Text>{AppLocales.t("ADD_MODEL_TITLE")}</Text>
+                            </Button>
+                        </View>
+
+                        <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                             <View style={styles.rowForm}>
                             <Picker
                                 mode="dropdown"
@@ -236,6 +259,7 @@ class RegisterVehicleScreen extends React.Component {
                             </Picker>
                             </View>
                         </Item>
+                        </View>
                     </View>
                     <View style={styles.rowContainer}>
                         <Item stackedLabel style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>

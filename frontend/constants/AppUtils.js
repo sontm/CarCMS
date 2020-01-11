@@ -1828,6 +1828,8 @@ class AppUtils {
                 if (props.userData.modifiedInfo.changedCustom) {
                     objectToSync.customServiceModules = props.userData.customServiceModules;
                     objectToSync.customServiceModulesBike = props.userData.customServiceModulesBike;
+                    objectToSync.customVehicleModel = props.userData.customVehicleModel;
+                    
                 }
 
                 if (props.userData.modifiedInfo.changedSetting) {
@@ -1862,6 +1864,7 @@ class AppUtils {
             vehicleList: props.userData.vehicleList,
             customServiceModules: props.userData.customServiceModules,
             customServiceModulesBike: props.userData.customServiceModulesBike,
+            customVehicleModel: props.userData.customVehicleModel,
             settings: props.userData.settings,
             settingService: props.userData.settingService
             }, props.userData.token ,"vehicle",

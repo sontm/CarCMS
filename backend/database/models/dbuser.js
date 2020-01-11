@@ -106,6 +106,7 @@ const UserSchema = new Schema({
     // ],
     customServiceModules: [],
     customServiceModulesBike: [],
+    customVehicleModel: [],
     settings: {},
     settingService: {}
 });

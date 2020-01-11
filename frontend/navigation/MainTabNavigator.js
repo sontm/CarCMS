@@ -20,6 +20,7 @@ import PayServiceScreen from '../screens/addinfo/PayServiceScreen';
 import PayExpenseScreen from '../screens/addinfo/PayExpenseScreen';
 import ServiceScreenModules from '../screens/addinfo/ServiceScreenModules';
 import ServiceModuleCreateScreen from '../screens/addinfo/ServiceModuleCreateScreen';
+import CreateVehicleModel from '../screens/addinfo/CreateVehicleModel';
 import MyVehicleScreen from '../screens/MyVehicleScreen'
 
 import VehicleDetailReport from '../screens/VehicleDetailReport';
@@ -31,6 +32,7 @@ import ServiceMaintainSettingScreen from '../screens/setting/ServiceMaintainSett
 import CheckJoinTeamScreen from '../screens/setting/CheckJoinTeamScreen';
 import ForgotPasswordScreen from '../screens/setting/ForgotPasswordScreen';
 import CustomerVoiceScreen from  '../screens/setting/CustomerVoiceScreen';
+import SettingVehicleModulesScreen from '../screens/setting/SettingVehicleModulesScreen';
 
 import LoginScreen from '../screens/setting/LoginScreen';
 import ProfileScreen from '../screens/setting/ProfileScreen';
@@ -74,7 +76,8 @@ const MyVehicleStack = createStackNavigator(
     ServiceModules: ServiceScreenModules,
     ServiceModuleCreate: ServiceModuleCreateScreen,
     SetMaxOdometer: SetMaxOdometer,
-    ServiceMaintainSetting: ServiceMaintainSettingScreen
+    ServiceMaintainSetting: ServiceMaintainSettingScreen,
+    CreateVehicleModel:CreateVehicleModel
   },
   config
 );
@@ -113,6 +116,7 @@ const SettingsStack = createStackNavigator(
     ForgotPasswordScreen: ForgotPasswordScreen,
     CustomerVoiceScreen: CustomerVoiceScreen,
     Notification: NotificationScreen,
+    SettingVehicleModulesScreen: SettingVehicleModulesScreen,
     
     DebugScreen: DebugScreen
   },
