@@ -762,9 +762,11 @@ export default function(state = initialState, action) {
 
         // Compare and Merge Vehicle List, if Same ID, use the Server One
         let newVehicleList = data.vehicleList;
+        console.log("&&&&&&&&&&&&&&&&&&&&& newVehicleList:" + newVehicleList.length)
         let modifiedInfo = {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0};
         if (isMergeDataBeforeLogin) {
             let prevVehicleList = state.vehicleList;
+            console.log("&&&&&&&&&&&&&&&&&&&&& prevVehicleList:" + prevVehicleList.length)
             if (prevVehicleList && prevVehicleList.length > 0) {
                 // This mean have Prev data, need Sync to Server
                 modifiedInfo = {vehicleIds:[], 
@@ -784,6 +786,9 @@ export default function(state = initialState, action) {
                             // Add to new List if not Exist
                             newVehicleList.push(item)
                         }
+                    } else {
+                        // push new item
+                        newVehicleList.push(item)
                     }
                 })
             }

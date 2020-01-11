@@ -159,7 +159,7 @@ class RegisterVehicleScreen extends React.Component {
                 }
             }
         }
-        return [{ id: 0,name: "N/A"}];
+        return [{ id: -1,name: "N/A"}];
     }
     render() {
         return (

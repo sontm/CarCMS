@@ -104,8 +104,6 @@ class VehicleBasicReport extends Component {
         //     = AppUtils.getInfoCarAuthorizeDate(currentVehicle.authorizeCarList)
 
         let imgSource = AppUtils.loadImageSourceOfBrand(this.props.vehicle.brand.toLowerCase(), this.props.vehicle.type!="car")
-        console.log("currentData.gasReport.totalKmGas:" + currentData.gasReport.totalKmGas)
-        console.log("currentData.gasReport.totalMoneyGas:" + currentData.gasReport.totalMoneyGas)
         return (
             <Content>
             <TouchableOpacity 

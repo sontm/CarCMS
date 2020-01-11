@@ -55,7 +55,7 @@ const DATA_BRAND_MODEL = [
       {"id":18,"name":"Vision"},{"id":19,"name":"Wave"},{"id":20,"name":"WinnerX"}]},
   { id: 17,name: "Yamaha", type:"bike",
       models: [{"id":1,"name":"Acruzo"},{"id":2,"name":"Exciter"},{"id":3,"name":"FreeGo"},{"id":4,"name":"FZ150i"},
-      {"id":5,"name":"Janus"},{"id":6,"name":"Jupiter"},{"id":7,"name":"Lattte"},{"id":8,"name":"MT03"},{"id":9,"name":"NVX"},
+      {"id":5,"name":"Janus"},{"id":6,"name":"Jupiter"},{"id":7,"name":"Lattte"},{"id":16,"name":"Luvias"},{"id":8,"name":"MT03"},{"id":9,"name":"NVX"},
       {"id":10,"name":"Grande"},{"id":11,"name":"R15"},{"id":12,"name":"R3"},{"id":13,"name":"Sirius"},{"id":14,"name":"TFX150"}]},
   { id: 18,name: "Suzuki", type:"bike",
       models: [{"id":1,"name":"Address"},{"id":2,"name":"Axelo"},{"id":3,"name":"GD110"},{"id":4,"name":"GSX150"},
@@ -255,22 +255,25 @@ module.exports = {
 
 
 
+
+  // Modify Date of this
   getLatestDataDateOn(req, res) {
     console.log("App getLatestDataDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2019-12-13",
+        updatedOn: "2020-01-01",
       }
       res.status(200).send(latestData)
     } else {
       res.status(501).send({msg: "Require Authentication."})
     }
   },
+  // Modify Date of this
   getLatestAppData(req, res) {
     console.log("App getLatestAppData")
     if (true || req.user) {
       let appData = {
-        updatedOn: "2019-12-13",
+        updatedOn: "2020-01-01",
         vehicles: DATA_BRAND_MODEL,
         services: DATA_SERVICE_TYPE,
         servicesBike: DATA_SERVICE_TYPE_BIKE,
