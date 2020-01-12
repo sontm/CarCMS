@@ -7,7 +7,7 @@ import Layout from '../constants/Layout'
 
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
-import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
+import {VictoryLabel, VictoryPie, VictoryLegend, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryContainer} from 'victory-native';
 
 import { connect } from 'react-redux';
 import AppLocales from '../constants/i18n'
@@ -158,6 +158,7 @@ class MoneyUsageReport extends React.Component {
   //arrExpenseTypeByTime: [{"TienPhat": [{x: 2019-03-03, y: 200(K)}, {x: 2019-04-03, y: 100(K)}]}]
   calculateExpenseTypeFromArr(arrExpenseTypeByTime) {
     let arrSubExpenseSpend = []; // [{x:"tienPhat", y: 200}]
+    let legendLabels = [];
     let totalSubExpenseSpend = 0;
     if (arrExpenseTypeByTime && arrExpenseTypeByTime.length > 0) {
   
@@ -183,6 +184,7 @@ class MoneyUsageReport extends React.Component {
                     }
                     if (yVal) {
                         arrSubExpenseSpend.push({x: prop, y: yVal})
+                        legendLabels.push({name: prop})
                         totalSubExpenseSpend += yVal;
                     }
                 }
@@ -190,12 +192,13 @@ class MoneyUsageReport extends React.Component {
         })
         
     }
-    return {arrSubExpenseSpend,totalSubExpenseSpend};
+    return {arrSubExpenseSpend,totalSubExpenseSpend, legendLabels};
   }
 
   //arrExpenseTypeByTime: [{"TienPhat": [{x: 2019-03-03, y: 200(K)}, {x: 2019-04-03, y: 100(K)}]}]
   calculateExpenseTypeTeam() {
     let arrSubExpenseSpend = []; // [{x:"tienPhat", y: 200}]
+    let legendLabels = [];
     let totalSubExpenseSpend = 0;
     let objectTemp = {}; // {"TienPhat": 200}
     this.props.teamData.teamCarList.forEach(element => {
@@ -243,9 +246,10 @@ class MoneyUsageReport extends React.Component {
                 y: objectTemp[""+prop],
                 x: prop   
             })
+            legendLabels.push({name: prop})
         }
     }
-    return {arrSubExpenseSpend};
+    return {arrSubExpenseSpend, legendLabels};
   }
   render() {
       // Only Team or Private (Detail)
@@ -261,7 +265,7 @@ class MoneyUsageReport extends React.Component {
             var totalServiceSpend = totalServiceSpendTeam;
             var totalAlSpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
 
-            var {arrSubExpenseSpend, totalSubExpenseSpend} = this.calculateExpenseTypeTeam();
+            var {arrSubExpenseSpend, totalSubExpenseSpend, legendLabels} = this.calculateExpenseTypeTeam();
         } else {
             var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
                 totalExpenseSpendPrivate, totalServiceSpendPrivate}
@@ -275,8 +279,10 @@ class MoneyUsageReport extends React.Component {
             var totalAlSpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
 
             var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
-            var {arrSubExpenseSpend, totalSubExpenseSpend} = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
+            var {arrSubExpenseSpend, totalSubExpenseSpend, legendLabels} = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
         }
+        console.log("{{{{{{{{{{{{{{{ arrSubExpenseSpend")
+        console.log(arrSubExpenseSpend)
 
         return (
             <View style={styles.container}>
@@ -322,8 +328,8 @@ class MoneyUsageReport extends React.Component {
                     />
                 </View>
 
+                {totalAlSpend > 0 ? (
                 <View style={styles.statRow}>
-                    {totalAlSpend > 0 ? (
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
@@ -335,19 +341,38 @@ class MoneyUsageReport extends React.Component {
                             ]}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => (datum&&datum.y>0) ? (datum.x + "\n(" 
-                                + AppUtils.formatMoneyToK(datum.y) + ", "
+                            labels={({ datum }) => (datum&&datum.y>0) ? (
+                                AppUtils.formatMoneyToK(datum.y) + "\n("
                                 +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
                             labelRadius={({ radius }) => radius + 10 }
-                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            labelComponent={<VictoryLabel style={{fontSize: 13}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
                                 {AppUtils.formatMoneyToK(totalAlSpend)}
                             </Text>
                         </View>
-                    </View>) : <NoDataText />}
-                </View>
+                    </View>
+
+                    <View>
+                        <VictoryContainer
+                            width={Layout.window.width}
+                            height={30*Math.ceil(AppConstants.LEGEND_CHITIEU_2.length/2)}
+                        >
+                        <VictoryLegend standalone={false}
+                            x={15} y={5}
+                            itemsPerRow={4}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            orientation="horizontal"
+                            gutter={5}
+                            symbolSpacer={5}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            data={AppConstants.LEGEND_CHITIEU_2}
+                            style={{paddingBottom: 10}}
+                        />
+                        </VictoryContainer>
+                    </View>
+                </View>) : <NoDataText />}
 
                 <View>
                 <View style={{...styles.textRow, marginTop: 15, alignSelf:"center"}}>
@@ -355,27 +380,48 @@ class MoneyUsageReport extends React.Component {
                     {AppLocales.t("CARDETAIL_H1_EXPENSE_USAGE")+" ("+this.state.duration+" Tháng)"}
                     </TypoH5></Text>
                 </View>
+
+                {totalExpenseSpend > 0 ? (
                 <View style={{...styles.statRow, marginTop: 10}}>
-                    {totalExpenseSpend > 0 ? (
+                    
                     <View style={styles.moneyUsagePieContainer}>
                         <VictoryPie
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={arrSubExpenseSpend}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" 
-                                + AppUtils.formatMoneyToK(datum.y) + ", "
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (
+                                AppUtils.formatMoneyToK(datum.y) + "\n("
                                 +AppUtils.formatToPercent(datum.y, totalExpenseSpend)+")") : ""}
-                            labelRadius={({ radius }) => radius + 15 }
-                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            labelRadius={({ radius }) => radius + 10 }
+                            labelComponent={<VictoryLabel style={{fontSize: 13}}/>}
                             />
                         <View style={styles.labelProgress}>
                             <Text style={styles.labelProgressText}>
                                 {AppUtils.formatMoneyToK(totalExpenseSpend)}
                             </Text>
                         </View>
-                    </View> ) : <NoDataText />}
-                </View>
+                    </View>
+
+                    <View>
+                        <VictoryContainer
+                            width={Layout.window.width}
+                            height={30*Math.ceil(legendLabels.length/2)}
+                        >
+                        <VictoryLegend standalone={false}
+                            x={15} y={5}
+                            itemsPerRow={4}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            orientation="horizontal"
+                            gutter={5}
+                            symbolSpacer={5}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            data={legendLabels}
+                            style={{paddingBottom: 10}}
+                        />
+                        </VictoryContainer>
+                    </View>
+                </View>) : <NoDataText />}
                 </View>
 
             </View>
@@ -398,8 +444,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "white",
         flexDirection: "column",
-        borderWidth: 0.5,
-        borderColor: "grey",
+        //borderWidth: 0.5,
+        //borderColor: "grey",
         justifyContent: "space-between",
         marginBottom: 20,
         // borderRadius: 7,

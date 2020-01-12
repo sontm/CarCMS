@@ -117,9 +117,10 @@ class MyVehicleScreen extends React.Component {
     if (this.state.activePage==1) {
       var viewPage1 = (
           <Tabs style={{flex: 1}}>
-            <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")}
-                tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+            <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                activeTextStyle={{fontSize: 14,color: "white"}}>
               <Content><View style={styles.container}><ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}>
@@ -130,9 +131,10 @@ class MyVehicleScreen extends React.Component {
 
               </ScrollView></View></Content>
             </Tab>
-            <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB2")} 
-                tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+            <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB2")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+              activeTextStyle={{fontSize: 14,color: "white"}}>
             <Content><View style={styles.container}><ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}>

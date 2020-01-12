@@ -303,19 +303,19 @@ class TeamScreen extends React.Component {
           return this.props.teamData.teamCarReports[bId].gasReport.avgKmMonthly - 
             this.props.teamData.teamCarReports[aId].gasReport.avgKmMonthly
         } else if (this.state.sortType == "gasEffective") {
-          if (!this.props.teamData.teamCarReports[bId].gasReport.avgMoneyPerKmMonthly || 
-              this.props.teamData.teamCarReports[bId].gasReport.avgMoneyPerKmMonthly <= 0) {
+          if (!this.props.teamData.teamCarReports[bId].gasReport.totalMoneyGas || 
+            !this.props.teamData.teamCarReports[bId].gasReport.totalKmGas) {
             // If B NULL, return false
             return false;
           }
-          if (!this.props.teamData.teamCarReports[aId].gasReport.avgMoneyPerKmMonthly || 
-              this.props.teamData.teamCarReports[aId].gasReport.avgMoneyPerKmMonthly <= 0) {
+          if (!this.props.teamData.teamCarReports[aId].gasReport.totalMoneyGas || 
+              !this.props.teamData.teamCarReports[aId].gasReport.totalKmGas) {
             // If B NULL, return false
             return true;
           }
 
-          return this.props.teamData.teamCarReports[bId].gasReport.avgMoneyPerKmMonthly - 
-            this.props.teamData.teamCarReports[aId].gasReport.avgMoneyPerKmMonthly
+          return this.props.teamData.teamCarReports[bId].gasReport.totalMoneyGas/this.props.teamData.teamCarReports[bId].gasReport.totalKmGas - 
+            this.props.teamData.teamCarReports[aId].gasReport.totalMoneyGas/this.props.teamData.teamCarReports[aId].gasReport.totalKmGas;
         } else if (this.state.sortType == "moneyTotal") {
           if (!this.props.teamData.teamCarReports[bId].moneyReport.totalMoneySpend  || 
               this.props.teamData.teamCarReports[bId].moneyReport.totalMoneySpend <= 0) {
@@ -468,19 +468,22 @@ class TeamScreen extends React.Component {
 
         {stateTeam == 2 && this.state.activePage === 1? (
         <Tabs style={{flex: 1}} locked={true}>
-          <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")}
-              tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+          <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB1")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+              activeTextStyle={{fontSize: 14,color: "white"}}>
             <TeamReport navigation={this.props.navigation}/>
           </Tab>
-          <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB2")}
-              tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+          <Tab heading={AppLocales.t("TEAM_REPORT_REPORT_TAB2")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+              activeTextStyle={{fontSize: 14,color: "white"}}>
             <TeamReport2 navigation={this.props.navigation}/>
           </Tab>
-          <Tab heading={AppLocales.t("CARDETAIL_SERVICE_TABLE")}
-              tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+          <Tab heading={AppLocales.t("CARDETAIL_SERVICE_TABLE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+              textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+              activeTextStyle={{fontSize: 14,color: "white"}}>
             <Content>
                 <ServiceMaintainTable selectFromList={true}/>
             </Content>

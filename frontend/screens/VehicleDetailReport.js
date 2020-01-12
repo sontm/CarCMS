@@ -285,10 +285,11 @@ class VehicleDetailReport extends React.Component {
                                 {AppUtils.formatDateMonthDayYearVNShort(nextDateService)}
                             </Text> : null}
                             </View>
+                            {passServiceSub > 0 ?
                             <Text style={{fontSize: 12, textAlign:"center", alignSelf:"center"}}>{"(Nếu Theo "+ unitServiceSub + ": "}
                                 {passServiceSub+"/"+ totalNeedServiceSub+ unitServiceSub+")"}
                                 {/* {!nextDateServiceSub ? ")" : ""} */}
-                            </Text>
+                            </Text> : null}
                             {/* {nextDateServiceSub ? 
                             <Text style={{fontSize: 13}}>{AppLocales.t("GENERAL_NEXT") + ": "}
                                 {AppUtils.formatDateMonthDayYearVNShort(nextDateServiceSub)+")"}

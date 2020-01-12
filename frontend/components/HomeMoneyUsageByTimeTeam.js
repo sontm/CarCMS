@@ -17,7 +17,7 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        duration: 6,
+        duration: 7,
         durationType: "month", // quarter, year
         activeDisplay: 0, // 0: Km, 1:Money, 2: Money/KM
         tillDate: new Date(),

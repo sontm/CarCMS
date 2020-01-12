@@ -148,7 +148,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                             labels={({ datum }) => (datum&&datum.y > 0) ? ( 
                                 AppUtils.formatMoneyToK(datum.y) + "\n"
                                 +"("+AppUtils.formatToPercent(datum.y, theTotal)+")") : ""}
-                            labelRadius={({ radius }) => radius+5 }
+                            labelRadius={({ radius }) => radius+10 }
                             labelComponent={<VictoryLabel style={{fontSize: 13}}/>}
                             />                      
                         <View style={styles.labelProgress}>
@@ -199,8 +199,8 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "white",
         flexDirection: "column",
-        borderWidth: 0.5,
-        borderColor: "grey",
+        //borderWidth: 0.5,
+        //borderColor: "grey",
         justifyContent: "space-between",
         marginBottom: 20,
         //borderRadius: 7,

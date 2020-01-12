@@ -188,7 +188,7 @@ class ServiceMaintainTable extends React.Component {
             {this.props.selectFromList ? (
             <View style={styles.rowContainerCarSelect}>
                 <Picker
-                    style={{width: AppConstants.DEFAULT_FORM_WIDTH,fontSize: 30,
+                    style={{width: AppConstants.DEFAULT_FORM_WIDTH,
                         alignSelf:"center"}}
                     mode="dropdown"
                     iosIcon={<Icon name="arrow-down" />}

@@ -832,12 +832,40 @@ export default function(state = initialState, action) {
             return bDate - aDate;
         })
 
+        let syncCustom1 = data.customServiceModules;
+        let syncCustom2 = data.customServiceModulesBike;
+        let syncCustom3 = data.customVehicleModel;
+
+        let isSaveCustom = false;
+        //if (isMergeDataBeforeLogin) {
+            // only merge if Server data empty and PhoneData > 0
+            if((state.customServiceModules&&state.customServiceModules.length>0) && 
+                (!syncCustom1 || syncCustom1.length == 0)) {
+                    syncCustom1 = state.customServiceModules;
+                    isSaveCustom = true;
+            }
+            if((state.customServiceModulesBike&&state.customServiceModulesBike.length>0) && 
+                (!syncCustom2 || syncCustom2.length == 0)) {
+                    syncCustom2 = state.customServiceModulesBike;
+                    isSaveCustom = true;
+            }
+            if((state.customVehicleModel&&state.customVehicleModel.length>0) && 
+                (!syncCustom3 || syncCustom3.length == 0)) {
+                    syncCustom3 = state.customVehicleModel;
+                    isSaveCustom = true;
+            }
+        //}
+        if (isSaveCustom) {
+            modifiedInfo.changedCustom = true;
+            modifiedInfo.changedItemCount = modifiedInfo.changedItemCount+1;
+        }
+
         let newStateSyncFrom = {
             ...state,
             vehicleList: newVehicleList,
-            customServiceModules: data.customServiceModules,
-            customServiceModulesBike: data.customServiceModulesBike,
-            customVehicleModel: data.customVehicleModel,
+            customServiceModules: syncCustom1,
+            customServiceModulesBike: syncCustom2,
+            customVehicleModel: syncCustom3,
             settings: data.settings,
             settingService: data.settingService,
             notifications: newNotis0,

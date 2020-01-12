@@ -14,7 +14,7 @@ export default {
     IS_DEBUG_MODE: true,
     // TODO Enable these values
     SETTING_KM_SHOWWARN: 100,
-    SETTING_DAY_SHOW_WARN: 260,
+    SETTING_DAY_SHOW_WARN: 30,
 
     SETTING_MAX_CAR_INDIVIDUAL: 30,
 
@@ -55,8 +55,12 @@ export default {
     LEGEND_CHITIEU: [
         {name:"Xăng"},{name:"Pháp Lý"},{name:"Phụ Chi"},{name:"Bảo Dưỡng"}
     ],
+    LEGEND_CHITIEU_2: [
+        {name:"Xăng"},{name:"Phụ Chi"},{name:"Pháp Lý"},{name:"Bảo Dưỡng"}
+    ],
 
     SERVER_API:"https://yamastack.com/api/",
+
     //SERVER_API:"http://18.140.121.240:3000/api",
     //SERVER_API:  "http://192.168.1.51:3000/api",
     //SERVER_API:  "http://192.168.0.108:3000/api",

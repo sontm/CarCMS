@@ -89,7 +89,7 @@ export default {
     CARDETAIL_H1_MONEY_USAGE_BYTIME: "Chi Tiêu Theo Thời Gian",
     CARDETAIL_H1_MONEY_USAGE_CARs: "Phân Bố Chi Tiêu Các Xe",
     CARDETAIL_H1_MONEY_USAGE: "Phân Bố Các Khoản Tổng Các Xe",
-    CARDETAIL_H1_EXPENSE_USAGE: "Chi Tiêu Phụ Phí",
+    CARDETAIL_H1_EXPENSE_USAGE: "Chi Tiêu Phụ Chi",
     CARDETAIL_H1_SERVICE_USAGE: "Chi Tiêu Bảo Dưỡng/Sửa Chữa",
     CARDETAIL_H1_SERVICE_USAGE_TOTAL: "Bảo Dưỡng/Sửa Chữa Tổng Các Xe",
     CARDETAIL_AVERAGE_IN: "Trung Bình ",
@@ -271,6 +271,9 @@ export default {
     MSG_REQUEST_REJECTED: "Yêu Cầu gia nhập đã bị Từ Chối.",
     MSG_REQUEST_BLOCKED: "Yêu Cầu gia nhập đã bị Chặn Lại.",
 
+    MSG_CONFIRM_SYNC_FROMSERVER: "Dữ liệu trên điện thoại sẽ bị Thay Thế bởi dữ liệu trên máy chủ!",
+    MSG_CONFIRM_SYNC_TOSERVER: "Dữ liệu trên điện thoại sẽ Thay Thế dữ liệu trên máy chủ!",
+
     NOTIFICATION_AUTH: "Sắp Đến Ngày Đăng Kiểm",
     NOTIFICATION_INSURANCE: "Sắp Đến Ngày Đóng Bảo Hiểm Dân Sự",
     NOTIFICATION_ROADFEE: "Sắp Đến Ngày Phí Bảo Trì Đường Bộ",
@@ -294,6 +297,7 @@ export default {
     TOAST_CONFIRM_CODE_NG: "Mã Xác Nhận Không Khớp!",
     TOAST_OVER_MAXCAR_CREATED: "Đã tạo quá số Xe cho phép, giới hạn số Xe:",
     TOAST_NEWVEHICLEMODULE_EXIST: "Dòng Xe đã tồn tại, hãy điền tên khác!",
+    TOAST_SYNC_TO_SERVER_OK: "Đồng bộ lên máy chủ thành công!",
 
     TOAST_SEND_CUSTOMERVOICE_OK: "Rất cảm ơn vì nhận xét của bạn, chúng tôi sẽ tiếp thu và xử lý sớm nhất có thể.",
 };

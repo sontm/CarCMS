@@ -63,7 +63,20 @@ class SettingsScreen extends React.Component {
   syncDataFromServer() {
     NetInfo.fetch().then(state => {
       if (state.isConnected) {
-        AppUtils.syncDataFromServer(this.props)
+        Alert.alert(
+          AppLocales.t("GENERAL_CONFIRM"),
+          AppLocales.t("MSG_CONFIRM_SYNC_FROMSERVER"),
+          [
+              {
+                text: AppLocales.t("GENERAL_CANCEL_SHORT"),
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
+                  onPress: () => AppUtils.syncDataFromServer(this.props)},
+          ],
+          {cancelable: true}
+        )
       } else {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
@@ -79,7 +92,20 @@ class SettingsScreen extends React.Component {
   syncDataToServer() {
     NetInfo.fetch().then(state => {
       if (state.isConnected) {
-        AppUtils.syncDataToServer(this.props)
+        Alert.alert(
+          AppLocales.t("GENERAL_CONFIRM"),
+          AppLocales.t("MSG_CONFIRM_SYNC_TOSERVER"),
+          [
+              {
+                text: AppLocales.t("GENERAL_CANCEL_SHORT"),
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+              },
+              {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
+                  onPress: () => AppUtils.syncDataToServer(this.props)},
+          ],
+          {cancelable: true}
+        )
       } else {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
@@ -1028,7 +1054,7 @@ const styles = StyleSheet.create({
     // backgroundColor: "white"
   },
   equalStartRow: {
-      width: Layout.window.width*0.45,
+      width: Layout.window.width*0.47,
       // height: 120
   },
   iconCloudDown: {

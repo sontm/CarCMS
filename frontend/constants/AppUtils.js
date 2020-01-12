@@ -6,6 +6,7 @@ import { Notifications } from 'expo';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import NetInfo from "@react-native-community/netinfo";
+import {Toast} from 'native-base';
 
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
@@ -1870,6 +1871,13 @@ class AppUtils {
             }, props.userData.token ,"vehicle",
           response => {
             console.log("Sync Post Vehicle OK")
+            Toast.show({
+                text: AppLocales.t("TOAST_SYNC_TO_SERVER_OK"),
+                //buttonText: "Okay",
+                position:"top",
+                type: "success"
+            })
+
             props.actVehicleSyncToServerOK()
         },
           error => {console.log(error)}

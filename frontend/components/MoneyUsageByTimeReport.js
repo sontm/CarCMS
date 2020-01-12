@@ -949,8 +949,8 @@ const styles = StyleSheet.create({
     container: {
       backgroundColor: "white",
       flexDirection: "column",
-      borderWidth: 0.3,
-      borderColor: "grey",
+      //borderWidth: 0.3,
+      //borderColor: "grey",
       justifyContent: "space-between",
       marginBottom: 20,
     //   borderRadius: 7,

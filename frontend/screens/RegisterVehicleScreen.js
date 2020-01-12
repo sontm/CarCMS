@@ -62,9 +62,31 @@ class RegisterVehicleScreen extends React.Component {
             // }
             // Set to the First Car in List
             if (this.props.appData.carModels && this.props.appData.carModels.length > 0) {
-            this.setState({
-                brand: this.props.appData.carModels[0].name
-            })
+                let firstBrand = this.props.appData.carModels[0].name;
+                let selectedModel = null;
+                if (this.props.userData.customVehicleModel && this.props.userData.customVehicleModel.length > 0) {
+                    this.props.userData.customVehicleModel.forEach(item => {
+                        if (this.state.type == "car" && firstBrand == item.name && 
+                                item.models && item.models.length > 0) {
+                            //
+                            selectedModel = item.models[0].name;
+                        }
+                    })
+                }
+                
+                if (!selectedModel) {
+                    for (let i = 0; i < this.props.appData.carModels.length; i++) {
+                        if (this.props.appData.carModels[i].type == "car" && 
+                                (this.props.appData.carModels[i].id == firstBrand || this.props.appData.carModels[i].name == firstBrand)) {
+                            selectedModel = this.props.appData.carModels[i].name;
+                        }
+                    }
+                }
+
+                this.setState({
+                    brand: firstBrand,
+                    model: selectedModel
+                })
             }
         }
     }
@@ -76,7 +98,8 @@ class RegisterVehicleScreen extends React.Component {
         // })
     }
     save(newVehicle) {
-        if (!this.state.licensePlate || !this.state.model || this.state.model == "--------------") {
+        if (!this.state.licensePlate || !this.state.model) {
+            console.log(this.state)
             Toast.show({
                 text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
                 //buttonText: "Okay",
