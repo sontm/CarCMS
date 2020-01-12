@@ -467,6 +467,7 @@ module.exports = {
       newRecovery.userId = currentUser.id;
       newRecovery.createdAt = today;
       newRecovery.validUntil = new Date(today);
+      newRecovery.enable= true;
 
       // Valid in 12h
       newRecovery.validUntil.setHours(newRecovery.validUntil.getHours()+12);
@@ -542,6 +543,7 @@ module.exports = {
     newRecovery.userId = currentUser.id;
     newRecovery.createdAt = today;
     newRecovery.validUntil = new Date(today);
+    newRecovery.enable = true;
 
     // Valid in 12h
     newRecovery.validUntil.setHours(newRecovery.validUntil.getHours()+12);
@@ -559,11 +561,11 @@ module.exports = {
             Charset: 'UTF-8',
             Data:
             "<h3>Xin Chào "+newRecovery.email+".<h3>.<br/>" + 
-            "Có vẻ như quý khách đang mong muốn phục hồi lại mật khẩu để sử dụng ứng dụng QuanLyXe.<br/><br/> Xin hãy truy "+
+            "Quý khách vừa yêu cầu phục hồi lại mật khẩu để sử dụng ứng dụng QuanLyXe.<br/><br/> Xin hãy truy "+
             "cập vào đường link dưới đây và điền mật khẩu mới:<br/>" +
             link + "<br/><br/>" +
             "Nếu quý khách không phải là người yêu cầu, xin hãy bỏ qua email này.<br/><br/>"+
-            "CHÚ Ý: Đây là hệ thống trả lời email tự động, xin quý khách không gửi phản hồi đến địa chỉ này!<br/><br/>"+
+            "CHÚ Ý: Đây là hệ thống trả lời email tự động, xin quý khách không gửi phản hồi đến địa chỉ này!<br/>"+
             "Xin chân thành cảm ơn.<br/>"
           },
         },

@@ -33,7 +33,7 @@ class ForgotPasswordScreen extends React.Component {
                             console.log(response.data)
                             Alert.alert(
                                 AppLocales.t("GENERAL_NOTIFICATION"),
-                                "Xin hãy làm theo email hướng dẫn được gửi đến " + this.state.email+
+                                "1 email đã được gửi đến hòm thư " + this.state.email+ ", xin hãy làm theo hướng dẫn. " +
                                 "(Đừng quên kiểm tra luôn cả thư mục Spam nữa nhé).",
                                 [
                                     {

@@ -28,6 +28,10 @@ const PwdRecoverySchema = new Schema({
         type: Date,
         required: false
     },
+    enable: {
+        type:Boolean,
+        required: false
+    },
 });
 
 PwdRecoverySchema.set('toJSON', {

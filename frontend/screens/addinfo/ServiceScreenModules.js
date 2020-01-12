@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Segment,List, ListItem, CheckBox, H3 } from 'native-base';
 
 import {HeaderText, WhiteText} from '../../components/StyledText'
@@ -20,6 +20,7 @@ class ServiceScreenModules extends React.Component {
         this.state = {
             //serviceModule: [], // Bo Phan cua Xe Sua Chua
             serviceModule: {}, // DauMay: Thay Thế|Bảo Dưỡng|Kiểm Tra
+            selected: new Map()
         };
 
         this.toggleItemCheck = this.toggleItemCheck.bind(this)
@@ -52,17 +53,25 @@ class ServiceScreenModules extends React.Component {
             //prevList.push(value)
             prevList[""+value] = AppLocales.t("GENERAL_MAINTAIN_THAYTHE");
         }
-        
+        let newSelected = new Map(this.state.selected)
+        newSelected.set(""+value, prevList[""+value] ? true : false)
         this.setState({
-            serviceModule: prevList
+            serviceModule: prevList,
+            selected: newSelected
         })
     }
     // type: T, K, B
     onSetFixType(item, value) {
+        console.log(" onSetFixType"+item+" " + value)
         let prevList = this.state.serviceModule;
         prevList[""+item.name] = value;
+
+        let newSelected = new Map(this.state.selected)
+        newSelected.set(""+value, prevList[""+value] ? true : false)
+
         this.setState({
-            serviceModule: prevList
+            serviceModule: prevList,
+            selected: newSelected
         })
     }
     okSetModules() {
@@ -73,6 +82,7 @@ class ServiceScreenModules extends React.Component {
     render() {
         
         console.log("---------------------Render of service module")
+        console.log(this.state.selected)
         //console.log(this.state.serviceModule)
         let serviceArr = this.props.appData.typeService;
         let customArr = this.props.userData.customServiceModules;
@@ -87,40 +97,43 @@ class ServiceScreenModules extends React.Component {
                     {AppLocales.t("SETTING_SERVICEMODULEHEAD_USERDEFINED")}</Text>
             )
 
-            customArr.forEach((item,idx) => {
-                customView.push(
-                    <ListItem key={item.name+idx}
-                            style={{marginLeft: 5}}>
-                        
-                        <CheckBox checked={this.state.serviceModule[""+item.name] ? true : false}
-                            onPress={() => {this.toggleItemCheck(item.name)}}/>
+            customView.push(<FlatList key={"custom"}
+                data={customArr}
+                renderItem={({ item }) => (
+                    <View key={item.name} style={{flexDirection:"row", paddingTop: 10, paddingBottom: 10, flexWrap: "wrap", flexGrow: 100,
+                            justifyContent:"space-between",
+                            borderBottomColor: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG,borderBottomWidth: 0.3, marginLeft: -5}}>
 
-                        <Body style={{flexDirection:"row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", flexGrow: 100}}>
-                        <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
-                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2, minHeight: 20}}>{item.name}</Text>
-                        </TouchableOpacity>
-                        {this.state.serviceModule[""+item.name] ? (
-                        <View style={{flexDirection:"row", alignItems: "center", justifyContent:"flex-end", marginRight: -15}}>
-                                <Text style={this.state.serviceModule[""+item.name]==T ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
-                                        onPress={() => this.onSetFixType(item, T)}>
-                                    Thay Thế
-                                </Text>
-                                <Text style={this.state.serviceModule[""+item.name]==K ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
-                                        onPress={() => this.onSetFixType(item, K)}>
-                                    Kiểm Tra
-                                </Text>
-                                <Text style={this.state.serviceModule[""+item.name]==B ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
-                                        onPress={() => this.onSetFixType(item, B)}>
-                                    Bảo Dưỡng
-                                </Text>
+                            <View style={{flexDirection:"row", alignItems: "center"}}>
+                                <CheckBox checked={this.state.serviceModule[""+item.name] ? true : false}
+                                onPress={() => {this.toggleItemCheck(item.name)}}/>
+                                
+                                <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
+                                    <Text style={{fontSize: 15, minWidth: Layout.window.width * 0.2, minHeight: 20, marginLeft: 13}}>{item.name}</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            {this.state.serviceModule[""+item.name] ? (
+                                <View style={{flexDirection:"row", alignItems: "center", justifyContent:"flex-end", marginLeft: 5}}>
+                                    <Text style={this.state.serviceModule[""+item.name]==T ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                            onPress={() => this.onSetFixType(item, T)}>
+                                        Thay Thế
+                                    </Text>
+                                    <Text style={this.state.serviceModule[""+item.name]==K ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                            onPress={() => this.onSetFixType(item, K)}>
+                                        Kiểm Tra
+                                    </Text>
+                                    <Text style={this.state.serviceModule[""+item.name]==B ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                            onPress={() => this.onSetFixType(item, B)}>
+                                        Bảo Dưỡng
+                                    </Text>
+                                </View>
+                            ) : null }
                         </View>
-                        ) : null }
-                        </Body>
-
-                        <Right style={{flex: 0}}></Right>
-                    </ListItem>
-                )
-            })
+                )}
+                keyExtractor={item => item.name}
+                extraData={this.state.selected}
+                />)
 
             customView.push(
                 <Text style={styles.textHeadingRow} key="systemdefined">
@@ -131,50 +144,53 @@ class ServiceScreenModules extends React.Component {
             <Container>
             <Content>
                 <View style={styles.formContainer}>
-                <List>
                 {customView}
-                {serviceArr.map(item => (
-                    <ListItem key={item.name}
-                            style={{marginLeft: 5}}>
-                        
-                        <CheckBox checked={this.state.serviceModule[""+item.name] ? true : false}
-                            onPress={() => {this.toggleItemCheck(item.name)}}/>
-
-                        <Body style={{flexDirection:"row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", flexGrow: 100}}>
-                        <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
-                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2, minHeight: 20}}>{item.name}</Text>
-                        </TouchableOpacity>
-                        {this.state.serviceModule[""+item.name] ? (
-                        <View style={{flexDirection:"row", alignItems: "center", justifyContent:"flex-end", marginRight: -15}}>
-                                <Text style={this.state.serviceModule[""+item.name]==T ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
-                                        onPress={() => this.onSetFixType(item, T)}>
-                                    Thay Thế
-                                </Text>
-                                <Text style={this.state.serviceModule[""+item.name]==K ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
-                                        onPress={() => this.onSetFixType(item, K)}>
-                                    Kiểm Tra
-                                </Text>
-                                <Text style={this.state.serviceModule[""+item.name]==B ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
-                                        onPress={() => this.onSetFixType(item, B)}>
-                                    Bảo Dưỡng
-                                </Text>
-                        </View>
-                        ) : null }
-                        </Body>
-
-                        <Right style={{flex: 0}}></Right>
-                    </ListItem>
-                ))} 
                 
-                    
-                </List>
+                <FlatList key={"default"}
+                    data={serviceArr}
+                    renderItem={({ item }) => (
+                        <View key={item.name} style={{flexDirection:"row", paddingTop: 10, paddingBottom: 10, flexWrap: "wrap", flexGrow: 100,
+                            justifyContent:"space-between",
+                            borderBottomColor: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG,borderBottomWidth: 0.3, marginLeft: -5}}>
+
+                            <View style={{flexDirection:"row", alignItems: "center"}}>
+                                <CheckBox checked={this.state.serviceModule[""+item.name] ? true : false}
+                                onPress={() => {this.toggleItemCheck(item.name)}}/>
+                                
+                                <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
+                                    <Text style={{fontSize: 15, minWidth: Layout.window.width * 0.2, minHeight: 20, marginLeft: 13}}>{item.name}</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            {this.state.serviceModule[""+item.name] ? (
+                                <View style={{flexDirection:"row", alignItems: "center", justifyContent:"flex-end", marginLeft: 5}}>
+                                    <Text style={this.state.serviceModule[""+item.name]==T ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                            onPress={() => this.onSetFixType(item, T)}>
+                                        Thay Thế
+                                    </Text>
+                                    <Text style={this.state.serviceModule[""+item.name]==K ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                            onPress={() => this.onSetFixType(item, K)}>
+                                        Kiểm Tra
+                                    </Text>
+                                    <Text style={this.state.serviceModule[""+item.name]==B ? styles.activeSegmentText2 : styles.inActiveSegmentText2}
+                                            onPress={() => this.onSetFixType(item, B)}>
+                                        Bảo Dưỡng
+                                    </Text>
+                                </View>
+                            ) : null }
+                        </View>
+                    )}
+                    keyExtractor={item => item.name}
+                    extraData={this.state.selected}
+                />
+                
                 </View>
             </Content>
             <View style={styles.rowButton}>
                 <Button rounded
                     style={styles.btnSubmit}
                     onPress={() => this.okSetModules()}
-                ><Text>{AppLocales.t("GENERAL_ADDDATA")}</Text></Button>
+                ><Text>{AppLocales.t("MAINTAIN_ADD_MODULE")}</Text></Button>
             </View>
             </Container>
         );
@@ -281,7 +297,7 @@ const styles = StyleSheet.create({
   activeSegmentText2: {
       //color:"white",
       color:AppConstants.COLOR_GOOGLE,
-      fontSize: 12,
+      fontSize: 13,
       textDecorationLine: "underline",
       fontWeight: "bold",
       marginLeft: 3,
@@ -289,7 +305,7 @@ const styles = StyleSheet.create({
   },
   inActiveSegmentText2: {
         color:AppConstants.COLOR_PICKER_TEXT,
-      fontSize: 12,
+      fontSize: 14,
       padding: 0,
       margin: 0,
       marginLeft: 3,

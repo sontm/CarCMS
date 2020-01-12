@@ -54,7 +54,7 @@ export default {
     GENERAL_MAINTAIN_MODULE: "Bộ Phận",
 
     MAINTAIN_ADD_MODULE: "Thêm Bộ Phận",
-    MAINTAIN_CREATE_MODULE: "Tạo Bộ Phận",
+    MAINTAIN_CREATE_MODULE: "Tạo Bộ Phận Bảo Dưỡng",
 
     NAV_BOT_HOME: "Home",
     NAV_BOT_MY_CAR: "Cá Nhân",
@@ -278,8 +278,8 @@ export default {
     INFO_SYNCING_PRIVATE_DATA:"Đang đồng bộ dữ liệu...",
     INFO_SYNCING_TEAM_DATA:"Đang đồng bộ dữ liệu Nhóm...",
 
-    NOTE_VALIDFOR_OIL: "Chung Toi De mac dinh la \n 1000KM for Oto. What Are You Thinasd k sdfis my work dsdfnot allasdfk jasdf ",
-    NOTE_VALIDFOR_AUTH: "Chung Toi De mac dinh la \n 365 Ngay (1 Nam) for Oto",
+    NOTE_VALIDFOR_OIL: "",
+    NOTE_VALIDFOR_AUTH: "",
     
     TOAST_SUCCESS_COPIED: "Đã Sao Chép Mã Nhóm",
     TOAST_NEED_OLDPWD: "Hãy Điền Mật Khẩu Cũ",

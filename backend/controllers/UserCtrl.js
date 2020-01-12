@@ -132,13 +132,14 @@ module.exports = {
   },
 
 
-  //body 
+  //body . Req from Website
   async resetPassword(req, res) {
     console.log("resetPassword of USERID:")
     if (req.body.userId && req.body.token && req.body.password) {
       // Find current User record contain Vehicle data
       const theRecord = await dbpwdrecovery.findOne({
         userId: req.body.userId,
+        enable: true,
         token:req.body.token});
       
       if (theRecord) {
@@ -152,6 +153,9 @@ module.exports = {
             currentUser.passwordR = req.body.password;
             currentUser.password = newHashed;
             await currentUser.save();
+
+            theRecord.enable = false;
+            await theRecord.save();
 
             res.status(200).send({msg: "OK"})
           } else {
