@@ -19,25 +19,30 @@ passport.use(new LocalStrategy({
         .then(result => {
             if (result) {
                 console.log("    AppPassport Local Found User, checking PWD, raw:" + password + ",db:" + result.password)
-                // Found user with this user name, check Password
-                bcrypt.compare(password, result.password)
-                .then(isMatch => {
-                    if (isMatch) {
-                        console.log("      AppPassport Local PWD MATCHED")
-                        // Match Username and Password
-                        if (result) {
-                            let user = AppUtil.createUserFromRecordForJWT(result)
-                            return done(null, user, 
-                                {message: 'AUTH Logged In Successfully'});
+                if ((!result.password && password) || (result.password && !password)) {
+                    // One of password is NULL, FAIL
+                    return done(null, false, {message: 'AUTH Incorrect password'});
+                } else {
+                    // Found user with this user name, check Password
+                    bcrypt.compare(password, result.password)
+                    .then(isMatch => {
+                        if (isMatch) {
+                            console.log("      AppPassport Local PWD MATCHED")
+                            // Match Username and Password
+                            if (result) {
+                                let user = AppUtil.createUserFromRecordForJWT(result)
+                                return done(null, user, 
+                                    {message: 'AUTH Logged In Successfully'});
+                            } else {
+                                return done(null, false, {message: 'AUTH Incorrect Local PWD'});
+                            }
                         } else {
-                            return done(null, false, {message: 'AUTH Incorrect Local PWD'});
+                            console.log("      AppPassport Local PWD NOT MATCH")
+                            // Not Match
+                            return done(null, false, {message: 'AUTH Incorrect user And password'});
                         }
-                    } else {
-                        console.log("      AppPassport Local PWD NOT MATCH")
-                        // Not Match
-                        return done(null, false, {message: 'AUTH Incorrect user And password'});
-                    }
-                })
+                    })
+                }
             } else {
                 return done(null, false, {message: 'AUTH Incorrect User Name'});
             }
