@@ -218,8 +218,8 @@ module.exports = {
       };
       try {
         const theUser = await new Promise((resolve, reject) => {
-          // TODO for this AND query
-          dbuser.findOneAndUpdate({ email: item.email, userServiceId: item.userServiceId }, item, 
+          //userServiceId: item.userServiceId 
+          dbuser.findOneAndUpdate({ email: item.email}, item, 
               {upsert:true, useFindAndModify: false, new:true}, function(err, doc){
             err ? reject(err) : resolve(doc);
           });
@@ -328,7 +328,8 @@ module.exports = {
           try {
             const theUser = await new Promise((resolve, reject) => {
               // TODO for this AND query, OR ??
-              dbuser.findOneAndUpdate({ email: item.email, userServiceId: item.userServiceId }, item, 
+              ////userServiceId: item.userServiceId 
+              dbuser.findOneAndUpdate({ email: item.email}, item, 
                   {upsert:true, useFindAndModify: false, new:true}, function(err, doc){
                 err ? reject(err) : resolve(doc);
               });
