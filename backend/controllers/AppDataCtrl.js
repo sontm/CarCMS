@@ -560,7 +560,7 @@ module.exports = {
           Html: {
             Charset: 'UTF-8',
             Data:
-            "<h3>Xin Chào "+newRecovery.email+".<h3>.<br/>" + 
+            "<h3>Xin Chào "+newRecovery.email+".</h3><br/>" + 
             "Quý khách vừa yêu cầu phục hồi lại mật khẩu để sử dụng ứng dụng QuanLyXe.<br/><br/> Xin hãy truy "+
             "cập vào đường link dưới đây và điền mật khẩu mới:<br/>" +
             link + "<br/><br/>" +
