@@ -238,62 +238,72 @@ class SettingsScreen extends React.Component {
     }
   }
   handleLogin() {
-    NetInfo.fetch().then(state => {
-      if (state.isConnected) {
-        Backend.login({email: this.state.email, password: this.state.password}, 
-          response => {
-              console.log("Login OK")
-              // Login OK, check if current have Data
-              //console.log(response.data)
-              if (this.props.userData.vehicleList.length > 0) {
-                Alert.alert(
-                  AppLocales.t("GENERAL_WARN"),
-                  AppLocales.t("MSG_CONFIRM_MERGEDATA_BEFORELOGIN"),
-                  [
-                      {
-                        text: AppLocales.t("GENERAL_NO"),
-                        onPress: () => {
-                          // User dont want to Merge data
-                          this.props.actUserLoginOK(response.data)
-                        },
-                      },
-                      {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
-                        onPress: () => {
-                          // User want to Merge data
-                          this.setState({
-                            isMergeDataBeforeLogin: true
-                          })
-                          this.props.actUserLoginOK(response.data)
-                        }},
-                  ],
-                  {cancelable: true}
-                )
-              } else {
-                this.props.actUserLoginOK(response.data)
-              }
+    // check if user fill valid Username and Password
+    if (!this.state.email || !this.state.password || this.state.password.length < 6 || this.state.password.length < 3) {
+      Toast.show({
+        text: AppLocales.t("TOAST_USER_PWED_NOTENOUGH"),
+        //buttonText: "Okay",
+        position: "top",
+        type: "danger"
+      })
+    } else {
 
-          },
-          error => {
-              console.log("Login ERROR")
-              console.log(error)
-              Toast.show({
-                text: AppLocales.t("TOAST_LOGIN_FAILED"),
-                //buttonText: "Okay",
-                position: "top",
-                type: "danger"
-              })
-          }
-        );
-      } else {
-        Toast.show({
-          text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
-          //buttonText: "Okay",
-          position: "top",
-          type: "danger"
-        })
-      }
-    });
-    
+      NetInfo.fetch().then(state => {
+        if (state.isConnected) {
+          Backend.login({email: this.state.email, password: this.state.password}, 
+            response => {
+                console.log("Login OK")
+                // Login OK, check if current have Data
+                //console.log(response.data)
+                if (this.props.userData.vehicleList.length > 0) {
+                  Alert.alert(
+                    AppLocales.t("GENERAL_WARN"),
+                    AppLocales.t("MSG_CONFIRM_MERGEDATA_BEFORELOGIN"),
+                    [
+                        {
+                          text: AppLocales.t("GENERAL_NO"),
+                          onPress: () => {
+                            // User dont want to Merge data
+                            this.props.actUserLoginOK(response.data)
+                          },
+                        },
+                        {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
+                          onPress: () => {
+                            // User want to Merge data
+                            this.setState({
+                              isMergeDataBeforeLogin: true
+                            })
+                            this.props.actUserLoginOK(response.data)
+                          }},
+                    ],
+                    {cancelable: true}
+                  )
+                } else {
+                  this.props.actUserLoginOK(response.data)
+                }
+
+            },
+            error => {
+                console.log("Login ERROR")
+                console.log(error.response)
+                Toast.show({
+                  text: AppLocales.t("TOAST_LOGIN_FAILED"),
+                  //buttonText: "Okay",
+                  position: "top",
+                  type: "danger"
+                })
+            }
+          );
+        } else {
+          Toast.show({
+            text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+            //buttonText: "Okay",
+            position: "top",
+            type: "danger"
+          })
+        }
+      });
+    }
   }
 
   async doLoginFacebook() {
@@ -792,8 +802,6 @@ class SettingsScreen extends React.Component {
                 <View style={styles.rowText}>
                   <Text style={styles.textNormal}>{AppLocales.t("SETTING_LBL_GUIDE")}</Text>
                 </View>
-                <View style={styles.rowRightIcon}>
-                  <Icon name="arrow-forward" style={styles.iconRight}/></View>
               </View>
             </TouchableOpacity>
             <TouchableOpacity 

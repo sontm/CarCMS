@@ -17,8 +17,8 @@ class RegisterUserScreen extends React.Component {
         super(props);
         this.state = {
             fullName: "Tester",
-            email: "tester",
-            phone: "Phone123",
+            email: "tester@mail.com",
+            phone: "01689985174",
             password: "123456",
             isShowPwd: false
         };
@@ -31,6 +31,20 @@ class RegisterUserScreen extends React.Component {
         if (!this.state.fullName || !this.state.email || !this.state.password) {
             Toast.show({
                 text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
+                //buttonText: "Okay",
+                position: "top",
+                type: "danger"
+            })
+        } else if (this.state.email.length < 3 || this.state.email.indexOf("@") < 0) {
+            Toast.show({
+                text: "Email không đúng",
+                //buttonText: "Okay",
+                position: "top",
+                type: "danger"
+            })
+        } else if (this.state.password.length < 6) {
+            Toast.show({
+                text: "Mật khẩu cần ít nhất 6 ký tự",
                 //buttonText: "Okay",
                 position: "top",
                 type: "danger"

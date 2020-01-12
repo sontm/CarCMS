@@ -215,7 +215,7 @@ class ProfileScreen extends React.Component {
                     {/* TODO for Edit Profile, also Team name here  */}
                     <View style={styles.rowButton}>
                     <Button
-                        rounded primary
+                        rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG, width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,justifyContent: "center"}}
                         onPress={() => this.updateProfile()}
                     ><Text>{AppLocales.t("GENERAL_EDITDATA")}</Text></Button>
                     </View>

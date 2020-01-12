@@ -42,6 +42,13 @@ class CustomerVoiceScreen extends React.Component {
                 position:"top",
                 type: "danger"
             })
+        } else if (this.state.email.indexOf("@") < 0) {
+            Toast.show({
+                text: "Email không đúng",
+                //buttonText: "Okay",
+                position: "top",
+                type: "danger"
+            })
         } else if (this.state.codeRandom != this.state.codeTyped) {
             Toast.show({
                 text: AppLocales.t("TOAST_CONFIRM_CODE_NG"),
@@ -56,6 +63,7 @@ class CustomerVoiceScreen extends React.Component {
                         email: this.state.email,
                         title: this.state.title,
                         content: this.state.content,
+                        token: this.props.userData.token
                         }, 
                         response => {
                             console.log("Send Customer Voice OK")
@@ -129,7 +137,8 @@ class CustomerVoiceScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <Item stackedLabel>
                         <View style={{flexDirection:"row", alignSelf:"flex-start", width: AppConstants.DEFAULT_FORM_WIDTH}}>
-                        <Label>{AppLocales.t("SETTING_LBL_CUSTOMERVOICE_CODE")+"'" + this.state.codeRandom + "'"}</Label>
+                        <Label>{AppLocales.t("SETTING_LBL_CUSTOMERVOICE_CODE")}</Label>
+                        <Label style={{fontWeight:"bold", fontSize: 16}}>{this.state.codeRandom}</Label>
                             {!this.state.codeTyped ?
                             <Label style={{color: "red"}}>*</Label>
                             : null}
@@ -138,6 +147,7 @@ class CustomerVoiceScreen extends React.Component {
                         <Input
                             onChangeText={(codeTyped) => this.setState({codeTyped: codeTyped})}
                             value={this.state.codeTyped}
+                            keyboardType={"numeric"}
                         />
                         </Item>
                     </View>

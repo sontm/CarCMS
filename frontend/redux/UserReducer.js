@@ -755,7 +755,7 @@ export default function(state = initialState, action) {
             carReports:{},
             settings: DEFAULT_SETTING_REMIND,
             settingService: DEFAULT_SETTING_SERVICE,
-            notifications: [],
+            //notifications: [], When Logout, No Need clear Notifications
             myJoinRequest: {},
             countNotSeenNoti: 0,
             modalState: 0,

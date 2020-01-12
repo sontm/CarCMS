@@ -243,6 +243,7 @@ class PayServiceScreen extends React.Component {
     combineMaintainType(settingService) {
         let result = [];
         console.log(" combine MainTain Type:" + this.currentVehileIsBike)
+        console.log(settingService)
         if (settingService) {
             if (this.currentVehileIsBike) {
                 if (settingService.KmBike && settingService.KmBike.length > 0 &&
@@ -263,7 +264,7 @@ class PayServiceScreen extends React.Component {
                 if (settingService.Km && settingService.Km.length > 0 &&
                         settingService.Month && settingService.Month.length > 0) {
                     settingService.Km.forEach((item, idx) => {
-                        if (settingService.LevelEnable[idx]) {
+                        if (settingService.LevelEnable && settingService.LevelEnable[idx]) {
                             result.push({
                                 text: settingService.Km[idx]+"Km ("+AppLocales.t("GENERAL_OR")+" "+
                                 settingService.Month[idx]+" "+AppLocales.t("GENERAL_MONTH") +")",
@@ -448,7 +449,7 @@ class PayServiceScreen extends React.Component {
                     <View style={styles.rowContainer}>
                         <View style={styles.rowForm}>
                         <View style={{flexDirection: "row", justifyContent: "space-between"}}>
-                            <Label>{AppLocales.t("NEW_SERVICE_MAINTAIN_TYPE")}</Label>
+                            <Label style={styles.rowLabel}>{AppLocales.t("NEW_SERVICE_MAINTAIN_TYPE")}</Label>
                             <Button small style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                                     onPress={() => {
                                         this.props.navigation.navigate("ServiceMaintainSetting")

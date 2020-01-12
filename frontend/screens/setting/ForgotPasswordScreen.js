@@ -78,12 +78,12 @@ class ForgotPasswordScreen extends React.Component {
                         }
                     );
                 } else {
-                Toast.show({
-                    text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
-                    //buttonText: "Okay",
-                    position: "top",
-                    type: "danger"
-                })
+                    Toast.show({
+                        text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+                        //buttonText: "Okay",
+                        position: "top",
+                        type: "danger"
+                    })
                 }
             });
         } else {
@@ -109,13 +109,14 @@ class ForgotPasswordScreen extends React.Component {
                         <Input
                             onChangeText={(email) => this.setState({email})}
                             value={this.state.email}
+                            keyboardType="email-address"
                         />
                         </Item>
                     </View>
 
                     <View style={styles.rowButton}>
                     <Button
-                        rounded primary
+                        rounded style={{backgroundColor:AppConstants.COLOR_HEADER_BG}}
                         onPress={() => this.handleSubmit()}
                         ><Text>{AppLocales.t("GENERAL_CONFIRM")}</Text></Button>
                     </View>

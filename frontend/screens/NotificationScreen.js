@@ -149,11 +149,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   notiTitle: {
-    fontSize: 15, marginTop: 5,flexWrap: "wrap",
+    fontSize: 15, marginTop: 1,flexWrap: "wrap",
     color: AppConstants.COLOR_PICKER_TEXT,
   },
   notiTitleNotSeen: {
-    fontSize: 17, fontWeight: "bold", marginTop: 5,flexWrap: "wrap",
+    fontSize: 17, fontWeight: "bold", marginTop: 1,flexWrap: "wrap",
     color: AppConstants.COLOR_PICKER_TEXT,
   },
   notiUrl: {

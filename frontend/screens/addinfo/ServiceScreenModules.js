@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
-import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Segment,Label, ListItem, CheckBox, H3 } from 'native-base';
+import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Segment,List, ListItem, CheckBox, H3 } from 'native-base';
 
 import {HeaderText, WhiteText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
@@ -9,6 +9,10 @@ import { connect } from 'react-redux';
 import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserReducer'
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
+
+let T = AppLocales.t("GENERAL_MAINTAIN_THAYTHE");
+let B = AppLocales.t("GENERAL_MAINTAIN_BAODUONG");
+let K = AppLocales.t("GENERAL_MAINTAIN_KIEMTRA");
 
 class ServiceScreenModules extends React.Component {
     constructor(props) {
@@ -67,14 +71,9 @@ class ServiceScreenModules extends React.Component {
         this.props.navigation.navigate("PayService")
     }
     render() {
-        let T = AppLocales.t("GENERAL_MAINTAIN_THAYTHE");
-        let B = AppLocales.t("GENERAL_MAINTAIN_BAODUONG");
-        let K = AppLocales.t("GENERAL_MAINTAIN_KIEMTRA");
+        
         console.log("---------------------Render of service module")
         //console.log(this.state.serviceModule)
-        console.log(this.props.userData.customServiceModules)
-        console.log(this.props.userData.customServiceModulesBike)
-
         let serviceArr = this.props.appData.typeService;
         let customArr = this.props.userData.customServiceModules;
         if (this.props.navigation.state.params.isBike == true) {
@@ -132,6 +131,7 @@ class ServiceScreenModules extends React.Component {
             <Container>
             <Content>
                 <View style={styles.formContainer}>
+                <List>
                 {customView}
                 {serviceArr.map(item => (
                     <ListItem key={item.name}
@@ -167,7 +167,7 @@ class ServiceScreenModules extends React.Component {
                 ))} 
                 
                     
-
+                </List>
                 </View>
             </Content>
             <View style={styles.rowButton}>

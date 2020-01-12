@@ -286,6 +286,7 @@ export default {
     TOAST_NEWPWD_NOTMATCHED: "Mật Khẩu Mới Không Khớp!",
     TOAST_NEWSERVICEMODULE_EXIST: "Tên Đã Tồn Tại, Hãy Điền Tên Khác!",
     TOAST_NEED_FILL_ENOUGH: "Hãy nhập đủ thông tin cần thiết!",
+    TOAST_USER_PWED_NOTENOUGH: "Hãy điền đầy đủ thông tin đăng nhập. Mật khẩu phải nhiều hơn 6 kí tư!",
     TOAST_LOGIN_FAILED: "Đăng nhập thất bại, xin hãy kiểm tra lại thông tin!",
     TOAST_LOGIN_FAILED_FBGG: "Đăng nhập thất bại, xin hãy thử lại lần sau!",
     TOAST_NEED_INTERNET_CON: "Chức Năng Này Cần Kết Nối Mạng!",

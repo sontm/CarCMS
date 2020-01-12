@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, 
     Picker, Button, Text, Segment,Label, ListItem, CheckBox, H3,Tab, TabHeading, Tabs } from 'native-base';
 
@@ -30,11 +30,26 @@ class SettingVehicleModulesScreen extends React.Component {
     }
 
     onDeleteModule(brand, model, isBike) {
-        if (isBike) {
-            this.props.actUserDelNewVehicleModel({brand, model, isBike})
-        } else {
-            this.props.actUserDelNewVehicleModel({brand, model, isBike})
-        }
+        Alert.alert(
+            AppLocales.t("MSG_REMOVE_CONFIRM"),
+            ""+brand + " " + model,
+            [
+                {
+                  text: AppLocales.t("GENERAL_NO"),
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {
+                    if (isBike) {
+                        this.props.actUserDelNewVehicleModel({brand, model, isBike})
+                    } else {
+                        this.props.actUserDelNewVehicleModel({brand, model, isBike})
+                    }
+                }},
+            ],
+            {cancelable: true}
+        )
+        
     }
     render() {
         let carView = [];
@@ -121,10 +136,18 @@ SettingVehicleModulesScreen.navigationOptions = ({ navigation}) => ({
               <Icon name="arrow-back" />
             </Button>
           </Left>
+
           <Body  style={{flex: 4}}>
             <Title><HeaderText>{AppLocales.t("SETTING_LBL_VEHICLE_MODELS_TITLE")}</HeaderText></Title>
           </Body>
+
           <Right style={{flex: 1}}>
+            <Button transparent vertical onPress={() => {
+                navigation.navigate("CreateVehicleModel")
+            }}>
+              <Icon type="AntDesign" name="plus" />
+              <WhiteText style={styles.smallerText}>{AppLocales.t("GENERAL_ADD")}</WhiteText>
+            </Button>
           </Right>
         </Header>
     )

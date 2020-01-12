@@ -117,6 +117,7 @@ const SettingsStack = createStackNavigator(
     CustomerVoiceScreen: CustomerVoiceScreen,
     Notification: NotificationScreen,
     SettingVehicleModulesScreen: SettingVehicleModulesScreen,
+    CreateVehicleModel:CreateVehicleModel,
     
     DebugScreen: DebugScreen
   },
@@ -246,7 +247,7 @@ const tabNavigator = createBottomTabNavigator({
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 checkAndShowInterestial();
-                if (props.navigation.state.index === 1) {
+                if (props.navigation.state.index === 2) {
                   props.navigation.navigate("Team")
                 } else {
                   props.navigation.navigate("TeamStack")
@@ -264,7 +265,11 @@ const tabNavigator = createBottomTabNavigator({
                 AppConstants.CURRENT_VEHICLE_ID = "0";
                 AppConstants.CURRENT_EDIT_FILL_ID = "0";
                 checkAndShowInterestial();
-                props.navigation.navigate("Settings")
+                if (props.navigation.state.index === 3) {
+                  props.navigation.navigate("Settings")
+                } else {
+                  props.navigation.navigate("SettingsStack")
+                }
               }}>
               <Icon name='more' style={props.navigation.state.index==3?styles.iconActive:styles.iconInActive}/>
               <Text style={props.navigation.state.index==3?styles.textActive:styles.textInActive}>{AppLocales.t("NAV_BOT_MORE")}</Text>

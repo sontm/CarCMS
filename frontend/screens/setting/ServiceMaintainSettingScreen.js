@@ -130,8 +130,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                             <Label style={styles.rowLabel}>
                                 <TypoH4 style={this.state.LevelEnable[1] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L2")}</TypoH4></Label>
                             <Switch value={this.state.LevelEnable[1]} onChange={() => this.onToggleEnable(2, false)} 
-                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} 
-                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                                thumbColor={this.state.LevelEnable[1]?AppConstants.COLOR_HEADER_BG_LIGHT:AppConstants.COLOR_GREY_BG} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER, false: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG}}/>
                         </View>
 
                         {this.state.LevelEnable[1] ? 
@@ -158,7 +158,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                             <Label style={styles.rowLabel}>
                                 <TypoH4 style={this.state.LevelEnable[2] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L3")}</TypoH4></Label>
                             <Switch value={this.state.LevelEnable[2]} onChange={() => this.onToggleEnable(3, false)} 
-                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                                thumbColor={this.state.LevelEnable[2]?AppConstants.COLOR_HEADER_BG_LIGHT:AppConstants.COLOR_GREY_BG} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER, false: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG}}/>
                         </View>
 
                         {this.state.LevelEnable[2] ? 
@@ -185,7 +186,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                             <Label style={styles.rowLabel}>
                                 <TypoH4 style={this.state.LevelEnable[3] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L4")}</TypoH4></Label>
                             <Switch value={this.state.LevelEnable[3]} onChange={() => this.onToggleEnable(4, false)}
-                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                                thumbColor={this.state.LevelEnable[3]?AppConstants.COLOR_HEADER_BG_LIGHT:AppConstants.COLOR_GREY_BG} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER, false: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG}}/>
                         </View>
 
                         {this.state.LevelEnable[3] ? 
@@ -212,7 +214,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                             <Label style={styles.rowLabel}>
                                 <TypoH4 style={this.state.LevelEnable[4] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L5")}</TypoH4></Label>
                             <Switch value={this.state.LevelEnable[4]} onChange={() => this.onToggleEnable(5, false)}
-                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                                thumbColor={this.state.LevelEnable[4]?AppConstants.COLOR_HEADER_BG_LIGHT:AppConstants.COLOR_GREY_BG} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER, false: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG}}/>
                         </View>
 
                         {this.state.LevelEnable[4] ? 
@@ -280,7 +283,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                             <Label style={styles.rowLabel}>
                                 <TypoH4 style={this.state.LevelBikeEnable[1] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L2_BIKE")}</TypoH4></Label>
                             <Switch value={this.state.LevelBikeEnable[1]} onChange={() => this.onToggleEnable(2, true)} 
-                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                                thumbColor={this.state.LevelBikeEnable[1]?AppConstants.COLOR_HEADER_BG_LIGHT:AppConstants.COLOR_GREY_BG} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER, false: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG}}/>
                         </View>
 
                         {this.state.LevelBikeEnable[1] ? 
@@ -307,7 +311,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                             <Label style={styles.rowLabel}>
                                 <TypoH4 style={this.state.LevelBikeEnable[2] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L3_BIKE")}</TypoH4></Label>
                             <Switch value={this.state.LevelBikeEnable[2]} onChange={() => this.onToggleEnable(3, true)} 
-                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                                thumbColor={this.state.LevelBikeEnable[2]?AppConstants.COLOR_HEADER_BG_LIGHT:AppConstants.COLOR_GREY_BG} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER, false: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG}}/>
                         </View>
 
                         {this.state.LevelBikeEnable[2] ? 
@@ -334,7 +339,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                             <Label style={styles.rowLabel}>
                                 <TypoH4 style={this.state.LevelBikeEnable[3] ? null : styles.levelDisable}>{AppLocales.t("SETTING_MAINTAIN_L4_BIKE")}</TypoH4></Label>
                             <Switch value={this.state.LevelBikeEnable[3]} onChange={() => this.onToggleEnable(4, true)} 
-                                thumbColor={AppConstants.COLOR_HEADER_BG_LIGHT} trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER}}/>
+                                thumbColor={this.state.LevelBikeEnable[3]?AppConstants.COLOR_HEADER_BG_LIGHT:AppConstants.COLOR_GREY_BG} 
+                                trackColor={{true: AppConstants.COLOR_HEADER_BG_LIGHT_SUPER, false: AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG}}/>
                         </View>
 
                         {this.state.LevelBikeEnable[3] ? 
@@ -363,7 +369,7 @@ class ServiceMaintainSettingScreen extends React.Component {
             </Tabs>
             <View style={styles.rowButton}>
                 <Button
-                    rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                    rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG, width: 150, justifyContent:"center"}}
                     onPress={() => this.save(this.state)}
                 ><Text>{AppLocales.t("SETTING_REMIND_BTN_SAVE")}</Text></Button>
             </View>

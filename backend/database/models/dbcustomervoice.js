@@ -28,6 +28,14 @@ const CustomerVoiceSchema = new Schema({
         type:Date,
         required: false
     },
+    userEmail: {
+        type: String,
+        required: false
+    },
+    userId: {
+        type: String,
+        required: false
+    }
 });
 
 CustomerVoiceSchema.set('toJSON', {

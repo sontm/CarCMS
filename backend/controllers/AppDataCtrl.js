@@ -7,9 +7,11 @@ import { date } from "joi";
 require('dotenv').config()
 const AWS = require('aws-sdk');
 const ses = new AWS.SES()
-
+const passportJWT = require("passport-jwt");
+const jwt = require('jsonwebtoken');
 var mailer = require("nodemailer");
 var xoauth2 = require('xoauth2');
+const ExtractJWT = passportJWT.ExtractJwt;
 
 const DATA_BRAND_MODEL = [
   { id: 1,name: "Toyota", type:"car",
@@ -384,12 +386,30 @@ module.exports = {
   async addNewCustomerVoice(req, res) {
     console.log("App addNewCustomerVoice")
     console.log(req.body)
+    let userId;
+    let userEmail;
+    if (req.body.token && req.body.token.length > 10) {
+      try{
+        let decodedUser = jwt.verify(req.body.token, 'your_jwt_secret');
+        console.log(decoded)
+        if (decodedUser && (decodedUser.id || decodedUser.email)) {
+          userId = decodedUser.id;
+          userEmail = decodedUser.email;
+        }
+      } catch (error) {
+        // do nothing
+      }
+    }
+
+    
     //if (req.user) {
     try {
       var item = new dbcustomervoice({
         ...req.body,
         status:"new",
-        receiveDate: new Date()
+        receiveDate: new Date(),
+        userEmail: userEmail,
+        userId: userId
       });
 
       let newRecord = await new Promise((resolve, reject) => {

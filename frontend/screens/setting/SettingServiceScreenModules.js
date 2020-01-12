@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, 
     Picker, Button, Text, Segment,Label, ListItem, CheckBox, H3,Tab, TabHeading, Tabs } from 'native-base';
 
@@ -29,13 +29,27 @@ class SettingServiceScreenModules extends React.Component {
 
     // type: T, K, B
     onDeleteModule(item, isBike) {
-        if (isBike) {
-            console.log("   Will delete SERvice module BIKE:" + item.name)
-            this.props.actCustomDelServiceModuleBike(item)
-        } else {
-            console.log("   Will delete SERvice module CAR:" + item.name)
-            this.props.actCustomDelServiceModule(item)
-        }
+        Alert.alert(
+            AppLocales.t("MSG_REMOVE_CONFIRM"),
+            ""+item.name,
+            [
+                {
+                  text: AppLocales.t("GENERAL_NO"),
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {
+                    if (isBike) {
+                        console.log("   Will delete SERvice module BIKE:" + item.name)
+                        this.props.actCustomDelServiceModuleBike(item)
+                    } else {
+                        console.log("   Will delete SERvice module CAR:" + item.name)
+                        this.props.actCustomDelServiceModule(item)
+                    }
+                }},
+            ],
+            {cancelable: true}
+        )
     }
     onChangeTab(param) {
         if (param.i == 1) {
@@ -126,9 +140,7 @@ class SettingServiceScreenModules extends React.Component {
                             style={{marginLeft: 5}}>
 
                         <Body style={{flexDirection:"row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", flexGrow: 100}}>
-                        <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
-                            <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2}}>{item.name}</Text>
-                        </TouchableOpacity>
+                        <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2}}>{item.name}</Text>
                         
                         </Body>
 
@@ -151,10 +163,7 @@ class SettingServiceScreenModules extends React.Component {
                             style={{marginLeft: 5}}>
 
                         <Body style={{flexDirection:"row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", flexGrow: 100}}>
-                        <TouchableOpacity onPress={() => {this.toggleItemCheck(item.name)}} >
                             <Text style={{fontSize: 16, minWidth: Layout.window.width * 0.2}}>{item.name}</Text>
-                        </TouchableOpacity>
-                        
                         </Body>
 
                         <Right style={{flex: 0}}></Right>
