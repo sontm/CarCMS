@@ -57,7 +57,7 @@ module.exports = {
             console.log("    Auth, Login Failed, err:")
             console.log(user)
             return res.status(400).json({
-                message: 'Something is not right',
+                message: 'Invalid Email or Password!',
                 user   : user
             });
         }
