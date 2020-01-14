@@ -166,27 +166,30 @@ class CreateTeamScreen extends React.Component {
                         </Item>
                     </View>
 
-                    <TouchableOpacity onPress={() => this.toogleMemberCanViewReport()}>
+                    
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
                         marginLeft: -10, marginTop: 15, marginBottom: 10}}>
                         <CheckBox checked={this.state.canMemberViewReport}
                             onPress={() => this.toogleMemberCanViewReport()}/>
-                        <Text onPress={() => this.toogleMemberCanViewReport()} style={{marginLeft: 12, fontSize: 13}}>
+                        <TouchableOpacity onPress={() => this.toogleMemberCanViewReport()}>
+                        <Text style={{marginLeft: 12, fontSize: 13}}>
                             {AppLocales.t("SETTING_LBL_CREATE_TEAM_MEM_CANVIEWREPORT")}
                         </Text>
+                        </TouchableOpacity>
                     </View>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => this.toggleExcludeMyCar()}>
+
+                    
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
                         marginLeft: -10, marginTop: 15, marginBottom: 10}}>
                         <CheckBox checked={this.state.excludeMyCar}
                             onPress={() => this.toggleExcludeMyCar()}/>
-                        <Text onPress={() => this.toggleExcludeMyCar()} style={{marginLeft: 12, fontSize: 13}}>
+                        <TouchableOpacity onPress={() => this.toggleExcludeMyCar()}>
+                        <Text style={{marginLeft: 12, fontSize: 13}}>
                             {AppLocales.t("SETTING_LBL_CREATE_TEAM_EXCLUDE_MYCAR")}
                         </Text>
+                        </TouchableOpacity>
                     </View>
-                    </TouchableOpacity>
 
                     <View style={styles.rowButton}>
                     <Button

@@ -154,6 +154,15 @@ class CarAuthorizeScreen extends React.Component {
         })
     }
     render() {
+        if (!this.state.vehicleId) {
+            // No Car Associated,
+            return (
+                <View style={styles.formContainer}>
+                    <NoDataText content="Không Có Xe Tương Ứng!"/>
+                </View>
+            )
+        }
+        
         let theDate = new Date(this.state.fillDate);
         let today = new Date();
         if (today.getFullYear() == theDate.getFullYear && today.getMonth() == theDate.getMonth() &&

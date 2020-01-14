@@ -426,7 +426,7 @@ class PayServiceScreen extends React.Component {
                             <Label>{AppLocales.t("NEW_SERVICE_TYPE")}</Label>
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
 
-                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: false})}
+                            <TouchableOpacity
                                 style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
                             <CheckBox checked={this.state.isConstantFix != true} 
                                 onPress={() =>this.setState({isConstantFix: false})}/>
@@ -434,7 +434,7 @@ class PayServiceScreen extends React.Component {
                                 {AppLocales.t("NEW_SERVICE_MAINTAIN")+""}</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity onPress={() =>this.setState({isConstantFix: true})} 
+                            <TouchableOpacity
                                 style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
                             <CheckBox style={{marginLeft: 10}}checked={this.state.isConstantFix == true} 
                                 onPress={() =>this.setState({isConstantFix: true})}/>

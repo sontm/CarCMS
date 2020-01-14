@@ -741,7 +741,10 @@ class SettingsScreen extends React.Component {
                       <Icon name="cloud-upload" style={styles.iconCloudUp} />
                       <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO")}</Text>
                       <Text style={styles.textNormalSmallDate}>
-                        {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ":\n" + AppUtils.formatDateTimeFullVN(this.props.userData.lastSyncToServerOn)}
+                        {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ":\n" + 
+                        (this.props.userData.lastSyncToServerOn? 
+                          AppUtils.formatDateTimeFullVN(this.props.userData.lastSyncToServerOn) :
+                          "Chưa có")}
                       </Text>
                       {/* <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_TO_NOTE")}</Text> */}
                     </Body>
@@ -756,7 +759,10 @@ class SettingsScreen extends React.Component {
                       <Icon name="cloud-download" style={styles.iconCloudDown} />
                       <Text style={styles.textNormalSmall}>{AppLocales.t("SETTING_LBL_SYNC_FROM")}</Text>
                       <Text style={styles.textNormalSmallDate}>
-                        {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ":\n" + AppUtils.formatDateTimeFullVN(this.props.userData.lastSyncFromServerOn)}
+                        {AppLocales.t("SETTING_LBL_SYNC_FROM_LASTSYNC") + ":\n" + 
+                        (this.props.userData.lastSyncFromServerOn ? 
+                          AppUtils.formatDateTimeFullVN(this.props.userData.lastSyncFromServerOn) :
+                          "Chưa có")}
                       </Text>
                       {/* <Text style={styles.textNormalSmallRed}>{"("+AppLocales.t("SETTING_LBL_SYNC_FROM_NOTE")+")"}</Text> */}
                     </Body>

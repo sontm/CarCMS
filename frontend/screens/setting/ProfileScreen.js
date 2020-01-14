@@ -26,7 +26,8 @@ class ProfileScreen extends React.Component {
             pictureUrl: null,
             teamName: null,
             message: "",
-            isChangePwd: false
+            isChangePwd: false,
+            isShowPwd: false
         };
 
         this.togglePwdChange = this.togglePwdChange.bind(this)
@@ -57,7 +58,15 @@ class ProfileScreen extends React.Component {
                 position: "top",
                 type: "danger"
             })
-        } else if (this.state.isChangePwd && this.state.newPwd1.length > 0 && this.state.newPwd1 != this.state.newPwd2) {
+        } else if (this.state.isChangePwd && (this.state.newPwd1.length < 6 || this.state.newPwd2.length < 6)) {
+            // error
+            Toast.show({
+                text: "Mật khẩu cần ít nhất 6 ký tự",
+                //buttonText: "Okay",
+                position: "top",
+                type: "danger"
+            })
+        }  else if (this.state.isChangePwd && this.state.newPwd1.length > 0 && this.state.newPwd1 != this.state.newPwd2) {
             // error
             Toast.show({
                 text: AppLocales.t("TOAST_NEWPWD_NOTMATCHED"),
@@ -84,8 +93,16 @@ class ProfileScreen extends React.Component {
                             this.props.actUserUpdateProfileOK(response.data)
                             this.props.navigation.goBack();
                         }, error => {
-                            console.log(error)
+                            console.log(error.response)
                             console.log("Update Profile Error!")
+                            if (error.response.data.msg) {
+                                Toast.show({
+                                    text: error.response.data.msg,
+                                    //buttonText: "Okay",
+                                    position: "top",
+                                    type: "danger"
+                                })
+                            }
                         });
                 } else {
                   Toast.show({
@@ -143,7 +160,7 @@ class ProfileScreen extends React.Component {
                         <Label style={styles.rowLabel}>{AppLocales.t("USER_PHONE")}</Label>
                         <Input
                             style={styles.rowForm}
-                            keyboardType="numeric"
+                            keyboardType="phone-pad"
                             onChangeText={(phone) => this.setState({phone})}
                             value={this.state.phone}
                         />
@@ -165,14 +182,22 @@ class ProfileScreen extends React.Component {
                     </View> : null}
 
                     {(this.props.userData.userProfile.type != "facebook" && this.props.userData.userProfile.type != "google") ? (
-                    <TouchableOpacity onPress={() => this.togglePwdChange()}>
-                    <View style={{flexDirection: "row", justifyContent:"flex-start",
+                    
+                    <View style={{flexDirection: "row", justifyContent:"space-between",
                         marginLeft: -10, marginTop: 15, marginBottom: 10}}>
+                        <View style={{flexDirection:"row"}}>
                         <CheckBox checked={this.state.isChangePwd}
                             onPress={() => this.togglePwdChange()}/>
-                        <Text onPress={() => this.togglePwdChange()} style={{marginLeft: 12}}>{AppLocales.t("USER_CHANGEPWD")}</Text>
-                    </View>
-                    </TouchableOpacity>): null}
+                        <TouchableOpacity onPress={() => this.togglePwdChange()} >
+                        <Text style={{marginLeft: 14}}>{AppLocales.t("USER_CHANGEPWD")}</Text>
+                        </TouchableOpacity>
+                        </View>
+
+                        <TouchableOpacity 
+                            onPress={() => this.setState({isShowPwd: !this.state.isShowPwd})}>
+                            <Icon style={{color: AppConstants.COLOR_GREY_MIDDLE}} name={this.state.isShowPwd ? "eye-off" : "eye"} />
+                        </TouchableOpacity>
+                    </View>): null}
 
                     {(this.props.userData.userProfile.type != "facebook" && 
                         this.props.userData.userProfile.type != "google" && this.state.isChangePwd) ? (
@@ -181,6 +206,7 @@ class ProfileScreen extends React.Component {
                         <Item stackedLabel>
                         <Label style={styles.rowLabel}>{AppLocales.t("USER_OLDPWD")}</Label>
                         <Input
+                            secureTextEntry={this.state.isShowPwd ? false : true}
                             style={styles.rowForm}
                             onChangeText={(oldPwd) => this.setState({oldPwd})}
                             value={this.state.oldPwd}
@@ -191,6 +217,7 @@ class ProfileScreen extends React.Component {
                         <Item stackedLabel>
                         <Label style={styles.rowLabel}>{AppLocales.t("USER_NEWPWD1")}</Label>
                         <Input
+                            secureTextEntry={this.state.isShowPwd ? false : true}
                             style={styles.rowForm}
                             onChangeText={(newPwd1) => this.setState({newPwd1})}
                             value={this.state.newPwd1}
@@ -201,6 +228,7 @@ class ProfileScreen extends React.Component {
                         <Item stackedLabel>
                         <Label style={styles.rowLabel}>{AppLocales.t("USER_NEWPWD2")}</Label>
                         <Input
+                            secureTextEntry={this.state.isShowPwd ? false : true}
                             style={styles.rowForm}
                             onChangeText={(newPwd2) => this.setState({newPwd2})}
                             value={this.state.newPwd2}

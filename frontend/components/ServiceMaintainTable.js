@@ -44,13 +44,14 @@ class ServiceMaintainTable extends React.Component {
     }
     let customArr = this.props.userData.customServiceModules;
     if (theVehicle.type != "car") {
-        customArr = this.props.appData.customServiceModulesBike;
+        customArr = this.props.userData.customServiceModulesBike;
     }
     if (customArr) {
         customArr.forEach(item => {
             objTableData[""+item.name] = [];
         })
     }
+
     serviceArr.forEach(item => {
         objTableData[""+item.name] = [];
     })
@@ -212,16 +213,16 @@ class ServiceMaintainTable extends React.Component {
                 </H3></Text>
             </View>
 
-            <TouchableOpacity onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}>
+            
             <View style={{flexDirection: "row", marginTop: 7, marginLeft: 15, marginBottom: 10}}>
-                
                 <CheckBox checked={this.state.onlyShowDataRow} 
                     onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}/>
-                <Text style={{marginLeft: 18, fontSize: 15}} onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}>
+                <TouchableOpacity onPress={() =>this.setState({onlyShowDataRow: !this.state.onlyShowDataRow})}>
+                <Text style={{marginLeft: 18, fontSize: 15}}>
                     {"Chỉ hiển thị dòng có dữ liệu"}
                 </Text>
+                </TouchableOpacity>
             </View>
-            </TouchableOpacity>
 
             <View style={{flexDirection: "row"}}>
             <View style={{width: baseWidth*1.5}}>

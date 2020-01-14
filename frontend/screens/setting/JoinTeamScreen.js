@@ -99,42 +99,51 @@ class JoinTeamScreen extends React.Component {
         }
     }
     handleSubmit() {
-        NetInfo.fetch().then(state => {
-            if (state.isConnected) {
-                Backend.joinTeam({
-                    teamCode: this.state.code
-                    }, this.props.userData.token, 
-                    response => {
-                        console.log("Join Team OK")
-                        console.log(response.data)
-                        //this.props.actUserCreateTeamOK(response.data)
-                        //this.props.navigation.navigate("Settings")
-                        this.props.actUserGotMyJoinRequest(response.data)
-                        
-
-
-                        this.props.navigation.goBack()
-                    },
-                    error => {
-                        console.log("Join Team ERROR")
-                        console.log((error.response.data))
-                        Toast.show({
-                            text: error.response.data.msg,
-                            //buttonText: "Okay",
-                            position: "top",
-                            type: "danger"
-                        })
-                    }
-                );
-            } else {
-              Toast.show({
-                text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+        if (!this.state.code) {
+            Toast.show({
+                text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
                 //buttonText: "Okay",
                 position: "top",
                 type: "danger"
-              })
-            }
-          });
+            })
+        } else {
+            NetInfo.fetch().then(state => {
+                if (state.isConnected) {
+                    Backend.joinTeam({
+                        teamCode: this.state.code
+                        }, this.props.userData.token, 
+                        response => {
+                            console.log("Join Team OK")
+                            console.log(response.data)
+                            //this.props.actUserCreateTeamOK(response.data)
+                            //this.props.navigation.navigate("Settings")
+                            this.props.actUserGotMyJoinRequest(response.data)
+                            
+
+
+                            this.props.navigation.goBack()
+                        },
+                        error => {
+                            console.log("Join Team ERROR")
+                            console.log((error.response.data))
+                            Toast.show({
+                                text: error.response.data.msg,
+                                //buttonText: "Okay",
+                                position: "top",
+                                type: "danger"
+                            })
+                        }
+                    );
+                } else {
+                    Toast.show({
+                      text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+                      //buttonText: "Okay",
+                      position: "top",
+                      type: "danger"
+                    })
+                }
+            }) 
+        };
     }
     
     render() {

@@ -141,7 +141,7 @@ class HomeScreen extends React.Component {
     let addedFontSize = 0;
     if (!this.props.userData.teamInfo || !this.props.userData.teamInfo.id) {
       isUserHasTeam = false;
-      addedFontSize = 3;
+      addedFontSize = 0;
     }
     let {totalMoneyPrivate, totalMoneyPrivateThisMonth, totalMoneyPrivatePrevMonth} = this.calculateAllVehicleTotalMoney();
     if (isUserHasTeam) {
@@ -273,6 +273,11 @@ class HomeScreen extends React.Component {
             <ReminderReport/>
             <HomeMoneyUsageByTime isTotalReport={true} />
             <HomeMoneyUsageByTimeTeam isTotalReport={true} />
+            {this.props.appData.countOpen < 100 ?
+            <View style={{marginLeft: 5, marginRight: 5, marginBottom: 20, flexWrap:"wrap"}}>
+              <Text style={{fontStyle: "italic", fontSize: 14, color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
+                'N' là viết tắt của Nghìn VND. 'Tr' là viết tắt của Triệu VND.</Text>
+            </View>: null}
             </View>
             : null }
 

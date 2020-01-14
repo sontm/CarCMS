@@ -206,7 +206,7 @@ class TeamScreen extends React.Component {
           </Picker>
           </View>
 
-          <TouchableOpacity onPress={() => this.setState({sortAscending: !this.state.sortAscending})} 
+          <TouchableOpacity
             style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
           <CheckBox checked={this.state.sortAscending==true} style={{marginLeft: -10}}
             onPress={() => this.setState({sortAscending: !this.state.sortAscending})} />
@@ -375,8 +375,10 @@ class TeamScreen extends React.Component {
   }
 
   render() {
-    
-    let stateTeam = 0; // 0: NotJoinTeam, 1: RequestingJoin, 2: joined
+    let stateTeam = 0; // -1: NOT LOGINED, 0: NotJoinTeam, 1: RequestingJoin, 2: joined
+    if (!this.props.userData.isLogined) {
+      stateTeam = -1;
+    } else 
     if (this.props.userData.teamInfo && this.props.userData.teamInfo.id) {
       stateTeam = 2;
     } else if (this.props.userData.myJoinRequest && this.props.userData.myJoinRequest.teamCode) {
@@ -387,7 +389,6 @@ class TeamScreen extends React.Component {
     console.log(this.props.userData.myJoinRequest)
     return (
       <Container>
-        
         {stateTeam == 2 ? (
         <Header hasTabs style={{justifyContent: "space-between", backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
         <Left style={{flex:1, marginRight: 0}}>
@@ -503,6 +504,10 @@ class TeamScreen extends React.Component {
             </ScrollView>
           </View>
         </Content>
+        ) : ((stateTeam == -1) ? (
+          <View style={styles.formContainer}>
+            <NoDataText content="Chức năng cần đăng nhập!"/>
+          </View>
         ) : (
           (stateTeam ==1) ? (
             <CheckMyJoinRequest key={"inTeam"} navigation={this.props.navigation}/>
@@ -533,7 +538,7 @@ class TeamScreen extends React.Component {
             </View>
           )
         )
-        )}
+        ))}
 
         
 
@@ -550,7 +555,8 @@ TeamScreen.navigationOptions = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
+    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
+    minHeight: Layout.window.height-50
   },
   contentContainer: {
 

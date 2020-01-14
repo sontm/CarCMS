@@ -391,7 +391,7 @@ module.exports = {
     if (req.body.token && req.body.token.length > 10) {
       try{
         let decodedUser = jwt.verify(req.body.token, 'your_jwt_secret');
-        console.log(decoded)
+        console.log(decodedUser)
         if (decodedUser && (decodedUser.id || decodedUser.email)) {
           userId = decodedUser.id;
           userEmail = decodedUser.email;

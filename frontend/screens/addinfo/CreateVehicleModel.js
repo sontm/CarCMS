@@ -109,17 +109,18 @@ class CreateVehicleModel extends React.Component {
                                 <Label>{AppLocales.t("NEW_CAR_TYPE")}</Label>
                             </View>
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
-                            <TouchableOpacity onPress={() =>this.setState({type: "car"})} style={{flexDirection: "row"}}>
                                 <CheckBox checked={this.state.type == "car"} 
                                     onPress={() =>this.setState({type: "car"})}/>
-                                <Text onPress={() =>this.setState({type: "car"})}>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
-                            </TouchableOpacity>
+                                <TouchableOpacity onPress={() =>this.setState({type: "car"})} style={{flexDirection: "row"}}>
+                                <Text>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
+                                </TouchableOpacity>
 
-                            <TouchableOpacity onPress={() =>this.setState({type: "bike"})}  style={{flexDirection: "row"}}>
+                            
                                 <CheckBox style={{marginLeft: 30}} checked={this.state.type == "bike"} 
                                     onPress={() =>this.setState({type: "bike"})}/>
-                                <Text onPress={() =>this.setState({type: "bike"})}>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
-                            </TouchableOpacity>
+                                <TouchableOpacity onPress={() =>this.setState({type: "bike"})}  style={{flexDirection: "row"}}>
+                                    <Text>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
+                                </TouchableOpacity>
                             </View>
                         </Item>
                     </View>
