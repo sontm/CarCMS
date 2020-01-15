@@ -81,6 +81,7 @@ class VehicleDetailHistory extends React.Component {
             },
             {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {
                 console.log('Delete Pressed')
+                console.log([this.state.vehicleId , itemId, type])
                 this.props.actVehicleDeleteFillItem(this.state.vehicleId , itemId, type, this.props.userData)
             }},
         ],

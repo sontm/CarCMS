@@ -75,6 +75,8 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
     let isSomeCarRemoved = false;
     let isAlreadyDispatch = false;
 
+    let isMyCarNeedExclude = false;
+
     let newCarIds = [];
 
     // Got New Cars IDs first
@@ -103,8 +105,14 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
 
         //mem.vehicleList.forEach((item, idx) => {
             // If Exclude My Car, NoNeed
+            console.log("HEYYYYYYYYYYYYYY, tri cal team:" + userData.teamInfo.excludeMyCar )
+            console.log(myCarIdArr)
             if (userData.teamInfo.excludeMyCar && myCarIdArr.indexOf(item.id) >= 0 ) {
                 // no thing
+                console.log("  Ngon, Excluded " + item.id )
+                if (oldTeamData.teamCarReports[""+item.id]) {
+                    isMyCarNeedExclude = true;
+                }
             } else {
                 // Deep Compare Object here
                 let isSameData = false;
@@ -141,6 +149,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
                             if (!silence) {
                                 oldProps.actUserStartSyncTeamDone();
                             }
+                            console.log("------FInal Dispatch Team")
                             dispatch({
                                 type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
                                 payload: teamCarReportsAll
@@ -155,7 +164,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
             }
         }
     }
-    if (isSomeCarRemoved && !isAlreadyDispatch) {
+    if ((isSomeCarRemoved||isMyCarNeedExclude) && !isAlreadyDispatch) {
         // We still Force to ReCalculate Reports when some Car Removed
         if (!silence) {
             oldProps.actUserStartSyncTeamDone();

@@ -228,7 +228,7 @@ class CheckMyJoinRequest extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        rounded primary
+                        rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         onPress={() => this.checkMyJoinRequest()}
                         ><Text>{AppLocales.t("SETTING_LBL_CHECK_JOIN_STATUS")}</Text></Button>
                     </View>

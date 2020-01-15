@@ -1371,9 +1371,9 @@ export default function(state = initialState, action) {
         let  findVehicle5 = delState5.vehicleList.find(
             item => item.id == action.payload.vehicleId);
         if (findVehicle5) {
-            for (let i = 0; i < findVehicle5.expenseList.length; i++) {
-                if (findVehicle5.expenseList[i].id == action.payload.itemId) {
-                    findVehicle5.expenseList.splice(i, 1);
+            for (let i = 0; i < findVehicle5.serviceList.length; i++) {
+                if (findVehicle5.serviceList[i].id == action.payload.itemId) {
+                    findVehicle5.serviceList.splice(i, 1);
                     break;
                 }
             }
