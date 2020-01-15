@@ -17,7 +17,8 @@ import Backend from '../constants/Backend';
 
 import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer, 
   actVehicleSyncToServerOK, actUserStartSyncPrivate,actUserStartSyncPrivateDone,actUserStartSyncTeam,actUserStartSyncTeamDone} from '../redux/UserReducer';
-import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK, actUserForCloseModal} from '../redux/UserReducer'
+import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK, actUserForCloseModal, 
+  actUserCreateTeamOK} from '../redux/UserReducer'
 import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout, actTeamLeaveTeamOK} from '../redux/TeamReducer'
 import * as Google from 'expo-google-app-auth'
 import * as Facebook from 'expo-facebook';
@@ -1089,7 +1090,7 @@ const mapActionsToProps = {
   actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout,
   actUserLeaveTeamOK, actTeamLeaveTeamOK,
   actUserStartSyncPrivate,actUserStartSyncPrivateDone,actUserStartSyncTeam,actUserStartSyncTeamDone,
-  actUserForCloseModal
+  actUserForCloseModal,actUserCreateTeamOK
 };
   
 export default connect(

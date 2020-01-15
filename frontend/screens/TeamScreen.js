@@ -27,8 +27,8 @@ import { HeaderText } from '../components/StyledText';
 
 import CheckMyJoinRequest from  '../components/CheckMyJoinRequest'
 
-import {actTeamGetDataOK, actTeamGetJoinRequestOK} from '../redux/TeamReducer'
-import {actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal} from '../redux/UserReducer'
+import {actTeamGetDataOK, actTeamGetJoinRequestOK,actTeamLeaveTeamOK} from '../redux/TeamReducer'
+import {actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal, actUserCreateTeamOK, actUserLeaveTeamOK} from '../redux/UserReducer'
 
 import TeamMembers from './team/TeamMembers'
 import TeamReport from './team/TeamReport'
@@ -78,8 +78,43 @@ class TeamScreen extends React.Component {
     console.log("My Team IDDDDDD")
     console.log(this.props.userData.userProfile)
     console.log(this.props.userData.teamInfo)
-    if (this.props.userData.userProfile.roleInTeam != "manager" && !this.props.userData.teamInfo.canMemberViewReport) {
-      // no get data
+    if (this.props.userData.userProfile.roleInTeam != "manager") {
+      // get updated information ..
+      Backend.getLatestTeamInfoOfMe(this.props.userData.token,
+        response => {
+            console.log("===============getLatestTeamInfoOfMe Data")
+            console.log(response.data)
+            // Rejoin team can ReUse Create Team
+            this.props.actUserCreateTeamOK(response.data, true)
+
+            // Sync Team Data heare also
+            if (response.data.canMemberViewReport) {
+              Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, 
+                  this.props.userData.token, 
+              response2 => {
+                  console.log("GEt all Member in Team OK")
+
+                  this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
+              },
+              error => {
+                  this.props.actUserStartSyncTeamDone();
+                  console.log("GEt all Member in Team ERROR")
+                  console.log(JSON.stringify(error))
+              }
+              );
+            } else {
+              this.props.actTeamGetDataOK([], this.props.userData, this.props.teamData, this.props)
+            }
+        }, err => {
+            this.props.actUserStartSyncTeamDone();
+            console.log("get LatestTeamInfo ERROR")
+            console.log(err)
+            if (err.response.data.code == 100) {
+              // Seems User is Removed from Team
+              this.props.actUserLeaveTeamOK()
+              this.props.actTeamLeaveTeamOK()
+            }
+      })
     } else {
       NetInfo.fetch().then(state => {
         if (state.isConnected) {
@@ -345,7 +380,7 @@ class TeamScreen extends React.Component {
         return viewDisplay;
       } else {
         return (
-          <NoDataText />
+          <NoDataText noBg={true}/>
         )
       }
     } else if(this.state.activePage === 1) {
@@ -375,11 +410,13 @@ class TeamScreen extends React.Component {
   }
 
   render() {
-    let stateTeam = 0; // -1: NOT LOGINED, 0: NotJoinTeam, 1: RequestingJoin, 2: joined
+    let stateTeam = 0; // -1: NOT LOGINED, 0: NotJoinTeam, 1: RequestingJoin, 2: joined, 3: membercannotviewReport
     if (!this.props.userData.isLogined) {
       stateTeam = -1;
-    } else 
-    if (this.props.userData.teamInfo && this.props.userData.teamInfo.id) {
+    } else if (this.props.userData.teamInfo && this.props.userData.userProfile.roleInTeam=="member" && 
+        !this.props.userData.teamInfo.canMemberViewReport) {
+      stateTeam = 3;
+    } else if (this.props.userData.teamInfo && this.props.userData.teamInfo.id) {
       stateTeam = 2;
     } else if (this.props.userData.myJoinRequest && this.props.userData.myJoinRequest.teamCode) {
       stateTeam = 1;
@@ -437,6 +474,13 @@ class TeamScreen extends React.Component {
         ) : 
            <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
              <Left style={{flex: 1}}>
+              {stateTeam == 3 ?
+              <TouchableOpacity onPress={this.fetchTeamData} >
+              <View style={{alignItems: "center"}}>
+                <Icon name="cloud-download" style={{color: "white", fontSize: 22}} />
+                <WhiteText style={{fontSize: 10, marginTop: -3}}>{AppLocales.t("GENERAL_EDITDATA")}</WhiteText>
+              </View>
+              </TouchableOpacity> : null}
              </Left>
              <Body  style={{flex: 5, alignItems: "center"}}>
                <Title><HeaderText>{AppLocales.t("GENERAL_TEAM")}</HeaderText></Title>
@@ -508,8 +552,11 @@ class TeamScreen extends React.Component {
           <View style={styles.formContainer}>
             <NoDataText content="Chức năng cần đăng nhập!"/>
           </View>
-        ) : (
-          (stateTeam ==1) ? (
+        ) : (stateTeam==3 ?
+          ( <View style={styles.formContainer}>
+            <NoDataText content={"Thành Viên của '" + this.props.userData.teamInfo.name+ "' không thể xem báo cáo nhóm."}/>
+          </View>)
+          : ((stateTeam ==1) ? (
             <CheckMyJoinRequest key={"inTeam"} navigation={this.props.navigation}/>
           ) : (
             <View style={{alignItems: "center", padding: 10}}>
@@ -536,7 +583,7 @@ class TeamScreen extends React.Component {
               </Button>
 
             </View>
-          )
+          ))
         )
         ))}
 
@@ -657,8 +704,8 @@ const mapStateToProps = (state) => ({
   userData: state.userData
 });
 const mapActionsToProps = {
-  actTeamGetDataOK, actTeamGetJoinRequestOK,
-  actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal
+  actTeamGetDataOK, actTeamGetJoinRequestOK,actTeamLeaveTeamOK,
+  actUserStartSyncTeam,actUserStartSyncTeamDone, actUserForCloseModal,actUserCreateTeamOK,actUserLeaveTeamOK
 };
 
 export default connect(

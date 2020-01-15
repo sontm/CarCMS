@@ -197,12 +197,12 @@ export const actUserRegisterOK = (data) => (dispatch) => {
     })
 }
 
-export const actUserCreateTeamOK = (data) => (dispatch) => {
+export const actUserCreateTeamOK = (data, isMember) => (dispatch) => {
     console.log("actCreateTeamOK:")
     console.log(data)
     dispatch({
         type: USER_CREATE_TEAM_OK,
-        payload: data
+        payload: {data: data, isMember: isMember}
     })
 }
 export const actUserLeaveTeamOK = (data) => (dispatch) => {
@@ -713,11 +713,11 @@ export default function(state = initialState, action) {
     case USER_CREATE_TEAM_OK:
         return {
             ...state,
-            teamInfo: action.payload,
+            teamInfo: action.payload.data,
             userProfile: {...state.userProfile, 
-                teamId: action.payload.id,
-                teamCOde: action.payload.code,
-                roleInTeam: "manager"
+                teamId: action.payload.data.id,
+                teamCOde: action.payload.data.code,
+                roleInTeam: action.payload.isMember ? "member" : "manager"
             },
             myJoinRequest: {},
         };

@@ -1939,8 +1939,42 @@ class AppUtils {
         // If User is Member and TEam have setting of cannot view report
         //console.log(props.userData.userProfile.roleInTeam)
         //user not is manager and setting cannot see
-        if (!props.userData.teamInfo || (props.userData.userProfile.roleInTeam != "manager" && !props.userData.teamInfo.canMemberViewReport)) {
-            // no team data
+        if (!props.userData.teamInfo || props.userData.userProfile.roleInTeam != "manager") {
+            Backend.getLatestTeamInfoOfMe(props.userData.token,
+                response => {
+                    console.log("===============getLatestTeamInfoOfMe Data SyncAll")
+                    console.log(response.data)
+                    // Rejoin team can ReUse Create Team
+                    props.actUserCreateTeamOK(response.data, true)
+        
+                    // Sync Team Data heare also
+                    if (response.data.canMemberViewReport) {
+                      Backend.getAllUserOfTeam({teamId: props.userData.userProfile.teamId}, 
+                          props.userData.token, 
+                      response2 => {
+                          console.log("GEt all Member in Team OK")
+        
+                          props.actTeamGetDataOK(response2.data, props.userData, props.teamData, props)
+                      },
+                      error => {
+                          props.actUserStartSyncTeamDone();
+                          console.log("GEt all Member in Team ERROR")
+                          console.log(JSON.stringify(error))
+                      }
+                      );
+                    } else {
+                      props.actTeamGetDataOK([], props.userData, props.teamData, props)
+                    }
+                }, err => {
+                    props.actUserStartSyncTeamDone();
+                    console.log("get LatestTeamInfo ERROR")
+                    console.log(err)
+                    if (err.response.data.code == 100) {
+                      // Seems User is Removed from Team
+                      props.actUserLeaveTeamOK()
+                      props.actTeamLeaveTeamOK()
+                    }
+            })
         } else {
             props.actUserStartSyncTeam();
             Backend.getAllJoinTeamRequest(props.userData.token, 

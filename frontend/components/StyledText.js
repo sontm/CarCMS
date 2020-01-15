@@ -55,7 +55,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 0,
     marginBottom: 20,
-    minHeight: 100
+    minHeight: 100,
+    flexWrap:"wrap",
+    marginLeft: 5,
+    marginRight: 5
   },
   containerNoDataNoBg: {
     flexDirection: "column",
@@ -63,6 +66,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 0,
     marginBottom: 20,
-    minHeight: 100
+    minHeight: 100,
+    flexWrap:"wrap",
+    marginLeft: 5,
+    marginRight: 5
   }
 })

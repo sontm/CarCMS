@@ -136,10 +136,12 @@ export default {
     SETTING_LBL_PRO: "Giới Thiệu Phiên Bản PRO",
     SETTING_LBL_CREATE_TEAM: "Tạo Nhóm",
     SETTING_LBL_JOIN_TEAM: "Gia Nhập Nhóm",
-    SETTING_LBL_EDIT_TEAM: "Chỉnh Sửa Nhóm",
+    SETTING_LBL_JOIN_TEAM_QRSCAN: "Quét QR cho Mã Nhóm",
+    SETTING_LBL_JOIN_TEAM_QRSCAN_OFF: "Tắt quét QR",
+    SETTING_LBL_EDIT_TEAM: "Thông Tin Nhóm",
     SETTING_LBL_LEAVE_TEAM: "Rời Nhóm",
     SETTING_LBL_CHECK_TEAM_JOINREQUEST: "Trạng Thái Gia Nhập Nhóm",
-    SETTING_LBL_JOIN_TEAM_CODE: "Mã Nhóm Muốn Gia Nhập",
+    SETTING_LBL_JOIN_TEAM_CODE: "Điền mã nhóm muốn gia nhập",
     SETTING_LBL_JOIN_CREATEDTEAM: "Hoặc vào lại các nhóm đã tạo",
     SETTING_LBL_CHECK_JOIN_STATUS: "Kiểm Tra Trạng Thái Mới Nhất",
 
@@ -299,5 +301,5 @@ export default {
     TOAST_NEWVEHICLEMODULE_EXIST: "Dòng Xe đã tồn tại, hãy điền tên khác!",
     TOAST_SYNC_TO_SERVER_OK: "Đồng bộ lên máy chủ thành công!",
 
-    TOAST_SEND_CUSTOMERVOICE_OK: "Rất cảm ơn vì nhận xét của bạn, chúng tôi sẽ tiếp thu và xử lý sớm nhất có thể.",
+    TOAST_SEND_CUSTOMERVOICE_OK: "Rất cảm ơn nhận xét của bạn, chúng tôi sẽ tiếp thu và xử lý ngay khi có thể.",
 };

@@ -72,7 +72,8 @@ class CustomerVoiceScreen extends React.Component {
                                 text: AppLocales.t("TOAST_SEND_CUSTOMERVOICE_OK"),
                                 //buttonText: "Okay",
                                 position:"top",
-                                type: "success"
+                                type: "success",
+                                duration: 3000
                             })
 
                             this.props.navigation.goBack()

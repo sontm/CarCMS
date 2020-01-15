@@ -178,6 +178,7 @@ class JoinRequestScreen extends React.Component {
                     </Text>
                     </TouchableOpacity>
                 </Body>
+                {this.props.userData.userProfile.roleInTeam == "manager" ?
                 <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center"}}>
                   <TouchableOpacity 
                         onPress={() => this.handleDeleteMember(item)}>
@@ -187,10 +188,10 @@ class JoinRequestScreen extends React.Component {
                     </View>
                   </TouchableOpacity>
                   <Icon name="arrow-forward" style={{alignSelf: "center"}}/>
-                </Right>
+                </Right> : null}
             </ListItem>
           )): (
-            <NoDataText />
+            <NoDataText noBg={true}/>
           )}
         </View>
     );

@@ -192,11 +192,11 @@ class ProfileScreen extends React.Component {
                         <Text style={{marginLeft: 14}}>{AppLocales.t("USER_CHANGEPWD")}</Text>
                         </TouchableOpacity>
                         </View>
-
+                        {this.state.isChangePwd ? (
                         <TouchableOpacity 
                             onPress={() => this.setState({isShowPwd: !this.state.isShowPwd})}>
                             <Icon style={{color: AppConstants.COLOR_GREY_MIDDLE}} name={this.state.isShowPwd ? "eye-off" : "eye"} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> ) : null}
                     </View>): null}
 
                     {(this.props.userData.userProfile.type != "facebook" && 

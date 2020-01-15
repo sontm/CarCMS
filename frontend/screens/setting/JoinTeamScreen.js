@@ -15,18 +15,24 @@ import Backend from '../../constants/Backend'
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
 import NetInfo from "@react-native-community/netinfo";
+import * as Permissions from 'expo-permissions';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import Layout from '../../constants/Layout';
 
 class JoinTeamScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            code: "ZU2YE8yE",
+            code: "",
             teamsByMe: [],
+            cameraPermission: false,
+            barCodeOpened: false,
+            teamCodeScanned: false
         };
 
         this.handleSubmit = this.handleSubmit.bind(this)
     }
-    componentWillMount() {
+    async componentWillMount() {
 
         // Get all team created by this User
         // TODO, send teamCode here......
@@ -39,6 +45,16 @@ class JoinTeamScreen extends React.Component {
             }, error => {
                 console.log("getTeamsCreatedByMe ERROR")
             })
+
+            const { status: existingStatus } = await Permissions.getAsync(
+                Permissions.CAMERA
+            );
+            console.log("existingCameraStatus:" + existingStatus)
+            if (existingStatus =="granted") {
+                this.setState({
+                    cameraPermission: true
+                })
+            }
 
         
     }
@@ -122,6 +138,13 @@ class JoinTeamScreen extends React.Component {
 
 
                             this.props.navigation.goBack()
+                            Toast.show({
+                                text: "Yêu cầu gia nhập nhóm đã được gửi đi, xin hãy đợi Quản Lý của nhóm thông qua.",
+                                //buttonText: "Okay",
+                                position: "top",
+                                type: "success",
+                                duration: 3000
+                            })
                         },
                         error => {
                             console.log("Join Team ERROR")
@@ -145,6 +168,35 @@ class JoinTeamScreen extends React.Component {
             }) 
         };
     }
+
+    async requestQRScanner() {
+        if (!this.state.cameraPermission) {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA);
+            console.log("status")
+            if (status =="granted") {
+                this.setState({
+                    cameraPermission: true,
+                    barCodeOpened: true,
+                    teamCodeScanned: false
+                })
+            }
+        } else {
+            this.setState({
+                barCodeOpened: !this.state.barCodeOpened,
+                teamCodeScanned: false
+            })
+        }
+    }
+    handleBarcodeScanned = ( result ) => {
+        console.log(JSON.stringify(result)); // PRINTS UNDEFINED - passing in ({ type, data }) and trying to console.log(data + type) throws: undefined is not an object (evaluating '_ref.type')
+        if (result.data && result.data.length > 10) {
+            this.setState({
+                teamCodeScanned: true,
+                code: result.data,
+                barCodeOpened: false
+            })
+        }
+    };
     
     render() {
         console.log("---------------------this.props.userData.teamInfo")
@@ -153,6 +205,34 @@ class JoinTeamScreen extends React.Component {
             <Container>
             <Content>
                 <View style={styles.formContainer}>
+                    <View style={{alignSelf:"center", marginTop: 0}}>
+                    <Button
+                        full style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        onPress={() => this.requestQRScanner()}>
+                            <Icon type="MaterialCommunityIcons" name="qrcode-scan" />
+                            <Text>{this.state.barCodeOpened ?  AppLocales.t("SETTING_LBL_JOIN_TEAM_QRSCAN_OFF")
+                             : AppLocales.t("SETTING_LBL_JOIN_TEAM_QRSCAN")}</Text>
+                    </Button>
+                    <Text style={{alignSelf:"center", color: AppConstants.COLOR_TEXT_LIGHT_INFO,
+                        fontSize: 13,marginTop: 2, marginBottom: 5, fontStyle:"italic"}}>
+                            Mã QR từ màn hình 'Thông Tin Nhóm'
+                    </Text>
+                    </View>
+                    {(this.state.cameraPermission && this.state.barCodeOpened)? (
+                        <View style={{alignItems:"center"}}>
+                        <BarCodeScanner
+                            onBarCodeScanned={ this.state.teamCodeScanned ? undefined : this.handleBarcodeScanned}
+                            style={{
+                                height: Layout.window.height-150,
+                                width: Layout.window.width
+                            }}
+                        
+                        /></View>
+                    ) : null}
+
+                    <Text style={{alignSelf:"center", color: AppConstants.COLOR_TEXT_LIGHT_INFO,
+                        marginTop: 10, marginBottom: 10}}>Hoặc</Text>
+
                     <View style={styles.rowContainer}>
                         <Item stackedLabel>
                         <Label>
@@ -167,7 +247,7 @@ class JoinTeamScreen extends React.Component {
 
                     <View style={styles.rowButton}>
                     <Button
-                        rounded primary
+                        rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         onPress={() => this.handleSubmit()}
                         ><Text>{AppLocales.t("SETTING_LBL_JOIN_TEAM")}</Text></Button>
                     </View>

@@ -136,23 +136,28 @@ class CheckMyJoinRequest extends React.Component {
                                                     console.log("===============getLatestTeamInfoOfMe Data")
                                                     console.log(response.data)
                                                     // Rejoin team can ReUse Create Team
-                                                    this.props.actUserCreateTeamOK(response.data)
+                                                    this.props.actUserCreateTeamOK(response.data, true)
 
-                                                    // Sync Team Data heare also
-                                                    // TODO Message of Syncing here
-                                                    Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, 
-                                                        this.props.userData.token, 
-                                                    response2 => {
-                                                        console.log("GEt all Member in Team OK")
-                            
-                                                        this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
-                                                    },
-                                                    error => {
+                                                    if (response.data.canMemberViewReport) {
+                                                        // Sync Team Data heare also
+                                                        // TODO Message of Syncing here
+                                                        Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, 
+                                                            this.props.userData.token, 
+                                                        response2 => {
+                                                            console.log("GEt all Member in Team OK")
+                                
+                                                            this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
+                                                        },
+                                                        error => {
+                                                            this.props.actUserStartSyncTeamDone();
+                                                            console.log("GEt all Member in Team ERROR")
+                                                            console.log(JSON.stringify(error))
+                                                        }
+                                                        );
+                                                    } else {
                                                         this.props.actUserStartSyncTeamDone();
-                                                        console.log("GEt all Member in Team ERROR")
-                                                        console.log(JSON.stringify(error))
+                                                        this.props.actTeamGetDataOK([], this.props.userData, this.props.teamData, this.props)
                                                     }
-                                                    );
                                             
                         
                                                     this.props.navigation.goBack()

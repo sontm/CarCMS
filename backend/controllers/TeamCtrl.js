@@ -90,7 +90,11 @@ module.exports = {
           res.status(401).send({msg: "Cannot Find Team of User"})
         }
       } else {
-        res.status(400).send({msg: "Not Found User"})
+        if (!requestUser.teamCode) {
+          res.status(400).send({code:100, msg: "UserNoTeam"})
+        } else {
+          res.status(400).send({msg: "Not Found User"})
+        }
       }
 
     } catch (error) {

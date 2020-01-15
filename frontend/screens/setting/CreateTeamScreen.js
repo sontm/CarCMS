@@ -12,6 +12,7 @@ import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
 import NetInfo from "@react-native-community/netinfo";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import QRCode from 'react-native-qrcode-svg';
 
 class CreateTeamScreen extends React.Component {
     constructor(props) {
@@ -137,6 +138,7 @@ class CreateTeamScreen extends React.Component {
     render() {
         console.log("******TEam info")
         console.log(this.state)
+        let logoFromFile = require('../../assets/images/icon.png');
         return (
             <Container>
             <Content>
@@ -191,6 +193,19 @@ class CreateTeamScreen extends React.Component {
                         </TouchableOpacity>
                     </View>
 
+                    <View style={{alignItems:"center", marginTop: 10}}>
+                        <QRCode
+                            value={this.state.code}
+                            logo={logoFromFile}
+                            logoSize={25}
+                            size={250}
+                        />
+                        <Text style={{alignSelf:"center", color: AppConstants.COLOR_TEXT_LIGHT_INFO,
+                            fontSize: 14,marginTop: 5, fontStyle:"italic"}}>
+                                Hãy quét QR trên để lấy Mã Nhóm khi muốn Gia Nhập
+                        </Text>
+                    </View>
+
                     <View style={styles.rowButton}>
                     <Button
                         rounded style={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
@@ -198,7 +213,7 @@ class CreateTeamScreen extends React.Component {
                     >
                         <Text>
                         {this.props.navigation.state.params.isEdit ? (
-                            AppLocales.t("SETTING_LBL_EDIT_TEAM")
+                            AppLocales.t("GENERAL_EDITDATA")
                         ): (
                             AppLocales.t("SETTING_LBL_CREATE_TEAM")
                         )}
@@ -238,6 +253,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingTop: 5,
+    paddingBottom: 20,
     paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
     backgroundColor: '#fff',
     flexDirection: "column"

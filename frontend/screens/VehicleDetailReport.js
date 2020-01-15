@@ -63,42 +63,44 @@ class VehicleDetailReport extends React.Component {
         let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase(), currentVehicle.type!="car")
         // calcualte Service maintain date or KM
         //totalNextDay
-        let passedDay =  AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
-            new Date());
-        let totalDayForMaintain = this.props.userData.carReports[currentVehicle.id].maintainRemind.totalNextDay;
-        if (!totalDayForMaintain) {
-            totalDayForMaintain = AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
-                this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain);
-        }
-        let percentByDate = 1.0 * passedDay/totalDayForMaintain;
-        let percentByKm = 1.0 * this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain/
-            this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
-        if (percentByDate > percentByKm) {
-            // Will Show by Date
-            var passService = passedDay;
-            var totalNeedService = totalDayForMaintain;
-            var unitService = AppLocales.t("GENERAL_DAY");
-            var nextDateService = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
+        if (this.props.userData.carReports[currentVehicle.id] && this.props.userData.carReports[currentVehicle.id].maintainRemind) {
+            var passedDay =  AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
+                new Date());
+            var totalDayForMaintain = this.props.userData.carReports[currentVehicle.id].maintainRemind.totalNextDay;
+            if (!totalDayForMaintain) {
+                totalDayForMaintain = AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
+                    this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain);
+            }
+            var percentByDate = 1.0 * passedDay/totalDayForMaintain;
+            var percentByKm = 1.0 * this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain/
+                this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+            if (percentByDate > percentByKm) {
+                // Will Show by Date
+                var passService = passedDay;
+                var totalNeedService = totalDayForMaintain;
+                var unitService = AppLocales.t("GENERAL_DAY");
+                var nextDateService = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
 
-            var passServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
-            var totalNeedServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
-            var unitServiceSub = "Km";
-        } else {
-            var passServiceSub = passedDay;
-            var totalNeedServiceSub = totalDayForMaintain;
-            var unitServiceSub = AppLocales.t("GENERAL_DAY");
-            var nextDateServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
+                var passServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
+                var totalNeedServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+                var unitServiceSub = "Km";
+            } else {
+                var passServiceSub = passedDay;
+                var totalNeedServiceSub = totalDayForMaintain;
+                var unitServiceSub = AppLocales.t("GENERAL_DAY");
+                var nextDateServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
 
-            var passService = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
-            var totalNeedService = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
-            var unitService = "Km";
-        }
-        let isHaveRemindData = false;
-        if ((this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService) ||
-                (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor) ||
-                (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance) ||
-                (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee)) {
-            isHaveRemindData = true;
+                var passService = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
+                var totalNeedService = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+                var unitService = "Km";
+            }
+            var isHaveRemindData = false;
+            if ((this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService) ||
+                    (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor) ||
+                    (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance) ||
+                    (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee)) {
+                isHaveRemindData = true;
+            }
         }
         return (
             <Container>
