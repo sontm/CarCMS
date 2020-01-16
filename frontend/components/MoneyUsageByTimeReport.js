@@ -861,8 +861,8 @@ class MoneyUsageByTimeReport extends React.Component {
                             innerRadius={80}
                             radius={90}
                             labels={({ datum }) => (datum&&datum.y > 0) ? (
-                                AppUtils.formatMoneyToK(datum.y) + "\n("
-                                +AppUtils.formatToPercent(datum.y, totalAllCarsAllCategory)+")") : ""}
+                                AppUtils.formatMoneyToK(datum.y) + "\n"
+                                +AppUtils.formatToPercent(datum.y, totalAllCarsAllCategory)) : ""}
                             labelRadius={({ radius }) => radius + 10 }
                             labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                             />
@@ -906,16 +906,15 @@ class MoneyUsageByTimeReport extends React.Component {
                             colorScale={AppConstants.COLOR_SCALE_10}
                             data={[
                                 { x: AppLocales.t("GENERAL_GAS"), y: totalGasSpendPrivate },
-                                { x: AppLocales.t("GENERAL_OIL"), y: totalOilSpendPrivate },
-                                { x: AppLocales.t("GENERAL_AUTHROIZE"), y: totalAuthSpendPrivate },
                                 { x: AppLocales.t("GENERAL_EXPENSE"), y: totalExpenseSpendPrivate },
+                                { x: AppLocales.t("GENERAL_AUTHROIZE"), y: totalAuthSpendPrivate },
                                 { x: AppLocales.t("GENERAL_SERVICE"), y: totalServiceSpendPrivate },
                             ]}
                             innerRadius={80}
                             radius={90}
-                            labels={({ datum }) => (datum&&datum.y > 0) ? (datum.x + "\n(" 
-                                + AppUtils.formatMoneyToK(datum.y) + ", \n"
-                                +AppUtils.formatToPercent(datum.y, totalAllSpendPrivate)+")") : ""}
+                            labels={({ datum }) => (datum&&datum.y > 0) ? (
+                                AppUtils.formatMoneyToK(datum.y) + "\n"
+                                +AppUtils.formatToPercent(datum.y, totalAllSpendPrivate)) : ""}
                             labelRadius={({ radius }) => radius+10 }
                             labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
                         />
@@ -925,6 +924,26 @@ class MoneyUsageByTimeReport extends React.Component {
                             </Text>
                         </View>
                     </View>
+
+                    <View>
+                        <VictoryContainer
+                            width={Layout.window.width}
+                            height={30*Math.ceil(AppConstants.LEGEND_CHITIEU_2.length/2)}
+                        >
+                        <VictoryLegend standalone={false}
+                            x={15} y={5}
+                            itemsPerRow={4}
+                            colorScale={AppConstants.COLOR_SCALE_10}
+                            orientation="horizontal"
+                            gutter={5}
+                            symbolSpacer={5}
+                            labelComponent={<VictoryLabel style={{fontSize: 12}}/>}
+                            data={AppConstants.LEGEND_CHITIEU_2}
+                            style={{paddingBottom: 10}}
+                        />
+                        </VictoryContainer>
+                    </View>
+                    
                 </View>
                 ) : <NoDataText /> }
                 </View>

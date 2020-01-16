@@ -139,6 +139,16 @@ class ServiceMaintainTable extends React.Component {
             }
         }
     }
+    var dropdownView = [];
+    dropdownView.push(
+        <Picker.Item label={"--" + AppLocales.t("TEXT_PLEASE_SELECT_CAR_SERVICES") + "--"}
+            value={0} key={0}/>)
+    this.props.teamData.teamCarList.forEach(item => {
+        dropdownView.push (
+            <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate + ", " + item.ownerFullName}
+            value={item.id} key={item.id}/>
+        )
+    })
     if (currentVehicle) {
         // Calculate Width
         // General, Width is divided into 5.5; First Col will be 1.5
@@ -149,6 +159,25 @@ class ServiceMaintainTable extends React.Component {
                 <Container>
                 <Content>
                 <View style={styles.container}>
+                    {this.props.selectFromList ? (
+                    <View style={styles.rowContainerCarSelect}>
+                        <Picker
+                            style={{width: AppConstants.DEFAULT_FORM_WIDTH,
+                                alignSelf:"center"}}
+                            mode="dropdown"
+                            iosIcon={<Icon name="arrow-down" />}
+                            placeholder={"--"+AppLocales.t("NEW_GAS_CAR")+"--"}
+                            placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
+                            placeholderIconColor="#007aff"
+                            selectedValue={this.state.vehicleId}
+                            onValueChange={(itemValue, itemIndex) =>
+                                this.setState({vehicleId: itemValue})
+                            }
+                        >
+                            {dropdownView}
+                        </Picker>
+                    </View>) : null}
+                
                     <NoDataText />
                 </View>
                 </Content>
@@ -174,16 +203,7 @@ class ServiceMaintainTable extends React.Component {
         var {tableData, arrCurrentKm, arrDiffKm, arrCurrentDate, arrDiffDay, arrMaintainType, widthArr, firstCol, itemHaveData} = 
             this.parseMaintainTableData(currentVehicle, baseWidth)
     }
-    var dropdownView = [];
-    dropdownView.push(
-        <Picker.Item label={"--" + AppLocales.t("TEXT_PLEASE_SELECT_CAR_SERVICES") + "--"}
-            value={0} key={0}/>)
-    this.props.teamData.teamCarList.forEach(item => {
-        dropdownView.push (
-            <Picker.Item label={item.brand + " " + item.model + " " + item.licensePlate + ", " + item.ownerFullName}
-            value={item.id} key={item.id}/>
-        )
-    })
+    
     return (
         <View style={styles.container}>
             {this.props.selectFromList ? (

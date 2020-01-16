@@ -277,7 +277,7 @@ class GasUsageTopReport extends React.Component {
                     <VictoryChart
                         width={Layout.window.width}
                         height={300}
-                        padding={{top:10,bottom:30,left:3,right:10}}
+                        padding={{top:25,bottom:40,left:3,right:10}}
                         domainPadding={{y: [0, 0], x: [50, 20]}}
                     >
                     <VictoryStack

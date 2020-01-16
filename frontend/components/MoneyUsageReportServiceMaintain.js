@@ -147,7 +147,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                             radius={90}
                             labels={({ datum }) => (datum&&datum.y > 0) ? ( 
                                 AppUtils.formatMoneyToK(datum.y) + "\n"
-                                +"("+AppUtils.formatToPercent(datum.y, theTotal)+")") : ""}
+                                +AppUtils.formatToPercent(datum.y, theTotal)) : ""}
                             labelRadius={({ radius }) => radius+10 }
                             labelComponent={<VictoryLabel style={{fontSize: 13}}/>}
                             />                      

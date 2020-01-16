@@ -333,7 +333,7 @@ export const actVehicleDeleteFillItem = (vehicleId, itemId, type, prevUserData) 
     }
 
     let {userData} = getState();
-    reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
+    reCalculateCarReports(null, userData, dispatch, vehicleId)
 }
 
 // type: gas, oil, auth, 

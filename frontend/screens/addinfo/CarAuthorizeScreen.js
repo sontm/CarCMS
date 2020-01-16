@@ -254,7 +254,7 @@ class CarAuthorizeScreen extends React.Component {
                             <CheckBox checked={this.state.subTypeArr.indexOf(this.props.appData.typeAuth[2].name) >=0} 
                                 onPress={() =>this.onSetSubType(2)}/>
                             <TouchableOpacity onPress={() =>this.onSetSubType(2)}>
-                            <Text style={{marginLeft: 20}} onPress={() =>this.onSetSubType(2)}>{this.props.appData.typeAuth[2].name}</Text>
+                            <Text style={{marginLeft: 20}}>{this.props.appData.typeAuth[2].name}</Text>
                             </TouchableOpacity>
                         </View>
 

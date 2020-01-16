@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
+import { View, StyleSheet, TextInput, Clipboard } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
     Item, Picker, Button, Text, Input,Label, Toast, CheckBox } from 'native-base';
 
@@ -155,17 +155,30 @@ class CreateTeamScreen extends React.Component {
                         </Item>
                     </View>
 
-                    <View style={styles.rowContainer}>
-                        <Item stackedLabel>
-                        <Label>{AppLocales.t("GENERAL_TEAM_CODE_SHORT")+" ("+
+                    <View style={{...styles.rowContainer, flexDirection:"column", alignItems:"flex-start"}}>
+                        <Label style={{color: AppConstants.COLOR_TEXT_DARKDER_INFO, fontSize: 15}}>{AppLocales.t("GENERAL_TEAM_CODE_SHORT")+" ("+
                             AppLocales.t("GENERAL_RANDOM")+")"}
                         </Label>
-                        <Input
-                            disabled
-                            style={{...styles.rowForm, backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG}}
-                            value={this.state.code}
-                        />
-                        </Item>
+                        <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
+                            <Input
+                                disabled
+                                style={{...styles.rowForm, backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG}}
+                                value={this.state.code}
+                            />
+                            <TouchableOpacity 
+                                onPress={() => {
+                                    Toast.show({
+                                    text: AppLocales.t("TOAST_SUCCESS_COPIED"),
+                                    //buttonText: "Okay",
+                                    position: "top",
+                                    type: "success"
+                                    })
+                                    Clipboard.setString(this.state.code)
+                                }}>
+                                <Icon type="FontAwesome5" name="copy" 
+                                style={{fontSize: 28, color: "grey", alignSelf:"center", marginLeft: 5}}/>
+                            </TouchableOpacity>
+                        </View>
                     </View>
 
                     
@@ -253,7 +266,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingTop: 5,
-    paddingBottom: 20,
+    paddingBottom: 40,
     paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
     backgroundColor: '#fff',
     flexDirection: "column"

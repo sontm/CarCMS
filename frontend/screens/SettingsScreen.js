@@ -25,7 +25,6 @@ import * as Facebook from 'expo-facebook';
 import NetInfo from "@react-native-community/netinfo";
 
 import AppLocales from '../constants/i18n'
-import { italic } from 'ansi-colors';
 
 class SettingsScreen extends React.Component {
   constructor(props) {

@@ -273,7 +273,7 @@ class HomeScreen extends React.Component {
             <ReminderReport/>
             <HomeMoneyUsageByTime isTotalReport={true} />
             <HomeMoneyUsageByTimeTeam isTotalReport={true} />
-            {this.props.appData.countOpen < 100 ?
+            {this.props.appData.countOpen < 30 ?
             <View style={{marginLeft: 5, marginRight: 5, marginBottom: 20, flexWrap:"wrap"}}>
               <Text style={{fontStyle: "italic", fontSize: 14, color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
                 'N' là viết tắt của Nghìn VND. 'Tr' là viết tắt của Triệu VND.</Text>

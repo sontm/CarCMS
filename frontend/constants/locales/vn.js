@@ -81,7 +81,7 @@ export default {
     ADD_MAX_METER_LBL: "Hãy Điền Số Lớn Nhất Công tơ Mét",
 
     ADD_MODEL_TITLE:"Thêm Dòng Xe",
-    ADD_MODEL_LABEL:"Điền Tên Dòng Xe",
+    ADD_MODEL_LABEL:"Tên Dòng Xe Muốn Thêm",
 
     CARDETAIL_HEADER: "Chi Tiết",
     CARDETAIL_REMINDER: "Nhắc Nhở",

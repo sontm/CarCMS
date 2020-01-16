@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   btnSubmit: {
-    width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH,
+    width: AppConstants.DEFAULT_FORM_BUTTON_WIDTH + 30,
     backgroundColor: AppConstants.COLOR_BUTTON_BG,
     justifyContent: "center",
   }

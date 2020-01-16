@@ -342,8 +342,8 @@ class MoneyUsageReport extends React.Component {
                             innerRadius={80}
                             radius={90}
                             labels={({ datum }) => (datum&&datum.y>0) ? (
-                                AppUtils.formatMoneyToK(datum.y) + "\n("
-                                +AppUtils.formatToPercent(datum.y, totalAlSpend)+")") : ""}
+                                AppUtils.formatMoneyToK(datum.y) + "\n"
+                                +AppUtils.formatToPercent(datum.y, totalAlSpend)) : ""}
                             labelRadius={({ radius }) => radius + 10 }
                             labelComponent={<VictoryLabel style={{fontSize: 13}}/>}
                             />
@@ -391,8 +391,8 @@ class MoneyUsageReport extends React.Component {
                             innerRadius={80}
                             radius={90}
                             labels={({ datum }) => (datum&&datum.y > 0) ? (
-                                AppUtils.formatMoneyToK(datum.y) + "\n("
-                                +AppUtils.formatToPercent(datum.y, totalExpenseSpend)+")") : ""}
+                                AppUtils.formatMoneyToK(datum.y) + "\n"
+                                +AppUtils.formatToPercent(datum.y, totalExpenseSpend)) : ""}
                             labelRadius={({ radius }) => radius + 10 }
                             labelComponent={<VictoryLabel style={{fontSize: 13}}/>}
                             />
