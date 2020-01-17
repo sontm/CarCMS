@@ -2,9 +2,16 @@ import { Platform} from 'react-native';
 import Layout from './Layout';
 
 // TODO
-const ADS_BANNERID_ANDROID = "ca-app-pub-3940256099942544/6300978111"
+
+// const ADS_BANNERID_ANDROID = "ca-app-pub-3940256099942544/6300978111"
+// const ADS_BANNERID_IOS= "ca-app-pub-3940256099942544/6300978111"
+// const ADS_INTERESTIALID_ANDROID = "ca-app-pub-3940256099942544/1033173712"
+// const ADS_INTERESTIALID_IOS = "ca-app-pub-3940256099942544/1033173712"
+
+//APpID:ca-app-pub-7157132347657223~8153766505
+const ADS_BANNERID_ANDROID = "ca-app-pub-7157132347657223/9163256532"
 const ADS_BANNERID_IOS= "ca-app-pub-3940256099942544/6300978111"
-const ADS_INTERESTIALID_ANDROID = "ca-app-pub-3940256099942544/1033173712"
+const ADS_INTERESTIALID_ANDROID = "ca-app-pub-7157132347657223/8483227509"
 const ADS_INTERESTIALID_IOS = "ca-app-pub-3940256099942544/1033173712"
 const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : 0;
 const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROID;
@@ -59,10 +66,10 @@ export default {
         {name:"Xăng"},{name:"Phụ Chi"},{name:"Pháp Lý"},{name:"Bảo Dưỡng"}
     ],
 
-    //SERVER_API:"https://yamastack.com/api/",
+    SERVER_API:"https://yamastack.com/api/",
 
     //SERVER_API:"http://18.140.121.240:3000/api",
-    SERVER_API:  "http://192.168.1.51:3000/api",
+    //SERVER_API:  "http://192.168.1.51:3000/api",
     //SERVER_API:  "http://192.168.0.108:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here (not OK when on LAN setting of Expo)
     //SERVER_API:  "http://172.20.10.2:3000/api",

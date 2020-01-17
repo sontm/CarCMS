@@ -60,6 +60,10 @@ const UserSchema = new Schema({
         type: String, // manager, member
         required: false
     },
+    isNoAds: {
+        type:Boolean,
+        required: false
+    },
     vehicleList: [],
     //     {
     //         id: {

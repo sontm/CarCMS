@@ -648,7 +648,8 @@ module.exports = {
         settingService: currentUser.settingService,
         teamInfo: teamInfo,
         notifications: notiInfo,
-        myJoinRequest: myJoinRequest
+        myJoinRequest: myJoinRequest,
+        isNoAds: currentUser.isNoAds
       }
       )
     } else {

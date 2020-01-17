@@ -16,10 +16,10 @@ class RegisterUserScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            fullName: "Tester",
-            email: "tester@mail.com",
-            phone: "01689985174",
-            password: "123456",
+            fullName: "",
+            email: "",
+            phone: "",
+            password: "",
             isShowPwd: false
         };
 

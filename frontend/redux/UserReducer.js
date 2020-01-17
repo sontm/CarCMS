@@ -120,6 +120,8 @@ const initialState = {
 
     countNotSeenNoti: 0,
 
+    isNoAds: false,
+
     modalState: 0, // 1: syncPrivate, 2: syncTeam, 0: close. ++ when start each sync, -- when done each
 
     // Object of store information to server
@@ -875,6 +877,8 @@ export default function(state = initialState, action) {
             notifications: newNotis0,
             myJoinRequest: data.myJoinRequest,
             countNotSeenNoti: 0,
+
+            isNoAds: data.isNoAds,
 
             teamInfo: data.teamInfo,
 

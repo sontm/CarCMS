@@ -31,8 +31,8 @@ class SettingsScreen extends React.Component {
     super(props);
 
     this.state = {
-      email: "tester1",
-      password: "123456",
+      email: "",
+      password: "",
       isShowPwd: false,
 
       isMergeDataBeforeLogin: false

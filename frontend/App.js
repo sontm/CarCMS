@@ -90,9 +90,9 @@ class App extends React.Component {
             <Root>
             <AppNavigator/>
             </Root>
-            <View style={{position: "absolute", bottom: AppConstants.DEFAULT_BOTTOM_NAV_HEIGHT, left: 0, right: 0}}>
+            {/* <View style={{position: "absolute", bottom: AppConstants.DEFAULT_BOTTOM_NAV_HEIGHT, left: 0, right: 0}}> */}
               <AdsManager />
-            </View>
+            {/* </View> */}
             {/* <NotificationManager /> */}
             <CheckLatestAppDataManager />
           </PersistGate>
