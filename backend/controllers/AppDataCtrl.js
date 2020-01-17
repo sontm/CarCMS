@@ -286,6 +286,22 @@ module.exports = {
       res.status(501).send({msg: "Require Authentication."})
     }
   },
+
+  // Modify Date of this
+  getFirstModal(req, res) {
+    console.log("App getFirstModal")
+    if (true || req.user) {
+      let modalInfo = {
+        imgUrl:"https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+        linkUrl:"https://yamastack.com"
+      }
+      res.status(200).send(modalInfo)
+    } else {
+      res.status(501).send({msg: "Require Authentication."})
+    }
+  },
+
+
   async addAppNotification(req, res) {
     console.log("App addAppNotification")
     console.log(req.body)
@@ -320,6 +336,21 @@ module.exports = {
           err ? reject(err) : resolve(doc);
         });
       });
+      if (currentUser) {
+        var queryObj = {
+          $or:[ 
+            {forAll: true},
+            {'teamId':currentUser.teamId},
+            {'userId':currentUser.id} 
+          ],
+        }
+      } else {
+        var queryObj = {
+          $or:[ 
+            {forAll: true}
+          ],
+        }
+      }
       let notQueryIds = [];
       if (req.body && req.body.length > 0) {
         notQueryIds = req.body;
@@ -327,13 +358,7 @@ module.exports = {
       dbnotification.find( 
         { 
           $and: [
-            {
-              $or:[ 
-                {forAll: true},
-                {'teamId':currentUser.teamId},
-                {'userId':currentUser.id} 
-              ],
-            },
+            queryObj,
             {"_id": { "$nin": notQueryIds }},
             {enable: true}
           ]

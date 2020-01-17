@@ -61,6 +61,7 @@ app.post('/api/team/request/cancel', passport.authenticate('jwt', {session: fals
 
 app.get('/api/app/lateston', appData.getLatestDataDateOn);
 app.get('/api/app/appdata', appData.getLatestAppData);
+app.get('/api/app/prourl', appData.getFirstModal);
 
 app.post('/api/app/notification', appData.addAppNotification);
 app.post('/api/app/notification/me', passport.authenticate('jwt', {session: false}),

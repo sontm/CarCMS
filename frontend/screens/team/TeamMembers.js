@@ -17,7 +17,7 @@ import Backend from '../../constants/Backend'
 import AppLocales from '../../constants/i18n'
 
 import {actTeamGetJoinRequestOK} from '../../redux/TeamReducer'
-import { NoDataText } from '../../components/StyledText';
+import { NoDataText, TypoH4 } from '../../components/StyledText';
 import apputils from '../../constants/AppUtils';
 
 // navigation is passed from Parent
@@ -116,7 +116,7 @@ class JoinRequestScreen extends React.Component {
 
           {this.props.teamData.joinRequests.length > 0 ?
           <View style={styles.textRow}>
-            <H3>{AppLocales.t("TEAM_MEM_JOIN_REQUEST")}</H3>
+            <TypoH4 style={{color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>{AppLocales.t("TEAM_MEM_JOIN_REQUEST")}</TypoH4>
           </View> : null }
 
           {this.props.teamData.joinRequests.length > 0 ? this.props.teamData.joinRequests.map(item => (
@@ -124,8 +124,8 @@ class JoinRequestScreen extends React.Component {
                   <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)"}}>
                   </Left>
                   <Body style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", flex: 3, marginLeft: -5}}>
-                    <Text style={{fontSize: 15, marginTop: 5}}>{item.fullName}</Text>
-                    <Text style={{fontSize: 12, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 3}}>{item.email}</Text>
+                    <Text style={{fontSize: 16, marginTop: 2}}>{item.fullName}</Text>
+                    <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT, marginTop: 5}}>{item.email}</Text>
                   </Body>
                   <Right style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", alignSelf: "center", flex: 2}}>
                       <TouchableOpacity 
@@ -157,11 +157,11 @@ class JoinRequestScreen extends React.Component {
           )}
 
           <View style={styles.textRow}>
-            <H3>{AppLocales.t("TEAM_MEM_LIST")}</H3>
+            <TypoH4 style={{color: AppConstants.COLOR_TEXT_DARKEST_INFO}}>{AppLocales.t("TEAM_MEM_LIST")}</TypoH4>
           </View>
           {this.props.teamData.members.length > 0 ? this.props.teamData.members.map((item, idx) => (
             <ListItem icon key={item.id} style={styles.listItemRow} key={item.type+"-"+item.id}>
-                <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", width: 54, marginLeft: 10}}>
+                <Left style={{borderWidth: 0, borderColor: "rgba(0,0,0,0)", width: 54, marginLeft: 13}}>
                   {item.pictureUrl ?
                   <Thumbnail source={{uri: item.pictureUrl }} style={{...styles.avatarView, marginLeft: 0}}/>
                   :
@@ -210,8 +210,8 @@ const styles = StyleSheet.create({
 
   textRow: {
     flexDirection: "row",
-    paddingTop: 10,
-    paddingLeft: 5,
+    paddingTop: 13,
+    paddingLeft: 7,
     justifyContent: "space-between",
     alignItems: "center",
     flexWrap: "wrap",
@@ -220,9 +220,9 @@ const styles = StyleSheet.create({
 
   listItemRow: {
     height: 70,
-    marginLeft: 0,
-    marginRight: 0,
-    marginTop: 5,
+    marginLeft: 3,
+    marginRight: 3,
+    marginTop: 7,
     backgroundColor:"white",
     borderRadius: 0,
     //borderColor: "rgb(220, 220, 220)",

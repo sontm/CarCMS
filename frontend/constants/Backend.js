@@ -242,6 +242,13 @@ class Backend {
             .then((response) => {onOK(response);})
             .catch((error) => {onError(error);});
     }
+    getPromoteImageLink(onOK, onError) {
+        axios.get("/app/prourl",
+           // { headers: this.createHeader(), withCredentials: true})
+            { headers: this.createHeader(),})
+            .then((response) => {onOK(response);})
+            .catch((error) => {onError(error);});
+    }
 
     getAllNotification(lstExist, token, onOK, onError) {
         console.log("Backend getAllNotification:")

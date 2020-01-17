@@ -383,7 +383,7 @@ ServiceMaintainSettingScreen.navigationOptions = ({navigation}) => ({
         <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
-              <Icon name="arrow-back" />
+              <Icon name="arrow-back" style={{color:"white"}}/>
             </Button>
           </Left>
           <Body style={{flex: 4}}>

@@ -8,14 +8,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  AsyncStorage
+  Linking
 } from 'react-native';
 import Layout from '../constants/Layout'
 import AppUtils from '../constants/AppUtils'
 import AppConstants from '../constants/AppConstants';
 import AppLocales from '../constants/i18n';
 
-import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, H2, H3, H1 , Badge} from 'native-base';
+import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, Card, CardItem, Thumbnail , Badge} from 'native-base';
 import {VictoryLabel, VictoryPie, VictoryBar, VictoryChart, VictoryStack, VictoryArea, VictoryLine, VictoryAxis} from 'victory-native';
 import { HeaderText, WhiteText } from '../components/StyledText';
 import {
@@ -27,6 +27,8 @@ import ReminderReport from '../components/ReminderReport'
 
 import {actVehicleDeleteVehicle, actVehicleAddVehicle, actUserGetNotifications, actUserSyncPartlyOK} from '../redux/UserReducer'
 import {actTempCalculateCarReport} from '../redux/UserReducer'
+import backend from '../constants/Backend';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 // vehicleList: {brand: "Kia", model: "Cerato", licensePlate: "18M1-78903", checkedDate: "01/14/2019", id: 3}
 // fillGasList: {vehicleId: 2, fillDate: "10/14/2019, 11:30:14 PM", amount: 2, price: 100000, currentKm: 123344, id: 1}
@@ -35,9 +37,32 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      notSeenNotiCount: 0
+      notSeenNotiCount: 0,
+      showPRModal: false,
+      imgUrl:"",
+      linkUrl:"",
     };
 
+  }
+  componentWillMount() {
+    console.log("HOMESCreen Will Mount")
+    backend.getPromoteImageLink(
+      response => {
+        console.log("Promote image")
+        console.log(response.data)
+        if (response.data && response.data.imgUrl) {
+          this.setState({
+            showPRModal:true,
+            linkUrl: response.data.linkUrl,
+            imgUrl: response.data.imgUrl
+          })
+        }
+      },
+      err => {
+        console.log("Cannot Get promote image")
+        console.log(err)
+      }
+    )
   }
   componentDidMount() {
     console.log("HOMESCreen DidMount, CountOpen:" + this.props.appData.countOpen)
@@ -72,6 +97,7 @@ class HomeScreen extends React.Component {
   }
   componentWillUnmount() {
     console.log("HOMESCreen Will UnMount")
+    // Get Promoted URL Here
   }
   calculateAllVehicleTotalMoney() {
     let totalMoneyPrivate = 0;
@@ -135,6 +161,23 @@ class HomeScreen extends React.Component {
 
     return {totalMoneyTeam, totalMoneyTeamThisMonth, totalMoneyTeamPrevMonth};
   }
+  onClosePRModal() {
+    console.log("Calling onForceCloseModalByPressBack..........")
+    this.setState({showPRModal: false})
+  }
+  onClickPRModal() {
+    if(this.state.linkUrl && this.state.linkUrl.length > 0) {
+      Linking.canOpenURL(this.state.linkUrl).then(supported => {
+        if (supported) {
+          Linking.openURL(this.state.linkUrl);
+          this.setState({showPRModal: false})
+        } else {
+          console.log("Don't know how to open URI: " + this.state.linkUrl);
+        }
+      });
+    }
+  }
+
   render() {
     console.log("HOMESCreen Render")
     let isUserHasTeam = true;
@@ -192,8 +235,9 @@ class HomeScreen extends React.Component {
             </Button>
           </Right>
         </Header>
-        
+       
         <Content>
+          
           <ScrollView
             style={styles.container}
             contentContainerStyle={styles.contentContainer}>
@@ -299,6 +343,24 @@ class HomeScreen extends React.Component {
               style={{color: AppConstants.COLOR_GREY_MIDDLE, fontSize: 25, width: 25}} />
 
         </View> : null }
+
+        {this.state.showPRModal ?
+          <View style={{position: "absolute", alignItems:"center", justifyContent:"center",
+            left: 0, right: 0, top:0,height: Layout.window.height,
+            backgroundColor: "rgba(80, 80, 80, 0.4)"}}>
+            <View style={{marginTop: -100}}>
+              <TouchableOpacity onPress={() => this.onClosePRModal()} >
+              <Icon type="AntDesign" name="closecircle" 
+                style={{fontSize: 30, color: AppConstants.COLOR_GREY_DARK, alignSelf:"flex-end"}}/>
+              </TouchableOpacity>
+
+              <TouchableWithoutFeedback onPress={() => this.onClickPRModal()} >
+                <Thumbnail square source={{uri: this.state.imgUrl }} 
+                  style={{height: 200, width: 300, marginTop: 5}}/>
+              </TouchableWithoutFeedback>
+            </View>
+          </View> : null}
+
       </Container>
     );
   }
@@ -421,18 +483,19 @@ const styles = StyleSheet.create({
 
   notifyBadge: {
     position:"relative",
+    padding: 0,
     left: -10,
     top: 0,
     // width: 20,
     //width: 20,
-    height: 16,
+    height: 17,
     flexDirection:"column",
     justifyContent: "center"
   },
   notifyBadgeText: {
     position:"relative",
-    top: -1,
-    fontSize: 12,
+    top: -3,
+    fontSize: 11,
   },
 
   blurViewTop: {

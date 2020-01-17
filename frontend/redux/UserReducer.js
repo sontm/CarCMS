@@ -647,10 +647,12 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
         response => {
             console.log("  OK Got Notification:" )
             console.log(response.data)
-            dispatch({
-                type: USER_GET_APPNOTIFICATION,
-                payload: response.data
-            })
+            if (response.data && response.data.length > 0) {
+                dispatch({
+                    type: USER_GET_APPNOTIFICATION,
+                    payload: response.data
+                })
+            }
         },error => {
             console.log("  Error Got Notificationt:")
         })
@@ -659,10 +661,12 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
             response => {
                 console.log("  OK Got Notification GUeest:" )
                 console.log(response.data)
-                dispatch({
-                    type: USER_GET_APPNOTIFICATION,
-                    payload: response.data
-                })
+                if (response.data && response.data.length > 0) {
+                    dispatch({
+                        type: USER_GET_APPNOTIFICATION,
+                        payload: response.data
+                    })
+                }
             },error => {
                 console.log("  Error Got Notificationt GUeest:")
                 console.log(error.response)
@@ -1649,6 +1653,7 @@ export default function(state = initialState, action) {
         }
         // add to notifications list if not exist ID
         let receivedNotis = action.payload;
+        console.log("USER_GET_APPNOTIFICATION:" + receivedNotis.length)
         let newNotis = [...prevNotis];
         let isHaveNew = false;
         let countNotSeenNoti = 0;
@@ -1682,6 +1687,7 @@ export default function(state = initialState, action) {
             countNotSeenNoti: countNotSeenNoti
         }
     case USER_SAW_ALL_APPNOTIFICATION:
+        console.log("USER_SAW_ALL_APPNOTIFICATION")
         let prevNotis2 = state.notifications;
         if (!prevNotis2) {
             prevNotis2 = [];

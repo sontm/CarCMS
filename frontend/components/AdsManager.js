@@ -69,8 +69,8 @@ class AdsManager extends React.Component {
   
   render() {
     console.log("||||Ads Manager|||| Render, count:" + this.props.appData.countOpen)
-    //TODO this for Ads
-    if (true || this.props.appData.isNoAds || this.props.appData.countOpen < 10) {
+    //this.props.appData.isNoAds
+    if (this.props.appData.countOpen < 10) {
         return null
     } else {
         return (
