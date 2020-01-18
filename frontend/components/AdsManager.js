@@ -1,7 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity, ScrollView } from 'react-native';
-
+import { Toast } from 'native-base';
 import { connect } from 'react-redux';
 import {actAppIncreaseOpenCount} from '../redux/AppDataReducer'
 
@@ -51,7 +51,10 @@ export async function checkAndShowInterestial() {
 class AdsManager extends React.Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+        bannerError: false
+    }
+    this.bannerError = this.bannerError.bind(this)
   }
   componentWillUnmount() {
     AdMobInterstitial.removeAllListeners();
@@ -66,6 +69,18 @@ class AdsManager extends React.Component {
         canShowInterestial = true;
     }
   }
+  bannerError(err) {
+    console.log("-------------Banner Error--------------")
+    console.log(err)
+    Toast.show({
+        text: "Ads:"+err,
+        //buttonText: "Okay",
+        position: "top",
+        type: "danger",
+        duration: 4000
+      })
+    this.setState({bannerError: true})
+  }
 
   
   render() {
@@ -75,16 +90,20 @@ class AdsManager extends React.Component {
     if (this.props.appData.countOpen < 10 || this.props.userData.isNoAds) {
         return null
     } else {
-        return (
-            <AdMobBanner
-                style={styles.bottomBanner}
-                bannerSize="fullBanner"
-                adUnitID={AppConstants.ADS_BANNERID}
-                // Test ID, Replace with your-admob-unit-id
-                testDeviceID="EMULATOR"
-                didFailToReceiveAdWithError={this.bannerError}
-            />
-        )
+        if (this.state.bannerError)
+        {
+            return null;
+        } else {
+            return (
+                <AdMobBanner
+                    style={styles.bottomBanner}
+                    bannerSize="banner"
+                    adUnitID={AppConstants.ADS_BANNERID}
+                    testDeviceID="EMULATOR"
+                    onDidFailToReceiveAdWithError={this.bannerError}
+                />
+            )
+        }
     }
   }
 }

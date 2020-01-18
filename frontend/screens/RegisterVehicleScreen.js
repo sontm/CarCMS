@@ -41,6 +41,7 @@ class RegisterVehicleScreen extends React.Component {
             // Edit Information
             for (let i = 0; i < this.props.userData.vehicleList.length; i++) {
                 if (this.props.userData.vehicleList[i].id == AppConstants.CURRENT_VEHICLE_ID) {
+                    this.isEditting = true;
                     this.setState({
                         id: AppConstants.CURRENT_VEHICLE_ID,
                         brand:this.props.userData.vehicleList[i].brand,
@@ -208,17 +209,20 @@ class RegisterVehicleScreen extends React.Component {
                                 <Label>{AppLocales.t("NEW_CAR_TYPE")}</Label>
                             </View>
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
+
+                            {(!this.isEditting||(this.isEditting && this.state.type == "car")) ? 
                             <TouchableOpacity style={{flexDirection: "row"}}>
                                 <CheckBox checked={this.state.type == "car"} 
-                                    onPress={() =>this.setState({type: "car"})}/>
-                                <Text onPress={() =>this.setState({type: "car"})}>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
-                            </TouchableOpacity>
+                                    onPress={() =>!this.isEditting ? this.setState({type: "car"}) : {}}/>
+                                <Text onPress={() =>!this.isEditting ? this.setState({type: "car"}) : {}}>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
+                            </TouchableOpacity> : null}
 
+                            {(!this.isEditting||(this.isEditting && this.state.type == "bike")) ? 
                             <TouchableOpacity  style={{flexDirection: "row"}}>
                                 <CheckBox style={{marginLeft: 30}} checked={this.state.type == "bike"} 
-                                    onPress={() =>this.setState({type: "bike"})}/>
-                                <Text onPress={() =>this.setState({type: "bike"})}>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
-                            </TouchableOpacity>
+                                    onPress={() =>!this.isEditting ? this.setState({type: "bike"}) : {}}/>
+                                <Text onPress={() =>!this.isEditting ? this.setState({type: "bike"}) : {}}>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
+                            </TouchableOpacity> : null}
                             </View>
                         </Item>
                     </View>

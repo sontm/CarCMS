@@ -126,7 +126,7 @@ class RegisterUserScreen extends React.Component {
                             />
                             <TouchableOpacity 
                             onPress={() => this.setState({isShowPwd: !this.state.isShowPwd})}>
-                            <Icon name={this.state.isShowPwd ? "eye-off" : "eye"} />
+                            <Icon name={this.state.isShowPwd ? "eye-off" : "eye"} style={{color:AppConstants.COLOR_GREY_MIDDLE}}/>
                             </TouchableOpacity>
                         </Item>
                         </Item>

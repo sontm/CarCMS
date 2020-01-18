@@ -1,7 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
 import React from 'react';
-import { ActivityIndicator, Spinner, Clipboard, Modal} from 'react-native';
+import { ActivityIndicator, Linking, Clipboard, Modal} from 'react-native';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Thumbnail, Toast, Item, Label, Input } from 'native-base';
@@ -457,6 +457,15 @@ class SettingsScreen extends React.Component {
     }
   }
 
+  onClickPrivacyPolicy() {
+    Linking.canOpenURL("https://yamastack.com/quanlyxe/PrivacyPolicy").then(supported => {
+      if (supported) {
+        Linking.openURL("https://yamastack.com/quanlyxe/PrivacyPolicy");
+      } else {
+        console.log("Don't know how to open URI: " + "https://yamastack.com/quanlyxe/PrivacyPolicy");
+      }
+    });
+  }
   render() {
     // NetInfo.fetch().then(state => {
     //   console.log("Connection type", state.type); // wifi...
@@ -593,7 +602,7 @@ class SettingsScreen extends React.Component {
                     />
                     <TouchableOpacity 
                       onPress={() => this.setState({isShowPwd: !this.state.isShowPwd})}>
-                      <Icon name={this.state.isShowPwd ? "eye-off" : "eye"} />
+                      <Icon name={this.state.isShowPwd ? "eye-off" : "eye"} style={{color:AppConstants.COLOR_GREY_MIDDLE}}/>
                     </TouchableOpacity>
                   </Item>
               </View>
@@ -633,6 +642,18 @@ class SettingsScreen extends React.Component {
                   <Text style={{...styles.textNormal, color: "white"}}>{AppLocales.t("SETTING_LBL_LOGIN_FB")}</Text>
                 </Button>
               </View>
+
+              <View style={{marginTop: 4, alignSelf:"center", flexDirection:"row", alignItems:"center", 
+                justifyContent:"center", flexWrap:"wrap"}}>
+                <Text style={{fontSize: 12, fontStyle: "italic"}}>
+                  {AppLocales.t("SETTING_LBL_LOGIN_DESC_AGREE")}</Text>
+                <TouchableOpacity 
+                  onPress={() => this.onClickPrivacyPolicy()}>
+                  <Text style={{fontSize: 13, color: AppConstants.COLOR_PICKER_TEXT}}>
+                    {AppLocales.t("SETTING_LBL_LOGIN_DESC_AGREE_TERM")}</Text>
+                </TouchableOpacity>
+              </View>
+              
             </View>
             )}
             

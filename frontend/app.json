@@ -28,15 +28,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sansan.VehicleCMS",
+      "bundleIdentifier": "host.exp.exponent",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-3940256099942544~1458002511"
       }
     },
     "android": {
-      "package": "com.yamastack.QuanLyXe",
+      "package": "host.exp.exponent",
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-3940256099942544~3347511713"
+        "googleMobileAdsAppId": "ca-app-pub-7157132347657223~8153766505"
       }
     }
   }

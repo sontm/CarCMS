@@ -174,6 +174,8 @@ export default {
     //SETTING_LBL_LOGIN_BTN: "Đăng Nhập",
     SETTING_LBL_LOGIN: "Đăng Nhập",
     SETTING_LBL_LOGIN_DESC: "Hãy Đăng Nhập để Đồng Bộ Dữ Liệu và Quản Lý Nhóm",
+    SETTING_LBL_LOGIN_DESC_AGREE: "Đăng nhập nghĩa là bạn đã đồng ý với ",
+    SETTING_LBL_LOGIN_DESC_AGREE_TERM: "CHÍNH SÁCH BẢO MẬT",
     SETTING_LBL_REGISTER: "Tạo Tài Khoản",
     SETTING_LBL_PWD_FORGOT: "Quên Mật Khẩu",
     SETTING_LBL_PROFILE: "Thông Tin Cá Nhân",

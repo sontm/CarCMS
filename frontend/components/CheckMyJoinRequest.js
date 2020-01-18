@@ -96,6 +96,7 @@ class CheckMyJoinRequest extends React.Component {
                     if (updatedInfo) {
                         let msg = null;
                         let needDownloadTeamData = false;
+                        let needReloadMyJoinRequest = false;
                         let prevRequest = this.props.userData.myJoinRequest;
                         if (updatedInfo.id == prevRequest.id) {
                             if (updatedInfo.status == "requested") {
@@ -112,9 +113,11 @@ class CheckMyJoinRequest extends React.Component {
                                 msg = AppLocales.t("MSG_REQUEST_APPROVED")
                             } else if (updatedInfo.status == "rejected") {
                                 // Rejected, just display message
+                                needReloadMyJoinRequest = true;
                                 msg = AppLocales.t("MSG_REQUEST_REJECTED")
                             } else if (updatedInfo.status == "blocked") {
                                 // Rejected, just display message
+                                needReloadMyJoinRequest = true;
                                 msg = AppLocales.t("MSG_REQUEST_BLOCKED")
                             }
                         }
@@ -127,6 +130,10 @@ class CheckMyJoinRequest extends React.Component {
                                     {
                                       text: 'OK',
                                       onPress: () => {
+                                          if (needReloadMyJoinRequest) {
+                                            this.props.actUserGotMyJoinRequest([])
+                                            this.props.navigation.goBack()
+                                          }
                                           if (needDownloadTeamData) {
                                             // Download Team Here
                                             console.log(" Will Download Team Here")

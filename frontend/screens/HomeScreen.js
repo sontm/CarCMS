@@ -351,7 +351,7 @@ class HomeScreen extends React.Component {
             <View style={{marginTop: -100}}>
               <TouchableOpacity onPress={() => this.onClosePRModal()} >
               <Icon type="AntDesign" name="closecircle" 
-                style={{fontSize: 30, color: AppConstants.COLOR_GREY_DARK, alignSelf:"flex-end"}}/>
+                style={{fontSize: 30, color: AppConstants.COLOR_GREY_DARK, alignSelf:"flex-end", marginRight: 7}}/>
               </TouchableOpacity>
 
               <TouchableWithoutFeedback onPress={() => this.onClickPRModal()} >

@@ -17,11 +17,13 @@ const DATA_BRAND_MODEL = [
   { id: 1,name: "Toyota", type:"car",
       models: [{"id":1,"name":"Alphard"},{"id":2,"name":"Altis"},{"id":3,"name":"Avanza"},{"id":4,"name":"Camry"},{"id":5,"name":"Fortuner"},{"id":6,"name":"Hiace"},{"id":7,"name":"Hilux"},{"id":8,"name":"Innova"},{"id":9,"name":"LandPrado"},{"id":10,"name":"LandCruiser"},{"id":11,"name":"Prado"},{"id":12,"name":"Rush"},{"id":13,"name":"Vios"},{"id":14,"name":"Wigo"},{"id":15,"name":"Yaris"}]},
   { id: 2,name: "Hyundai",  type:"car",
-      models: [{"id":1,"name":"Accent"},{"id":2,"name":"Elantra"},{"id":3,"name":"Genesis"},{"id":4,"name":"i10"},{"id":5,"name":"Kona"},{"id":6,"name":"SantaFe"},{"id":7,"name":"Solati"},{"id":8,"name":"Sonata"},{"id":9,"name":"Starex"},{"id":10,"name":"Tucson"}]},
+      models: [{"id":1,"name":"Accent"},{"id":2,"name":"Elantra"},{"id":3,"name":"Genesis"},{"id":4,"name":"i10"},{"id":5,"name":"Kona"},{"id":6,"name":"SantaFe"},{"id":7,"name":"Solati"},
+      {"id":8,"name":"Sonata"},{"id":9,"name":"Starex"},{"id":10,"name":"Tucson"}  ]},
   { id: 3,name: "Mazda", type:"car", 
       models: [{"id":1,"name":"2"},{"id":2,"name":"3"},{"id":3,"name":"6"},{"id":4,"name":"BT50"},{"id":5,"name":"CX3"},{"id":6,"name":"CX5"},{"id":7,"name":"CX8"},{"id":8,"name":"CX9"},{"id":9,"name":"MX5"}]},
   { id: 4,name: "Kia", type:"car",
-      models: [{"id":1,"name":"Cerato(K3)"},{"id":2,"name":"Morning"},{"id":3,"name":"Optima(K5)"},{"id":4,"name":"Quoris(K9)"},{"id":5,"name":"GrandSedona"},{"id":6,"name":"Rondo"},{"id":7,"name":"Soluto"},{"id":8,"name":"Sorento"}]},
+      models: [{"id":1,"name":"Cerato(K3)"},{"id":2,"name":"Morning"},{"id":3,"name":"Optima(K5)"},{"id":4,"name":"Quoris(K9)"},{"id":5,"name":"GrandSedona"},{"id":6,"name":"Rondo"},
+      {"id":7,"name":"Soluto"},{"id":8,"name":"Sorento"},{"id":9,"name":"Frontier"}  ]},
   { id: 5,name: "Honda",  type:"car",
       models: [{"id":1,"name":"Accord"},{"id":2,"name":"Brio"},{"id":3,"name":"BRV"},{"id":4,"name":"City"},{"id":5,"name":"Civic"},{"id":6,"name":"CRV"},{"id":7,"name":"HRV"},{"id":8,"name":"Jazz"}]},
   { id: 6,name: "Ford",  type:"car",
@@ -46,26 +48,32 @@ const DATA_BRAND_MODEL = [
       {"id":13,"name":"GLA200"},{"id":14,"name":"GLA250"},{"id":16,"name":"GLA45"},{"id":17,"name":"GLC200"},{"id":18,"name":"GLC250"},{"id":19,"name":"GLC300"},{"id":20,"name":"GLC43"}]},
   { id: 15,name: "VINFAST",  type:"car",
       models: [{"id":1,"name":"Fadil"},{"id":2,"name":"LuxA2.0"},{"id":3,"name":"LuxSA2.0"},{"id":4,"name":"LuxV8"}]},
+  { id: 16,name: "Xe Tải", type:"car",
+      models: [
+      {"id":20,"name":"CAMC"},{"id":21,"name":"Changan"},{"id":22,"name":"Chenglong"},{"id":23,"name":"Daewoo"},{"id":24,"name":"DFSK"},{"id":25,"name":"Dongben"},{"id":26,"name":"Dongfeng"},
+      {"id":27,"name":"Fuso"},{"id":28,"name":"Hyundai"},{"id":29,"name":"Hino"},{"id":30,"name":"Isuzu"},{"id":31,"name":"Jac"},{"id":32,"name":"Kenbo"},
+      {"id":33,"name":"Shacman"},{"id":34,"name":"Suzuki"},{"id":35,"name":"Tata"},{"id":36,"name":"Teraco"},{"id":37,"name":"TMT"},{"id":38,"name":"Veam"},
+      {"id":1,"name":"Thaco County"},{"id":2,"name":"Thaco City"},{"id":3,"name":"Thaco Forland"},{"id":4,"name":"Thaco Frontier"},{"id":5,"name":"Thaco Auman"},{"id":6,"name":"Thaco Mobihome"},{"id":7,"name":"Thaco Ollin"},{"id":8,"name":"Thaco Towner"},{"id":9,"name":"Thaco Solati"},{"id":10,"name":"Thaco Universe"}]},
 
 
   // Motorbike
-  { id: 16,name: "Honda", type:"bike",
+  { id: 100,name: "Honda", type:"bike",
       models: [{"id":1,"name":"ADV"},{"id":2,"name":"AirBlade"},{"id":3,"name":"Beat"},{"id":4,"name":"Blade"},
       {"id":5,"name":"Dream"},{"id":6,"name":"Future"},{"id":7,"name":"Genio"},{"id":8,"name":"Lead"},
       {"id":9,"name":"Mokey"},{"id":10,"name":"MSX125"},{"id":11,"name":"PCX"},{"id":12,"name":"Rebel"},{"id":13,"name":"Sonic"},
       {"id":14,"name":"SHMode"},{"id":15,"name":"SH"},{"id":16,"name":"SuperCub"},{"id":17,"name":"Vario"},
       {"id":18,"name":"Vision"},{"id":19,"name":"Wave"},{"id":20,"name":"WinnerX"}]},
-  { id: 17,name: "Yamaha", type:"bike",
+  { id: 101,name: "Yamaha", type:"bike",
       models: [{"id":1,"name":"Acruzo"},{"id":2,"name":"Exciter"},{"id":3,"name":"FreeGo"},{"id":4,"name":"FZ150i"},
       {"id":5,"name":"Janus"},{"id":6,"name":"Jupiter"},{"id":7,"name":"Lattte"},{"id":16,"name":"Luvias"},{"id":8,"name":"MT03"},{"id":9,"name":"NVX"},
       {"id":10,"name":"Grande"},{"id":11,"name":"R15"},{"id":12,"name":"R3"},{"id":13,"name":"Sirius"},{"id":14,"name":"TFX150"}]},
-  { id: 18,name: "Suzuki", type:"bike",
+  { id: 102,name: "Suzuki", type:"bike",
       models: [{"id":1,"name":"Address"},{"id":2,"name":"Axelo"},{"id":3,"name":"GD110"},{"id":4,"name":"GSX150"},
       {"id":5,"name":"GSX-R150"},{"id":6,"name":"GSX-S150"},{"id":7,"name":"Impulse"},{"id":8,"name":"Raider"},
       {"id":9,"name":"Revo"},{"id":10,"name":"Satria"},{"id":11,"name":"SkyDrive"},{"id":12,"name":"Viva"},{"id":13,"name":"X-Bike"}]},
-  { id: 19,name: "Piaggio", type:"bike",
+  { id: 103,name: "Piaggio", type:"bike",
       models: [{"id":1,"name":"Liberty"},{"id":2,"name":"Medley"},{"id":3,"name":" Zip"},{"id":4,"name":"Vespa"}]},
-  { id: 20,name: "SYM", type:"bike",
+  { id: 104,name: "SYM", type:"bike",
       models: [{"id":1,"name":"Abela"},{"id":2,"name":"Amigo"},{"id":3,"name":"Angela"},{"id":4,"name":"AngelEz"},
       {"id":5,"name":"Attila"},{"id":6,"name":"Elegant"},{"id":7,"name":"Elite"},{"id":8,"name":"Elizabeth"},
       {"id":9,"name":"Joyride"},{"id":10,"name":"Fancy"},{"id":11,"name":"Galaxy"},{"id":12,"name":"Husky"},
@@ -263,7 +271,7 @@ module.exports = {
     console.log("App getLatestDataDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-01-01",
+        updatedOn: "2020-01-15",
       }
       res.status(200).send(latestData)
     } else {
@@ -275,7 +283,7 @@ module.exports = {
     console.log("App getLatestAppData")
     if (true || req.user) {
       let appData = {
-        updatedOn: "2020-01-01",
+        updatedOn: "2020-01-15",
         vehicles: DATA_BRAND_MODEL,
         services: DATA_SERVICE_TYPE,
         servicesBike: DATA_SERVICE_TYPE_BIKE,
@@ -291,10 +299,11 @@ module.exports = {
   getFirstModal(req, res) {
     console.log("App getFirstModal")
     if (true || req.user) {
-      let modalInfo = {
-        imgUrl:"https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-        linkUrl:"https://yamastack.com"
-      }
+      // let modalInfo = {
+      //   imgUrl:"https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+      //   linkUrl:"https://yamastack.com"
+      // }
+      let modalInfo = {}
       res.status(200).send(modalInfo)
     } else {
       res.status(501).send({msg: "Require Authentication."})
