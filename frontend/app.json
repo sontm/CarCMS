@@ -34,7 +34,8 @@
       }
     },
     "android": {
-      "package": "host.exp.exponent",
+      "package": "com.sansan.VehicleCMS",
+      "versionCode": 2,
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-7157132347657223~8153766505"
       }
