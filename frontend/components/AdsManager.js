@@ -52,6 +52,7 @@ class AdsManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+        didReceiveAd:false,
         bannerError: false
     }
     this.bannerError = this.bannerError.bind(this)
@@ -82,6 +83,10 @@ class AdsManager extends React.Component {
     this.setState({bannerError: true})
   }
 
+  didReceiveAd() {
+    this.setState({didReceiveAd: true})
+  }
+
   
   render() {
     console.log("||||Ads Manager|||| Render, count:" + this.props.appData.countOpen)
@@ -93,7 +98,8 @@ class AdsManager extends React.Component {
         if (this.state.bannerError)
         {
             return null;
-        } else {
+        } else if (this.state.didReceiveAd)
+        {
             return (
                 <AdMobBanner
                     style={styles.bottomBanner}
@@ -101,7 +107,21 @@ class AdsManager extends React.Component {
                     adUnitID={AppConstants.ADS_BANNERID}
                     testDeviceID="EMULATOR"
                     onDidFailToReceiveAdWithError={this.bannerError}
+                    onAdViewDidReceiveAd = {this.didReceiveAd}
                 />
+            )
+        } else {
+            return (
+                <View style={{position: "absolute", bottom: AppConstants.DEFAULT_BOTTOM_NAV_HEIGHT, left: 0, right: 0}}>
+                    <AdMobBanner
+                        style={styles.bottomBanner}
+                        bannerSize="banner"
+                        adUnitID={AppConstants.ADS_BANNERID}
+                        testDeviceID="EMULATOR"
+                        onDidFailToReceiveAdWithError={this.bannerError}
+                        onAdViewDidReceiveAd = {this.didReceiveAd}
+                    />
+                </View>
             )
         }
     }

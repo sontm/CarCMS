@@ -20,7 +20,11 @@ import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer
 import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK, actUserForCloseModal, 
   actUserCreateTeamOK} from '../redux/UserReducer'
 import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout, actTeamLeaveTeamOK} from '../redux/TeamReducer'
+
 import * as Google from 'expo-google-app-auth'
+//This is for Standalone apk app
+import { GoogleSignIn } from 'expo-google-sign-in';
+
 import * as Facebook from 'expo-facebook';
 import NetInfo from "@react-native-community/netinfo";
 
@@ -168,6 +172,10 @@ class SettingsScreen extends React.Component {
       ],
       {cancelable: true})
   }
+
+  signOutAsync = async () => {
+    await GoogleSignIn.signOutAsync();
+  };
   //Reponse Object:
   // "accessToken": "CNyi5FoAg0AGniBwVr__RiKV9_i8Qdqy8Y3hxydYcW-M63g",
   // "idToken": "eyJhnFGldJGEQ",
@@ -182,23 +190,111 @@ class SettingsScreen extends React.Component {
   //   "photoUrl": "xxxw",
   // },
   async doLoginGoogle() {
+    console.log("doLoginGoogle...")
+    const netState = await NetInfo.fetch();
+    if (!netState.isConnected) {
+      Toast.show({
+        text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
+        //buttonText: "Okay",
+        position: "top",
+        type: "danger"
+      })
+      return;
+    }
+
+
+    if (true) {
+    // Below is on Android Standlone APK 
     try {
-      console.log("doLoginGoogle...")
-      const netState = await NetInfo.fetch();
-      if (!netState.isConnected) {
-        Toast.show({
-          text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
-          //buttonText: "Okay",
-          position: "top",
-          type: "danger"
-        })
-        return;
-      }
+      await GoogleSignIn.initAsync({
+        // Android No Need this ID because got from google services
+        clientId: '<YOUR_IOS_CLIENT_ID>',
+      });
+      console.log("   Done initAsync")
       
+      await GoogleSignIn.askForPlayServicesAsync();
+      const { type, user } = await GoogleSignIn.signInAsync();
+      console.log("   Done signInAsync, type:" + type)
+      console.log(user);
+
+      if (type === 'success') {
+        console.log("    Login Google OK Standalone")
+        const result = await GoogleSignIn.signInSilentlyAsync();
+        console.log("   Done signInSilentlyAsync")
+        console.log(result);
+
+
+        Backend.loginGoogle({
+          idToken: result.idToken
+        },
+        response => {
+          console.log("Backend Return OK")
+          console.log(response.data)
+          if (this.props.userData.vehicleList.length > 0) {
+            Alert.alert(
+              AppLocales.t("GENERAL_WARN"),
+              AppLocales.t("MSG_CONFIRM_MERGEDATA_BEFORELOGIN"),
+              [
+                  {
+                    text: AppLocales.t("GENERAL_NO"),
+                    onPress: () => {
+                      // User dont want to Merge data
+                      this.props.actUserLoginOK(response.data)
+                    },
+                  },
+                  {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
+                    onPress: () => {
+                      // User want to Merge data
+                      this.setState({
+                        isMergeDataBeforeLogin: true
+                      })
+                      this.props.actUserLoginOK(response.data)
+                    }},
+              ],
+              {cancelable: true}
+            )
+          } else {
+            this.props.actUserLoginOK(response.data)
+          }
+        },
+        error => {
+          console.log(JSON.stringify(error))
+          Toast.show({
+            text: AppLocales.t("TOAST_LOGIN_FAILED"),
+            //buttonText: "Okay",
+            position: "top",
+            type: "danger"
+          })
+        })
+      }
+
+    } catch (e) {
+      console.log("ERROR Google Login Standalone")
+      console.log(e)
+      if (e.message) {
+        console.log(e.message)
+      }
+
+      Toast.show({
+        text: AppLocales.t("TOAST_LOGIN_FAILED"),
+        //buttonText: "Okay",
+        position: "top",
+        type: "danger"
+      })
+    }
+
+  } else {
+    // Below is on Expo Client only
+
+    try {
       const result = await Google.logInAsync({
-        // behavior: "web",
-        androidClientId: "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",
+        behavior: "web",
+        androidClientId: "654590019389-4bi3qc9kl12c21q2fpql2tt1obqgc3bf.apps.googleusercontent.com",
+        androidStandaloneAppClientId: "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",
+
         iosClientId: "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com",
+        iosStandaloneAppClientId: "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com",
+
         scopes: ["profile", "email"]
       })
       console.log(result)
@@ -261,6 +357,7 @@ class SettingsScreen extends React.Component {
         position: "top",
         type: "danger"
       })
+    }
     }
   }
   handleLogin() {
@@ -912,6 +1009,14 @@ class SettingsScreen extends React.Component {
             </View>
             ) : null }
             
+            <View style={styles.rowContainerNoBorder}>
+              <View style={styles.rowRightIcon}>
+              <Text style={{fontStyle:"italic", fontSize: 13, color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
+                {"Phiên Bản " + AppConstants.DEFAULT_VERSION}
+              </Text>
+              </View>
+            </View>
+
         </View>
         </Content>
         </Container>

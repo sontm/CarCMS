@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { View, StyleSheet, TextInput, AsyncStorage, Switch } from 'react-native';
+import { View, StyleSheet, Platform, Switch, KeyboardAvoidingView } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
     Item, Picker, Button, Text, Input, Label, H3, Tabs, Tab, TabHeading} from 'native-base';
 import {HeaderText, TypoH4} from '../../components/StyledText'
@@ -8,6 +8,7 @@ import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
 import {actSettingSetMaintainType} from '../../redux/UserReducer'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class ServiceMaintainSettingScreen extends React.Component {
     constructor(props) {
@@ -95,6 +96,10 @@ class ServiceMaintainSettingScreen extends React.Component {
             <Tab heading={AppLocales.t("GENERAL_CAR")}
                     tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                     activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                <KeyboardAvoidingView
+                    style={{flex: 1, justifyContent: 'center'}}
+                    behavior={Platform.OS === "ios" ? 'padding' : null}
+                >
                 <Content>
                 <View style={styles.formContainer}>
                     <Text style={styles.noteRow}>
@@ -239,6 +244,7 @@ class ServiceMaintainSettingScreen extends React.Component {
 
                 </View>
                 </Content>
+                </KeyboardAvoidingView>
                 </Tab>
 
 
@@ -251,6 +257,10 @@ class ServiceMaintainSettingScreen extends React.Component {
                 <Tab heading={AppLocales.t("GENERAL_BIKE")}
                         tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                <KeyboardAvoidingView
+                    style={{flex: 1, justifyContent: 'center'}}
+                    behavior={Platform.OS === "ios" ? 'padding' : null}
+                >
                 <Content>
                 <View style={styles.formContainer}>
                 <Text style={styles.noteRow}>
@@ -365,6 +375,7 @@ class ServiceMaintainSettingScreen extends React.Component {
                     
                 </View>
                 </Content>
+                </KeyboardAvoidingView>
                 </Tab>
             </Tabs>
             <View style={styles.rowButton}>

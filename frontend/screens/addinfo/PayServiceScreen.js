@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Alert, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, 
     Picker, Button, Text, Input,Label, DatePicker, CheckBox, ListItem, Toast } from 'native-base';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import {HeaderText} from '../../components/StyledText'
 import AppConstants from '../../constants/AppConstants'
@@ -373,6 +374,10 @@ class PayServiceScreen extends React.Component {
         
         return (
             <Container>
+            <KeyboardAvoidingView
+                style={{flex: 1, justifyContent: 'center'}}
+                behavior={Platform.OS === "ios" ? 'padding' : null}
+            >
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainerCarSelect}>
@@ -562,6 +567,7 @@ class PayServiceScreen extends React.Component {
                     </View>
                 </View>
             </Content>
+            </KeyboardAvoidingView>
             </Container>
         );
     }
