@@ -23,7 +23,7 @@ const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROI
 const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTERESTIALID_ANDROID;
 
 export default {
-    DEFAULT_VERSION: "0.2.0",
+    DEFAULT_VERSION: "0.2.1",
     IS_DEBUG_MODE: true,
     // TODO Enable these values
     SETTING_KM_SHOWWARN: 100,

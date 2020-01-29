@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "654590019389-kpvccej3ahoin5tm0l62tmsj23q2bb48.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sansan.VehicleCMS",
+            "certificate_hash": "50aed38392f0a3ffc0c9e60763897010affb881f"
+          }
+        },
+        {
           "client_id": "654590019389-ulnlrsteuoramtlk82l5h19fsr88o6o5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
