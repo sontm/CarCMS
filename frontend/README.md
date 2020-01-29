@@ -116,4 +116,6 @@ Theo Doi So Bao Duong
 Quan Ly Chi Tieu Xe trong 1 Nhom
 
 
-
+    "androidStatusBar": {
+      "backgroundColor": "#1565c0"
+    },

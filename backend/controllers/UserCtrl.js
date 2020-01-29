@@ -183,7 +183,12 @@ module.exports = {
         idToken: req.body.idToken,
         audience: [
           "654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.apps.googleusercontent.com",  // Android Specify the CLIENT_ID of the app that accesses the backend
-          "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com" // iOS
+          "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com", // iOS
+
+          // Got from google-services.json
+          "654590019389-ulnlrsteuoramtlk82l5h19fsr88o6o5.apps.googleusercontent.com",
+          "654590019389-v756q9jmg4ueskmjgi4cj79ltp03r187.apps.googleusercontent.com",
+          "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com",
         ]
         // Or, if multiple clients access the backend:
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]

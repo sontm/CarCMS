@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, 
     Button, Text, Input, Label, CheckBox, Toast } from 'native-base';
 
@@ -101,6 +101,8 @@ class CreateVehicleModel extends React.Component {
     render() {
         return (
             <Container>
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+                behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
@@ -172,6 +174,7 @@ class CreateVehicleModel extends React.Component {
 
                 </View>
             </Content>
+            </KeyboardAvoidingView>
             </Container>
         );
     }

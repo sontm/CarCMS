@@ -84,7 +84,7 @@ class App extends React.Component {
           {Platform.OS == "ios" ? 
             <MyStatusBar backgroundColor={AppConstants.COLOR_HEADER_BG} barStyle="light-content" /> : 
             <StatusBar barStyle="light-content"/>}
-          {/* <View style={{ backgroundColor: AppConstants.COLOR_HEADER_BG , height: StatusBar.currentHeight }} /> */}
+          <View style={{ backgroundColor: AppConstants.COLOR_HEADER_BG , height: StatusBar.currentHeight }} />
           <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <Root>

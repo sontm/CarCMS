@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
-    minHeight: Layout.window.height
+    minHeight: Layout.window.height - 50
   },
   contentContainer: {
   },

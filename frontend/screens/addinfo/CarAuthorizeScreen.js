@@ -12,7 +12,6 @@ import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
 import Layout from '../../constants/Layout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class CarAuthorizeScreen extends React.Component {
     constructor(props) {
@@ -174,11 +173,8 @@ class CarAuthorizeScreen extends React.Component {
         }
         return (
             <Container>
-            <KeyboardAvoidingView
-                style={{flex: 1, justifyContent: 'center'}}
-                keyboardVerticalOffset={100}
-                behavior={Platform.OS === "ios" ? 'padding' : 'height'}
-            >
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+                behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainerCarSelect}>

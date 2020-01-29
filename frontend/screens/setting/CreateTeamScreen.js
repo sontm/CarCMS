@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, Clipboard } from 'react-native';
+import { View, StyleSheet, TextInput, Clipboard, Platform, KeyboardAvoidingView } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, 
     Item, Picker, Button, Text, Input,Label, Toast, CheckBox } from 'native-base';
 
@@ -141,6 +141,8 @@ class CreateTeamScreen extends React.Component {
         let logoFromFile = require('../../assets/images/icon.png');
         return (
             <Container>
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+                behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
@@ -235,6 +237,7 @@ class CreateTeamScreen extends React.Component {
 
                 </View>
             </Content>
+            </KeyboardAvoidingView>
             </Container>
         );
     }

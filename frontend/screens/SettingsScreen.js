@@ -23,7 +23,8 @@ import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout, actTea
 
 import * as Google from 'expo-google-app-auth'
 //This is for Standalone apk app
-import { GoogleSignIn } from 'expo-google-sign-in';
+//import { GoogleSignIn } from 'expo-google-sign-in';
+import * as GoogleSignIn from 'expo-google-sign-in';
 
 import * as Facebook from 'expo-facebook';
 import NetInfo from "@react-native-community/netinfo";
@@ -225,7 +226,7 @@ class SettingsScreen extends React.Component {
 
 
         Backend.loginGoogle({
-          idToken: result.idToken
+          idToken: result.auth.idToken
         },
         response => {
           console.log("Backend Return OK")
@@ -1033,7 +1034,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingBottom: 60,
+    paddingBottom: 30,
   },
 
   userInfoContainer: {

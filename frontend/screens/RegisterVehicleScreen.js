@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TextInput, AsyncStorage } from 'react-native';
+import { View, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import AppConstants from '../constants/AppConstants'
 import {Container, Header, Title, Left, Icon, Right, Button, Body, Content,Text, 
@@ -201,6 +201,8 @@ class RegisterVehicleScreen extends React.Component {
         console.log(this.props.userData.customVehicleModel)
         return (
             <Container>
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+                behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainer}>
@@ -341,7 +343,8 @@ class RegisterVehicleScreen extends React.Component {
                     </View>
                      */}
                 </View>
-                </Content>
+            </Content>
+            </KeyboardAvoidingView>
             </Container>
         );
     }

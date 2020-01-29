@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import { View, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
 import { Container, Header, Left, Body, Right, Title, Content, Form, Icon, Item, Picker, Button, Text, Input,Label, DatePicker, Toast } from 'native-base';
 
 import {HeaderText} from '../../components/StyledText'
@@ -10,7 +10,6 @@ import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserRed
 import AppConstants from '../../constants/AppConstants';
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class PayExpenseScreen extends React.Component {
     constructor(props) {
@@ -141,7 +140,8 @@ class PayExpenseScreen extends React.Component {
         console.log(this.state)
         return (
             <Container>
-            <KeyboardAwareScrollView enableOnAndroid={true} enableAutomaticScroll={(Platform.OS === 'ios')}>
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+                behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainerCarSelect}>
@@ -250,7 +250,7 @@ class PayExpenseScreen extends React.Component {
 
                 </View>
             </Content>
-            </KeyboardAwareScrollView>
+            </KeyboardAvoidingView>
             </Container>
         );
     }

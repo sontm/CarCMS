@@ -10,7 +10,6 @@ import {actVehicleAddFillItem, actVehicleEditFillItem} from '../../redux/UserRed
 import apputils from '../../constants/AppUtils';
 import AppLocales from '../../constants/i18n';
 import Layout from '../../constants/Layout';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class FillGasScreen extends React.Component {
     constructor(props) {
@@ -258,11 +257,8 @@ class FillGasScreen extends React.Component {
         console.log("000000000 this.isEditing && this.initialEditKm:" + this.isEditing +","+ this.initialEditKm)
         return (
             <Container>
-            <KeyboardAvoidingView
-                style={{flex: 1, justifyContent: 'center'}}
-                keyboardVerticalOffset={0}
-                behavior={Platform.OS === "ios" ? 'padding' : 'height'}
-            >
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+                behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
             <View style={styles.formContainer}>
                 <View style={styles.rowContainerCarSelect}>

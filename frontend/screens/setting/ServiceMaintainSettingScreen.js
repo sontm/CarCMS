@@ -8,7 +8,6 @@ import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
 import {actSettingSetMaintainType} from '../../redux/UserReducer'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class ServiceMaintainSettingScreen extends React.Component {
     constructor(props) {
@@ -96,10 +95,8 @@ class ServiceMaintainSettingScreen extends React.Component {
             <Tab heading={AppLocales.t("GENERAL_CAR")}
                     tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                     activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
-                <KeyboardAvoidingView
-                    style={{flex: 1, justifyContent: 'center'}}
-                    behavior={Platform.OS === "ios" ? 'padding' : null}
-                >
+                <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={140} 
+                behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
                 <Content>
                 <View style={styles.formContainer}>
                     <Text style={styles.noteRow}>
@@ -257,10 +254,8 @@ class ServiceMaintainSettingScreen extends React.Component {
                 <Tab heading={AppLocales.t("GENERAL_BIKE")}
                         tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
                         activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
-                <KeyboardAvoidingView
-                    style={{flex: 1, justifyContent: 'center'}}
-                    behavior={Platform.OS === "ios" ? 'padding' : null}
-                >
+                <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={140} 
+                    behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
                 <Content>
                 <View style={styles.formContainer}>
                 <Text style={styles.noteRow}>
@@ -412,7 +407,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: AppConstants.DEFAULT_FORM_PADDING_HORIZON,
     backgroundColor: '#fff',
     flexDirection: "column",
-    paddingBottom: 80
+    paddingBottom: 100
   },
   rowContainer: {
     //flexDirection: "row",
