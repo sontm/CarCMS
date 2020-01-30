@@ -13,12 +13,12 @@ passport.use(new LocalStrategy({
         passwordField: 'password'
     }, 
     function (email, password, done) {
-        console.log("  AppPassport Local strategy called, useremail:" + email + ",pwd:" + password)
+        AppUtil.CONSOLE_LOG("  AppPassport Local strategy called, useremail:" + email + ",pwd:" + password)
         return dbuser
         .findOne({email:email})
         .then(result => {
             if (result) {
-                console.log("    AppPassport Local Found User, checking PWD, raw:" + password + ",db:" + result.password)
+                AppUtil.CONSOLE_LOG("    AppPassport Local Found User, checking PWD, raw:" + password + ",db:" + result.password)
                 if ((!result.password && password) || (result.password && !password)) {
                     // One of password is NULL, FAIL
                     return done(null, false, {message: 'AUTH Incorrect password'});
@@ -27,7 +27,7 @@ passport.use(new LocalStrategy({
                     bcrypt.compare(password, result.password)
                     .then(isMatch => {
                         if (isMatch) {
-                            console.log("      AppPassport Local PWD MATCHED")
+                            AppUtil.CONSOLE_LOG("      AppPassport Local PWD MATCHED")
                             // Match Username and Password
                             if (result) {
                                 let user = AppUtil.createUserFromRecordForJWT(result)
@@ -37,7 +37,7 @@ passport.use(new LocalStrategy({
                                 return done(null, false, {message: 'AUTH Incorrect Local PWD'});
                             }
                         } else {
-                            console.log("      AppPassport Local PWD NOT MATCH")
+                            AppUtil.CONSOLE_LOG("      AppPassport Local PWD NOT MATCH")
                             // Not Match
                             return done(null, false, {message: 'AUTH Incorrect user And password'});
                         }
@@ -48,7 +48,7 @@ passport.use(new LocalStrategy({
             }
         })
         .catch(error => {
-            console.log(error)
+            AppUtil.CONSOLE_LOG(error)
             return done(null, false, {message: 'AUTH Incorrect user or password.'});
         });
     }
@@ -61,8 +61,8 @@ passport.use(new JWTStrategy({
         passReqToCallback: true, // Will pass req as first param
     },
     function (req, jwtPayload, done) {
-        console.log("  AppPassport JWT strategy jwtPayload:")
-        console.log(jwtPayload)
+        AppUtil.CONSOLE_LOG("  AppPassport JWT strategy jwtPayload:")
+        AppUtil.CONSOLE_LOG(jwtPayload)
         return done(null, jwtPayload);
 
         //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.

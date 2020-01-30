@@ -133,7 +133,7 @@ const startServer = async () => {
     dbName = process.env.DB_NAME_DEV;
   }
 
-  console.log ("Use Mongo DB:" + dbName)
+  console.log ("Use MongoDB:" + dbName)
   await mongoose.connect("mongodb://127.0.0.1:27017/" + dbName, {
     useNewUrlParser: true, useUnifiedTopology:true
   });
@@ -141,7 +141,7 @@ const startServer = async () => {
   // listen for requests
   const port = process.env.PORT || 3000
   app.listen(port, () => {
-      console.log("Vehicle Server is listening on port "+ port);
+      console.log("QLX Server is listening on port "+ port);
   });
 }
 

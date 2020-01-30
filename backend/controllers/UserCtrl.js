@@ -15,7 +15,7 @@ const client = new OAuth2Client("654590019389-5p2kn1c423p3mav7a07gsg8e7an12rc1.a
 module.exports = {
   // TODO for validate Email
   async registerLocalUser(req, res, next) {
-    console.log("[UserCtrl] Register, email, password:" + req.body.password + "," + req.body.email)
+    apputil.CONSOLE_LOG("[UserCtrl] Register, email, password:" + req.body.password + "," + req.body.email)
     let currentUser = await dbuser.findOne({email: req.body.email});
     // if There is a User associated, NG
     if (currentUser) {
@@ -29,7 +29,7 @@ module.exports = {
       if(err) {
         return res.status(400).send(err);
       }
-      console.log("  Register user, NewHashed:" + newHashed)
+      apputil.CONSOLE_LOG("  Register user, NewHashed:" + newHashed)
       let userInfo = {};
       userInfo.email = req.body.email;
       userInfo.password = newHashed;
@@ -50,12 +50,12 @@ module.exports = {
   },
 
   login(req, res, next) {
-    console.log("[UserCtrl], Login:")
+    apputil.CONSOLE_LOG("[UserCtrl], Login:")
     // Not use session, use JWT
     passport.authenticate('local', {session: false}, (err, user, info) => {
         if (err || !user) {
-            console.log("    Auth, Login Failed, err:")
-            console.log(user)
+            apputil.CONSOLE_LOG("    Auth, Login Failed, err:")
+            apputil.CONSOLE_LOG(user)
             return res.status(400).json({
                 message: 'Invalid Email or Password!',
                 user   : user
@@ -65,14 +65,14 @@ module.exports = {
         // Auth OK
         req.login(user, {session: false}, (err) => {
             if (err) {
-                console.log("      Auth, ReqLogin failed:")
+                apputil.CONSOLE_LOG("      Auth, ReqLogin failed:")
                 return res.status(401).send(err);
             }
-            console.log("      Auth, ReqLogin OK, UserInfo:")
-            console.log(user)
+            apputil.CONSOLE_LOG("      Auth, ReqLogin OK, UserInfo:")
+            apputil.CONSOLE_LOG(user)
             // generate a signed son web token with the contents of user object and return it in the response
             const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
-            console.log("      Auth, ReqLogin OK, token:" + token)
+            apputil.CONSOLE_LOG("      Auth, ReqLogin OK, token:" + token)
 
             // Return Team Info also
             dbteam.findById(user.teamId,function(err, teamInfo) {
@@ -89,8 +89,8 @@ module.exports = {
   },
   //body 
   async updateUserProfile(req, res) {
-    console.log("updateUserProfile of USERID:" + req.user.id)
-    console.log(req.body)
+    apputil.CONSOLE_LOG("updateUserProfile of USERID:" + req.user.id)
+    apputil.CONSOLE_LOG(req.body)
     // Find current User record contain Vehicle data
     const currentUser = await new Promise((resolve, reject) => {
       dbuser.findById(req.user.id, function(err, doc){
@@ -98,7 +98,7 @@ module.exports = {
       });
     });
     
-    //console.log(currentUser)
+    //apputil.CONSOLE_LOG(currentUser)
     if (currentUser) {
       if (req.body.oldPwd) {
         if (req.body.oldPwd != currentUser.passwordR) {
@@ -107,7 +107,7 @@ module.exports = {
           return;
         }
         const newHashed = await bcrypt.hash(req.body.newPwd, 10)
-        console.log("   UNewHashed:" + newHashed)
+        apputil.CONSOLE_LOG("   UNewHashed:" + newHashed)
         currentUser.passwordR = req.body.newPwd;
         currentUser.password = newHashed;
       }
@@ -121,7 +121,7 @@ module.exports = {
       });
       let user = apputil.createUserFromRecordForJWT(result)
       const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
-      console.log("      New Token:" + token)
+      apputil.CONSOLE_LOG("      New Token:" + token)
 
       res.status(200).send({
         fullName: result.fullName,
@@ -134,7 +134,7 @@ module.exports = {
 
   //body . Req from Website
   async resetPassword(req, res) {
-    console.log("resetPassword of USERID:")
+    apputil.CONSOLE_LOG("resetPassword of USERID:")
     if (req.body.userId && req.body.token && req.body.password) {
       // Find current User record contain Vehicle data
       const theRecord = await dbpwdrecovery.findOne({
@@ -177,8 +177,8 @@ module.exports = {
 
   async loginGoogle(req, res, next) {
     try {
-      console.log("loginGoogle------------")
-      console.log(req.body)
+      apputil.CONSOLE_LOG("loginGoogle------------")
+      apputil.CONSOLE_LOG(req.body)
       const ticket = await client.verifyIdToken({
         idToken: req.body.idToken,
         audience: [
@@ -195,8 +195,8 @@ module.exports = {
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
       });
       const payload = ticket.getPayload();
-      console.log("Verity Google TOken OK")
-      //console.log(payload)
+      apputil.CONSOLE_LOG("Verity Google TOken OK")
+      //apputil.CONSOLE_LOG(payload)
       // Till here, aud, exp, iss is OK
       // { iss: 'https://accounts.google.com',
       // azp:
@@ -234,8 +234,8 @@ module.exports = {
             err ? reject(err) : resolve(doc);
           });
         });
-        console.log("Found User++++++++++++++")
-        console.log(theUser)
+        apputil.CONSOLE_LOG("Found User++++++++++++++")
+        apputil.CONSOLE_LOG(theUser)
         if (!theUser) {
           // This is First time Create
           var user = apputil.createUserFromRecordForJWT(item);
@@ -245,9 +245,9 @@ module.exports = {
         
         
         const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
-        console.log("      Auth, Google LOgin OK, token:" + token)
-        console.log("userJwt-----")
-        console.log(user)
+        apputil.CONSOLE_LOG("      Auth, Google LOgin OK, token:" + token)
+        apputil.CONSOLE_LOG("userJwt-----")
+        apputil.CONSOLE_LOG(user)
         // Return Team Info also
         dbteam.findById(user.teamId,function(err, teamInfo) {
           if (err) {
@@ -260,13 +260,13 @@ module.exports = {
         });
 
       } catch (err) {
-        console.log("create/find Google User Failed")
-        console.log(err)
+        apputil.CONSOLE_LOG("create/find Google User Failed")
+        apputil.CONSOLE_LOG(err)
         res.status(500).send({msg: "Google Login Error"})
       }
     } catch (error) {
-      console.log("Cannot Verify Google idToken")
-      console.log(error)
+      apputil.CONSOLE_LOG("Cannot Verify Google idToken")
+      apputil.CONSOLE_LOG(error)
       res.status(500).send({msg: "Google Login Error"})
     }
   },
@@ -274,28 +274,28 @@ module.exports = {
 
   async loginFacebook(req, res, next) {
     try {
-      console.log("loginFacebook------------")
-      console.log(req.body)
+      apputil.CONSOLE_LOG("loginFacebook------------")
+      apputil.CONSOLE_LOG(req.body)
       let userToken = req.body.accessToken;
       const appToken = await new Promise((resolve, reject) => {
         axios.get('https://graph.facebook.com/oauth/access_token?client_id=' 
           + '704967129987939' + '&client_secret=' 
           + 'a198785420e516c70853f12886b7bdca' + '&grant_type=client_credentials')
           .then(response => {
-            console.log(response.data.access_token);
+            apputil.CONSOLE_LOG(response.data.access_token);
             resolve(response.data.access_token)
           })
           .catch(error => {
-            console.log(error);
+            apputil.CONSOLE_LOG(error);
             reject(err)
           });
       })
-      console.log(" appToken: " + appToken)
+      apputil.CONSOLE_LOG(" appToken: " + appToken)
 
       const responseData = await new Promise((resolve, reject) => {
         axios.get('https://graph.facebook.com/debug_token?input_token=' + userToken + '&access_token=' + appToken)
           .then(response => {
-            console.log(response.data)
+            apputil.CONSOLE_LOG(response.data)
             // It will return
             // "data": {
             //   "app_id": "YYY",
@@ -317,11 +317,11 @@ module.exports = {
             resolve(response.data.data)
           })
           .catch(error => {
-            console.log(error);
+            apputil.CONSOLE_LOG(error);
             reject(error)
           });
       })
-      console.log("  AppID: " + responseData.app_id + ",UserID:" + responseData.user_id)
+      apputil.CONSOLE_LOG("  AppID: " + responseData.app_id + ",UserID:" + responseData.user_id)
       if (responseData.app_id == "704967129987939") {
         let userProfile = req.body.userProfile;
         if (userProfile.id == responseData.user_id) {
@@ -344,8 +344,8 @@ module.exports = {
                 err ? reject(err) : resolve(doc);
               });
             });
-            console.log("Found User++++++++++++++")
-            console.log(theUser)
+            apputil.CONSOLE_LOG("Found User++++++++++++++")
+            apputil.CONSOLE_LOG(theUser)
             if (!theUser) {
               // This is First time Create
               var user = apputil.createUserFromRecordForJWT(item);
@@ -354,9 +354,9 @@ module.exports = {
             }
             
             const token = jwt.sign(user, 'your_jwt_secret', { expiresIn: '30d' });
-            console.log("      Auth, Facebook LOgin OK, token:" + token)
-            console.log("userJwt-----")
-            console.log(user)
+            apputil.CONSOLE_LOG("      Auth, Facebook LOgin OK, token:" + token)
+            apputil.CONSOLE_LOG("userJwt-----")
+            apputil.CONSOLE_LOG(user)
             // Return Team Info also
             dbteam.findById(user.teamId,function(err, teamInfo) {
               if (err) {
@@ -369,31 +369,31 @@ module.exports = {
             });
     
           } catch (err) {
-            console.log("create/find Google User Failed")
-            console.log(err)
+            apputil.CONSOLE_LOG("create/find Google User Failed")
+            apputil.CONSOLE_LOG(err)
             res.status(500).send({msg: "Google Login Error"})
           }
         }
       }
     } catch (error) {
-      console.log("Cannot Verify FB idToken")
-      console.log(error)
+      apputil.CONSOLE_LOG("Cannot Verify FB idToken")
+      apputil.CONSOLE_LOG(error)
       res.status(500).send({msg: "FB Login Error"})
     }
   },
 
 
   getAll(req, res) {
-    console.log("[UserCtrl] Get All")
+    apputil.CONSOLE_LOG("[UserCtrl] Get All")
     dbuser.find({}, function(err, result) {
       if (err) {
-          console.log("    UserCtrl Get All Error")
-          console.log(err);
+          apputil.CONSOLE_LOG("    UserCtrl Get All Error")
+          apputil.CONSOLE_LOG(err);
           res.status(500).send(err)
       } else {
-          console.log("    UserCtrl Get All OK")
+          apputil.CONSOLE_LOG("    UserCtrl Get All OK")
           // object of all the users
-          console.log(result);
+          apputil.CONSOLE_LOG(result);
           res.status(200).send(result)
       }
     });
@@ -402,8 +402,8 @@ module.exports = {
 
   getByEmailOrObjectId(req, res) { // Get from Params
     // req.body.email or email, req.body.password
-    console.log("[UserCtrl] getByEmailOrObjectId")
-    console.log(req.params.id)
+    apputil.CONSOLE_LOG("[UserCtrl] getByEmailOrObjectId")
+    apputil.CONSOLE_LOG(req.params.id)
     var ObjectId = require('mongoose').Types.ObjectId;
     var objId = new ObjectId( (req.params.id.length < 12) ? "123456789012" : req.params.id );
     
@@ -412,20 +412,20 @@ module.exports = {
         {'email':req.params.id}
       ]}, function(err, result) {
       if (err) {
-        console.log("    UserCtrl getByEmailOrObjectId Error")
-        console.log(err);
+        apputil.CONSOLE_LOG("    UserCtrl getByEmailOrObjectId Error")
+        apputil.CONSOLE_LOG(err);
         res.status(500).send(err)
       } else {
         // object of all the users
-        console.log("    UserCtrl getByEmailOrObjectId OK")
-        console.log(result);
+        apputil.CONSOLE_LOG("    UserCtrl getByEmailOrObjectId OK")
+        apputil.CONSOLE_LOG(result);
         res.status(200).send(result)
       }
     });
   },
   getUserProfile(req, res) {
-    console.log("[UserCtrl] getUserProfile, User in Request")
-    console.log(req.user)
+    apputil.CONSOLE_LOG("[UserCtrl] getUserProfile, User in Request")
+    apputil.CONSOLE_LOG(req.user)
     res.status(200).send(req.user)
   },
 
@@ -439,7 +439,7 @@ module.exports = {
     // settings: props.userData.settings,
     // settingService: props.userData.settingService
   async syncToServer(req, res) {
-    console.log("Vehicle Sync of USERID:" + req.user.id)
+    apputil.CONSOLE_LOG("Vehicle Sync of USERID:" + req.user.id)
     
     // Find current User record 
     const currentUser = await new Promise((resolve, reject) => {
@@ -464,8 +464,8 @@ module.exports = {
       currentUser.settings = req.body.settings;
       currentUser.settingService = req.body.settingService;
 
-      console.log(" -- Will Save User")
-      console.log(currentUser)
+      apputil.CONSOLE_LOG(" -- Will Save User")
+      apputil.CONSOLE_LOG(currentUser)
 
       await new Promise((resolve, reject) => {
         currentUser.save(function(err, doc){
@@ -516,7 +516,7 @@ module.exports = {
 
     // Or someVehicles:[]
     async syncSomeDataToServer(req, res) {
-      console.log("Vehicle SOME DATA Sync of USERID:" + req.user.id)
+      apputil.CONSOLE_LOG("Vehicle SOME DATA Sync of USERID:" + req.user.id)
       // Find current User record 
       let currentUser = await new Promise((resolve, reject) => {
         dbuser.findById(req.user.id, function(err, doc){
@@ -570,7 +570,7 @@ module.exports = {
         }
 
 
-        console.log(" -- Will Save User from PartlyData")
+        apputil.CONSOLE_LOG(" -- Will Save User from PartlyData")
   
         await new Promise((resolve, reject) => {
           currentUser.save(function(err, doc){
@@ -596,7 +596,7 @@ module.exports = {
     // notifications
     // myJoinRequest
   async syncFromServer(req, res) {
-    console.log("Vehicle Get OF USER ID:" + req.user.id)
+    apputil.CONSOLE_LOG("Vehicle Get OF USER ID:" + req.user.id)
     // Find current User record contain Vehicle data
     const currentUser = await new Promise((resolve, reject) => {
       dbuser.findById(req.user.id, function(err, doc){
@@ -644,7 +644,7 @@ module.exports = {
         });
       });
 
-      //console.log(currentUser.vehicleList[0])
+      //apputil.CONSOLE_LOG(currentUser.vehicleList[0])
       res.status(200).send({
         vehicleList: currentUser.vehicleList,
         customServiceModules: currentUser.customServiceModules,

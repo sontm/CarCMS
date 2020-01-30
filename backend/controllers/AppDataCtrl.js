@@ -226,7 +226,7 @@ const DATA_SERVICE_TYPE_BIKE = [
 module.exports = {
   // Auth API
   getDataServiceTypes(req, res) {
-    console.log("App getDataServiceTypes")
+    apputil.CONSOLE_LOG("App getDataServiceTypes")
     if (true || req.user) {
       let services = {
         updatedOn: "2019-12-06",
@@ -238,7 +238,7 @@ module.exports = {
     }
   },
   getDataExpenseTypes(req, res) {
-    console.log("App getDataExpenseTypes")
+    apputil.CONSOLE_LOG("App getDataExpenseTypes")
     if (true || req.user) {
       let expenses = {
         updatedOn: "2019-12-06",
@@ -250,7 +250,7 @@ module.exports = {
     }
   },
   getDataVehicleModels(req, res) {
-    console.log("App getDataVehicleModels")
+    apputil.CONSOLE_LOG("App getDataVehicleModels")
     if (true || req.user) {
       let cars = {
         updatedOn: "2019-12-13",
@@ -268,7 +268,7 @@ module.exports = {
 
   // Modify Date of this
   getLatestDataDateOn(req, res) {
-    console.log("App getLatestDataDateOn")
+    apputil.CONSOLE_LOG("App getLatestDataDateOn")
     if (true || req.user) {
       let latestData = {
         updatedOn: "2020-01-15",
@@ -280,7 +280,7 @@ module.exports = {
   },
   // Modify Date of this
   getLatestAppData(req, res) {
-    console.log("App getLatestAppData")
+    apputil.CONSOLE_LOG("App getLatestAppData")
     if (true || req.user) {
       let appData = {
         updatedOn: "2020-01-15",
@@ -297,7 +297,7 @@ module.exports = {
 
   // Modify Date of this
   getFirstModal(req, res) {
-    console.log("App getFirstModal")
+    apputil.CONSOLE_LOG("App getFirstModal")
     if (true || req.user) {
       // let modalInfo = {
       //   imgUrl:"https://images.pexels.com/photos/1308881/pexels-photo-1308881.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
@@ -312,8 +312,8 @@ module.exports = {
 
 
   async addAppNotification(req, res) {
-    console.log("App addAppNotification")
-    console.log(req.body)
+    apputil.CONSOLE_LOG("App addAppNotification")
+    apputil.CONSOLE_LOG(req.body)
     //if (req.user) {
     try {
       var item = new dbnotification({
@@ -327,16 +327,16 @@ module.exports = {
       });
       res.status(200).send(newNotification)
     } catch (error) {
-      console.log("Create Notificatioiin MSG error")
-      console.log(error)
+      apputil.CONSOLE_LOG("Create Notificatioiin MSG error")
+      apputil.CONSOLE_LOG(error)
       res.status(500).send({msg: "Internal error"})
     }
   },
 
   // req.body is array of string ids
   async getMyNotification(req, res) {
-    console.log("App getMyNotification")
-    console.log(req.body)
+    apputil.CONSOLE_LOG("App getMyNotification")
+    apputil.CONSOLE_LOG(req.body)
     if (req.user) {
       // Find All message or teamId same or userID same
       // Find the User Record
@@ -373,42 +373,42 @@ module.exports = {
           ]
         }, function(err, result) {
         if (err) {
-            console.log("    Get All Notification of User Error")
-            console.log(err);
+            apputil.CONSOLE_LOG("    Get All Notification of User Error")
+            apputil.CONSOLE_LOG(err);
             res.status(500).send(err)
         } else {
-            console.log("    Get All Notification of User OK:"+result.length)
+            apputil.CONSOLE_LOG("    Get All Notification of User OK:"+result.length)
             // object of all the users
-            //console.log(result);
+            //apputil.CONSOLE_LOG(result);
             res.status(200).send(result)
         }
       });
     } else {
       // Get "All" Notification
-      console.log("No User, get All Notitification")
+      apputil.CONSOLE_LOG("No User, get All Notitification")
       dbnotification.find({forAll: true, enable: true}, function(err, result) {
         if (err) {
-            console.log("    Get All Notification of Guest Error")
-            console.log(err);
+            apputil.CONSOLE_LOG("    Get All Notification of Guest Error")
+            apputil.CONSOLE_LOG(err);
             res.status(500).send(err)
         } else {
-            console.log("    Get All Notification of Guest OK:"+result.length)
+            apputil.CONSOLE_LOG("    Get All Notification of Guest OK:"+result.length)
             // object of all the users
-            //console.log(result);
+            //apputil.CONSOLE_LOG(result);
             res.status(200).send(result)
         }
       });
     }
   },
   getAllAppNotification(req, res) {
-    console.log("App getAllAppNotification")
+    apputil.CONSOLE_LOG("App getAllAppNotification")
     dbnotification.find({}, function(err, result) {
       if (err) {
-          console.log("    Get All Notification Error")
-          console.log(err);
+          apputil.CONSOLE_LOG("    Get All Notification Error")
+          apputil.CONSOLE_LOG(err);
           res.status(500).send(err)
       } else {
-          console.log("    Get All Notification OK")
+          apputil.CONSOLE_LOG("    Get All Notification OK")
           // object of all the users
           res.status(200).send(result)
       }
@@ -418,14 +418,14 @@ module.exports = {
 
 
   async addNewCustomerVoice(req, res) {
-    console.log("App addNewCustomerVoice")
-    console.log(req.body)
+    apputil.CONSOLE_LOG("App addNewCustomerVoice")
+    apputil.CONSOLE_LOG(req.body)
     let userId;
     let userEmail;
     if (req.body.token && req.body.token.length > 10) {
       try{
         let decodedUser = jwt.verify(req.body.token, 'your_jwt_secret');
-        console.log(decodedUser)
+        apputil.CONSOLE_LOG(decodedUser)
         if (decodedUser && (decodedUser.id || decodedUser.email)) {
           userId = decodedUser.id;
           userEmail = decodedUser.email;
@@ -453,20 +453,20 @@ module.exports = {
       });
       res.status(200).send({msg: "OK"})
     } catch (error) {
-      console.log("Create addNewCustomerVoice MSG error")
-      console.log(error)
+      apputil.CONSOLE_LOG("Create addNewCustomerVoice MSG error")
+      apputil.CONSOLE_LOG(error)
       res.status(500).send({msg: "Internal Error"})
     }
   },
   getAllCustomerVoice(req, res) {
-    console.log("App getAllCustomerVoice")
+    apputil.CONSOLE_LOG("App getAllCustomerVoice")
     dbcustomervoice.find({}, function(err, result) {
       if (err) {
-          console.log("    getAllCustomerVoice Error")
-          console.log(err);
+          apputil.CONSOLE_LOG("    getAllCustomerVoice Error")
+          apputil.CONSOLE_LOG(err);
           res.status(500).send(err)
       } else {
-          console.log("    getAllCustomerVoice OK")
+          apputil.CONSOLE_LOG("    getAllCustomerVoice OK")
           // object of all the users
           res.status(200).send(result)
       }
@@ -485,7 +485,7 @@ module.exports = {
 
       const currentUser = await dbuser.findOne({email: req.body.email});
       if (!currentUser) {
-        console.log("CAnnot FInd Use with Email "+req.body.email)
+        apputil.CONSOLE_LOG("CAnnot FInd Use with Email "+req.body.email)
         res.status(400).send({msg: "Email này chưa dùng cho tài khoản nào."})
         return;
       }
@@ -535,17 +535,17 @@ module.exports = {
 
       outlookSMTP.sendMail(mail, function(error, response){
           if(error){
-              console.log(error);
+              apputil.CONSOLE_LOG(error);
               res.status(500).send("Error")
           }else{
-              console.log("Message sent: " + response.message);
+              apputil.CONSOLE_LOG("Message sent: " + response.message);
               res.status(200).send({msg:"OK"})
           }
           outlookSMTP.close();
       });
   } catch (err) {
-    console.log("PWD Recoveyry Error")
-    console.log(err)
+    apputil.CONSOLE_LOG("PWD Recoveyry Error")
+    apputil.CONSOLE_LOG(err)
     res.status(500).send("Error2")
   }
   },
@@ -560,7 +560,7 @@ module.exports = {
 
     let currentUser = await dbuser.findOne({email: req.body.email});
     if (!currentUser) {
-      console.log("CAnnot FInd Use with Email "+req.body.email)
+      apputil.CONSOLE_LOG("CAnnot FInd Use with Email "+req.body.email)
       res.status(400).send({msg: "Email này chưa dùng cho tài khoản nào."})
       return;
     }
@@ -612,20 +612,20 @@ module.exports = {
       ReturnPath: 'hotro.quanlyxe@gmail.com',
       Source: "QuanLyXe <noreply@quanlyxe.yamastack.com>"
     }
-    console.log("...Start Send mail to:" + newRecovery.email)
+    apputil.CONSOLE_LOG("...Start Send mail to:" + newRecovery.email)
     ses.sendEmail(params, (err, data) => {
       if (err) {
-        console.log(err, err.stack)
+        apputil.CONSOLE_LOG(err, err.stack)
         res.status(500).send("Error")
       }
       else {
-        console.log(data)
+        apputil.CONSOLE_LOG(data)
         res.status(200).send({msg:"OK"})
       }
     })
   } catch (err) {
-    console.log("PWD Recoveyry Error")
-    console.log(err)
+    apputil.CONSOLE_LOG("PWD Recoveyry Error")
+    apputil.CONSOLE_LOG(err)
     res.status(500).send("ErrorException")
   }
   },

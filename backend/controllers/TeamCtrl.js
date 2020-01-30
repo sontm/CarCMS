@@ -1,12 +1,13 @@
 import dbteam from "../database/models/dbteam";
 import dbuser from "../database/models/dbuser";
 import dbjointeam from "../database/models/dbjointeam";
+import apputil from "../components/AppUtil";
 
 module.exports = {
   // req.body: teamId
   async getAllUserOfTeam(req, res) {
-    console.log("getAllUserOfTeam:" + req.body.teamId)  
-    console.log(req.body)  
+    apputil.CONSOLE_LOG("getAllUserOfTeam:" + req.body.teamId)  
+    apputil.CONSOLE_LOG(req.body)  
     if (req.body.teamId) {
       try {
         // Find the User with this ID. Create new Team, assign teamId of User to this new ID
@@ -17,7 +18,7 @@ module.exports = {
         });
         res.status(200).send(allUsers)
       } catch (error) {
-        console.log(error);
+        apputil.CONSOLE_LOG(error);
         res.status(500).send({msg: "Inter Server Error "})
         throw error;
       }
@@ -27,7 +28,7 @@ module.exports = {
   },
   // An User want to Join a team
   async rejoinTeamCreatedByMe(req, res) {
-    console.log("rejoinTeamCreatedByMe USERID:" + req.user.id + ",code:" + req.body.code)
+    apputil.CONSOLE_LOG("rejoinTeamCreatedByMe USERID:" + req.user.id + ",code:" + req.body.code)
     try {
       //Find the User informationi of Request
       const requestUser = await new Promise((resolve, reject) => {
@@ -38,9 +39,9 @@ module.exports = {
 
       if (requestUser && req.body.code && req.body.code.length > 0) {
         const result = await dbteam.findOne({code: req.body.code});
-        console.log("    getTeam with Code OK:" + req.body.code)
+        apputil.CONSOLE_LOG("    getTeam with Code OK:" + req.body.code)
         // object of all the users
-        console.log(result);
+        apputil.CONSOLE_LOG(result);
         // If the TEam is same with User ID
         if (result.createdUserId == req.user.id) {
           requestUser.teamId = result._id;
@@ -62,7 +63,7 @@ module.exports = {
       }
 
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }
@@ -70,7 +71,7 @@ module.exports = {
 
   // An User want to Join a team
   async getLatestTeamInfoOfUser(req, res) {
-    console.log("getLatestTeamInfoOfUser USERID:" + req.user.id + ",code:" + req.body.code)
+    apputil.CONSOLE_LOG("getLatestTeamInfoOfUser USERID:" + req.user.id + ",code:" + req.body.code)
     try {
       //Find the User informationi of Request
       const requestUser = await new Promise((resolve, reject) => {
@@ -81,7 +82,7 @@ module.exports = {
 
       if (requestUser && requestUser.teamCode) {
         const result = await dbteam.findOne({code: requestUser.teamCode});
-        console.log("    getTeam with Code OK:" + requestUser.teamCode)
+        apputil.CONSOLE_LOG("    getTeam with Code OK:" + requestUser.teamCode)
 
         // If the TEam is same with User ID
         if (result) {
@@ -98,7 +99,7 @@ module.exports = {
       }
 
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }
@@ -107,10 +108,10 @@ module.exports = {
   // ONE USER CAN ONLY Have MAx 3 Team
   // TODO. Need return new JWT token contain teamId and TeamCode of this User
   async createTeamOfUser(req, res) {
-    console.log("Team Create of USERID:" + req.user.id)  
+    apputil.CONSOLE_LOG("Team Create of USERID:" + req.user.id)  
     // Find How Many Team this User created
     const teamsOfMe = await dbteam.find({createdUserId: req.user.id});
-    console.log("   User have Teams:" + teamsOfMe.length)
+    apputil.CONSOLE_LOG("   User have Teams:" + teamsOfMe.length)
     if (teamsOfMe && teamsOfMe.length >= 3) {
       // User canot create Any more
       res.status(500).send({msg: "Bạn Không thể tạo quá 3 Nhóm!"})
@@ -130,7 +131,7 @@ module.exports = {
         createdUserId: req.user.id
       });
     }
-    console.log(item)
+    apputil.CONSOLE_LOG(item)
     
 
     try {
@@ -144,7 +145,7 @@ module.exports = {
       if (thisUser) {
         // if user already manager of other team or not manager, skip
         if (thisUser.roleInTeam == "member" && thisUser.teamId) {
-          console.log("Member cannot create team")
+          apputil.CONSOLE_LOG("Member cannot create team")
           res.status(401).send({msg: "Member cannot create team"})
           return;
         }
@@ -160,8 +161,8 @@ module.exports = {
         });
 
         });
-        console.log("Created Team ID:")
-        console.log(newTeam)
+        apputil.CONSOLE_LOG("Created Team ID:")
+        apputil.CONSOLE_LOG(newTeam)
         thisUser.teamId = newTeam._id;
         thisUser.teamCode = newTeam.code;
         thisUser.roleInTeam = "manager";
@@ -174,7 +175,7 @@ module.exports = {
         res.status(200).send(newTeam)
       }
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }
@@ -183,7 +184,7 @@ module.exports = {
 
   // An User want to Join a team
   async joinTeam(req, res) {
-    console.log("Team Join Team From USERID:" + req.user.id + ", to:" + req.body.teamCode)
+    apputil.CONSOLE_LOG("Team Join Team From USERID:" + req.user.id + ", to:" + req.body.teamCode)
     try {
       // Find if Any Blocked Requested  
       // TODO
@@ -256,14 +257,14 @@ module.exports = {
       }
 
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }
   },
   // An User want to Join a team
   async leaveTeam(req, res) {
-    console.log("Team Leave From USERID:" + req.user.id)
+    apputil.CONSOLE_LOG("Team Leave From USERID:" + req.user.id)
     try {
       //Find the User informationi of Request
       const requestUser = await new Promise((resolve, reject) => {
@@ -289,7 +290,7 @@ module.exports = {
       }
 
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }
@@ -297,7 +298,7 @@ module.exports = {
 
   // req.body: teamId, teamCode
   async getAllJoinRequestWhichUserIsManager(req, res) {
-    console.log("TeamCtrl, getAllJoinRequestWhichUserIsManager")
+    apputil.CONSOLE_LOG("TeamCtrl, getAllJoinRequestWhichUserIsManager")
     try {
       // Find the User with this ID
       const thisUser = await new Promise((resolve, reject) => {
@@ -319,15 +320,15 @@ module.exports = {
         res.status(200).send([])
       }
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }
   },
 
   async cancelMyJoinRequest(req, res) {
-    console.log("TeamCtrl, cancelMyJoinRequest")
-    console.log(req.user)
+    apputil.CONSOLE_LOG("TeamCtrl, cancelMyJoinRequest")
+    apputil.CONSOLE_LOG(req.user)
     if (req.user && req.user.id) {
       try {
         // Find all Request with teamCode which User is Manager and status is "requested"
@@ -351,7 +352,7 @@ module.exports = {
         
 
       } catch (error) {
-        console.log(error);
+        apputil.CONSOLE_LOG(error);
         res.status(500).send({msg: "Inter Server Error "})
         throw error;
       }
@@ -360,15 +361,15 @@ module.exports = {
     }
   },
   async getMyJoinRequest(req, res) {
-    console.log("TeamCtrl, getMyJoinRequest, ID")
-    console.log(req.params.id)
+    apputil.CONSOLE_LOG("TeamCtrl, getMyJoinRequest, ID")
+    apputil.CONSOLE_LOG(req.params.id)
     let queryObj = {userId: req.user.id, status: "requested"};
     if (req.params.id) {
       var ObjectId = require('mongoose').Types.ObjectId;
       queryObj = {userId: req.user.id, "_id": new ObjectId(req.params.id )};
     }
-    console.log("queryObj---")
-    console.log(queryObj)
+    apputil.CONSOLE_LOG("queryObj---")
+    apputil.CONSOLE_LOG(queryObj)
     if (req.user && req.user.id) {
       try {
         // Find all Request with teamCode which User is Manager and status is "requested"
@@ -377,10 +378,10 @@ module.exports = {
             err ? reject(err) : resolve(doc);
           });
         });
-        console.log(allRequests)
+        apputil.CONSOLE_LOG(allRequests)
         res.status(200).send(allRequests)
       } catch (error) {
-        console.log(error);
+        apputil.CONSOLE_LOG(error);
         res.status(500).send({msg: "Inter Server Error "})
         throw error;
       }
@@ -392,8 +393,8 @@ module.exports = {
 
   // req.body: teamId, teamCode, requestUserId, id (join id), action (approved or rejected)
   async approveOrRejectJoinRequest(req, res) {
-    console.log("TeamCtrl, approveOrRejectJoinRequest")
-    console.log(req.body)
+    apputil.CONSOLE_LOG("TeamCtrl, approveOrRejectJoinRequest")
+    apputil.CONSOLE_LOG(req.body)
     try {
       // Find the User with this ID
       const thisUser = await new Promise((resolve, reject) => {
@@ -455,7 +456,7 @@ module.exports = {
       }
       res.status(400).send({})
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }
@@ -464,31 +465,31 @@ module.exports = {
 
   // TODO for Edit Team. Only User of that Team can Edit
   getAll(req, res) {
-    console.log("Team Get All")
+    apputil.CONSOLE_LOG("Team Get All")
     dbteam.find({}, function(err, result) {
       if (err) {
-          console.log("    Team Get All Error")
-          console.log(err);
+          apputil.CONSOLE_LOG("    Team Get All Error")
+          apputil.CONSOLE_LOG(err);
           res.status(500).send(err)
       } else {
-          console.log("    Team Get All OK")
+          apputil.CONSOLE_LOG("    Team Get All OK")
           // object of all the users
-          console.log(result);
+          apputil.CONSOLE_LOG(result);
           res.status(200).send(result)
       }
     });
   },
   getById(req, res) {
-    console.log("Team Get By ID:" + req.params.id)
+    apputil.CONSOLE_LOG("Team Get By ID:" + req.params.id)
     dbteam.find(req.params, function(err, result) {
       if (err) {
-        console.log("    Team Get By ID Error")
-        console.log(err);
+        apputil.CONSOLE_LOG("    Team Get By ID Error")
+        apputil.CONSOLE_LOG(err);
         res.status(500).send(err)
       } else {
         // object of all the users
-        console.log("    Team Get By ID OK")
-        console.log(result);
+        apputil.CONSOLE_LOG("    Team Get By ID OK")
+        apputil.CONSOLE_LOG(result);
         res.status(200).send(result)
       }
     });
@@ -496,17 +497,17 @@ module.exports = {
 
   // Auth API
   getAllTeamCreatedByUser(req, res) {
-    console.log("Team getAllTeamCreatedByUser:" + req.user.id)
+    apputil.CONSOLE_LOG("Team getAllTeamCreatedByUser:" + req.user.id)
     if (req.user) {
       dbteam.find({createdUserId: req.user.id}, function(err, result) {
         if (err) {
-            console.log("    getAllTeamCreatedByUser USER Error")
-            console.log(err);
+            apputil.CONSOLE_LOG("    getAllTeamCreatedByUser USER Error")
+            apputil.CONSOLE_LOG(err);
             res.status(500).send(err)
         } else {
-            console.log("    getAllTeamCreatedByUser OK")
+            apputil.CONSOLE_LOG("    getAllTeamCreatedByUser OK")
             // object of all the users
-            console.log(result);
+            apputil.CONSOLE_LOG(result);
             res.status(200).send(result)
         }
       });
@@ -519,7 +520,7 @@ module.exports = {
   // An User want to Join a team
   // body.userId, body.teamId
   async removeMemFromTeam(req, res) {
-    console.log("removeMemFromTeam USERID:" + req.user.id)
+    apputil.CONSOLE_LOG("removeMemFromTeam USERID:" + req.user.id)
     try {
       //Find the User informationi of Request
       const requestUser = await dbuser.findById(req.user.id);
@@ -555,7 +556,7 @@ module.exports = {
       }
 
     } catch (error) {
-      console.log(error);
+      apputil.CONSOLE_LOG(error);
       res.status(500).send({msg: "Inter Server Error "})
       throw error;
     }

@@ -1,5 +1,10 @@
 
 class AppUtils {
+    CONSOLE_LOG(s) {
+        if (true) {
+            console.log(s)
+        }
+    }
     createUserFromRecordForJWT(userRecord) {
         if (userRecord) {
             let result = {
