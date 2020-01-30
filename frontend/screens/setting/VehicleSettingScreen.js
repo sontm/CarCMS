@@ -6,6 +6,7 @@ import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
 import {actSettingSetRemind} from '../../redux/UserReducer'
+import apputils from '../../constants/AppUtils';
 
 class VehicleSettingScreen extends React.Component {
     constructor(props) {
@@ -22,24 +23,24 @@ class VehicleSettingScreen extends React.Component {
 
     save = async (newVehicle) => {
         try {
-            console.log("WIll Save Vehicle SEtting Default:")
+            apputils.CONSOLE_LOG("WIll Save Vehicle SEtting Default:")
             let newData = {
                 kmForOilRemind: Number(this.state.kmForOilRemind),
                 dayForAuthRemind: Number(this.state.dayForAuthRemind),
                 dayForInsuranceRemind: Number(this.state.dayForInsuranceRemind),
                 dayForRoadFeeRemind: Number(this.state.dayForRoadFeeRemind),
             }
-            console.log(newData)
+            apputils.CONSOLE_LOG(newData)
             this.props.actSettingSetRemind(newData)
 
             this.props.navigation.navigate('Settings')
         } catch (e) {
             console.error('Failed to save Vehicle SEtting.')
-            console.log(e)
+            apputils.CONSOLE_LOG(e)
         }
     }
     componentWillMount() {
-        console.log("VehicleSEttingScreen WillMount:" + JSON.stringify(this.props.settingData))
+        apputils.CONSOLE_LOG("VehicleSEttingScreen WillMount:" + JSON.stringify(this.props.settingData))
         if (this.props.userData.settings && this.props.userData.settings.kmForOilRemind) {
             // aready set
             this.setState({

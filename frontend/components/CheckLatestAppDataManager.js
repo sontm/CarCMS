@@ -16,7 +16,6 @@ class CheckLatestAppDataManager extends React.Component {
   }
   
   componentWillMount() {
-    console.log("CheckLatestAppDataManager will Mount")
     this.props.actUserInitializeInitialDataWhenAppStart()
     this.props.actAppSyncLatestDataIfNeeded(this.props.appData);
   }

@@ -38,18 +38,18 @@ class JoinTeamScreen extends React.Component {
         // TODO, send teamCode here......
         Backend.getTeamsCreatedByMe(this.props.userData.token,
             response2 => {
-                console.log(response2.data)
+                apputils.CONSOLE_LOG(response2.data)
                 this.setState({
                     teamsByMe: response2.data
                 })
             }, error => {
-                console.log("getTeamsCreatedByMe ERROR")
+                apputils.CONSOLE_LOG("getTeamsCreatedByMe ERROR")
             })
 
             const { status: existingStatus } = await Permissions.getAsync(
                 Permissions.CAMERA
             );
-            console.log("existingCameraStatus:" + existingStatus)
+            apputils.CONSOLE_LOG("existingCameraStatus:" + existingStatus)
             if (existingStatus =="granted") {
                 this.setState({
                     cameraPermission: true
@@ -64,21 +64,21 @@ class JoinTeamScreen extends React.Component {
                 if (state.isConnected) {
                     Backend.rejoinTeam({code: item.code}, this.props.userData.token,
                         response => {
-                            console.log("===============onReJoinTeamOfMe Data")
-                            console.log(response.data)
+                            apputils.CONSOLE_LOG("===============onReJoinTeamOfMe Data")
+                            apputils.CONSOLE_LOG(response.data)
                             // Rejoin team can ReUse Create Team
                             this.props.actUserCreateTeamOK(response.data)
                             // Sync Team Data heare also
                             // TODO Message of Syncing here
                             Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token,
                             response2 => {
-                                console.log("GEt all Member in Team OK")
+                                apputils.CONSOLE_LOG("GEt all Member in Team OK")
     
                                 this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
                             },
                             error => {
-                                console.log("GEt all Member in Team ERROR")
-                                console.log(JSON.stringify(error))
+                                apputils.CONSOLE_LOG("GEt all Member in Team ERROR")
+                                apputils.CONSOLE_LOG(JSON.stringify(error))
                                 this.setState({
                                     message: "Get Team Data Error!"
                                 })
@@ -87,12 +87,12 @@ class JoinTeamScreen extends React.Component {
                     
                             Backend.getAllJoinTeamRequest(this.props.userData.token, 
                             response3 => {
-                                console.log("GEt all JoinRequest OK")
+                                apputils.CONSOLE_LOG("GEt all JoinRequest OK")
                                 this.props.actTeamGetJoinRequestOK(response3.data)
                             },
                             error => {
-                                console.log("GEt all JoinRequest JoinTeam ERROR")
-                                console.log(JSON.stringify(error))
+                                apputils.CONSOLE_LOG("GEt all JoinRequest JoinTeam ERROR")
+                                apputils.CONSOLE_LOG(JSON.stringify(error))
                                 this.setState({
                                     message: "Login Error!"
                                 })
@@ -100,7 +100,7 @@ class JoinTeamScreen extends React.Component {
 
                             this.props.navigation.goBack()
                         }, err => {
-                            console.log("rejoinTeam ERROR")
+                            apputils.CONSOLE_LOG("rejoinTeam ERROR")
                     })
                 } else {
                   Toast.show({
@@ -129,8 +129,8 @@ class JoinTeamScreen extends React.Component {
                         teamCode: this.state.code
                         }, this.props.userData.token, 
                         response => {
-                            console.log("Join Team OK")
-                            console.log(response.data)
+                            apputils.CONSOLE_LOG("Join Team OK")
+                            apputils.CONSOLE_LOG(response.data)
                             //this.props.actUserCreateTeamOK(response.data)
                             //this.props.navigation.navigate("Settings")
                             this.props.actUserGotMyJoinRequest(response.data)
@@ -147,8 +147,8 @@ class JoinTeamScreen extends React.Component {
                             })
                         },
                         error => {
-                            console.log("Join Team ERROR")
-                            console.log((error.response.data))
+                            apputils.CONSOLE_LOG("Join Team ERROR")
+                            apputils.CONSOLE_LOG((error.response.data))
                             Toast.show({
                                 text: error.response.data.msg,
                                 //buttonText: "Okay",
@@ -172,7 +172,7 @@ class JoinTeamScreen extends React.Component {
     async requestQRScanner() {
         if (!this.state.cameraPermission) {
             const { status } = await Permissions.askAsync(Permissions.CAMERA);
-            console.log("status")
+            apputils.CONSOLE_LOG("status")
             if (status =="granted") {
                 this.setState({
                     cameraPermission: true,
@@ -188,7 +188,7 @@ class JoinTeamScreen extends React.Component {
         }
     }
     handleBarcodeScanned = ( result ) => {
-        console.log(JSON.stringify(result)); // PRINTS UNDEFINED - passing in ({ type, data }) and trying to console.log(data + type) throws: undefined is not an object (evaluating '_ref.type')
+        apputils.CONSOLE_LOG(JSON.stringify(result)); // PRINTS UNDEFINED - passing in ({ type, data }) and trying to apputils.CONSOLE_LOG(data + type) throws: undefined is not an object (evaluating '_ref.type')
         if (result.data && result.data.length > 10) {
             this.setState({
                 teamCodeScanned: true,
@@ -199,8 +199,8 @@ class JoinTeamScreen extends React.Component {
     };
     
     render() {
-        console.log("---------------------this.props.userData.teamInfo")
-        console.log(this.props.userData.teamInfo)
+        apputils.CONSOLE_LOG("---------------------this.props.userData.teamInfo")
+        apputils.CONSOLE_LOG(this.props.userData.teamInfo)
         return (
             <Container>
             <Content>

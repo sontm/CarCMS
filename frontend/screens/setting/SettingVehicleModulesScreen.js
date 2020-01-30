@@ -36,7 +36,7 @@ class SettingVehicleModulesScreen extends React.Component {
             [
                 {
                   text: AppLocales.t("GENERAL_NO"),
-                  onPress: () => console.log('Cancel Pressed'),
+                  onPress: () => {},
                   style: 'cancel',
                 },
                 {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {

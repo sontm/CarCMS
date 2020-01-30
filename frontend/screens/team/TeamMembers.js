@@ -42,8 +42,8 @@ class JoinRequestScreen extends React.Component {
         },
         this.props.userData.token, 
         response => {
-            console.log("Approve or Reject OK:" + type)
-            console.log(response.data)
+            apputils.CONSOLE_LOG("Approve or Reject OK:" + type)
+            apputils.CONSOLE_LOG(response.data)
             //this.props.actUserLoginOK(response.data)
             //this.props.navigation.navigate("Settings")
             // this.setState({
@@ -57,8 +57,8 @@ class JoinRequestScreen extends React.Component {
             
         },
         error => {
-            console.log("Approve or Reject ERROR:" + type)
-            console.log(JSON.stringify(error))
+            apputils.CONSOLE_LOG("Approve or Reject ERROR:" + type)
+            apputils.CONSOLE_LOG(JSON.stringify(error))
         }
     );
   }
@@ -69,11 +69,11 @@ class JoinRequestScreen extends React.Component {
       [
           {
             text: AppLocales.t("GENERAL_NO"),
-            onPress: () => console.log('Cancel Pressed'),
+            onPress: () => apputils.CONSOLE_LOG('Cancel Pressed'),
             style: 'cancel',
           },
           {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {
-              console.log('Delete Pressed')
+              apputils.CONSOLE_LOG('Delete Pressed')
               Backend.removeMemFromTeam(
                 {
                     teamId: item.teamId,
@@ -81,14 +81,14 @@ class JoinRequestScreen extends React.Component {
                 },
                 this.props.userData.token, 
                 response => {
-                    console.log("removeMemFromTeam OK:")
-                    console.log(response.data)
+                    apputils.CONSOLE_LOG("removeMemFromTeam OK:")
+                    apputils.CONSOLE_LOG(response.data)
                     
                   this.props.fetchTeamData();
                 },
                 error => {
-                    console.log("removeMemFromTeam ERROR:")
-                    console.log(JSON.stringify(error))
+                    apputils.CONSOLE_LOG("removeMemFromTeam ERROR:")
+                    apputils.CONSOLE_LOG(JSON.stringify(error))
                 }
               )
           }},
@@ -97,7 +97,7 @@ class JoinRequestScreen extends React.Component {
     )
   }
   componentDidMount() {
-    console.log("JoinRequestScreen componentDidMount:")
+    apputils.CONSOLE_LOG("JoinRequestScreen componentDidMount:")
 
   }
 
@@ -110,7 +110,7 @@ class JoinRequestScreen extends React.Component {
 //     "teamCode": "W4QKeBSl",
 //     "userId": "5daf30722a799e12423b976a",
   render() {
-    console.log("JoinRequestScreen Render:")
+    apputils.CONSOLE_LOG("JoinRequestScreen Render:")
     return (
         <View style={styles.container}>
 

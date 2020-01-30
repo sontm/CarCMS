@@ -38,7 +38,6 @@ class MoneyUsageByTimeTopReport extends React.Component {
   }
   // TODO for change Date
   onSetDateOption(newDate) {
-    console.log(newDate)
     this.setState({
         tillDate: newDate
     });
@@ -308,7 +307,6 @@ class MoneyUsageByTimeTopReport extends React.Component {
                 && !arrTotalExpenseOneCar.length && !arrTotalServiceEachCars.length)) {
             isHasData = false;
         }
-        console.log("*********** isHasData:" + isHasData)
         return (
             <View style={styles.container}>
                 

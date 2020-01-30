@@ -22,7 +22,6 @@ class MemberVehicleListScreen extends React.Component {
     super(props)
   }
   render() {
-    console.log("MemberVehicleListScreen Render")
     return (
           <View style={styles.container}>
             <ScrollView

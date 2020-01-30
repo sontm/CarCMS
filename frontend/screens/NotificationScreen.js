@@ -42,7 +42,7 @@ class NotificationScreen extends React.Component {
     }
   }
   componentDidMount() {
-    console.log("NotificationScreen componentDidMountttttttttttttttttt")
+    apputils.CONSOLE_LOG("NotificationScreen componentDidMountttttttttttttttttt")
     // Will Reset all notSeen Notification
     this.props.actUserSawAllNotifications();
   }
@@ -52,7 +52,7 @@ class NotificationScreen extends React.Component {
         if (supported) {
           Linking.openURL(item.url);
         } else {
-          console.log("Don't know how to open URI: " + item.url);
+          apputils.CONSOLE_LOG("Don't know how to open URI: " + item.url);
         }
       });
     }
@@ -67,8 +67,8 @@ class NotificationScreen extends React.Component {
 //     "teamCode": "W4QKeBSl",
 //     "userId": "5daf30722a799e12423b976a",
   render() {
-    console.log("NotificationScreen Render:")
-    console.log(this.notSeenIds)
+    apputils.CONSOLE_LOG("NotificationScreen Render:")
+    apputils.CONSOLE_LOG(this.notSeenIds)
     return (
       <Content>
         <View style={styles.container}>

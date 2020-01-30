@@ -32,8 +32,8 @@ class FillOilScreen extends React.Component {
     }
 
     componentWillMount() {
-        console.log("FILL OIL WILL MOUNT:")
-        console.log(this.props.navigation.state.params)
+        apputils.CONSOLE_LOG("FILL OIL WILL MOUNT:")
+        apputils.CONSOLE_LOG(this.props.navigation.state.params)
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
@@ -56,7 +56,7 @@ class FillOilScreen extends React.Component {
     
     save = async (newVehicle) => {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit FillOil:")
+            apputils.CONSOLE_LOG("WIll Edit FillOil:")
             let newData = {
                 ...this.state,
 
@@ -71,7 +71,7 @@ class FillOilScreen extends React.Component {
             this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_OIL, this.props.userData)
             this.props.navigation.goBack()
         } else {
-            console.log("WIll Save FillOil:")
+            apputils.CONSOLE_LOG("WIll Save FillOil:")
             let newData = {
                 ...this.state,
                 
@@ -81,7 +81,7 @@ class FillOilScreen extends React.Component {
                 currentKm: Number(this.state.currentKm),
                 validFor: Number(this.state.validFor)
             }
-            console.log(newData)
+            apputils.CONSOLE_LOG(newData)
 
             newData.id = apputils.uuidv4();
 

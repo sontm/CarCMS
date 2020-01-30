@@ -3,6 +3,12 @@ import {AsyncStorage} from 'react-native';
 import AppConstants from './AppConstants';
 import { connect } from 'react-redux';
 
+function BE_CONSOLE_LOG(text) {
+    if (AppConstants.IS_DEBUG_MODE) {
+        console.log(text)
+    }
+}
+
 class Backend {
     constructor() {
     }
@@ -25,8 +31,8 @@ class Backend {
     }
 
     postSomeDataToServer(data, token, onOK, onError) {
-        console.log("Backend postSomeDataToServer:")
-        console.log(data)
+        BE_CONSOLE_LOG("Backend postSomeDataToServer:")
+        BE_CONSOLE_LOG(data)
         axios.post("/users/sync/some",
             JSON.stringify(data),
             { headers: this.createHeader(token)})
@@ -37,8 +43,8 @@ class Backend {
     // Gas, Oil, Auth, Expense, Service List
     // token is JWT token
     postFillItemList(data, token, type, onOK, onError) {
-        console.log("Backend sync to Server:" + token)
-        console.log(data)
+        BE_CONSOLE_LOG("Backend sync to Server:" + token)
+        BE_CONSOLE_LOG(data)
         axios.post("/users/sync",
             JSON.stringify(data),
             { headers: this.createHeader(token)})
@@ -80,8 +86,8 @@ class Backend {
     }
 
     loginGoogle(data, onOK, onError) {
-        console.log("Backend, send data")
-        console.log((data))
+        BE_CONSOLE_LOG("Backend, send data")
+        BE_CONSOLE_LOG((data))
         axios.post("/login/google",
             JSON.stringify(data),
            // { headers: this.createHeader(), withCredentials: true})
@@ -90,8 +96,8 @@ class Backend {
             .catch((error) => {onError(error);});
     }
     loginFacebook(data, onOK, onError) {
-        console.log("Backend, send data Facebook")
-        console.log((data))
+        BE_CONSOLE_LOG("Backend, send data Facebook")
+        BE_CONSOLE_LOG((data))
         axios.post("/login/facebook",
             JSON.stringify(data),
            // { headers: this.createHeader(), withCredentials: true})
@@ -251,7 +257,7 @@ class Backend {
     }
 
     getAllNotification(lstExist, token, onOK, onError) {
-        console.log("Backend getAllNotification:")
+        BE_CONSOLE_LOG("Backend getAllNotification:")
         axios.post("/app/notification/me",
             JSON.stringify(lstExist),
             { headers: this.createHeader(token)})
@@ -260,7 +266,7 @@ class Backend {
     }
 
     getAllNotificationGuest(lstExist, onOK, onError) {
-        console.log("Backend getAllNotification Guest:")
+        BE_CONSOLE_LOG("Backend getAllNotification Guest:")
         axios.post("/app/notification/guest",
             JSON.stringify(lstExist),
             { headers: this.createHeader()})

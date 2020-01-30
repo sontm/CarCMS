@@ -63,7 +63,7 @@ class TeamScreen extends React.Component {
     this.onShowModalDialog = this.onShowModalDialog.bind(this)
   }
   onForceCloseModalByPressBack() {
-    console.log("Calling onForceCloseModalByPressBack..........")
+    AppUtils.CONSOLE_LOG("Calling onForceCloseModalByPressBack..........")
     this.props.actUserForCloseModal()
   }
   onShowModalDialog() {
@@ -75,15 +75,15 @@ class TeamScreen extends React.Component {
     }, 20000);
   }
   fetchTeamData(silence=false) {
-    console.log("My Team IDDDDDD")
-    console.log(this.props.userData.userProfile)
-    console.log(this.props.userData.teamInfo)
+    AppUtils.CONSOLE_LOG("My Team IDDDDDD")
+    AppUtils.CONSOLE_LOG(this.props.userData.userProfile)
+    AppUtils.CONSOLE_LOG(this.props.userData.teamInfo)
     if (this.props.userData.userProfile.roleInTeam != "manager") {
       // get updated information ..
       Backend.getLatestTeamInfoOfMe(this.props.userData.token,
         response => {
-            console.log("===============getLatestTeamInfoOfMe Data")
-            console.log(response.data)
+            AppUtils.CONSOLE_LOG("===============getLatestTeamInfoOfMe Data")
+            AppUtils.CONSOLE_LOG(response.data)
             // Rejoin team can ReUse Create Team
             this.props.actUserCreateTeamOK(response.data, true)
 
@@ -92,14 +92,14 @@ class TeamScreen extends React.Component {
               Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, 
                   this.props.userData.token, 
               response2 => {
-                  console.log("GEt all Member in Team OK")
+                  AppUtils.CONSOLE_LOG("GEt all Member in Team OK")
 
                   this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
               },
               error => {
                   this.props.actUserStartSyncTeamDone();
-                  console.log("GEt all Member in Team ERROR")
-                  console.log(JSON.stringify(error))
+                  AppUtils.CONSOLE_LOG("GEt all Member in Team ERROR")
+                  AppUtils.CONSOLE_LOG(JSON.stringify(error))
               }
               );
             } else {
@@ -107,8 +107,8 @@ class TeamScreen extends React.Component {
             }
         }, err => {
             this.props.actUserStartSyncTeamDone();
-            console.log("get LatestTeamInfo ERROR")
-            console.log(err)
+            AppUtils.CONSOLE_LOG("get LatestTeamInfo ERROR")
+            AppUtils.CONSOLE_LOG(err)
             if (err.response.data.code == 100) {
               // Seems User is Removed from Team
               this.props.actUserLeaveTeamOK()
@@ -124,16 +124,16 @@ class TeamScreen extends React.Component {
 
           Backend.getAllJoinTeamRequest(this.props.userData.token, 
             response => {
-                console.log("GEt all JoinRequest OK")
-                // console.log(response.data)
+                AppUtils.CONSOLE_LOG("GEt all JoinRequest OK")
+                // AppUtils.CONSOLE_LOG(response.data)
                 //this.props.actUserLoginOK(response.data)
                 //this.props.navigation.navigate("Settings")
                 this.props.actTeamGetJoinRequestOK(response.data)
 
                 Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token, 
                   response2 => {
-                      console.log("GEt all Member in Team OK")
-                      // console.log(response.data)
+                      AppUtils.CONSOLE_LOG("GEt all Member in Team OK")
+                      // AppUtils.CONSOLE_LOG(response.data)
                       //this.props.actUserLoginOK(response.data)
                       //this.props.navigation.navigate("Settings")
                       // this.setState({
@@ -145,8 +145,8 @@ class TeamScreen extends React.Component {
                     if (!silence) {
                       this.props.actUserStartSyncTeamDone();
                     }
-                      console.log("GEt all Member in Team ERROR")
-                      console.log(JSON.stringify(error))
+                      AppUtils.CONSOLE_LOG("GEt all Member in Team ERROR")
+                      AppUtils.CONSOLE_LOG(JSON.stringify(error))
                       this.setState({
                           message: "Get Team Data Error!"
                       })
@@ -157,8 +157,8 @@ class TeamScreen extends React.Component {
               if (!silence) {
                 this.props.actUserStartSyncTeamDone();
               }
-                console.log("GEt all JoinRequest ERROR")
-                console.log(error.response)
+                AppUtils.CONSOLE_LOG("GEt all JoinRequest ERROR")
+                AppUtils.CONSOLE_LOG(error.response)
             }
           );
         } else {
@@ -185,22 +185,22 @@ class TeamScreen extends React.Component {
   }
 
   componentDidMount() {
-    console.log("**********&&&&&&&&&^^^^^^^^^ TeamScreen DidMount")
+    AppUtils.CONSOLE_LOG("**********&&&&&&&&&^^^^^^^^^ TeamScreen DidMount")
 
     // Ưhen First Mount, try to FetchTeamData Silencely 
     this.fetchTeamData(true)
   }
   componentDidUpdate() {
-    console.log("**********&&&&&&&&&^^^^^^^^^^ TeamScreen componentDidUpdate")
+    AppUtils.CONSOLE_LOG("**********&&&&&&&&&^^^^^^^^^^ TeamScreen componentDidUpdate")
   }
 
   renderComponent = () => {
-    console.log(Layout.window.width)
+    AppUtils.CONSOLE_LOG(Layout.window.width)
     if(this.state.activePage === 0) {
-      console.log("this.state.activePage 0 Car Listssssssssss")
+      AppUtils.CONSOLE_LOG("this.state.activePage 0 Car Listssssssssss")
       let allVehicles = [];
       this.props.teamData.members.forEach(item=> {
-        console.log("       item:id:" + item.id)
+        AppUtils.CONSOLE_LOG("       item:id:" + item.id)
         if (this.props.userData.teamInfo.excludeMyCar && 
             item.id == this.props.userData.userProfile.id) {
               // Skip my cars
@@ -375,7 +375,7 @@ class TeamScreen extends React.Component {
           navigation={this.props.navigation} requestDisplay={this.state.sortType} isTeamDisplay={true}
         />
       )}))
-      console.log(" allVehicles" + allVehicles.length)
+      AppUtils.CONSOLE_LOG(" allVehicles" + allVehicles.length)
       if (allVehicles.length > 0) {
         return viewDisplay;
       } else {
@@ -386,7 +386,7 @@ class TeamScreen extends React.Component {
     } else if(this.state.activePage === 1) {
       return null;
     } else {
-      console.log("this.state.activePage 3 of THANH VIENnnnnnnnnnnnnnnnnnn")
+      AppUtils.CONSOLE_LOG("this.state.activePage 3 of THANH VIENnnnnnnnnnnnnnnnnnn")
       return (
         <View>
           {this.props.teamData.lastSyncFromServerOn ? (
@@ -406,7 +406,7 @@ class TeamScreen extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("TeamScreen DidUpdate")
+    AppUtils.CONSOLE_LOG("TeamScreen DidUpdate")
   }
 
   render() {
@@ -421,9 +421,9 @@ class TeamScreen extends React.Component {
     } else if (this.props.userData.myJoinRequest && this.props.userData.myJoinRequest.teamCode) {
       stateTeam = 1;
     }
-    console.log("TeamScreen Render:" + stateTeam)
-    console.log(this.props.userData.teamInfo)
-    console.log(this.props.userData.myJoinRequest)
+    AppUtils.CONSOLE_LOG("TeamScreen Render:" + stateTeam)
+    AppUtils.CONSOLE_LOG(this.props.userData.teamInfo)
+    AppUtils.CONSOLE_LOG(this.props.userData.myJoinRequest)
     return (
       <Container>
         {stateTeam == 2 ? (

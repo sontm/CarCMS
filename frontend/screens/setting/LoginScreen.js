@@ -9,13 +9,14 @@ import { connect } from 'react-redux';
 import {actUserLoginOK} from '../../redux/UserReducer';
 
 import Backend from '../../constants/Backend'
+import apputils from '../../constants/AppUtils';
 
 class LoginScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: "tester1",
-            password: "123456",
+            email: "",
+            password: "",
             message: ""
         };
 
@@ -24,14 +25,14 @@ class LoginScreen extends React.Component {
     handleLogin() {
         Backend.login({email: this.state.email, password: this.state.password}, 
             response => {
-                console.log("Login OK")
-                console.log(response.data)
+                apputils.CONSOLE_LOG("Login OK")
+                apputils.CONSOLE_LOG(response.data)
                 this.props.actUserLoginOK(response.data)
                 this.props.navigation.navigate("Settings")
             },
             error => {
-                console.log("Login ERROR")
-                console.log(error)
+                apputils.CONSOLE_LOG("Login ERROR")
+                apputils.CONSOLE_LOG(error)
                 this.setState({
                     message: "Login Error!"
                 })

@@ -12,6 +12,7 @@ import Backend from '../../constants/Backend'
 import {actUserUpdateProfileOK} from '../../redux/UserReducer';
 import NetInfo from "@react-native-community/netinfo";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import apputils from '../../constants/AppUtils';
 
 class ProfileScreen extends React.Component {
     constructor(props) {
@@ -89,12 +90,12 @@ class ProfileScreen extends React.Component {
                     Backend.updateUserProfile(newData
                         , this.props.userData.token,
                         response => {
-                            console.log(response.data)
+                            apputils.CONSOLE_LOG(response.data)
                             this.props.actUserUpdateProfileOK(response.data)
                             this.props.navigation.goBack();
                         }, error => {
-                            console.log(error.response)
-                            console.log("Update Profile Error!")
+                            apputils.CONSOLE_LOG(error.response)
+                            apputils.CONSOLE_LOG("Update Profile Error!")
                             if (error.response.data.msg) {
                                 Toast.show({
                                     text: error.response.data.msg,
@@ -118,8 +119,8 @@ class ProfileScreen extends React.Component {
         }
     }
     render() {
-        console.log("this.props.userData.userProfile")
-        console.log(this.props.userData.userProfile)
+        apputils.CONSOLE_LOG("this.props.userData.userProfile")
+        apputils.CONSOLE_LOG(this.props.userData.userProfile)
         return (
             <Container>
             <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 

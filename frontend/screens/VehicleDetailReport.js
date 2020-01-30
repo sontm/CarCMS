@@ -29,13 +29,13 @@ class VehicleDetailReport extends React.Component {
   }
 
   componentDidMount() {
-    console.log("~~~~~~~~~~~~DetailReport DidMount:" + AppConstants.CURRENT_VEHICLE_ID)
+    AppUtils.CONSOLE_LOG("~~~~~~~~~~~~DetailReport DidMount:" + AppConstants.CURRENT_VEHICLE_ID)
   }
   componentDidUpdate() {
-    console.log("~~~~~~~~~~~~DetailReport DidUpdate:" + AppConstants.CURRENT_VEHICLE_ID)
+    AppUtils.CONSOLE_LOG("~~~~~~~~~~~~DetailReport DidUpdate:" + AppConstants.CURRENT_VEHICLE_ID)
   }
   render() {
-    console.log("~~~~~~~~~~~~DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
+    AppUtils.CONSOLE_LOG("~~~~~~~~~~~~DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
     
     if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
         var currentVehicle = this.props.navigation.state.params.vehicle;
@@ -45,9 +45,9 @@ class VehicleDetailReport extends React.Component {
 
     if (currentVehicle) {
         AppConstants.CURRENT_VEHICLE_ID = currentVehicle.id;
-        //console.log("CALL actTempCalculateCarReport from Detail Report:")
+        //AppUtils.CONSOLE_LOG("CALL actTempCalculateCarReport from Detail Report:")
         //this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
-        //console.log("END actTempCalculateCarReport:")
+        //AppUtils.CONSOLE_LOG("END actTempCalculateCarReport:")
         // let {lastDate, lastKm, averageKmPerDay} = AppUtils.getLastDateAndKmFromGas(currentVehicle.fillGasList);
         // let {lastKmOil, lastDateOil, totalMoneyOil, passedKmFromPreviousOil, nextEstimateDateForOil}
         //     = AppUtils.getInfoForOilUsage(currentVehicle.fillOilList, 
@@ -102,6 +102,8 @@ class VehicleDetailReport extends React.Component {
                 isHaveRemindData = true;
             }
         }
+        AppUtils.CONSOLE_LOG("currentVehicle.brand")
+        AppUtils.CONSOLE_LOG(":" + currentVehicle.brand + ":")
         return (
             <Container>
             <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
@@ -111,8 +113,9 @@ class VehicleDetailReport extends React.Component {
                 </Button>
             </Left>
             <Body  style={{flex:5}}>
-                <Title><HeaderText>{currentVehicle.brand + " " +
-                     currentVehicle.model + " " + currentVehicle.licensePlate}</HeaderText></Title>
+                <Title><HeaderText style={{fontSize:16, fontWeight: 'normal'}}>{currentVehicle.brand == "Xe Tải" ?
+                    (currentVehicle.model + " " + currentVehicle.licensePlate) : 
+                    (currentVehicle.brand + " " + currentVehicle.model + " " + currentVehicle.licensePlate)}</HeaderText></Title>
             </Body>
             <Right style={{flex:1}}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate("VehicleHistory", 

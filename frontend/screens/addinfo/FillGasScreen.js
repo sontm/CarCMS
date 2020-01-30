@@ -36,8 +36,8 @@ class FillGasScreen extends React.Component {
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
                 AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
-            console.log("LoadGas From Info")
-            console.log(AppConstants.CURRENT_VEHICLE_ID)
+            apputils.CONSOLE_LOG("LoadGas From Info")
+            apputils.CONSOLE_LOG(AppConstants.CURRENT_VEHICLE_ID)
             let currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
             this.currentVehicle = currentVehicle;
             
@@ -90,7 +90,7 @@ class FillGasScreen extends React.Component {
             curMaxMeter = maxMeter+1;
         }
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit FillGas:")
+            apputils.CONSOLE_LOG("WIll Edit FillGas:")
             if (!this.isEditOverMaxMeter) {
                 curMaxMeter = 0;
             }
@@ -110,7 +110,7 @@ class FillGasScreen extends React.Component {
             this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
             this.props.navigation.goBack()
         } else {
-            console.log("WIll Save Fill Gas:")
+            apputils.CONSOLE_LOG("WIll Save Fill Gas:")
             let newData = {
                 ...this.state,
 
@@ -125,7 +125,7 @@ class FillGasScreen extends React.Component {
             }
 
             newData.id = "gas-"+this.state.vehicleId+"-"+apputils.uuidv4();
-            console.log(JSON.stringify(newData))
+            apputils.CONSOLE_LOG(JSON.stringify(newData))
             // set Current VE ID so can ComeBack VehicleDetail
             AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
 
@@ -150,8 +150,8 @@ class FillGasScreen extends React.Component {
             //     item.id == this.state.vehicleId);
             let currentVehicle = this.currentVehicle;
             
-            console.log("-----maxMeter")
-            console.log(currentVehicle.maxMeter)
+            apputils.CONSOLE_LOG("-----maxMeter")
+            apputils.CONSOLE_LOG(currentVehicle.maxMeter)
             let theMaxMeter = 0;
             if (currentVehicle.maxMeter) {
                 theMaxMeter = currentVehicle.maxMeter;
@@ -211,7 +211,7 @@ class FillGasScreen extends React.Component {
                             },
                             {
                                 text: 'Huỷ, Nhập Lại',
-                                onPress: () => console.log('Cancel Pressed'),
+                                onPress: () => apputils.CONSOLE_LOG('Cancel Pressed'),
                                 style: 'cancel',
                             },
                         ],
@@ -228,7 +228,7 @@ class FillGasScreen extends React.Component {
         }
     }
     onChooseVehicle(veId) {
-        console.log("onChoose:" + veId)
+        apputils.CONSOLE_LOG("onChoose:" + veId)
         this.currentVehicle = this.props.userData.vehicleList.find(item => item.id == veId);
 
         this.setState({
@@ -254,7 +254,7 @@ class FillGasScreen extends React.Component {
             var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
         }
 
-        console.log("000000000 this.isEditing && this.initialEditKm:" + this.isEditing +","+ this.initialEditKm)
+        apputils.CONSOLE_LOG("000000000 this.isEditing && this.initialEditKm:" + this.isEditing +","+ this.initialEditKm)
         return (
             <Container>
             <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 

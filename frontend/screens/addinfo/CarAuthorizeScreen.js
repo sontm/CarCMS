@@ -60,9 +60,9 @@ class CarAuthorizeScreen extends React.Component {
             // If There is No Current Vehicle ID, Set to the First 
             this.isEditing = false;
             if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
-                console.log(this.props.userData.vehicleList)
+                apputils.CONSOLE_LOG(this.props.userData.vehicleList)
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
-                    console.log(this.props.userData.vehicleList[0].id)
+                    apputils.CONSOLE_LOG(this.props.userData.vehicleList[0].id)
                     this.setState({
                         vehicleId: this.props.userData.vehicleList[0].id
                     })
@@ -85,7 +85,7 @@ class CarAuthorizeScreen extends React.Component {
             })
             } else {
             if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-                console.log("WIll Edit FillOil:")
+                apputils.CONSOLE_LOG("WIll Edit FillOil:")
                 let newData = {
                     ...this.state,
 
@@ -99,7 +99,7 @@ class CarAuthorizeScreen extends React.Component {
                 this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_AUTH, this.props.userData)
                 this.props.navigation.goBack()
             } else {
-                console.log("WIll Save Car Authorize:")
+                apputils.CONSOLE_LOG("WIll Save Car Authorize:")
                 let newData = {
                     ...this.state,
                     
@@ -117,7 +117,7 @@ class CarAuthorizeScreen extends React.Component {
                 // })
                 newData.id = "aut-"+this.state.vehicleId+"-"+apputils.uuidv4();
                 
-                console.log(newData)
+                apputils.CONSOLE_LOG(newData)
 
                 // set Current VE ID so can ComeBack VehicleDetail
                 AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
@@ -146,8 +146,8 @@ class CarAuthorizeScreen extends React.Component {
                 subType += item + '+';
             }
         })
-        console.log("subType:" + subType)
-        console.log(prevSubTypeArr)
+        apputils.CONSOLE_LOG("subType:" + subType)
+        apputils.CONSOLE_LOG(prevSubTypeArr)
         this.setState({
             subType: subType,
             subTypeArr:prevSubTypeArr

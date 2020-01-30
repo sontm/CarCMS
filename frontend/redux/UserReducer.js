@@ -1,7 +1,6 @@
 import { REHYDRATE } from 'redux-persist';
 import AppConstants from '../constants/AppConstants'
 import AppUtils from '../constants/AppUtils'
-import apputils from '../constants/AppUtils';
 import backend from '../constants/Backend';
 
 var _ = require('lodash');
@@ -145,9 +144,9 @@ export const reCalculateCarReports = (currentVehicle, prevUserData, theDispatch,
 
     // If currentVehicle is NULL, need get by vehicleId
     if (!currentVehicle) {
-        console.log("=====vehicleNull, id:" + vehicleId + "ml:" + prevUserData.vehicleList.length)
+        AppUtils.CONSOLE_LOG("=====vehicleNull, id:" + vehicleId + "ml:" + prevUserData.vehicleList.length)
         for (let l = 0; l < prevUserData.vehicleList.length; l++ ) {
-            console.log("   list id:" + prevUserData.vehicleList[l].id)
+            AppUtils.CONSOLE_LOG("   list id:" + prevUserData.vehicleList[l].id)
             if (prevUserData.vehicleList[l].id == vehicleId) {
                 currentVehicle = prevUserData.vehicleList[l];
             }
@@ -157,7 +156,7 @@ export const reCalculateCarReports = (currentVehicle, prevUserData, theDispatch,
         AppUtils.actTempCalculateCarReportAsyncWrapper(currentVehicle, options, 
             prevUserData.settings, prevUserData.carReports, prevUserData.settingService)
         .then (result => {
-            console.log("<<<<<<<reCalculateCarReports FINISH")
+            AppUtils.CONSOLE_LOG("<<<<<<<reCalculateCarReports FINISH")
             if (theDispatch) {
                 theDispatch({
                     type: TEMP_CALCULATE_CARREPORT,
@@ -171,20 +170,20 @@ export const reCalculateCarReports = (currentVehicle, prevUserData, theDispatch,
             }
         })
         .catch (error => {
-            console.log(error)
+            AppUtils.CONSOLE_LOG(error)
         })
     }
 }
 
 export const actSettingSetMaintainType = (data) => (dispatch) => {
-    console.log("actSettingSetMaintainType:")
+    AppUtils.CONSOLE_LOG("actSettingSetMaintainType:")
     dispatch({
         type: SETTING_MAINTAIN_TYPE,
         payload: data
     })
 }
 export const actSettingSetRemind = (data) => (dispatch) => {
-    console.log("actSettingSetRemind:")
+    AppUtils.CONSOLE_LOG("actSettingSetRemind:")
     dispatch({
         type: SETTING_REMIND,
         payload: data
@@ -192,7 +191,7 @@ export const actSettingSetRemind = (data) => (dispatch) => {
 }
 
 export const actUserRegisterOK = (data) => (dispatch) => {
-    console.log("actUserRegisterOK:")
+    AppUtils.CONSOLE_LOG("actUserRegisterOK:")
     dispatch({
         type: USER_REGISTER_OK,
         payload: data
@@ -200,15 +199,15 @@ export const actUserRegisterOK = (data) => (dispatch) => {
 }
 
 export const actUserCreateTeamOK = (data, isMember) => (dispatch) => {
-    console.log("actCreateTeamOK:")
-    console.log(data)
+    AppUtils.CONSOLE_LOG("actCreateTeamOK:")
+    AppUtils.CONSOLE_LOG(data)
     dispatch({
         type: USER_CREATE_TEAM_OK,
         payload: {data: data, isMember: isMember}
     })
 }
 export const actUserLeaveTeamOK = (data) => (dispatch) => {
-    console.log("actUserLeaveTeamOK:")
+    AppUtils.CONSOLE_LOG("actUserLeaveTeamOK:")
     dispatch({
         type: USER_LEAVE_TEAM_OK
     })
@@ -216,7 +215,7 @@ export const actUserLeaveTeamOK = (data) => (dispatch) => {
 
 // data will have fullname, phone and token if needed
 export const actUserUpdateProfileOK = (data) => (dispatch) => {
-    console.log("actUserUpdateProfileOK:")
+    AppUtils.CONSOLE_LOG("actUserUpdateProfileOK:")
     dispatch({
         type: USER_UPDATEPROFILE_OK,
         payload: data
@@ -225,14 +224,14 @@ export const actUserUpdateProfileOK = (data) => (dispatch) => {
 
 //{user,token,teamInfo}
 export const actUserLoginOK = (data) => (dispatch) => {
-    console.log("actUserLoginOK:")
+    AppUtils.CONSOLE_LOG("actUserLoginOK:")
     dispatch({
         type: USER_LOGIN_OK,
         payload: data
     })
 }
 export const actUserLogout = () => (dispatch) => {
-    console.log("actUserLogout:")
+    AppUtils.CONSOLE_LOG("actUserLogout:")
     dispatch({
         type: USER_LOGOUT,
     })
@@ -243,7 +242,7 @@ export const actUserLogout = () => (dispatch) => {
 
 
 export const actVehicleAddVehicle = (vehicle, prevUserData) => (dispatch, getState) => {
-    console.log("actVehicleAddVehicle:")
+    AppUtils.CONSOLE_LOG("actVehicleAddVehicle:")
     dispatch({
         type: VEHICLE_ADD,
         payload: vehicle
@@ -252,7 +251,7 @@ export const actVehicleAddVehicle = (vehicle, prevUserData) => (dispatch, getSta
     reCalculateCarReports(vehicle, userData, dispatch)
 }
 export const actVehicleEditVehicle = (vehicle, prevUserData) => (dispatch, getState) => {
-    console.log("actVehicleEditVehicle:")
+    AppUtils.CONSOLE_LOG("actVehicleEditVehicle:")
     dispatch({
         type: VEHICLE_EDIT,
         payload: vehicle
@@ -261,7 +260,7 @@ export const actVehicleEditVehicle = (vehicle, prevUserData) => (dispatch, getSt
     reCalculateCarReports(vehicle, userData, dispatch)
 }
 export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) => {
-    console.log("actVehicleDeleteVehicle:"+vehicleId+",licensePlate:" + licensePlate)
+    AppUtils.CONSOLE_LOG("actVehicleDeleteVehicle:"+vehicleId+",licensePlate:" + licensePlate)
     dispatch({
         type: VEHICLE_DEL,
         payload: {id: vehicleId, licensePlate: licensePlate}
@@ -269,7 +268,7 @@ export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) =
 }
 
 export const actVehicleAddFillItem = (data, type, prevUserData) => (dispatch, getState) => {
-    console.log("actVehicleAddFillItem:")
+    AppUtils.CONSOLE_LOG("actVehicleAddFillItem:")
     //AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(data.vehicleId)
 
     if (type == AppConstants.FILL_ITEM_GAS) {
@@ -304,7 +303,7 @@ export const actVehicleAddFillItem = (data, type, prevUserData) => (dispatch, ge
 
 // type: gas, oil, auth, 
 export const actVehicleDeleteFillItem = (vehicleId, itemId, type, prevUserData) => (dispatch, getState) => {
-    console.log("actVehicleDeleteFillItem:"+itemId+",type:" + type)
+    AppUtils.CONSOLE_LOG("actVehicleDeleteFillItem:"+itemId+",type:" + type)
     //AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(itemId.vehicleId)
 
     if (type == AppConstants.FILL_ITEM_GAS) {
@@ -340,8 +339,8 @@ export const actVehicleDeleteFillItem = (vehicleId, itemId, type, prevUserData) 
 
 // type: gas, oil, auth, 
 export const actVehicleEditFillItem = (itemId, type, prevUserData) => (dispatch, getState) => {
-    console.log(">>>>>>>>>>>>> Start Dispatch actVehicleEditFillItem:"+itemId+",type:" + type)
-    console.log(itemId)
+    AppUtils.CONSOLE_LOG(">>>>>>>>>>>>> Start Dispatch actVehicleEditFillItem:"+itemId+",type:" + type)
+    AppUtils.CONSOLE_LOG(itemId)
     AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.push(itemId.vehicleId)
 
     if (type == AppConstants.FILL_ITEM_GAS) {
@@ -371,11 +370,11 @@ export const actVehicleEditFillItem = (itemId, type, prevUserData) => (dispatch,
         })
     }
 
-    console.log("<<<<<<<<<<<< END Dispatch actVehicleEditFillItem:"+itemId+",type:" + type)
+    AppUtils.CONSOLE_LOG("<<<<<<<<<<<< END Dispatch actVehicleEditFillItem:"+itemId+",type:" + type)
     let {userData} = getState();
-    // console.log(prevUserData.vehicleList[0].authorizeCarList)
-    // console.log("  >>>>>>>>>>>> Start reCalculateCarReports")
-    // console.log(userData.vehicleList[0].authorizeCarList)
+    // AppUtils.CONSOLE_LOG(prevUserData.vehicleList[0].authorizeCarList)
+    // AppUtils.CONSOLE_LOG("  >>>>>>>>>>>> Start reCalculateCarReports")
+    // AppUtils.CONSOLE_LOG(userData.vehicleList[0].authorizeCarList)
 
     reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
 }
@@ -388,7 +387,7 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
     if (!prevUserData || !prevUserData.carReports || !prevUserData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
-        console.log(">>>actTempCalculateCarReport in User:")
+        AppUtils.CONSOLE_LOG(">>>actTempCalculateCarReport in User:")
         // if (!prevUserData || !prevUserData.carReports) {
         //     // Maybe from Sync from Server, clear all Notifications
         //     apputils.cancelAllAppLocalNotification();
@@ -405,7 +404,7 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
         AppUtils.actTempCalculateCarReportAsyncWrapper(currentVehicle, options, 
             prevUserData.settings, prevUserData.carReports, prevUserData.settingService)
         .then (result => {
-            console.log("<<<<<<<actTempCalculateCarReport FINISH")
+            AppUtils.CONSOLE_LOG("<<<<<<<actTempCalculateCarReport FINISH")
             if (theDispatch) {
                 theDispatch({
                     type: TEMP_CALCULATE_CARREPORT,
@@ -419,7 +418,7 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
             }
         })
         .catch (error => {
-            console.log(error)
+            AppUtils.CONSOLE_LOG(error)
         })
     }
 }
@@ -434,7 +433,7 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevUserData,
     // teamInfo: teamInfo
 // oldProps have both userData, teamData
 export const actVehicleSyncAllFromServer = (data, oldProps, isMergeDataBeforeLogin) => (dispatch) => {
-    console.log("actVehicleSyncFromServer:")
+    AppUtils.CONSOLE_LOG("actVehicleSyncFromServer:")
     dispatch({
         type: VEHICLE_SYNC_FROMSERVER,
         payload: {data: data, isMergeDataBeforeLogin: isMergeDataBeforeLogin}
@@ -481,13 +480,13 @@ export const actVehicleSyncAllFromServer = (data, oldProps, isMergeDataBeforeLog
                 }
             }
             if (isSameData && oldProps.userData.carReports[""+vehicle.id]) {
-                console.log("&&&&&&&&&&&&&&^^^^^^^^ Yeah Same Data when sync from Server, No need Reports:"+ vehicle.licensePlate)
+                AppUtils.CONSOLE_LOG("&&&&&&&&&&&&&&^^^^^^^^ Yeah Same Data when sync from Server, No need Reports:"+ vehicle.licensePlate)
                 allCarReports[""+vehicle.id] = oldProps.userData.carReports[""+vehicle.id]
             } else {
                 needProcess++;
                 AppUtils.actTempCalculateCarReportAsyncWrapper(vehicle, options)
                 .then (result => {
-                    console.log("  OK User Calculate Report:" + vehicle.licensePlate)
+                    AppUtils.CONSOLE_LOG("  OK User Calculate Report:" + vehicle.licensePlate)
                     allCarReports[""+vehicle.id] = result
                     doneProcess++;
                     
@@ -495,7 +494,7 @@ export const actVehicleSyncAllFromServer = (data, oldProps, isMergeDataBeforeLog
                     if (doneProcess == needProcess) {
                         oldProps.actUserStartSyncPrivateDone();
                         isAlreadyDispatch = true;
-                        console.log("======================= Final Dispatch User Reports:")
+                        AppUtils.CONSOLE_LOG("======================= Final Dispatch User Reports:")
                         dispatch({
                             type: TEMP_CALCULATE_CARREPORT_ALL,
                             payload: allCarReports
@@ -503,8 +502,8 @@ export const actVehicleSyncAllFromServer = (data, oldProps, isMergeDataBeforeLog
                     }
                 })
                 .catch (error => {
-                    console.log("  Error User Calculate Report:" + vehicle.licensePlate)
-                    console.log(error)
+                    AppUtils.CONSOLE_LOG("  Error User Calculate Report:" + vehicle.licensePlate)
+                    AppUtils.CONSOLE_LOG(error)
                 })
             }
         })
@@ -528,38 +527,38 @@ export const actVehicleSyncAllFromServer = (data, oldProps, isMergeDataBeforeLog
 
 
 export const actUserInitializeInitialDataWhenAppStart = () => (dispatch) => {
-    console.log("actUserInitializeInitialDataWhenAppStart:")
+    AppUtils.CONSOLE_LOG("actUserInitializeInitialDataWhenAppStart:")
     dispatch({
         type: USER_INIT_DATA
     })
 }
 export const actUserStartSyncPrivate = () => (dispatch) => {
-    console.log("actUserStartSyncPrivate:")
+    AppUtils.CONSOLE_LOG("actUserStartSyncPrivate:")
     dispatch({
         type: USER_SYNC_PRIVATE_START
     })
 }
 export const actUserStartSyncPrivateDone = () => (dispatch) => {
-    console.log("actUserStartSyncPrivate:")
+    AppUtils.CONSOLE_LOG("actUserStartSyncPrivate:")
     dispatch({
         type: USER_SYNC_PRIVATE_DONE,
         
     })
 }
 export const actUserStartSyncTeam = () => (dispatch) => {
-    console.log("actUserStartSyncPrivate:")
+    AppUtils.CONSOLE_LOG("actUserStartSyncPrivate:")
     dispatch({
         type: USER_SYNC_TEAM_START
     })
 }
 export const actUserStartSyncTeamDone = () => (dispatch) => {
-    console.log("actUserStartSyncPrivate:")
+    AppUtils.CONSOLE_LOG("actUserStartSyncPrivate:")
     dispatch({
         type: USER_SYNC_TEAM_DONE
     })
 }
 export const actUserForCloseModal = () => (dispatch) => {
-    console.log("actUserForCloseModal:")
+    AppUtils.CONSOLE_LOG("actUserForCloseModal:")
     dispatch({
         type: USER_FORCE_CLOSE_MODAL
     })
@@ -570,7 +569,7 @@ export const actUserForCloseModal = () => (dispatch) => {
 
 
 export const actVehicleSyncToServerOK = (data) => (dispatch) => {
-    console.log("actVehicleSyncToServerOK:")
+    AppUtils.CONSOLE_LOG("actVehicleSyncToServerOK:")
     dispatch({
         type: VEHICLE_SYNC_TOSERVER
     })
@@ -578,28 +577,28 @@ export const actVehicleSyncToServerOK = (data) => (dispatch) => {
 
 
 export const actCustomAddServiceModule = (data) => (dispatch) => {
-    console.log("actCustomAddServiceModule:")
+    AppUtils.CONSOLE_LOG("actCustomAddServiceModule:")
     dispatch({
         type: CUSTOM_ADD_SERVICEMODULE,
         payload: data
     })
 }
 export const actCustomAddServiceModuleBike = (data) => (dispatch) => {
-    console.log("actCustomAddServiceModuleBike:")
+    AppUtils.CONSOLE_LOG("actCustomAddServiceModuleBike:")
     dispatch({
         type: CUSTOM_ADD_SERVICEMODULE_BIKE,
         payload: data
     })
 }
 export const actCustomDelServiceModule = (data) => (dispatch) => {
-    console.log("actCustomDelServiceModule:")
+    AppUtils.CONSOLE_LOG("actCustomDelServiceModule:")
     dispatch({
         type: CUSTOM_DEL_SERVICEMODULE,
         payload: data
     })
 }
 export const actCustomDelServiceModuleBike = (data) => (dispatch) => {
-    console.log("actCustomDelServiceModuleBike:")
+    AppUtils.CONSOLE_LOG("actCustomDelServiceModuleBike:")
     dispatch({
         type: CUSTOM_DEL_SERVICEMODULE_BIKE,
         payload: data
@@ -609,7 +608,7 @@ export const actCustomDelServiceModuleBike = (data) => (dispatch) => {
 
 // data: {vehicleId, maxMeter}
 export const actUserSetMaxOdometer = (data) => (dispatch) => {
-    console.log("actUserSetMaxOdometer:")
+    AppUtils.CONSOLE_LOG("actUserSetMaxOdometer:")
     dispatch({
         type: USER_SET_MAX_METER,
         payload: data
@@ -618,7 +617,7 @@ export const actUserSetMaxOdometer = (data) => (dispatch) => {
 
 // data: {type, brand, model}
 export const actUserCreateNewVehicleModel = (data) => (dispatch) => {
-    console.log("actUserCreateNewVehicleModel:")
+    AppUtils.CONSOLE_LOG("actUserCreateNewVehicleModel:")
     dispatch({
         type: USER_CREATE_VEHICLEMODEL,
         payload: data
@@ -627,7 +626,7 @@ export const actUserCreateNewVehicleModel = (data) => (dispatch) => {
 
 // data: {brand, model, isBike}
 export const actUserDelNewVehicleModel = (data) => (dispatch) => {
-    console.log("actUserDelNewVehicleModel:")
+    AppUtils.CONSOLE_LOG("actUserDelNewVehicleModel:")
     dispatch({
         type: USER_DEL_VEHICLEMODEL,
         payload: data
@@ -637,7 +636,7 @@ export const actUserDelNewVehicleModel = (data) => (dispatch) => {
 
 export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
-    console.log("actUserGetNotifications, token:" + prevUserProps.token)
+    AppUtils.CONSOLE_LOG("actUserGetNotifications, token:" + prevUserProps.token)
     let notiIds = [];
     if (prevUserProps.notifications) {
         prevUserProps.notifications.forEach(item => {
@@ -647,8 +646,8 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
     if (prevUserProps.isLogined) {
         backend.getAllNotification(notiIds, prevUserProps.token,
         response => {
-            console.log("  OK Got Notification:" )
-            console.log(response.data)
+            AppUtils.CONSOLE_LOG("  OK Got Notification:" )
+            AppUtils.CONSOLE_LOG(response.data)
             if (response.data && response.data.length > 0) {
                 dispatch({
                     type: USER_GET_APPNOTIFICATION,
@@ -656,13 +655,13 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
                 })
             }
         },error => {
-            console.log("  Error Got Notificationt:")
+            AppUtils.CONSOLE_LOG("  Error Got Notificationt:")
         })
     } else {
         backend.getAllNotificationGuest(notiIds,
             response => {
-                console.log("  OK Got Notification GUeest:" )
-                console.log(response.data)
+                AppUtils.CONSOLE_LOG("  OK Got Notification GUeest:" )
+                AppUtils.CONSOLE_LOG(response.data)
                 if (response.data && response.data.length > 0) {
                     dispatch({
                         type: USER_GET_APPNOTIFICATION,
@@ -670,8 +669,8 @@ export const actUserGetNotifications = (prevUserProps) => (dispatch) => {
                     })
                 }
             },error => {
-                console.log("  Error Got Notificationt GUeest:")
-                console.log(error.response)
+                AppUtils.CONSOLE_LOG("  Error Got Notificationt GUeest:")
+                AppUtils.CONSOLE_LOG(error.response)
             })
     }
 }
@@ -683,7 +682,7 @@ export const actUserSawAllNotifications = () => (dispatch) => {
 }
 
 export const actUserGotMyJoinRequest = (data) => (dispatch) => {
-    console.log("  actUserGotMyJoinRequest" )
+    AppUtils.CONSOLE_LOG("  actUserGotMyJoinRequest" )
     dispatch({
         type: USER_GOT_MY_JOINREQUEST,
         payload: data
@@ -692,7 +691,7 @@ export const actUserGotMyJoinRequest = (data) => (dispatch) => {
 
 
 export const actUserSyncPartlyOK = () => (dispatch) => {
-    console.log("  actUserSyncPartlyOK" )
+    AppUtils.CONSOLE_LOG("  actUserSyncPartlyOK" )
     dispatch({
         type: USER_SYNC_PARTLY_OK,
     })
@@ -712,7 +711,7 @@ function checkNameExistInServiceModule(arr, value) {
 export default function(state = initialState, action) {
     switch (action.type) {
     // case REHYDRATE:
-    //     console.log("HVE JUST LOAD STATE--------------")
+    //     AppUtils.CONSOLE_LOG("HVE JUST LOAD STATE--------------")
     //     let newAA = {...state}; // THis code will Lose all
     //     if (!state.vehicleList) state.vehicleList= [];
     //     return newAA;
@@ -794,11 +793,11 @@ export default function(state = initialState, action) {
 
         // Compare and Merge Vehicle List, if Same ID, use the Server One
         let newVehicleList = data.vehicleList;
-        console.log("&&&&&&&&&&&&&&&&&&&&& newVehicleList:" + newVehicleList.length)
+        AppUtils.CONSOLE_LOG("&&&&&&&&&&&&&&&&&&&&& newVehicleList:" + newVehicleList.length)
         let modifiedInfo = {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0};
         if (isMergeDataBeforeLogin) {
             let prevVehicleList = state.vehicleList;
-            console.log("&&&&&&&&&&&&&&&&&&&&& prevVehicleList:" + prevVehicleList.length)
+            AppUtils.CONSOLE_LOG("&&&&&&&&&&&&&&&&&&&&& prevVehicleList:" + prevVehicleList.length)
             if (prevVehicleList && prevVehicleList.length > 0) {
                 // This mean have Prev data, need Sync to Server
                 modifiedInfo = {vehicleIds:[], 
@@ -1613,8 +1612,8 @@ export default function(state = initialState, action) {
         if (action.payload.isBike) {
             type = "bike";
         }
-        console.log("DELETEEEEE")
-        console.log(action.payload)
+        AppUtils.CONSOLE_LOG("DELETEEEEE")
+        AppUtils.CONSOLE_LOG(action.payload)
 
         if (!prevStateDelModel.customVehicleModel) {
             prevStateDelModel.customVehicleModel = [];
@@ -1624,7 +1623,7 @@ export default function(state = initialState, action) {
         prevStateDelModel.customVehicleModel.forEach((item, bidx) => {
             // if same brand and type
             if (item.type == type && item.name == action.payload.brand) {
-                console.log("  FOund BRAND")
+                AppUtils.CONSOLE_LOG("  FOund BRAND")
                 // Exist, check to add new Model
                 for (let idx = 0; idx < item.models.length; idx++) {
                     let m = item.models[idx];
@@ -1657,7 +1656,7 @@ export default function(state = initialState, action) {
         }
         // add to notifications list if not exist ID
         let receivedNotis = action.payload;
-        console.log("USER_GET_APPNOTIFICATION:" + receivedNotis.length)
+        AppUtils.CONSOLE_LOG("USER_GET_APPNOTIFICATION:" + receivedNotis.length)
         let newNotis = [...prevNotis];
         let isHaveNew = false;
         let countNotSeenNoti = 0;
@@ -1682,8 +1681,8 @@ export default function(state = initialState, action) {
                 return bDate - aDate;
             })
         }
-        // console.log("  FInal Notifications")
-        // console.log(newNotis)
+        // AppUtils.CONSOLE_LOG("  FInal Notifications")
+        // AppUtils.CONSOLE_LOG(newNotis)
 
         return {
             ...state,
@@ -1691,7 +1690,7 @@ export default function(state = initialState, action) {
             countNotSeenNoti: countNotSeenNoti
         }
     case USER_SAW_ALL_APPNOTIFICATION:
-        console.log("USER_SAW_ALL_APPNOTIFICATION")
+        AppUtils.CONSOLE_LOG("USER_SAW_ALL_APPNOTIFICATION")
         let prevNotis2 = state.notifications;
         if (!prevNotis2) {
             prevNotis2 = [];

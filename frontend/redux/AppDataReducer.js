@@ -1,5 +1,6 @@
 import { REHYDRATE } from 'redux-persist';
 import backend from '../constants/Backend';
+import apputils from '../constants/AppUtils';
 const APPDATA_OPEN_COUNT = 'APPDATA_OPEN_COUNT';
 const APPDATA_SYNC_LATEST = 'APPDATA_SYNC_LATEST';
 
@@ -291,23 +292,23 @@ const initialState = {
 };
 
 export const actAppIncreaseOpenCount = () => (dispatch) => {
-    console.log("actAppIncreaseOpenCount:")
+    apputils.CONSOLE_LOG("actAppIncreaseOpenCount:")
     dispatch({
         type: APPDATA_OPEN_COUNT
     })
 }
 
 export const actAppSyncLatestDataIfNeeded = (prevAppData) => (dispatch) => {
-    console.log("actAppSyncLatestDataIfNeeded:")
+    apputils.CONSOLE_LOG("actAppSyncLatestDataIfNeeded:")
     backend.getLatestAppDataOn(
     response => {
-        console.log(response.data.updatedOn + " vs " + prevAppData.appDataLatestOn)
+        apputils.CONSOLE_LOG(response.data.updatedOn + " vs " + prevAppData.appDataLatestOn)
         if (response.data.updatedOn &&  new Date(prevAppData.appDataLatestOn).getTime() < new Date(response.data.updatedOn).getTime()) {
-            console.log("-----Need Update App Data ")
+            apputils.CONSOLE_LOG("-----Need Update App Data ")
             // Need Update latest AppData here
             backend.getLatestAppData(
             response2 => {
-                //console.log(response.data)
+                //apputils.CONSOLE_LOG(response.data)
                 dispatch({
                     type: APPDATA_SYNC_LATEST,
                     payload: {data: response2.data, updatedOn: response.data.updatedOn}
@@ -332,7 +333,7 @@ export const actAppSyncLatestDataIfNeeded = (prevAppData) => (dispatch) => {
 export default function(state = initialState, action) {
     switch (action.type) {
     // case REHYDRATE:
-    //     console.log("HVE JUST LOAD STATE--------------")
+    //     apputils.CONSOLE_LOG("HVE JUST LOAD STATE--------------")
     //     let newAA = {...state}; // THis code will Lose all
     //     // if (!state.vehicleList) state.vehicleList= [];
     //     return newAA;

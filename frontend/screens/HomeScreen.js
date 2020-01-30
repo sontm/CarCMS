@@ -45,11 +45,11 @@ class HomeScreen extends React.Component {
 
   }
   componentWillMount() {
-    console.log("HOMESCreen Will Mount")
+    AppUtils.CONSOLE_LOG("HOMESCreen Will Mount")
     backend.getPromoteImageLink(
       response => {
-        console.log("Promote image")
-        console.log(response.data)
+        AppUtils.CONSOLE_LOG("Promote image")
+        AppUtils.CONSOLE_LOG(response.data)
         if (response.data && response.data.imgUrl) {
           this.setState({
             showPRModal:true,
@@ -59,20 +59,20 @@ class HomeScreen extends React.Component {
         }
       },
       err => {
-        console.log("Cannot Get promote image")
-        console.log(err)
+        AppUtils.CONSOLE_LOG("Cannot Get promote image")
+        AppUtils.CONSOLE_LOG(err)
       }
     )
   }
   componentDidMount() {
-    console.log("HOMESCreen DidMount, CountOpen:" + this.props.appData.countOpen)
+    AppUtils.CONSOLE_LOG("HOMESCreen DidMount, CountOpen:" + this.props.appData.countOpen)
     //this.loadFromStorage()
     // Load Notification messages
     this.props.actUserGetNotifications(this.props.userData)
   }
 
   componentDidUpdate() {
-    console.log("HOMESCreen DIDUpdate:"+this.props.userData.modifiedInfo.changedItemCount)
+    AppUtils.CONSOLE_LOG("HOMESCreen DIDUpdate:"+this.props.userData.modifiedInfo.changedItemCount)
     // Sync Some Data to Server if Edit Count >=3
     if (this.props.userData.isLogined) {
       // Try to Sync with Any New Data
@@ -93,10 +93,10 @@ class HomeScreen extends React.Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    console.log("HOMESCreen WillReceiveProps")
+    AppUtils.CONSOLE_LOG("HOMESCreen WillReceiveProps")
   }
   componentWillUnmount() {
-    console.log("HOMESCreen Will UnMount")
+    AppUtils.CONSOLE_LOG("HOMESCreen Will UnMount")
     // Get Promoted URL Here
   }
   calculateAllVehicleTotalMoney() {
@@ -162,7 +162,7 @@ class HomeScreen extends React.Component {
     return {totalMoneyTeam, totalMoneyTeamThisMonth, totalMoneyTeamPrevMonth};
   }
   onClosePRModal() {
-    console.log("Calling onForceCloseModalByPressBack..........")
+    AppUtils.CONSOLE_LOG("Calling onForceCloseModalByPressBack..........")
     this.setState({showPRModal: false})
   }
   onClickPRModal() {
@@ -172,14 +172,14 @@ class HomeScreen extends React.Component {
           Linking.openURL(this.state.linkUrl);
           this.setState({showPRModal: false})
         } else {
-          console.log("Don't know how to open URI: " + this.state.linkUrl);
+          AppUtils.CONSOLE_LOG("Don't know how to open URI: " + this.state.linkUrl);
         }
       });
     }
   }
 
   render() {
-    console.log("HOMESCreen Render")
+    AppUtils.CONSOLE_LOG("HOMESCreen Render")
     let isUserHasTeam = true;
     let addedFontSize = 0;
     if (!this.props.userData.teamInfo || !this.props.userData.teamInfo.id) {

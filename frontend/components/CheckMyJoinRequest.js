@@ -31,7 +31,6 @@ class CheckMyJoinRequest extends React.Component {
         this.onShowModalDialog = this.onShowModalDialog.bind(this)
     }
     onForceCloseModalByPressBack() {
-        console.log("Calling onForceCloseModalByPressBack..........")
         this.props.actUserForCloseModal()
     }
     onShowModalDialog() {
@@ -49,7 +48,7 @@ class CheckMyJoinRequest extends React.Component {
             [
                 {
                   text: AppLocales.t("GENERAL_NO"),
-                  onPress: () => console.log('Cancel Pressed'),
+                  onPress: () => apputils.CONSOLE_LOG('Cancel Pressed'),
                   style: 'cancel',
                 },
                 {text: AppLocales.t("GENERAL_YES"), onPress: () => {
@@ -57,13 +56,13 @@ class CheckMyJoinRequest extends React.Component {
                         if (state.isConnected) {
                             Backend.cancelMyJoinRequest(this.props.userData.token,
                                 response => {
-                                    console.log(response.data)
+                                    apputils.CONSOLE_LOG(response.data)
                                     this.props.actUserGotMyJoinRequest(response.data)
 
                                     this.props.navigation.goBack()
                                 }, error => {
-                                    console.log("cancelMyJoinRequest ERROR")
-                                    console.log(error.response)
+                                    apputils.CONSOLE_LOG("cancelMyJoinRequest ERROR")
+                                    apputils.CONSOLE_LOG(error.response)
                                 })
                         } else {
                             Toast.show({
@@ -82,15 +81,15 @@ class CheckMyJoinRequest extends React.Component {
     }
     checkMyJoinRequest() {
         // get the status of a Join Request id
-        console.log("this.props.userData.myJoinRequest.id")
-        console.log(this.props.userData.myJoinRequest.id)
+        apputils.CONSOLE_LOG("this.props.userData.myJoinRequest.id")
+        apputils.CONSOLE_LOG(this.props.userData.myJoinRequest.id)
         if (this.props.userData.myJoinRequest && this.props.userData.myJoinRequest.id) {
             NetInfo.fetch().then(state => {
             if (state.isConnected) {
                 Backend.getMyJoinRequest(this.props.userData.token, this.props.userData.myJoinRequest.id,
                 response => {
-                    console.log("   Latest Join Request Dataaaaaaa")
-                    console.log(response.data)
+                    apputils.CONSOLE_LOG("   Latest Join Request Dataaaaaaa")
+                    apputils.CONSOLE_LOG(response.data)
                     let updatedInfo = response.data;
                     
                     if (updatedInfo) {
@@ -136,12 +135,12 @@ class CheckMyJoinRequest extends React.Component {
                                           }
                                           if (needDownloadTeamData) {
                                             // Download Team Here
-                                            console.log(" Will Download Team Here")
+                                            apputils.CONSOLE_LOG(" Will Download Team Here")
                                             this.props.actUserStartSyncTeam();
                                             Backend.getLatestTeamInfoOfMe(this.props.userData.token,
                                                 response => {
-                                                    console.log("===============getLatestTeamInfoOfMe Data")
-                                                    console.log(response.data)
+                                                    apputils.CONSOLE_LOG("===============getLatestTeamInfoOfMe Data")
+                                                    apputils.CONSOLE_LOG(response.data)
                                                     // Rejoin team can ReUse Create Team
                                                     this.props.actUserCreateTeamOK(response.data, true)
 
@@ -151,14 +150,14 @@ class CheckMyJoinRequest extends React.Component {
                                                         Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, 
                                                             this.props.userData.token, 
                                                         response2 => {
-                                                            console.log("GEt all Member in Team OK")
+                                                            apputils.CONSOLE_LOG("GEt all Member in Team OK")
                                 
                                                             this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
                                                         },
                                                         error => {
                                                             this.props.actUserStartSyncTeamDone();
-                                                            console.log("GEt all Member in Team ERROR")
-                                                            console.log(JSON.stringify(error))
+                                                            apputils.CONSOLE_LOG("GEt all Member in Team ERROR")
+                                                            apputils.CONSOLE_LOG(JSON.stringify(error))
                                                         }
                                                         );
                                                     } else {
@@ -170,8 +169,8 @@ class CheckMyJoinRequest extends React.Component {
                                                     this.props.navigation.goBack()
                                                 }, err => {
                                                     this.props.actUserStartSyncTeamDone();
-                                                    console.log("get LatestTeamInfo ERROR")
-                                                    console.log(err)
+                                                    apputils.CONSOLE_LOG("get LatestTeamInfo ERROR")
+                                                    apputils.CONSOLE_LOG(err)
                                             })
                                           }
                                       },
@@ -183,8 +182,8 @@ class CheckMyJoinRequest extends React.Component {
                         }
                     }
                 }, error => {
-                    console.log("getMyJoinRequest ERROR")
-                    console.log(error)
+                    apputils.CONSOLE_LOG("getMyJoinRequest ERROR")
+                    apputils.CONSOLE_LOG(error)
                     this.props.actUserForCloseModal();
                 })
             } else {
@@ -200,8 +199,8 @@ class CheckMyJoinRequest extends React.Component {
         
     }
     render() {
-        console.log("===============this.props.userData.myJoinRequest")
-        console.log(this.props.userData.myJoinRequest)
+        apputils.CONSOLE_LOG("===============this.props.userData.myJoinRequest")
+        apputils.CONSOLE_LOG(this.props.userData.myJoinRequest)
         return (
             <Container>
                 <View style={styles.formContainer}>

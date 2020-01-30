@@ -35,15 +35,15 @@ class SettingServiceScreenModules extends React.Component {
             [
                 {
                   text: AppLocales.t("GENERAL_NO"),
-                  onPress: () => console.log('Cancel Pressed'),
+                  onPress: () => apputils.CONSOLE_LOG('Cancel Pressed'),
                   style: 'cancel',
                 },
                 {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {
                     if (isBike) {
-                        console.log("   Will delete SERvice module BIKE:" + item.name)
+                        apputils.CONSOLE_LOG("   Will delete SERvice module BIKE:" + item.name)
                         this.props.actCustomDelServiceModuleBike(item)
                     } else {
-                        console.log("   Will delete SERvice module CAR:" + item.name)
+                        apputils.CONSOLE_LOG("   Will delete SERvice module CAR:" + item.name)
                         this.props.actCustomDelServiceModule(item)
                     }
                 }},

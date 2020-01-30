@@ -51,9 +51,9 @@ class PayExpenseScreen extends React.Component {
                 defaultType = this.props.appData.typeExpense[0].name;
             }
             if (!AppConstants.CURRENT_VEHICLE_ID || AppConstants.CURRENT_VEHICLE_ID == 0) {
-                console.log(this.props.userData.vehicleList)
+                apputils.CONSOLE_LOG(this.props.userData.vehicleList)
                 if (this.props.userData.vehicleList && this.props.userData.vehicleList.length > 0) {
-                    console.log(this.props.userData.vehicleList[0].id)
+                    apputils.CONSOLE_LOG(this.props.userData.vehicleList[0].id)
                     this.setState({
                         vehicleId: this.props.userData.vehicleList[0].id,
                         subType: defaultType
@@ -81,7 +81,7 @@ class PayExpenseScreen extends React.Component {
         } else {
 
             if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-                console.log("WIll Edit Expense:")
+                apputils.CONSOLE_LOG("WIll Edit Expense:")
                 let newData = {
                     ...this.state,
 
@@ -93,7 +93,7 @@ class PayExpenseScreen extends React.Component {
                 this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
                 this.props.navigation.goBack()
             } else {
-                console.log("WIll Save Expense:")
+                apputils.CONSOLE_LOG("WIll Save Expense:")
                 let newData = {
                     ...this.state,
                     
@@ -109,7 +109,7 @@ class PayExpenseScreen extends React.Component {
                 //     }
                 // })
                 newData.id = "exp-"+this.state.vehicleId+"-"+apputils.uuidv4();
-                console.log(newData)
+                apputils.CONSOLE_LOG(newData)
                 // set Current VE ID so can ComeBack VehicleDetail
                 AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
                 this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
@@ -137,7 +137,7 @@ class PayExpenseScreen extends React.Component {
         } else {
             var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
         }
-        console.log(this.state)
+        apputils.CONSOLE_LOG(this.state)
         return (
             <Container>
             <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 

@@ -30,6 +30,7 @@ import * as Facebook from 'expo-facebook';
 import NetInfo from "@react-native-community/netinfo";
 
 import AppLocales from '../constants/i18n'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 class SettingsScreen extends React.Component {
   constructor(props) {
@@ -40,7 +41,9 @@ class SettingsScreen extends React.Component {
       password: "",
       isShowPwd: false,
 
-      isMergeDataBeforeLogin: false
+      isMergeDataBeforeLogin: false,
+
+      dbgCount: 0
     };
 
     this.syncDataToServer = this.syncDataToServer.bind(this)
@@ -49,12 +52,14 @@ class SettingsScreen extends React.Component {
 
     this.doLoginGoogle = this.doLoginGoogle.bind(this)
     this.handleLogin = this.handleLogin.bind(this)
+
+    this.onClickSettingDbg = this.onClickSettingDbg.bind(this)
     
     this.onShowModalDialog = this.onShowModalDialog.bind(this)
     this.onForceCloseModalByPressBack = this.onForceCloseModalByPressBack.bind(this)
   }
   onForceCloseModalByPressBack() {
-    console.log("Calling onForceCloseModalByPressBack..........")
+    AppUtils.CONSOLE_LOG("Calling onForceCloseModalByPressBack..........")
     this.props.actUserForCloseModal()
   }
   onShowModalDialog() {
@@ -74,7 +79,7 @@ class SettingsScreen extends React.Component {
           [
               {
                 text: AppLocales.t("GENERAL_CANCEL_SHORT"),
-                onPress: () => console.log('Cancel Pressed'),
+                onPress: () => AppUtils.CONSOLE_LOG('Cancel Pressed'),
                 style: 'cancel',
               },
               {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
@@ -103,7 +108,7 @@ class SettingsScreen extends React.Component {
           [
               {
                 text: AppLocales.t("GENERAL_CANCEL_SHORT"),
-                onPress: () => console.log('Cancel Pressed'),
+                onPress: () => AppUtils.CONSOLE_LOG('Cancel Pressed'),
                 style: 'cancel',
               },
               {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
@@ -129,7 +134,7 @@ class SettingsScreen extends React.Component {
       [
           {
             text: 'Huỷ',
-            onPress: () => console.log('Cancel Pressed'),
+            onPress: () => AppUtils.CONSOLE_LOG('Cancel Pressed'),
             style: 'cancel',
           },
           {text: 'OK', style: 'destructive' , 
@@ -145,11 +150,11 @@ class SettingsScreen extends React.Component {
       [
           {
             text: 'Huỷ',
-            onPress: () => console.log('Cancel Pressed'),
+            onPress: () => AppUtils.CONSOLE_LOG('Cancel Pressed'),
             style: 'cancel',
           },
           {text: 'OK', style: 'destructive' , onPress: () => {
-              console.log('Delete Pressed')
+              AppUtils.CONSOLE_LOG('Delete Pressed')
               NetInfo.fetch().then(state => {
                 if (state.isConnected) {
                   Backend.leaveTeam(this.props.userData.token,
@@ -157,8 +162,8 @@ class SettingsScreen extends React.Component {
                       this.props.actUserLeaveTeamOK()
                       this.props.actTeamLeaveTeamOK()
                     }, error => {
-                      console.log("User LEave team Error")
-                      console.log(error.response)
+                      AppUtils.CONSOLE_LOG("User LEave team Error")
+                      AppUtils.CONSOLE_LOG(error.response)
                     })
                 } else {
                   Toast.show({
@@ -191,7 +196,7 @@ class SettingsScreen extends React.Component {
   //   "photoUrl": "xxxw",
   // },
   async doLoginGoogle() {
-    console.log("doLoginGoogle...")
+    AppUtils.CONSOLE_LOG("doLoginGoogle...")
     const netState = await NetInfo.fetch();
     if (!netState.isConnected) {
       Toast.show({
@@ -211,26 +216,26 @@ class SettingsScreen extends React.Component {
         // Android No Need this ID because got from google services
         clientId: '<YOUR_IOS_CLIENT_ID>',
       });
-      console.log("   Done initAsync")
+      AppUtils.CONSOLE_LOG("   Done initAsync")
       
       await GoogleSignIn.askForPlayServicesAsync();
       const { type, user } = await GoogleSignIn.signInAsync();
-      console.log("   Done signInAsync, type:" + type)
-      console.log(user);
+      AppUtils.CONSOLE_LOG("   Done signInAsync, type:" + type)
+      AppUtils.CONSOLE_LOG(user);
 
       if (type === 'success') {
-        console.log("    Login Google OK Standalone")
+        AppUtils.CONSOLE_LOG("    Login Google OK Standalone")
         const result = await GoogleSignIn.signInSilentlyAsync();
-        console.log("   Done signInSilentlyAsync")
-        console.log(result);
+        AppUtils.CONSOLE_LOG("   Done signInSilentlyAsync")
+        AppUtils.CONSOLE_LOG(result);
 
 
         Backend.loginGoogle({
           idToken: result.auth.idToken
         },
         response => {
-          console.log("Backend Return OK")
-          console.log(response.data)
+          AppUtils.CONSOLE_LOG("Backend Return OK")
+          AppUtils.CONSOLE_LOG(response.data)
           if (this.props.userData.vehicleList.length > 0) {
             Alert.alert(
               AppLocales.t("GENERAL_WARN"),
@@ -259,7 +264,7 @@ class SettingsScreen extends React.Component {
           }
         },
         error => {
-          console.log(JSON.stringify(error))
+          AppUtils.CONSOLE_LOG(JSON.stringify(error))
           Toast.show({
             text: AppLocales.t("TOAST_LOGIN_FAILED"),
             //buttonText: "Okay",
@@ -270,10 +275,10 @@ class SettingsScreen extends React.Component {
       }
 
     } catch (e) {
-      console.log("ERROR Google Login Standalone")
-      console.log(e)
+      AppUtils.CONSOLE_LOG("ERROR Google Login Standalone")
+      AppUtils.CONSOLE_LOG(e)
       if (e.message) {
-        console.log(e.message)
+        AppUtils.CONSOLE_LOG(e.message)
       }
 
       Toast.show({
@@ -298,17 +303,17 @@ class SettingsScreen extends React.Component {
 
         scopes: ["profile", "email"]
       })
-      console.log(result)
+      AppUtils.CONSOLE_LOG(result)
       if (result.type === "success") {
-        console.log("Login Google OK")
+        AppUtils.CONSOLE_LOG("Login Google OK")
         
 
         Backend.loginGoogle({
           idToken: result.idToken
         },
         response => {
-          console.log("Backend Return OK")
-          console.log(response.data)
+          AppUtils.CONSOLE_LOG("Backend Return OK")
+          AppUtils.CONSOLE_LOG(response.data)
           if (this.props.userData.vehicleList.length > 0) {
             Alert.alert(
               AppLocales.t("GENERAL_WARN"),
@@ -337,7 +342,7 @@ class SettingsScreen extends React.Component {
           }
         },
         error => {
-          console.log(JSON.stringify(error))
+          AppUtils.CONSOLE_LOG(JSON.stringify(error))
           Toast.show({
             text: AppLocales.t("TOAST_LOGIN_FAILED"),
             //buttonText: "Okay",
@@ -347,11 +352,11 @@ class SettingsScreen extends React.Component {
         })
         // })
       } else {
-        console.log("cancelled Google Login")
+        AppUtils.CONSOLE_LOG("cancelled Google Login")
       }
     } catch (e) {
-      console.log("ERROR Google Login")
-      console.log(e)
+      AppUtils.CONSOLE_LOG("ERROR Google Login")
+      AppUtils.CONSOLE_LOG(e)
       Toast.show({
         text: AppLocales.t("TOAST_LOGIN_FAILED"),
         //buttonText: "Okay",
@@ -376,9 +381,9 @@ class SettingsScreen extends React.Component {
         if (state.isConnected) {
           Backend.login({email: this.state.email, password: this.state.password}, 
             response => {
-                console.log("Login OK")
+                AppUtils.CONSOLE_LOG("Login OK")
                 // Login OK, check if current have Data
-                //console.log(response.data)
+                //AppUtils.CONSOLE_LOG(response.data)
                 if (this.props.userData.vehicleList.length > 0) {
                   Alert.alert(
                     AppLocales.t("GENERAL_WARN"),
@@ -408,8 +413,8 @@ class SettingsScreen extends React.Component {
 
             },
             error => {
-                console.log("Login ERROR")
-                console.log(error.response)
+                AppUtils.CONSOLE_LOG("Login ERROR")
+                AppUtils.CONSOLE_LOG(error.response)
                 Toast.show({
                   text: AppLocales.t("TOAST_LOGIN_FAILED"),
                   //buttonText: "Okay",
@@ -439,7 +444,7 @@ class SettingsScreen extends React.Component {
       //   permissions,
       //   declinedPermissions,
       // } 
-      console.log("Start doLoginFacebook")
+      AppUtils.CONSOLE_LOG("Start doLoginFacebook")
       const netState = await NetInfo.fetch();
       if (!netState.isConnected) {
         Toast.show({
@@ -456,17 +461,17 @@ class SettingsScreen extends React.Component {
       });
       if (result.type === 'success') {
         // Get the user's name using Facebook's Graph API
-        console.log(result)
+        AppUtils.CONSOLE_LOG(result)
         //let strUrl = "https://graph.facebook.com/me?access_token=" + result.token + "&fields=id,name,birthday,email,address,gender,picture.type(normal)";
         let strUrl = "https://graph.facebook.com/me?access_token=" + result.token + "&fields=id,name,email,picture.type(normal)";
-        console.log(strUrl)
+        AppUtils.CONSOLE_LOG(strUrl)
         //const response = await fetch("https://graph.facebook.com/me?access_token=${result.token}&fields=id,name,birthday,email,address,gender,picture.type(normal)`);
         //const response = await fetch(strUrl);
         //const profile = await response.json() 
         axios.get(strUrl)
         .then(response => {
-          console.log("GraphFB Returned")
-          console.log(response.data)
+          AppUtils.CONSOLE_LOG("GraphFB Returned")
+          AppUtils.CONSOLE_LOG(response.data)
           const profile = response.data
           // "email": "XX",
           // "id": "YYY",
@@ -479,8 +484,8 @@ class SettingsScreen extends React.Component {
           //     "width": 200,
           //   },
           // },
-          console.log(profile)
-          console.log('Logged in!', `Hi ${profile.name}!`);
+          AppUtils.CONSOLE_LOG(profile)
+          AppUtils.CONSOLE_LOG('Logged in!', `Hi ${profile.name}!`);
           
           // Send the User Information and Access Token to Server for validate
           Backend.loginFacebook({
@@ -488,8 +493,8 @@ class SettingsScreen extends React.Component {
             userProfile: profile
           },
           response => {
-            console.log("Backend Return OK")
-            console.log(response.data)
+            AppUtils.CONSOLE_LOG("Backend Return OK")
+            AppUtils.CONSOLE_LOG(response.data)
             if (this.props.userData.vehicleList.length > 0) {
               Alert.alert(
                 AppLocales.t("GENERAL_WARN"),
@@ -518,7 +523,7 @@ class SettingsScreen extends React.Component {
             }
           },
           error => {
-            console.log(JSON.stringify(error))
+            AppUtils.CONSOLE_LOG(JSON.stringify(error))
             Toast.show({
               text: AppLocales.t("TOAST_LOGIN_FAILED_FBGG"),
               //buttonText: "Okay",
@@ -528,7 +533,7 @@ class SettingsScreen extends React.Component {
           })
         })
         .catch(error => {
-          console.log(error);
+          AppUtils.CONSOLE_LOG(error);
           Toast.show({
             text: AppLocales.t("TOAST_LOGIN_FAILED_FBGG"),
             //buttonText: "Okay",
@@ -542,12 +547,12 @@ class SettingsScreen extends React.Component {
         // type === 'cancel'
       }
     } catch ({ message }) {
-      console.log(`Facebook Login Error: ${message}`);
+      AppUtils.CONSOLE_LOG(`Facebook Login Error: ${message}`);
     }
   }
 
   componentWillReceiveProps(newProps) {
-    console.log("**********&&&&&&&&&^^^^^^^^^^ SettingScreen componentWillReceiveProps")
+    AppUtils.CONSOLE_LOG("**********&&&&&&&&&^^^^^^^^^^ SettingScreen componentWillReceiveProps")
     if (!this.props.userData.isLogined && newProps.userData.isLogined) {
       
       // This time, User have Just logined, will Sync
@@ -560,17 +565,52 @@ class SettingsScreen extends React.Component {
       if (supported) {
         Linking.openURL("https://yamastack.com/quanlyxe/PrivacyPolicy");
       } else {
-        console.log("Don't know how to open URI: " + "https://yamastack.com/quanlyxe/PrivacyPolicy");
+        AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://yamastack.com/quanlyxe/PrivacyPolicy");
       }
     });
   }
+  onClickReview() {
+    Linking.canOpenURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS").then(supported => {
+      if (supported) {
+        Linking.openURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
+      } else {
+        AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
+      }
+    });
+  }
+  onClickUserGuide() {
+    Linking.canOpenURL("https://yamastack.com/").then(supported => {
+      if (supported) {
+        Linking.openURL("https://yamastack.com/");
+      } else {
+        AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://yamastack.com/");
+      }
+    });
+  }
+  onClickSettingDbg() {
+    let curCount = this.state.dbgCount + 1;
+    if (curCount >= 5) {
+      Toast.show({
+        text: "You are going to enter Debug:" + curCount,
+        //buttonText: "Okay",
+        position: "bottom",
+        type: "warning"
+      })
+    }
+    if (curCount >= 8) {
+      // Enter Debug Mode
+    }
+    this.setState({
+      dbgCount: curCount
+    })
+  }
   render() {
     // NetInfo.fetch().then(state => {
-    //   console.log("Connection type", state.type); // wifi...
-    //   console.log("Is connected?", state.isConnected); // true..
+    //   AppUtils.CONSOLE_LOG("Connection type", state.type); // wifi...
+    //   AppUtils.CONSOLE_LOG("Is connected?", state.isConnected); // true..
     // });
-    console.log("===============this.props.userData.modalState")
-    console.log(this.props.userData.modalState)
+    AppUtils.CONSOLE_LOG("===============this.props.userData.modalState")
+    AppUtils.CONSOLE_LOG(this.props.userData.modalState)
     const uri = "https://facebook.github.io/react-native/docs/assets/favicon.png";
     return (
         <Container>
@@ -893,9 +933,12 @@ class SettingsScreen extends React.Component {
 
 
             <View style={styles.textRow}>
+              <TouchableWithoutFeedback 
+                  onPress={() => this.onClickSettingDbg()}>
                 <Text style={styles.textSection}>
                 {AppLocales.t("SETTING_H1_SETTING")}
                 </Text>
+              </TouchableWithoutFeedback>
             </View>
             {/* <TouchableOpacity 
                 onPress={() => this.props.navigation.navigate("VehicleSetting")}>
@@ -946,7 +989,7 @@ class SettingsScreen extends React.Component {
             </View>
 
             <TouchableOpacity 
-                onPress={() => {}}>
+                onPress={() => this.onClickUserGuide()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="Entypo" name="help-with-circle" style={{...styles.iconLeft}} /></View>
@@ -967,7 +1010,7 @@ class SettingsScreen extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity 
-                onPress={() => {}}>
+                onPress={() => this.onClickReview()}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowIcon}>
                   <Icon type="MaterialIcons" name="rate-review" style={{...styles.iconLeft}} /></View>
@@ -1034,7 +1077,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingBottom: 30,
+    paddingBottom: 10,
   },
 
   userInfoContainer: {

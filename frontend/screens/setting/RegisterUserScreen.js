@@ -11,6 +11,7 @@ import {actUserRegisterOK} from '../../redux/UserReducer'
 import Backend from '../../constants/Backend'
 import AppLocales from '../../constants/i18n'
 import NetInfo from "@react-native-community/netinfo";
+import apputils from '../../constants/AppUtils';
 
 class RegisterUserScreen extends React.Component {
     constructor(props) {
@@ -59,14 +60,14 @@ class RegisterUserScreen extends React.Component {
                         phone: this.state.phone,
                         }, 
                         response => {
-                            console.log("REgister OK")
-                            console.log(response.data)
+                            apputils.CONSOLE_LOG("REgister OK")
+                            apputils.CONSOLE_LOG(response.data)
                             this.props.actUserRegisterOK()
                             this.props.navigation.navigate("Settings")
                         },
                         error => {
-                            console.log("Register ERROR")
-                            console.log(error.response)
+                            apputils.CONSOLE_LOG("Register ERROR")
+                            apputils.CONSOLE_LOG(error.response)
                             Toast.show({
                                 text: error.response.data.msg,
                                 //buttonText: "Okay",

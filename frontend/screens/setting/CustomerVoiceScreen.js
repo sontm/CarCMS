@@ -66,8 +66,8 @@ class CustomerVoiceScreen extends React.Component {
                         token: this.props.userData.token
                         }, 
                         response => {
-                            console.log("Send Customer Voice OK")
-                            console.log(response.data)
+                            apputils.CONSOLE_LOG("Send Customer Voice OK")
+                            apputils.CONSOLE_LOG(response.data)
                             Toast.show({
                                 text: AppLocales.t("TOAST_SEND_CUSTOMERVOICE_OK"),
                                 //buttonText: "Okay",
@@ -79,8 +79,8 @@ class CustomerVoiceScreen extends React.Component {
                             this.props.navigation.goBack()
                         },
                         error => {
-                            console.log("Send Customer Voice ERROR")
-                            console.log(error)
+                            apputils.CONSOLE_LOG("Send Customer Voice ERROR")
+                            apputils.CONSOLE_LOG(error)
                         }
                     );
                 } else {

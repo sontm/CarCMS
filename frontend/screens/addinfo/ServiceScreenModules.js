@@ -40,7 +40,7 @@ class ServiceScreenModules extends React.Component {
         })
     }
     toggleItemCheck(value) {
-        console.log("toggleItemCheck:" + value)
+        apputils.CONSOLE_LOG("toggleItemCheck:" + value)
         let prevList = this.state.serviceModule;
 
         //let idx = prevList.indexOf(value);
@@ -62,7 +62,7 @@ class ServiceScreenModules extends React.Component {
     }
     // type: T, K, B
     onSetFixType(item, value) {
-        console.log(" onSetFixType"+item+" " + value)
+        apputils.CONSOLE_LOG(" onSetFixType"+item+" " + value)
         let prevList = this.state.serviceModule;
         prevList[""+item.name] = value;
 
@@ -81,9 +81,9 @@ class ServiceScreenModules extends React.Component {
     }
     render() {
         
-        console.log("---------------------Render of service module")
-        console.log(this.state.selected)
-        //console.log(this.state.serviceModule)
+        apputils.CONSOLE_LOG("---------------------Render of service module")
+        apputils.CONSOLE_LOG(this.state.selected)
+        //apputils.CONSOLE_LOG(this.state.serviceModule)
         let serviceArr = this.props.appData.typeService;
         let customArr = this.props.userData.customServiceModules;
         if (this.props.navigation.state.params.isBike == true) {

@@ -74,6 +74,11 @@ function getRandomIntInclusive(min, max) {
 
 
 class AppUtils {
+    CONSOLE_LOG(text) {
+        if (AppConstants.IS_DEBUG_MODE) {
+            console.log(text)
+        }
+    }
     loadImageSourceOfBrand(brand, isMotorBike) {
         if (brand && brand.length > 0) {
             if (isMotorBike) {
@@ -215,7 +220,7 @@ class AppUtils {
     }
 
     getNameOfFillItemType(type, isContantFix, item) {
-        console.log(item)
+        this.CONSOLE_LOG(item)
         if (type == AppConstants.FILL_ITEM_GAS) {
             return AppLocales.t("GENERAL_GAS");
         } else if (type == AppConstants.FILL_ITEM_OIL) {
@@ -495,9 +500,9 @@ class AppUtils {
             if (durationType == "quarter") {
                 let theQuarter = this.getQuarterNumberOfMonth(tillDate);
 
-                //console.log("theQuarter:" + theQuarter + ",BaseENdDate")
+                //this.CONSOLE_LOG("theQuarter:" + theQuarter + ",BaseENdDate")
                 baseEndDate = new Date( baseEndDate.setMonth((theQuarter-1) * 3))
-                //console.log(baseEndDate)
+                //this.CONSOLE_LOG(baseEndDate)
                 CALCULATE_START_DATE = this.normalizeDateBegin(new Date(baseEndDate.getFullYear(), 
                     baseEndDate.getMonth() - duration*3 + 1 + 3, 1));
             } else
@@ -507,9 +512,9 @@ class AppUtils {
                     0, 1));
             }
         }
-        console.log("CALCULATE_START_DATE-CALCULATE_END_DATE")
-        console.log(CALCULATE_START_DATE)
-        console.log(CALCULATE_END_DATE)
+        this.CONSOLE_LOG("CALCULATE_START_DATE-CALCULATE_END_DATE")
+        this.CONSOLE_LOG(CALCULATE_START_DATE)
+        this.CONSOLE_LOG(CALCULATE_END_DATE)
         let lastKm = 0;
         let totalMoneyGas = 0;
         let totalKmGas = 0;
@@ -540,8 +545,8 @@ class AppUtils {
 
             lastKm = fillGasList[fillGasList.length -1].currentKm;
             lastDate = this.normalizeFillDate(new Date(fillGasList[fillGasList.length -1].fillDate))
-            console.log("lastKm-----------------")
-            console.log(lastKm)
+            this.CONSOLE_LOG("lastKm-----------------")
+            this.CONSOLE_LOG(lastKm)
             let START_IDX=0;
             let END_IDX=fillGasList.length-1;
             for (let l = 0; l < fillGasList.length; l++) {
@@ -555,9 +560,9 @@ class AppUtils {
                     break;
                 }
             }
-            console.log("START_IDX-END_IDX")
-            console.log(START_IDX)
-            console.log(END_IDX)
+            this.CONSOLE_LOG("START_IDX-END_IDX")
+            this.CONSOLE_LOG(START_IDX)
+            this.CONSOLE_LOG(END_IDX)
             // Calculate valid range (first - 1 and last + 1)
             fillGasList.forEach((item, index) => {
                 //Skip Invalid Index
@@ -922,12 +927,12 @@ class AppUtils {
         let nextEstimatedDateForMaintain = 0;
         let passedKmFromPreviousMaintain = 0;
 
-        console.log(")))))))))))))))))) getRemindForMaintain")
+        this.CONSOLE_LOG(")))))))))))))))))) getRemindForMaintain")
         if (serviceList && serviceList.length > 0) {
             for (let index = serviceList.length -1; index >= 0; index--) {
                 let item = serviceList[index];
-                console.log("  )))))))))))))))))) item")
-                console.log(item)
+                this.CONSOLE_LOG("  )))))))))))))))))) item")
+                this.CONSOLE_LOG(item)
                 if (!item.isConstantFix) {
                     lastKmMaintain = item.currentKm;
                     lastDateMaintain = this.normalizeFillDate(new Date(item.fillDate));
@@ -945,8 +950,8 @@ class AppUtils {
                 }
             }
             let totalNextDay = this.calculateDiffDayOf2Date(lastDateMaintain, nextEstimatedDateForMaintain);
-            console.log("))))))))) Result");
-            console.log({lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
+            this.CONSOLE_LOG("))))))))) Result");
+            this.CONSOLE_LOG({lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
                 nextEstimatedDateForMaintain, passedKmFromPreviousMaintain, totalNextDay})
 
             return {lastKmMaintain, lastDateMaintain, lastMaintainKmValidFor, nextEstimatedKmForMaintain,
@@ -975,7 +980,7 @@ class AppUtils {
 
         if (authorizeList && authorizeList.length > 0) {
             authorizeList.forEach((item, index) => {
-                console.log("   ??????????? Type AUTH:" + item.subTypeArr)
+                this.CONSOLE_LOG("   ??????????? Type AUTH:" + item.subTypeArr)
                 if (item.subTypeArr && item.subTypeArr.indexOf("Bảo Hiểm Dân Sự") >= 0) {
                     if (maxInsuranceIdx < index) maxInsuranceIdx = index;
                     totalMoneyAuthorize += item.price;
@@ -1051,9 +1056,9 @@ class AppUtils {
             if (durationType == "quarter") {
                 let theQuarter = this.getQuarterNumberOfMonth(tillDate);
 
-                //console.log("theQuarter:" + theQuarter + ",BaseENdDate")
+                //this.CONSOLE_LOG("theQuarter:" + theQuarter + ",BaseENdDate")
                 baseEndDate = new Date( baseEndDate.setMonth((theQuarter-1) * 3))
-                //console.log(baseEndDate)
+                //this.CONSOLE_LOG(baseEndDate)
                 CALCULATE_START_DATE = this.normalizeDateBegin(new Date(baseEndDate.getFullYear(), 
                     baseEndDate.getMonth() - duration*3 + 1 + 3, 1));
             } else
@@ -1673,10 +1678,10 @@ class AppUtils {
                 })
             }
         }
-        // console.log("objExpenseTypeByTime)))))))))))))))))")
-        // console.log(objExpenseTypeByTime)
-        // console.log("arrExpenseTypeByTime~~~~~~~~~~~~~~~~~~")
-        // console.log(arrExpenseTypeByTime)
+        // this.CONSOLE_LOG("objExpenseTypeByTime)))))))))))))))))")
+        // this.CONSOLE_LOG(objExpenseTypeByTime)
+        // this.CONSOLE_LOG("arrExpenseTypeByTime~~~~~~~~~~~~~~~~~~")
+        // this.CONSOLE_LOG(arrExpenseTypeByTime)
         return {arrExpenseTypeSpend, arrExpenseTypeByTime};
     }
 
@@ -1728,10 +1733,10 @@ class AppUtils {
                 })
             }
         }
-        // console.log("objExpenseTypeByTime)))))))))))))))))")
-        // console.log(objExpenseTypeByTime)
-        // console.log("arrExpenseTypeByTime~~~~~~~~~~~~~~~~~~")
-        // console.log(arrExpenseTypeByTime)
+        // this.CONSOLE_LOG("objExpenseTypeByTime)))))))))))))))))")
+        // this.CONSOLE_LOG(objExpenseTypeByTime)
+        // this.CONSOLE_LOG("arrExpenseTypeByTime~~~~~~~~~~~~~~~~~~")
+        // this.CONSOLE_LOG(arrExpenseTypeByTime)
         return {arrServiceTypeSpend, totalServiceSpend2};
     }
 
@@ -1805,7 +1810,7 @@ class AppUtils {
         if (state.isConnected) {
 
             if (props.userData.modifiedInfo.changedItemCount > 0) {
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start syncDataPartlyToServer")
+                this.CONSOLE_LOG(">>>>>>>>>>>>>>>>>>>>>>>>>>>> Start syncDataPartlyToServer")
                 var objectToSync = {};//vehicleList, someVehicles, customServiceModules...
                 if (props.userData.modifiedInfo.changedAllVehicles) {
                     objectToSync.vehicleList = props.userData.vehicleList;
@@ -1842,24 +1847,24 @@ class AppUtils {
                 if (Object.keys(objectToSync).length > 0) {
                     Backend.postSomeDataToServer(objectToSync, props.userData.token,
                     response => {
-                        console.log("<<<<<<<<<<<<<<<<<<<<<<<<<< Sync Some Data OK")
+                        this.CONSOLE_LOG("<<<<<<<<<<<<<<<<<<<<<<<<<< Sync Some Data OK")
                         props.actUserSyncPartlyOK()
                     },
                     error => {
-                        console.log(error.response)
+                        this.CONSOLE_LOG(error.response)
                     }
                     );
                 }
             }
         } else {
-            console.log("*** Dont have NEtwork, will Sync later")
+            this.CONSOLE_LOG("*** Dont have NEtwork, will Sync later")
           }
       });
 
     }
 
     async syncDataToServer(props) {
-        console.log("LengVehicleList:" + props.userData.vehicleList.length)
+        this.CONSOLE_LOG("LengVehicleList:" + props.userData.vehicleList.length)
       if (props.userData.vehicleList && props.userData.vehicleList.length > 0) {
         Backend.postFillItemList({
             vehicleList: props.userData.vehicleList,
@@ -1870,7 +1875,7 @@ class AppUtils {
             settingService: props.userData.settingService
             }, props.userData.token ,"vehicle",
           response => {
-            console.log("Sync Post Vehicle OK")
+            this.CONSOLE_LOG("Sync Post Vehicle OK")
             Toast.show({
                 text: AppLocales.t("TOAST_SYNC_TO_SERVER_OK"),
                 //buttonText: "Okay",
@@ -1880,37 +1885,37 @@ class AppUtils {
 
             props.actVehicleSyncToServerOK()
         },
-          error => {console.log(error)}
+          error => {this.CONSOLE_LOG(error)}
         );
       }
       // if (props.userData.fillGasList && props.userData.fillGasList.length > 0) {
       //   Backend.postFillItemList(props.userData.fillGasList, props.userData.token, "gas",
-      //     response => {console.log("Sync Post Gas OK")},
-      //     error => {console.log(error)}
+      //     response => {this.CONSOLE_LOG("Sync Post Gas OK")},
+      //     error => {this.CONSOLE_LOG(error)}
       //   );
       // }
       // if (props.userData.fillOilList && props.userData.fillOilList.length > 0) {
       //   Backend.postFillItemList(props.userData.fillOilList, props.userData.token, "oil",
-      //     response => {console.log("Sync Post Oil OK")},
-      //     error => {console.log(error)}
+      //     response => {this.CONSOLE_LOG("Sync Post Oil OK")},
+      //     error => {this.CONSOLE_LOG(error)}
       //   );
       // }
       // if (props.userData.authorizeCarList && props.userData.authorizeCarList.length > 0) {
       //   Backend.postFillItemList(props.userData.authorizeCarList, props.userData.token, "authcheck",
-      //     response => {console.log("Sync Post AuthCheck OK")},
-      //     error => {console.log(error)}
+      //     response => {this.CONSOLE_LOG("Sync Post AuthCheck OK")},
+      //     error => {this.CONSOLE_LOG(error)}
       //   );
       // }
       // if (props.userData.expenseList && props.userData.expenseList.length > 0) {
       //   Backend.postFillItemList(props.userData.expenseList, props.userData.token, "expense",
-      //     response => {console.log("Sync Post Expense OK")},
-      //     error => {console.log(error)}
+      //     response => {this.CONSOLE_LOG("Sync Post Expense OK")},
+      //     error => {this.CONSOLE_LOG(error)}
       //   );
       // }
       // if (props.userData.serviceList && props.userData.serviceList.length > 0) {
       //   Backend.postFillItemList(props.userData.serviceList, props.userData.token, "service",
-      //     response => {console.log("Sync Post Service OK")},
-      //     error => {console.log(error)}
+      //     response => {this.CONSOLE_LOG("Sync Post Service OK")},
+      //     error => {this.CONSOLE_LOG(error)}
       //   );
       // }
     }
@@ -1926,24 +1931,24 @@ class AppUtils {
         props.actUserStartSyncPrivate();
         Backend.getAllItemList(props.userData.token,
             response => {
-                console.log("Sync Vehicle From Server OK");
+                this.CONSOLE_LOG("Sync Vehicle From Server OK");
                 //this.props.actVehicleAddVehicle(response.data, true)
-                //console.log(response.data.myJoinRequest)
+                //this.CONSOLE_LOG(response.data.myJoinRequest)
                 props.actVehicleSyncAllFromServer(response.data, props, isMergeDataBefore)
             },
-            error => {console.log("Sync Vehicle From Server Error");console.log(error);}
+            error => {this.CONSOLE_LOG("Sync Vehicle From Server Error");this.CONSOLE_LOG(error);}
         );
         
         //this.cancelAllAppLocalNotification();
 
         // If User is Member and TEam have setting of cannot view report
-        //console.log(props.userData.userProfile.roleInTeam)
+        //this.CONSOLE_LOG(props.userData.userProfile.roleInTeam)
         //user not is manager and setting cannot see
         if (!props.userData.teamInfo || props.userData.userProfile.roleInTeam != "manager") {
             Backend.getLatestTeamInfoOfMe(props.userData.token,
                 response => {
-                    console.log("===============getLatestTeamInfoOfMe Data SyncAll")
-                    console.log(response.data)
+                    this.CONSOLE_LOG("===============getLatestTeamInfoOfMe Data SyncAll")
+                    this.CONSOLE_LOG(response.data)
                     // Rejoin team can ReUse Create Team
                     props.actUserCreateTeamOK(response.data, true)
         
@@ -1952,14 +1957,14 @@ class AppUtils {
                       Backend.getAllUserOfTeam({teamId: props.userData.userProfile.teamId}, 
                           props.userData.token, 
                       response2 => {
-                          console.log("GEt all Member in Team OK")
+                          this.CONSOLE_LOG("GEt all Member in Team OK")
         
                           props.actTeamGetDataOK(response2.data, props.userData, props.teamData, props)
                       },
                       error => {
                           props.actUserStartSyncTeamDone();
-                          console.log("GEt all Member in Team ERROR")
-                          console.log(JSON.stringify(error))
+                          this.CONSOLE_LOG("GEt all Member in Team ERROR")
+                          this.CONSOLE_LOG(JSON.stringify(error))
                       }
                       );
                     } else {
@@ -1967,8 +1972,8 @@ class AppUtils {
                     }
                 }, err => {
                     props.actUserStartSyncTeamDone();
-                    console.log("get LatestTeamInfo ERROR")
-                    console.log(err)
+                    this.CONSOLE_LOG("get LatestTeamInfo ERROR")
+                    this.CONSOLE_LOG(err)
                     if (err.response.data.code == 100) {
                       // Seems User is Removed from Team
                       props.actUserLeaveTeamOK()
@@ -1979,16 +1984,16 @@ class AppUtils {
             props.actUserStartSyncTeam();
             Backend.getAllJoinTeamRequest(props.userData.token, 
             response => {
-                console.log("GEt all JoinRequest OK")
-                // console.log(response.data)
+                this.CONSOLE_LOG("GEt all JoinRequest OK")
+                // this.CONSOLE_LOG(response.data)
                 //this.props.actUserLoginOK(response.data)
                 //this.props.navigation.navigate("Settings")
                 props.actTeamGetJoinRequestOK(response.data)
 
                 Backend.getAllUserOfTeam({teamId: props.userData.teamInfo.id}, props.userData.token, 
                     response => {
-                        console.log("GEt all Member in Team OK")
-                        // console.log(response.data)
+                        this.CONSOLE_LOG("GEt all Member in Team OK")
+                        // this.CONSOLE_LOG(response.data)
                         //this.props.actUserLoginOK(response.data)
                         //this.props.navigation.navigate("Settings")
                         // this.setState({
@@ -1998,15 +2003,15 @@ class AppUtils {
                     },
                     error => {
                         props.actUserStartSyncTeamDone(); // close Dialog also when Error
-                        console.log("GEt all Member in Team ERROR")
-                        console.log(JSON.stringify(error))
+                        this.CONSOLE_LOG("GEt all Member in Team ERROR")
+                        this.CONSOLE_LOG(JSON.stringify(error))
                     }
                 );
             },
             error => {
                 props.actUserStartSyncTeamDone(); // close Dialog also when Error
-                console.log("GEt all JoinRequest AppUtils ERROR")
-                console.log(JSON.stringify(error))
+                this.CONSOLE_LOG("GEt all JoinRequest AppUtils ERROR")
+                this.CONSOLE_LOG(JSON.stringify(error))
             }
             );
         }
@@ -2015,12 +2020,12 @@ class AppUtils {
         //   await new Promise((resolve, reject) => {
         //     Backend.getAllItemList("gas", props.userData.token,
         //       response => {
-        //         console.log("Sync Gas From Server OK");
+        //         this.CONSOLE_LOG("Sync Gas From Server OK");
         //         //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_GAS, true)
         //         syncData.gas = response.data;
         //         resolve(response.data);
         //       },
-        //       error => {console.log("Sync Gas From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+        //       error => {this.CONSOLE_LOG("Sync Gas From Server ERR");this.CONSOLE_LOG(error); isFailedInOneStep = true;reject(error)}
         //     );
         //   });
         // }
@@ -2029,12 +2034,12 @@ class AppUtils {
         //   await new Promise((resolve, reject) => {
         //     Backend.getAllItemList("oil", props.userData.token,
         //       response => {
-        //         console.log("Sync Oil From Server OK");
+        //         this.CONSOLE_LOG("Sync Oil From Server OK");
         //         //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_OIL, true)
         //         syncData.oil = response.data;
         //         resolve(response.data);
         //       },
-        //       error => {console.log("Sync Oil From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+        //       error => {this.CONSOLE_LOG("Sync Oil From Server ERR");this.CONSOLE_LOG(error); isFailedInOneStep = true;reject(error)}
         //     );
         //   });
         // }
@@ -2043,12 +2048,12 @@ class AppUtils {
         //   await new Promise((resolve, reject) => {
         //     Backend.getAllItemList("authcheck", props.userData.token,
         //       response => {
-        //         console.log("Sync authcheck From Server OK");
+        //         this.CONSOLE_LOG("Sync authcheck From Server OK");
         //         //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_AUTH, true)
         //         syncData.authcheck = response.data;
         //         resolve(response.data);
         //       },
-        //       error => {console.log("Sync authcheck From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+        //       error => {this.CONSOLE_LOG("Sync authcheck From Server ERR");this.CONSOLE_LOG(error); isFailedInOneStep = true;reject(error)}
         //     );
         //   });
         // }
@@ -2057,12 +2062,12 @@ class AppUtils {
         //   await new Promise((resolve, reject) => {
         //     Backend.getAllItemList("expense", props.userData.token,
         //       response => {
-        //         console.log("Sync expense From Server OK");
+        //         this.CONSOLE_LOG("Sync expense From Server OK");
         //         //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_EXPENSE, true)
         //         syncData.expense = response.data;
         //         resolve(response.data);
         //       },
-        //       error => {console.log("Sync expense From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+        //       error => {this.CONSOLE_LOG("Sync expense From Server ERR");this.CONSOLE_LOG(error); isFailedInOneStep = true;reject(error)}
         //     );
         //   });
         // }
@@ -2071,12 +2076,12 @@ class AppUtils {
         //   await new Promise((resolve, reject) => {
         //     Backend.getAllItemList("service", props.userData.token,
         //       response => {
-        //         console.log("Sync service From Server OK");
+        //         this.CONSOLE_LOG("Sync service From Server OK");
         //         //this.props.actVehicleAddFillItem(response.data, AppConstants.FILL_ITEM_SERVICE, true)
         //         syncData.service = response.data;
         //         resolve(response.data);
         //       },
-        //       error => {console.log("Sync service From Server ERR");console.log(error); isFailedInOneStep = true;reject(error)}
+        //       error => {this.CONSOLE_LOG("Sync service From Server ERR");this.CONSOLE_LOG(error); isFailedInOneStep = true;reject(error)}
         //     );
         //   });
         // }
@@ -2087,7 +2092,7 @@ class AppUtils {
     async actTempCalculateCarReportAsyncWrapper(currentVehicle, options, remindSetting, prevCarReports, settingService) {
         return new Promise((resolve, reject) => {
             try {
-                console.log("~~~~~~~~~~~~~~~~ Calling actTempCalculateCarReportAsync:" + currentVehicle.licensePlate)
+                this.CONSOLE_LOG("~~~~~~~~~~~~~~~~ Calling actTempCalculateCarReportAsync:" + currentVehicle.licensePlate)
                 // let result = this.actTempCalculateCarReportAsync(currentVehicle, options, remindSetting);
                 // if (result) {
                 //     resolve(result)
@@ -2096,13 +2101,13 @@ class AppUtils {
                 // }
                 this.actTempCalculateCarReportAsync(currentVehicle, options, remindSetting, prevCarReports, settingService)
                 .then (result => {
-                    console.log("  ^^^ Result")
+                    this.CONSOLE_LOG("  ^^^ Result")
                     resolve(result)
                 })
                 .catch (err => {
                     reject({msg: "null result"})
                 })
-                console.log("  >>>>>> ENd calling async")
+                this.CONSOLE_LOG("  >>>>>> ENd calling async")
             } catch (err) {
                 reject(err)
             }
@@ -2130,10 +2135,10 @@ class AppUtils {
             //                     await new Promise((resolve, reject) => {
             //                         Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
             //                         .then(ret => {
-            //                             console.log("  OK Cancel Notification Auth:" + notObj.notificationId)
+            //                             this.CONSOLE_LOG("  OK Cancel Notification Auth:" + notObj.notificationId)
             //                             resolve(ret);
             //                         }).catch (error => {
-            //                             console.log("   Error Cancel:");console.log(error);reject(error)
+            //                             this.CONSOLE_LOG("   Error Cancel:");this.CONSOLE_LOG(error);reject(error)
             //                         })
             //                     })
             //                 }
@@ -2144,10 +2149,10 @@ class AppUtils {
             //                     await new Promise((resolve, reject) => {
             //                         Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
             //                         .then(ret => {
-            //                             console.log("  OK Cancel Notification Insurance:" + notObj.notificationId)
+            //                             this.CONSOLE_LOG("  OK Cancel Notification Insurance:" + notObj.notificationId)
             //                             resolve(ret);
             //                         }).catch (error => {
-            //                             console.log("   Error Cancel:");console.log(error);reject(error)
+            //                             this.CONSOLE_LOG("   Error Cancel:");this.CONSOLE_LOG(error);reject(error)
             //                         })
             //                     })
             //                 }
@@ -2158,10 +2163,10 @@ class AppUtils {
             //                     await new Promise((resolve, reject) => {
             //                         Notifications.cancelScheduledNotificationAsync(notObj.notificationId )
             //                         .then(ret => {
-            //                             console.log("  OK Cancel Notification RoadFee:" + notObj.notificationId)
+            //                             this.CONSOLE_LOG("  OK Cancel Notification RoadFee:" + notObj.notificationId)
             //                             resolve(ret);
             //                         }).catch (error => {
-            //                             console.log("   Error Cancel:");console.log(error);reject(error)
+            //                             this.CONSOLE_LOG("   Error Cancel:");this.CONSOLE_LOG(error);reject(error)
             //                         })
             //                     })
             //                 }
@@ -2346,8 +2351,8 @@ class AppUtils {
                 vibrate: [0, 250, 250, 250],
                 });
             }
-            console.log("#######################3 Create Android Async")
-            console.log(notifyDate.toLocaleDateString())
+            this.CONSOLE_LOG("#######################3 Create Android Async")
+            this.CONSOLE_LOG(notifyDate.toLocaleDateString())
 
             const localNotification = {
                 title: title,
@@ -2367,14 +2372,14 @@ class AppUtils {
                 localNotification, schedulingOptions
             )
             .then(notifyId => {
-                console.log("OK Result:" + notifyId)
+                this.CONSOLE_LOG("OK Result:" + notifyId)
                 resolve(notifyId);
             }).catch (error => {
-                console.log("Error Result:")
-                console.log(error)
+                this.CONSOLE_LOG("Error Result:")
+                this.CONSOLE_LOG(error)
                 reject(error)
             })
-                        // console.log("    OK Result:" + notifyId)
+                        // this.CONSOLE_LOG("    OK Result:" + notifyId)
             // return notifyId;
         })
     };
@@ -2383,10 +2388,10 @@ class AppUtils {
         await new Promise((resolve, reject) => {
             Notifications.cancelScheduledNotificationAsync(notificationId )
             .then(ret => {
-                console.log("  OK Cancel Notification:" + notificationId)
+                this.CONSOLE_LOG("  OK Cancel Notification:" + notificationId)
                 resolve(ret);
             }).catch (error => {
-                console.log("   Error Cancel:");console.log(error);reject(error)
+                this.CONSOLE_LOG("   Error Cancel:");this.CONSOLE_LOG(error);reject(error)
             })
         })
     };
@@ -2394,10 +2399,10 @@ class AppUtils {
         await new Promise((resolve, reject) => {
             Notifications.cancelAllScheduledNotificationsAsync( )
             .then(ret => {
-                console.log("  OK Cancel All Notification:")
+                this.CONSOLE_LOG("  OK Cancel All Notification:")
                 resolve(ret);
             }).catch (error => {
-                console.log("   Error Cancel:");console.log(error);reject(error)
+                this.CONSOLE_LOG("   Error Cancel:");this.CONSOLE_LOG(error);reject(error)
             })
         })
     };

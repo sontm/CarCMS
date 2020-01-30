@@ -281,8 +281,6 @@ class MoneyUsageReport extends React.Component {
             var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
             var {arrSubExpenseSpend, totalSubExpenseSpend, legendLabels} = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
         }
-        console.log("{{{{{{{{{{{{{{{ arrSubExpenseSpend")
-        console.log(arrSubExpenseSpend)
 
         return (
             <View style={styles.container}>

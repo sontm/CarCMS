@@ -29,8 +29,8 @@ class ForgotPasswordScreen extends React.Component {
                         email: this.state.email
                         }, 
                         response => {
-                            console.log("requestResetPwd")
-                            console.log(response.data)
+                            apputils.CONSOLE_LOG("requestResetPwd")
+                            apputils.CONSOLE_LOG(response.data)
                             Alert.alert(
                                 AppLocales.t("GENERAL_NOTIFICATION"),
                                 "1 email đã được gửi đến hòm thư " + this.state.email+ ", xin hãy làm theo hướng dẫn. " +
@@ -46,8 +46,8 @@ class ForgotPasswordScreen extends React.Component {
                             )
                         },
                         error => {
-                            console.log("request Reset ERROR")
-                            console.log((error))
+                            apputils.CONSOLE_LOG("request Reset ERROR")
+                            apputils.CONSOLE_LOG((error))
                             if (error.response.data.msg) {
                             Alert.alert(
                                 "Lỗi",

@@ -36,7 +36,7 @@ class RegisterVehicleScreen extends React.Component {
     }
 
     componentWillMount() {
-        console.log("CURRENTVEHICLE:" + AppConstants.CURRENT_VEHICLE_ID)
+        apputils.CONSOLE_LOG("CURRENTVEHICLE:" + AppConstants.CURRENT_VEHICLE_ID)
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             // Edit Information
             for (let i = 0; i < this.props.userData.vehicleList.length; i++) {
@@ -92,15 +92,15 @@ class RegisterVehicleScreen extends React.Component {
         }
     }
     handleToggleCheckDefault(e) {
-        console.log("handleToggleCheckDefault:")
-        console.log(e)
+        apputils.CONSOLE_LOG("handleToggleCheckDefault:")
+        apputils.CONSOLE_LOG(e)
         // this.setState({
         //     isDefault: !this.state.isDefault
         // })
     }
     save(newVehicle) {
         if (!this.state.licensePlate || !this.state.model) {
-            console.log(this.state)
+            apputils.CONSOLE_LOG(this.state)
             Toast.show({
                 text: AppLocales.t("TOAST_NEED_FILL_ENOUGH"),
                 //buttonText: "Okay",
@@ -109,7 +109,7 @@ class RegisterVehicleScreen extends React.Component {
             })
         } else {
             if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-                console.log("WIll Edit:")
+                apputils.CONSOLE_LOG("WIll Edit:")
                 // Only Set some Information. IFNOT, fillGasList will LOSt
                 newVehicle = {
                     id: this.state.id,
@@ -124,11 +124,11 @@ class RegisterVehicleScreen extends React.Component {
                     newVehicle.maxMeter = Number(this.state.maxMeter)
                 }
 
-                console.log(JSON.stringify(newVehicle))
+                apputils.CONSOLE_LOG(JSON.stringify(newVehicle))
                 this.props.actVehicleEditVehicle(newVehicle, this.props.userData)
                 this.props.navigation.navigate("MyVehicle")
             } else {
-                console.log("WIll Save:")
+                apputils.CONSOLE_LOG("WIll Save:")
 
                 // Check if How many Car Created,
                 if (this.props.userData.vehicleList.length >= AppConstants.SETTING_MAX_CAR_INDIVIDUAL) {
@@ -141,7 +141,7 @@ class RegisterVehicleScreen extends React.Component {
                     return;
                 }
 
-                console.log(this.state)
+                apputils.CONSOLE_LOG(this.state)
                 // let maxId = 0;
                 // this.props.userData.vehicleList.forEach(item => {
                 //     if (maxId < item.id) {
@@ -150,7 +150,7 @@ class RegisterVehicleScreen extends React.Component {
                 // })
 
                 newVehicle.id = "ve-"+apputils.uuidv4()+"-"+apputils.makeRandomAlphaNumeric(10);
-                console.log(JSON.stringify(newVehicle))
+                apputils.CONSOLE_LOG(JSON.stringify(newVehicle))
                 this.props.actVehicleAddVehicle(newVehicle, this.props.userData)
                 this.props.navigation.navigate("MyVehicle")
             }
@@ -197,8 +197,8 @@ class RegisterVehicleScreen extends React.Component {
         return [{ id: -1,name: "N/A"}];
     }
     render() {
-        console.log("++++++++++++props.userData.customVehicleModel")
-        console.log(this.props.userData.customVehicleModel)
+        apputils.CONSOLE_LOG("++++++++++++props.userData.customVehicleModel")
+        apputils.CONSOLE_LOG(this.props.userData.customVehicleModel)
         return (
             <Container>
             <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 

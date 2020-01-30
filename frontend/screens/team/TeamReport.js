@@ -33,8 +33,6 @@ class TeamReport extends React.Component {
   }
 
   render() {
-    console.log("TeamReport Render")
-  
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView

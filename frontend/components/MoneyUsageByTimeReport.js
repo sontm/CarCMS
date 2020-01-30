@@ -45,14 +45,12 @@ class MoneyUsageByTimeReport extends React.Component {
   }
   // TODO for change Date
   onSetDateOption(newDate) {
-    console.log(newDate)
     this.setState({
         tillDate: newDate
     });
   }
   // TODO for change Date
   onSetDateOptionTopCarTeam(newDate) {
-    console.log(newDate)
     this.setState({
         tillDateTopCarTeam: newDate
     });

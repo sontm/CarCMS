@@ -61,11 +61,11 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevTempData)
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
     if (!prevTempData.carReports[currentVehicle.id] || 
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id) >= 0) {
-        console.log(">>>actTempCalculateCarReport Team:")
+        AppUtils.CONSOLE_LOG(">>>actTempCalculateCarReport Team:")
         let theIdx = AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.indexOf(currentVehicle.id);
         actTempCalculateCarReportAsync(currentVehicle, options)
         .then (result => {
-            console.log("<<<actTempCalculateCarReport FINISH")
+            AppUtils.CONSOLE_LOG("<<<actTempCalculateCarReport FINISH")
             AppConstants.BUFFER_NEED_RECALCULATE_VEHICLE_ID.splice(theIdx, 1);
             dispatch({
                 type: TEMP_CALCULATE_CARREPORT,
@@ -73,14 +73,14 @@ export const actTempCalculateCarReport = (currentVehicle, options, prevTempData)
             })
         })
         .catch (error => {
-            console.log(error)
+            AppUtils.CONSOLE_LOG(error)
         })
     }
 }
 
 export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
-    console.log("actTempCalculateTeamCarReport cALEED WITH:" + currentVehicle.id)
+    AppUtils.CONSOLE_LOG("actTempCalculateTeamCarReport cALEED WITH:" + currentVehicle.id)
     actTempCalculateCarReportAsync(currentVehicle)
     .then (result => {
         dispatch({
@@ -89,14 +89,14 @@ export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
         })
     })
     .catch (error => {
-        console.log(error)
+        AppUtils.CONSOLE_LOG(error)
     })
 
 }
 
 export const actTempSetTeamCarList = (list, dispatch) =>  {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
-    console.log("actTempSetTeamCarListcalled with---------------")
+    AppUtils.CONSOLE_LOG("actTempSetTeamCarListcalled with---------------")
     dispatch({
         type: TEMP_CAR_LIST,
         payload: list

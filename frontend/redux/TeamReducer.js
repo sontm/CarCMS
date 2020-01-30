@@ -23,7 +23,7 @@ const initialState = {
 
 export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
     // If Report of this Vehicle already Exist, and Is not FOrce, no need to Re-calculate
-    console.log("actTempCalculateTeamCarReport cALEED WITH:" + currentVehicle.id)
+    AppUtils.CONSOLE_LOG("actTempCalculateTeamCarReport cALEED WITH:" + currentVehicle.id)
     // For calcualte All Time data
     let options = {
         durationType: "month",
@@ -33,27 +33,27 @@ export const actTempCalculateTeamCarReport = (currentVehicle, dispatch) => {
 
     AppUtils.actTempCalculateCarReportAsyncWrapper(currentVehicle, options)
     .then (result => {
-        console.log("  OK Team Calculate Report:" + currentVehicle.licensePlate)
+        AppUtils.CONSOLE_LOG("  OK Team Calculate Report:" + currentVehicle.licensePlate)
         dispatch({
             type: TEMP_CALCULATE_TEAMCARREPORT,
             payload: {id: currentVehicle.id, data: result}
         })
     })
     .catch (error => {
-        console.log("  Error Team Calculate Report:" + currentVehicle.licensePlate)
-        console.log(error)
+        AppUtils.CONSOLE_LOG("  Error Team Calculate Report:" + currentVehicle.licensePlate)
+        AppUtils.CONSOLE_LOG(error)
     })
 }
 
 export const actTeamUserWillLogout = () => (dispatch) => {
-    console.log("actTeamUserWillLogout:")
+    AppUtils.CONSOLE_LOG("actTeamUserWillLogout:")
     dispatch({
         type: TEMP_USER_LOGOUT,
     })
 }
 
 export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence = false) => (dispatch) => {
-    console.log("actTeamGetDataOK:")
+    AppUtils.CONSOLE_LOG("actTeamGetDataOK:")
     dispatch({
         type: TEAM_GET_OK,
         payload: data
@@ -105,11 +105,11 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
 
         //mem.vehicleList.forEach((item, idx) => {
             // If Exclude My Car, NoNeed
-            console.log("HEYYYYYYYYYYYYYY, tri cal team:" + userData.teamInfo.excludeMyCar )
-            console.log(myCarIdArr)
+            AppUtils.CONSOLE_LOG("HEYYYYYYYYYYYYYY, tri cal team:" + userData.teamInfo.excludeMyCar )
+            AppUtils.CONSOLE_LOG(myCarIdArr)
             if (userData.teamInfo.excludeMyCar && myCarIdArr.indexOf(item.id) >= 0 ) {
                 // no thing
-                console.log("  Ngon, Excluded " + item.id )
+                AppUtils.CONSOLE_LOG("  Ngon, Excluded " + item.id )
                 if (oldTeamData.teamCarReports[""+item.id]) {
                     isMyCarNeedExclude = true;
                 }
@@ -133,7 +133,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
                 }
                 
                 if (isSameData && oldTeamData.teamCarReports[""+item.id]) {
-                    console.log("&&&&&&&&&&&&&&^^^^^^ TEAM Yeah Same Data when sync from Server, No need Reports:"+ item.licensePlate)
+                    AppUtils.CONSOLE_LOG("&&&&&&&&&&&&&&^^^^^^ TEAM Yeah Same Data when sync from Server, No need Reports:"+ item.licensePlate)
                     teamCarReportsAll[""+item.id] = oldTeamData.teamCarReports[""+item.id]
                 } else {
                     needProcessCount++;
@@ -149,7 +149,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
                             if (!silence) {
                                 oldProps.actUserStartSyncTeamDone();
                             }
-                            console.log("------FInal Dispatch Team")
+                            AppUtils.CONSOLE_LOG("------FInal Dispatch Team")
                             dispatch({
                                 type: TEMP_CALCULATE_TEAMCARREPORT_ALL,
                                 payload: teamCarReportsAll
@@ -157,8 +157,8 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
                         }
                     })
                     .catch (error => {
-                        console.log("  Error Team Calculate Report:" + item.licensePlate)
-                        console.log(error)
+                        AppUtils.CONSOLE_LOG("  Error Team Calculate Report:" + item.licensePlate)
+                        AppUtils.CONSOLE_LOG(error)
                     })
                 }
             }
@@ -182,7 +182,7 @@ export const actTeamGetDataOK = (data, userData, oldTeamData, oldProps, silence 
 }
 
 export const actTeamGetJoinRequestOK = (data) => (dispatch) => {
-    console.log("actTeamGetJoinRequestOK:")
+    AppUtils.CONSOLE_LOG("actTeamGetJoinRequestOK:")
     dispatch({
         type: TEAM_GET_JOIN_REQ_OK,
         payload: data
@@ -190,7 +190,7 @@ export const actTeamGetJoinRequestOK = (data) => (dispatch) => {
 }
 
 export const actTeamLeaveTeamOK = () => (dispatch) => {
-    console.log("actTeamLeaveTeamOK:")
+    AppUtils.CONSOLE_LOG("actTeamLeaveTeamOK:")
     dispatch({
         type: TEAM_LEAVE_OK,
     })

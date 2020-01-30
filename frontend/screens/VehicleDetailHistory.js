@@ -31,7 +31,7 @@ class VehicleDetailHistory extends React.Component {
     this.handleEditItem = this.handleEditItem.bind(this)
   }
   componentDidMount() {
-    //console.log("DetailReport DidMount:" + this.props.navigation.state.params.vehicleId)
+    //AppUtils.CONSOLE_LOG("DetailReport DidMount:" + this.props.navigation.state.params.vehicleId)
     //AppConstants.CURRENT_VEHICLE_ID = this.props.navigation.state.params.vehicleId;
     if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
         this.currentVehicle = this.props.navigation.state.params.vehicle;
@@ -76,12 +76,12 @@ class VehicleDetailHistory extends React.Component {
         [
             {
               text: AppLocales.t("GENERAL_NO"),
-              onPress: () => console.log('Cancel Pressed'),
+              onPress: () => AppUtils.CONSOLE_LOG('Cancel Pressed'),
               style: 'cancel',
             },
             {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , onPress: () => {
-                console.log('Delete Pressed')
-                console.log([this.state.vehicleId , itemId, type])
+                AppUtils.CONSOLE_LOG('Delete Pressed')
+                AppUtils.CONSOLE_LOG([this.state.vehicleId , itemId, type])
                 this.props.actVehicleDeleteFillItem(this.state.vehicleId , itemId, type, this.props.userData)
             }},
         ],
@@ -91,7 +91,7 @@ class VehicleDetailHistory extends React.Component {
 
 
     renderHistoryList() {
-        console.log("renderHistoryList, VehicleID:" + AppConstants.CURRENT_VEHICLE_ID)
+        AppUtils.CONSOLE_LOG("renderHistoryList, VehicleID:" + AppConstants.CURRENT_VEHICLE_ID)
         let displayDatas = [...this.currentVehicle.authorizeCarList, ...this.currentVehicle.fillGasList,
             ...this.currentVehicle.expenseList, ...this.currentVehicle.serviceList];
         // Sort this data as Time order
@@ -206,7 +206,7 @@ class VehicleDetailHistory extends React.Component {
     }
 
   render() {
-    console.log("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
+    AppUtils.CONSOLE_LOG("DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
 
     if (this.currentVehicle) {
         return (
@@ -218,8 +218,12 @@ class VehicleDetailHistory extends React.Component {
                 </Button>
             </Left>
             <Body style={{flex: 6}}>
-                <Title><HeaderText>{AppLocales.t("GENERAL_HISTORY")+ " " +
-                    this.currentVehicle.brand + " " + this.currentVehicle.model + " "+ this.currentVehicle.licensePlate}</HeaderText></Title>
+                <Title><HeaderText style={{fontSize:16, fontWeight: 'normal'}}>{
+                    this.currentVehicle.brand=="Xe Tải" ? 
+                    (AppLocales.t("GENERAL_HISTORY")+ " " +
+                    this.currentVehicle.model + " "+ this.currentVehicle.licensePlate):
+                    (AppLocales.t("GENERAL_HISTORY")+ " " +
+                    this.currentVehicle.brand + " " + this.currentVehicle.model + " "+ this.currentVehicle.licensePlate)}</HeaderText></Title>
             </Body>
             <Right style={{flex: 0}}>
             </Right>

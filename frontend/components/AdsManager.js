@@ -11,39 +11,40 @@ import {
     AdMobInterstitial,
 } from 'expo-ads-admob';
 import AppConstants from '../constants/AppConstants';
+import apputils from '../constants/AppUtils';
 
 var canShowInterestial = true;
 export async function checkAndShowInterestial() {
     if (canShowInterestial) {
         AppConstants.ADS_COUNT_CLICK_INTERACTIVE++;
-        console.log("||AdsManager||: CountInteractive:" + AppConstants.ADS_COUNT_CLICK_INTERACTIVE)
+        apputils.CONSOLE_LOG("||AdsManager||: CountInteractive:" + AppConstants.ADS_COUNT_CLICK_INTERACTIVE)
         if (AppConstants.ADS_COUNT_CLICK_INTERACTIVE < AppConstants.ADS_COUNT_CLICK_SHOW_INTERESTIAL) {
             return;
         }
         AppConstants.ADS_COUNT_CLICK_INTERACTIVE = 0;
         try {
             AdMobInterstitial.setAdUnitID(AppConstants.ADS_INTERESTIALID); // Test ID, Replace with your-admob-unit-id
-            AdMobInterstitial.setTestDeviceID('EMULATOR');
+            //AdMobInterstitial.setTestDeviceID('EMULATOR');
             AdMobInterstitial.addEventListener("interstitialDidLoad", () =>
-            console.log("interstitialDidLoad")
+            apputils.CONSOLE_LOG("interstitialDidLoad")
             );
             AdMobInterstitial.addEventListener("interstitialDidFailToLoad", () =>
-            console.log("interstitialDidFailToLoad")
+            apputils.CONSOLE_LOG("interstitialDidFailToLoad")
             );
             AdMobInterstitial.addEventListener("interstitialDidOpen", () =>
-            console.log("interstitialDidOpen")
+            apputils.CONSOLE_LOG("interstitialDidOpen")
             );
             AdMobInterstitial.addEventListener("interstitialDidClose", () =>
-            console.log("interstitialDidClose")
+            apputils.CONSOLE_LOG("interstitialDidClose")
             );
             AdMobInterstitial.addEventListener("interstitialWillLeaveApplication", () =>
-            console.log("interstitialWillLeaveApplication")
+            apputils.CONSOLE_LOG("interstitialWillLeaveApplication")
             );
             await AdMobInterstitial.requestAdAsync({ servePersonalizedAds: true});
             await AdMobInterstitial.showAdAsync();
         } catch (error) {
-            console.log("Interestial Error*");
-            console.log(error)
+            apputils.CONSOLE_LOG("Interestial Error*");
+            apputils.CONSOLE_LOG(error)
         }
     }
 }
@@ -56,12 +57,14 @@ class AdsManager extends React.Component {
         bannerError: false
     }
     this.bannerError = this.bannerError.bind(this)
+    this.didReceiveAd = this.didReceiveAd.bind(this)
+    
   }
   componentWillUnmount() {
     AdMobInterstitial.removeAllListeners();
   }
   componentDidMount() {
-    console.log("||||Ads Manager|||| DidMount, count:" + this.props.appData.countOpen)
+    apputils.CONSOLE_LOG("||||Ads Manager|||| DidMount, count:" + this.props.appData.countOpen)
     this.props.actAppIncreaseOpenCount()
     if (this.props.appData.countOpen < 10 || this.props.userData.isNoAds) {
         canShowInterestial = false;
@@ -71,26 +74,25 @@ class AdsManager extends React.Component {
     }
   }
   bannerError(err) {
-    console.log("-------------Banner Error--------------")
-    console.log(err)
-    Toast.show({
-        text: "Ads:"+err,
-        //buttonText: "Okay",
-        position: "top",
-        type: "danger",
-        duration: 4000
-      })
+    apputils.CONSOLE_LOG("-------------Banner Error--------------")
+    apputils.CONSOLE_LOG(err)
+    // Toast.show({
+    //     text: "Ads:"+err,
+    //     //buttonText: "Okay",
+    //     position: "top",
+    //     type: "danger",
+    //     duration: 4000
+    //   })
     this.setState({bannerError: true})
   }
 
   didReceiveAd() {
     this.setState({didReceiveAd: true})
   }
-
   
   render() {
-    console.log("||||Ads Manager|||| Render, count:" + this.props.appData.countOpen)
-    console.log(this.props.userData.isNoAds)
+    apputils.CONSOLE_LOG("||||Ads Manager|||| Render, count:" + this.props.appData.countOpen)
+    apputils.CONSOLE_LOG(this.props.userData.isNoAds)
     //this.props.appData.isNoAds
     if (this.props.appData.countOpen < 10 || this.props.userData.isNoAds) {
         return null
@@ -105,7 +107,7 @@ class AdsManager extends React.Component {
                     style={styles.bottomBanner}
                     bannerSize="banner"
                     adUnitID={AppConstants.ADS_BANNERID}
-                    testDeviceID="EMULATOR"
+                    //testDeviceID="EMULATOR"
                     onDidFailToReceiveAdWithError={this.bannerError}
                     onAdViewDidReceiveAd = {this.didReceiveAd}
                 />
@@ -117,7 +119,7 @@ class AdsManager extends React.Component {
                         style={styles.bottomBanner}
                         bannerSize="banner"
                         adUnitID={AppConstants.ADS_BANNERID}
-                        testDeviceID="EMULATOR"
+                        //testDeviceID="EMULATOR"
                         onDidFailToReceiveAdWithError={this.bannerError}
                         onAdViewDidReceiveAd = {this.didReceiveAd}
                     />

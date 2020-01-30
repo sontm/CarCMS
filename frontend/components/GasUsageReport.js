@@ -57,7 +57,7 @@ class GasUsageReport extends React.Component {
   }
   // TODO for change Date
   onSetDateOption(newDate) {
-    console.log(newDate)
+    AppUtils.CONSOLE_LOG(newDate)
     this.setState({
         tillDate: newDate
     });
@@ -410,7 +410,7 @@ class GasUsageReport extends React.Component {
   }
 
   render() {
-    console.log("GasUsageReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
+    AppUtils.CONSOLE_LOG("GasUsageReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
     //isTotalReport mean this is used in Home screen or Team screen
     if (this.props.currentVehicle || this.props.isTotalReport) { //props
         if (this.props.isTotalReport) {
@@ -461,9 +461,9 @@ class GasUsageReport extends React.Component {
             var avgMoneyPerKmMonthly = avgMoneyMonthly/avgKmMonthly;
             
             var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);
-            console.log("avgMoneyMonthly:" + avgMoneyMonthly)
-            console.log("avgKmMonthly:" + avgKmMonthly)
-            console.log("avgMoneyPerKmMonthly:" + avgMoneyPerKmMonthly)
+            AppUtils.CONSOLE_LOG("avgMoneyMonthly:" + avgMoneyMonthly)
+            AppUtils.CONSOLE_LOG("avgKmMonthly:" + avgKmMonthly)
+            AppUtils.CONSOLE_LOG("avgMoneyPerKmMonthly:" + avgMoneyPerKmMonthly)
         }
         if (theBarWidth && theBarWidth > 36) {
             theBarWidth = 36;
@@ -492,7 +492,7 @@ class GasUsageReport extends React.Component {
         //     }]
         // }
         let arrLabelY = ["Km", "đ", "đ/Km"];
-        console.log(arrLabelY[this.state.activeDisplay])
+        AppUtils.CONSOLE_LOG(arrLabelY[this.state.activeDisplay])
         return (
             <View style={styles.container}>
                 <View style={styles.textRow}>

@@ -8,6 +8,7 @@ import AppConstants from '../../constants/AppConstants'
 import AppLocales from '../../constants/i18n';
 import { connect } from 'react-redux';
 import {actSettingSetMaintainType} from '../../redux/UserReducer'
+import apputils from '../../constants/AppUtils';
 
 class ServiceMaintainSettingScreen extends React.Component {
     constructor(props) {
@@ -29,14 +30,14 @@ class ServiceMaintainSettingScreen extends React.Component {
 
     save = async (newVehicle) => {
         try {
-            console.log("WIll Save Maintain Type setting:")
-            console.log(this.state)
+            apputils.CONSOLE_LOG("WIll Save Maintain Type setting:")
+            apputils.CONSOLE_LOG(this.state)
             this.props.actSettingSetMaintainType(this.state)
 
             this.props.navigation.goBack()
         } catch (e) {
             console.error('Failed to save Vehicle SEtting.')
-            console.log(e)
+            apputils.CONSOLE_LOG(e)
         }
     }
     onSetValue(value, level, isMonth, isBike) {
@@ -80,7 +81,7 @@ class ServiceMaintainSettingScreen extends React.Component {
     }
 
     componentWillMount() {
-        console.log("MainainServiceSetting WillMount:")
+        apputils.CONSOLE_LOG("MainainServiceSetting WillMount:")
         if (this.props.userData.settingService) {
             // aready set
             this.setState({

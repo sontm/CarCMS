@@ -56,7 +56,7 @@ class MyVehicleScreen extends React.Component {
     this.changeActivePage = this.changeActivePage.bind(this)
   }
   componentDidMount() {
-    console.log("HOMESCreen DidMount")
+    apputils.CONSOLE_LOG("HOMESCreen DidMount")
   }
  
   clearAsyncStorage = async() => {
@@ -92,13 +92,13 @@ class MyVehicleScreen extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("MyVehicleScreen DIDUpdate")
+    apputils.CONSOLE_LOG("MyVehicleScreen DIDUpdate")
   }
   componentWillReceiveProps(nextProps) {
-    console.log("MyVehicleScreen WillReceiveProps")
+    apputils.CONSOLE_LOG("MyVehicleScreen WillReceiveProps")
   }
   componentWillUnmount() {
-    console.log("MyVehicleScreen Will UnMount")
+    apputils.CONSOLE_LOG("MyVehicleScreen Will UnMount")
   }
   onSortChange(value) {
     this.setState({
@@ -112,8 +112,8 @@ class MyVehicleScreen extends React.Component {
   }
 
   render() {
-    console.log("MyVehicleScreen Render")
-    console.log(Object.keys(this.props.userData.carReports))
+    apputils.CONSOLE_LOG("MyVehicleScreen Render")
+    apputils.CONSOLE_LOG(Object.keys(this.props.userData.carReports))
     if (this.state.activePage==1) {
       var viewPage1 = (
           <Tabs style={{flex: 1}}>

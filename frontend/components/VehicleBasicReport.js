@@ -37,7 +37,6 @@ class VehicleBasicReport extends Component {
         this.handleEditVehicle = this.handleEditVehicle.bind(this)
     }
     handleEditVehicle() {
-        console.log("Edit Vehicle:" + this.props.vehicle.id)
         AppConstants.CURRENT_VEHICLE_ID = this.props.vehicle.id;
         this.props.navigation.navigate("NewVehicle");
     }
@@ -48,7 +47,7 @@ class VehicleBasicReport extends Component {
             [
                 {
                   text: AppLocales.t("GENERAL_NO"),
-                  onPress: () => console.log('Cancel Pressed'),
+                  onPress: () => {},
                   style: 'cancel',
                 },
                 {text: AppLocales.t("GENERAL_YES"), style: 'destructive' , 
@@ -59,7 +58,6 @@ class VehicleBasicReport extends Component {
 
     }
     componentWillMount() {
-        //console.log("VehicleReport WillMount")
         if (this.props.vehicle) {
             var currentVehicle = this.props.vehicle;
         } else {
@@ -69,17 +67,12 @@ class VehicleBasicReport extends Component {
             //this.props.actTempCalculateCarReport(currentVehicle, null, this.props.userData)
         }
     }
-    componentDidUpdate() {
-        //console.log("VehicleReport DIDUpdate")
-    }
-
     // there is props "requestDisplay to display some Part of Information only. "all" for display all "
     //      "all", "auth", "oil", "km", "gasEffective", "moneyTotal"
     // props: isTeamDisplay:
     // props: isMyVehicle: is display my vehicle, can Edit/Delete
     render() {
-        // console.log("VehicleReport Render")
-    
+
         if (this.props.vehicle) {
             var currentVehicle = this.props.vehicle;
         } else {

@@ -56,7 +56,6 @@ class GasUsageTopReport extends React.Component {
   }
   // TODO for change Date
   onSetDateOption(newDate) {
-    console.log(newDate)
     this.setState({
         tillDate: newDate
     });
@@ -192,7 +191,6 @@ class GasUsageTopReport extends React.Component {
   }
 
   render() {
-    console.log("GasUsageTopReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
     //isTotalReport mean this is used in Home screen or Team screen
     if (this.props.isTotalReport) {
         if (this.props.isTeamDisplay) {

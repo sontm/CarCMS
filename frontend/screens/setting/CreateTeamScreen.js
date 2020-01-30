@@ -81,14 +81,14 @@ class CreateTeamScreen extends React.Component {
                             excludeMyCar: this.state.excludeMyCar
                             }, this.props.userData.token, 
                             response => {
-                                console.log("Edit Team OK")
-                                console.log(response.data)
+                                apputils.CONSOLE_LOG("Edit Team OK")
+                                apputils.CONSOLE_LOG(response.data)
                                 this.props.actUserCreateTeamOK(response.data)
                                 this.props.navigation.navigate("Settings")
                             },
                             error => {
-                                console.log("Edit Team ERROR")
-                                console.log((error))
+                                apputils.CONSOLE_LOG("Edit Team ERROR")
+                                apputils.CONSOLE_LOG((error))
                                 // TODO: Toast
                                 
                             }
@@ -102,15 +102,15 @@ class CreateTeamScreen extends React.Component {
                             excludeMyCar: this.state.excludeMyCar
                             }, this.props.userData.token, 
                             response => {
-                                console.log("REgister Team OK")
-                                console.log(response.data)
+                                apputils.CONSOLE_LOG("REgister Team OK")
+                                apputils.CONSOLE_LOG(response.data)
                                 this.props.actUserCreateTeamOK(response.data)
                                 //this.props.navigation.navigate("Settings")
                                 this.props.navigation.goBack()
                             },
                             error => {
-                                console.log("Register Team ERROR")
-                                console.log((error.response.data))
+                                apputils.CONSOLE_LOG("Register Team ERROR")
+                                apputils.CONSOLE_LOG((error.response.data))
                                 // TODO: Toast
                                 Toast.show({
                                     text: error.response.data.msg,
@@ -136,8 +136,8 @@ class CreateTeamScreen extends React.Component {
        
     }
     render() {
-        console.log("******TEam info")
-        console.log(this.state)
+        apputils.CONSOLE_LOG("******TEam info")
+        apputils.CONSOLE_LOG(this.state)
         let logoFromFile = require('../../assets/images/icon.png');
         return (
             <Container>

@@ -18,6 +18,7 @@ import AppConstants from './constants/AppConstants';
 import AdsManager from './components/AdsManager';
 import NotificationManager from './components/NotificationManager';
 import CheckLatestAppDataManager from './components/CheckLatestAppDataManager';
+import apputils from './constants/AppUtils';
 
 axios.defaults.baseURL = AppConstants.SERVER_API;
 
@@ -49,13 +50,13 @@ class App extends React.Component {
   
   // These will be called Apter Redux-Load, so can connect to Server
   // componentWillMount() {
-  //   console.log("App componentWillMount*********************")
+  //   apputils.CONSOLE_LOG("App componentWillMount*********************")
   // }
   componentDidMount() {
-    console.log("App componentDidMount*********************")
+    apputils.CONSOLE_LOG("App componentDidMount*********************")
   }
   async componentWillMount() {
-    console.log("App componentWillMount*********************")
+    apputils.CONSOLE_LOG("App componentWillMount*********************")
     // await Font.loadAsync({
     //   Roboto: require("native-base/Fonts/Roboto.ttf"),
     //   Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")

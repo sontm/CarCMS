@@ -53,7 +53,7 @@ class PayServiceScreen extends React.Component {
     }
 
     componentWillMount() {
-        console.log("            PayService Screen WillMount")
+        apputils.CONSOLE_LOG("            PayService Screen WillMount")
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
@@ -101,7 +101,7 @@ class PayServiceScreen extends React.Component {
             curMaxMeter = maxMeter+1;
         }
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
-            console.log("WIll Edit Service:")
+            apputils.CONSOLE_LOG("WIll Edit Service:")
             let newData = {
                 ...this.state,
 
@@ -113,12 +113,12 @@ class PayServiceScreen extends React.Component {
             if (curMaxMeter) {
                 newData.maxMeter = curMaxMeter;
             }
-            console.log(newData)
+            apputils.CONSOLE_LOG(newData)
 
             this.props.actVehicleEditFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
             this.props.navigation.goBack()
         } else {
-            console.log("WIll Save Car Authorize:")
+            apputils.CONSOLE_LOG("WIll Save Car Authorize:")
             let newData = {
                 ...this.state,
                 
@@ -137,7 +137,7 @@ class PayServiceScreen extends React.Component {
             //     }
             // })
             newData.id = "ser-"+this.state.vehicleId+"-"+apputils.uuidv4();
-            console.log(newData)
+            apputils.CONSOLE_LOG(newData)
             // set Current VE ID so can ComeBack VehicleDetail
             AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
 
@@ -157,8 +157,8 @@ class PayServiceScreen extends React.Component {
         } else {
             let currentVehicle = this.currentVehicle;
             
-            console.log("-----maxMeter")
-            console.log(currentVehicle.maxMeter)
+            apputils.CONSOLE_LOG("-----maxMeter")
+            apputils.CONSOLE_LOG(currentVehicle.maxMeter)
             let theMaxMeter = 0;
             if (currentVehicle.maxMeter) {
                 theMaxMeter = currentVehicle.maxMeter;
@@ -179,8 +179,8 @@ class PayServiceScreen extends React.Component {
             }
             if (prevItem) {
                 // Bike Odometer ussually 99999, Car is 999999
-                console.log("currentKm:" + currentKm)
-                console.log("prevItem.currentKm:" + prevItem.currentKm)
+                apputils.CONSOLE_LOG("currentKm:" + currentKm)
+                apputils.CONSOLE_LOG("prevItem.currentKm:" + prevItem.currentKm)
                 if (!theMaxMeter && currentKm < 30000 && prevItem.currentKm > 90000) {
                     // Validate Current KM if Over Max Odometer. 
                     Alert.alert(
@@ -215,7 +215,7 @@ class PayServiceScreen extends React.Component {
                             },
                             {
                                 text: 'Huỷ, Nhập Lại',
-                                onPress: () => console.log('Cancel Pressed'),
+                                onPress: () => apputils.CONSOLE_LOG('Cancel Pressed'),
                                 style: 'cancel',
                             },
                         ],
@@ -234,7 +234,7 @@ class PayServiceScreen extends React.Component {
     }
 
     setMaintainType(value, index) {
-        console.log("setMaintainType validForIndex:" + index)
+        apputils.CONSOLE_LOG("setMaintainType validForIndex:" + index)
         this.setState({
             validForIndex: index,
             validFor: value
@@ -242,8 +242,8 @@ class PayServiceScreen extends React.Component {
     }
     combineMaintainType(settingService) {
         let result = [];
-        console.log(" combine MainTain Type:" + this.currentVehileIsBike)
-        console.log(settingService)
+        apputils.CONSOLE_LOG(" combine MainTain Type:" + this.currentVehileIsBike)
+        apputils.CONSOLE_LOG(settingService)
         if (settingService) {
             if (this.currentVehileIsBike) {
                 if (settingService.KmBike && settingService.KmBike.length > 0 &&
@@ -283,16 +283,16 @@ class PayServiceScreen extends React.Component {
 
     // called by ServiceScreenModules to re-render after go Back
     onUpdateMaintainModules(values) {
-        console.log("OK from CHILD calleddddddddddddddddddddddddddd")
-        console.log(values)
+        apputils.CONSOLE_LOG("OK from CHILD calleddddddddddddddddddddddddddd")
+        apputils.CONSOLE_LOG(values)
         this.setState({
             serviceModule: values
         })
     }
     removeMaintainModule(value) {
-        console.log(" remove Maintain Module calledddd")
-        console.log(value)
-        console.log(this.state.serviceModule[""+value])
+        apputils.CONSOLE_LOG(" remove Maintain Module calledddd")
+        apputils.CONSOLE_LOG(value)
+        apputils.CONSOLE_LOG(this.state.serviceModule[""+value])
         if (this.state.serviceModule[""+value]) {
             let prevList = this.state.serviceModule;
             delete prevList[""+value];
@@ -318,7 +318,7 @@ class PayServiceScreen extends React.Component {
         }
     }
     onChooseVehicle(veId) {
-        console.log("onChoose:" + veId)
+        apputils.CONSOLE_LOG("onChoose:" + veId)
         this.currentVehicle = this.props.userData.vehicleList.find(item => item.id == veId);
 
         this.setState({
@@ -335,7 +335,7 @@ class PayServiceScreen extends React.Component {
             )
         } 
 
-        console.log(this.state)
+        apputils.CONSOLE_LOG(this.state)
         this.checkCurrentVehicleIsBikeFromSelected();
         
         let theDate = new Date(this.state.fillDate);
@@ -347,8 +347,8 @@ class PayServiceScreen extends React.Component {
             var datePlaceHoder = apputils.formatDateMonthDayYearVNShort(theDate);
         }
         let maintainTypeArr = this.combineMaintainType(this.props.userData.settingService)
-        console.log("            PayServiceScreen render")
-        console.log(AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES)
+        apputils.CONSOLE_LOG("            PayServiceScreen render")
+        apputils.CONSOLE_LOG(AppConstants.TEMPDATA_SERVICE_MAINTAIN_MODULES)
 
         let viewServiceModule = [];
         for (let prop in this.state.serviceModule) {

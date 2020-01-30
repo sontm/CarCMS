@@ -23,7 +23,7 @@ const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROI
 const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTERESTIALID_ANDROID;
 
 export default {
-    DEFAULT_VERSION: "0.2.1",
+    DEFAULT_VERSION: "0.2.2",
     IS_DEBUG_MODE: true,
     // TODO Enable these values
     SETTING_KM_SHOWWARN: 100,
@@ -38,7 +38,7 @@ export default {
 
     ADS_BANNERID: BANNER_ID,
     ADS_INTERESTIALID: INTERESTIAL_ID,
-    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 20, // after every x click, show Interestial
+    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 16, // after every x click, show Interestial
     ADS_COUNT_CLICK_INTERACTIVE: 0,
 
     // Tempo data which

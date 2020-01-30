@@ -38,7 +38,6 @@ class HomeMoneyUsageByTimeTeam extends React.Component {
   }
   // TODO for change Date
   onSetDateOption(newDate) {
-    console.log(newDate)
     this.setState({
         tillDate: newDate
     });
