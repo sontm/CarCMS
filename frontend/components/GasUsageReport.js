@@ -74,17 +74,22 @@ class GasUsageReport extends React.Component {
   }
 
   // Used in Detail report
-  calculateOneVehicleGasUsage() {
+  calculateOneVehicleGasUsage(isTeamData) {
     let arrGasKmThisCar = [];
     let arrGasMoneyThisCar = [];
     let arrGasMoneyPerKmThisCar = [];
     let tickXLabels = [];
     let theBarWidth = 10;
 
-    if (this.props.currentVehicle && this.props.currentVehicle.id &&  this.props.userData.carReports[this.props.currentVehicle.id]) {
-        var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
-            = this.props.userData.carReports[this.props.currentVehicle.id].gasReport;    
-
+    if (this.props.currentVehicle && this.props.currentVehicle.id && 
+        ((isTeamData && this.props.teamData.teamCarReports[this.props.currentVehicle.id]) || (!isTeamData && this.props.userData.carReports[this.props.currentVehicle.id]))) {
+        if (isTeamData) {
+            var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
+                = this.props.teamData.teamCarReports[this.props.currentVehicle.id].gasReport;    
+        } else {
+            var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
+                = this.props.userData.carReports[this.props.currentVehicle.id].gasReport;    
+        }
         // End date is ENd of PREVIOUS MONTH Month  
         var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth(),0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
@@ -446,7 +451,7 @@ class GasUsageReport extends React.Component {
         } else {
             // this is One Vehicle in Detail Report
             var {arrGasKmThisCar, arrGasMoneyThisCar, arrGasMoneyPerKmThisCar, tickXLabels, theBarWidth} =
-                this.calculateOneVehicleGasUsage();
+                this.calculateOneVehicleGasUsage(this.props.isTeamData);
             if (this.state.activeDisplay == 1) {
                 var dataToDisplay = arrGasMoneyThisCar;
             } else if (this.state.activeDisplay == 2) {

@@ -95,12 +95,19 @@ class MoneyUsageReport extends React.Component {
         totalExpenseSpendTeam, totalServiceSpendTeam};
   }
 
-  calculateAllVehicleTotalMoneyPercentPrivate() {
+  calculateAllVehicleTotalMoneyPercentPrivate(isTeamData) {
     let totalGasSpendPrivate = 0, totalOilSpendPrivate = 0, totalAuthSpendPrivate = 0, 
         totalExpenseSpendPrivate = 0, totalServiceSpendPrivate = 0;
-    if (this.props.currentVehicle && this.props.currentVehicle.id &&  this.props.userData.carReports[this.props.currentVehicle.id]) {
+    if (this.props.currentVehicle && this.props.currentVehicle.id && 
+        ((!isTeamData && this.props.userData.carReports[this.props.currentVehicle.id]) || 
+        (isTeamData && this.props.teamData.teamCarReports[this.props.currentVehicle.id]))) {
+        if (isTeamData) {
+            var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
+                = this.props.teamData.teamCarReports[this.props.currentVehicle.id].moneyReport; 
+        } else {
         var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend}
-            = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;    
+            = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;   
+        } 
         // End date is ENd of This Month  
         var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
@@ -269,7 +276,7 @@ class MoneyUsageReport extends React.Component {
         } else {
             var {totalGasSpendPrivate,totalOilSpendPrivate,totalAuthSpendPrivate,
                 totalExpenseSpendPrivate, totalServiceSpendPrivate}
-                = this.calculateAllVehicleTotalMoneyPercentPrivate()
+                = this.calculateAllVehicleTotalMoneyPercentPrivate(this.props.isTeamData)
 
             var totalGasSpend = totalGasSpendPrivate;
             var totalOilSpend = totalOilSpendPrivate
@@ -278,7 +285,11 @@ class MoneyUsageReport extends React.Component {
             var totalServiceSpend = totalServiceSpendPrivate;
             var totalAlSpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
 
-            var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
+            if (this.props.isTeamData) {
+                var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.teamData.teamCarReports[this.props.currentVehicle.id].expenseReport;
+            } else {
+                var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
+            }
             var {arrSubExpenseSpend, totalSubExpenseSpend, legendLabels} = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
         }
 

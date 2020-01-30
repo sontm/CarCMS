@@ -45,10 +45,14 @@ class HomeScreen extends React.Component {
 
   }
   componentWillMount() {
-    AppUtils.CONSOLE_LOG("HOMESCreen Will Mount")
+    AppUtils.CONSOLE_LOG("HOME Mounting...")
+    if (!this.props.appData.isDebugMode) {
+      AppConstants.IS_DEBUG_MODE = false;
+    }
+
     backend.getPromoteImageLink(
       response => {
-        AppUtils.CONSOLE_LOG("Promote image")
+        AppUtils.CONSOLE_LOG("PR Image ")
         AppUtils.CONSOLE_LOG(response.data)
         if (response.data && response.data.imgUrl) {
           this.setState({
@@ -59,7 +63,7 @@ class HomeScreen extends React.Component {
         }
       },
       err => {
-        AppUtils.CONSOLE_LOG("Cannot Get promote image")
+        AppUtils.CONSOLE_LOG("****Cannot Get PR:")
         AppUtils.CONSOLE_LOG(err)
       }
     )

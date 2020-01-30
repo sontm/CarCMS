@@ -20,6 +20,7 @@ import {actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer
 import {actUserLogout, actUserLoginOK, actUserLeaveTeamOK, actUserForCloseModal, 
   actUserCreateTeamOK} from '../redux/UserReducer'
 import {actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout, actTeamLeaveTeamOK} from '../redux/TeamReducer'
+import {actAppToggleDebugMode} from '../redux/AppDataReducer'
 
 import * as Google from 'expo-google-app-auth'
 //This is for Standalone apk app
@@ -589,7 +590,12 @@ class SettingsScreen extends React.Component {
   }
   onClickSettingDbg() {
     let curCount = this.state.dbgCount + 1;
-    if (curCount >= 5) {
+    if (curCount <= 8) {
+      this.setState({
+        dbgCount: curCount
+      })
+    }
+    if (curCount >= 5 && curCount < 8) {
       Toast.show({
         text: "You are going to enter Debug:" + curCount,
         //buttonText: "Okay",
@@ -597,12 +603,32 @@ class SettingsScreen extends React.Component {
         type: "warning"
       })
     }
-    if (curCount >= 8) {
+    if (curCount == 8) {
       // Enter Debug Mode
+      this.props.actAppToggleDebugMode()
+      if (this.props.appData.isDebugMode) {
+        AppConstants.IS_DEBUG_MODE = false
+        Toast.show({
+          text: "You Are OUT Debug:" + curCount,
+          //buttonText: "Okay",
+          position: "bottom",
+          type: "danger"
+        })
+      } else {
+        AppConstants.IS_DEBUG_MODE = true
+        Toast.show({
+          text: "You Are IN Debug:" + curCount,
+          //buttonText: "Okay",
+          position: "bottom",
+          type: "success"
+        })
+      }
+      this.setState({
+        dbgCount: 0
+      })
+      
+      
     }
-    this.setState({
-      dbgCount: curCount
-    })
   }
   render() {
     // NetInfo.fetch().then(state => {
@@ -1044,7 +1070,7 @@ class SettingsScreen extends React.Component {
                 onPress={() => this.props.navigation.navigate("DebugScreen")}>
               <View style={styles.rowContainer}>
                 <View style={styles.rowText}>
-                  <Text style={styles.textNormal}>Debug Screen {" "+AppConstants.SERVER_API}</Text>
+                  <Text style={styles.textNormal}>Debug Screen</Text>
                 </View>
                 <View style={styles.rowRightIcon}>
                   <Icon name="arrow-forward" style={styles.iconRight}/></View>
@@ -1219,7 +1245,7 @@ const styles = StyleSheet.create({
     color: "rgb(80, 80, 80)"
   },
   textSection: {
-    fontSize: 24,
+    fontSize: 22,
     color: "rgb(100, 100, 100)"
   },
 
@@ -1251,7 +1277,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
     userData: state.userData,
-    teamData: state.teamData
+    teamData: state.teamData,
+    appData: state.appData,
 });
 const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,
@@ -1259,7 +1286,8 @@ const mapActionsToProps = {
   actTeamGetDataOK, actTeamGetJoinRequestOK, actTeamUserWillLogout,
   actUserLeaveTeamOK, actTeamLeaveTeamOK,
   actUserStartSyncPrivate,actUserStartSyncPrivateDone,actUserStartSyncTeam,actUserStartSyncTeamDone,
-  actUserForCloseModal,actUserCreateTeamOK
+  actUserForCloseModal,actUserCreateTeamOK,
+  actAppToggleDebugMode
 };
   
 export default connect(

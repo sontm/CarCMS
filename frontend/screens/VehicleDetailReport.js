@@ -36,7 +36,7 @@ class VehicleDetailReport extends React.Component {
   }
   render() {
     AppUtils.CONSOLE_LOG("~~~~~~~~~~~~DetailReport Render:" + AppConstants.CURRENT_VEHICLE_ID)
-    
+    AppUtils.CONSOLE_LOG(this.props.navigation.state.params)
     if (this.props.navigation && this.props.navigation.state.params && this.props.navigation.state.params.vehicle) {
         var currentVehicle = this.props.navigation.state.params.vehicle;
     } else {
@@ -59,51 +59,58 @@ class VehicleDetailReport extends React.Component {
         //     = AppUtils.getInfoMoneySpend(currentVehicle.fillGasList, currentVehicle.fillOilList, 
         //         currentVehicle.authorizeCarList, currentVehicle.expenseList, currentVehicle.serviceList);
         // let {arrExpenseTypeSpend} = AppUtils.getInfoMoneySpendInExpense(currentVehicle.expenseList);
-        
+        let theReport = this.props.userData.carReports[currentVehicle.id];
+        let isTeamData = false;
+        if (!theReport) {
+            theReport = this.props.teamData.teamCarReports[currentVehicle.id];
+            isTeamData = true;
+        }
+
         let imgSource = AppUtils.loadImageSourceOfBrand(currentVehicle.brand.toLowerCase(), currentVehicle.type!="car")
         // calcualte Service maintain date or KM
         //totalNextDay
-        if (this.props.userData.carReports[currentVehicle.id] && this.props.userData.carReports[currentVehicle.id].maintainRemind) {
-            var passedDay =  AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
+        if (theReport && theReport.maintainRemind) {
+            var passedDay =  AppUtils.calculateDiffDayOf2Date(theReport.maintainRemind.lastDateMaintain,
                 new Date());
-            var totalDayForMaintain = this.props.userData.carReports[currentVehicle.id].maintainRemind.totalNextDay;
+            var totalDayForMaintain = theReport.maintainRemind.totalNextDay;
             if (!totalDayForMaintain) {
-                totalDayForMaintain = AppUtils.calculateDiffDayOf2Date(this.props.userData.carReports[currentVehicle.id].maintainRemind.lastDateMaintain,
-                    this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain);
+                totalDayForMaintain = AppUtils.calculateDiffDayOf2Date(theReport.maintainRemind.lastDateMaintain,
+                    theReport.maintainRemind.nextEstimatedDateForMaintain);
             }
             var percentByDate = 1.0 * passedDay/totalDayForMaintain;
-            var percentByKm = 1.0 * this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain/
-                this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+            var percentByKm = 1.0 * theReport.maintainRemind.passedKmFromPreviousMaintain/
+            theReport.maintainRemind.lastMaintainKmValidFor;
             if (percentByDate > percentByKm) {
                 // Will Show by Date
                 var passService = passedDay;
                 var totalNeedService = totalDayForMaintain;
                 var unitService = AppLocales.t("GENERAL_DAY");
-                var nextDateService = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
+                var nextDateService = theReport.maintainRemind.nextEstimatedDateForMaintain;
 
-                var passServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
-                var totalNeedServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+                var passServiceSub = theReport.maintainRemind.passedKmFromPreviousMaintain;
+                var totalNeedServiceSub = theReport.maintainRemind.lastMaintainKmValidFor;
                 var unitServiceSub = "Km";
             } else {
                 var passServiceSub = passedDay;
                 var totalNeedServiceSub = totalDayForMaintain;
                 var unitServiceSub = AppLocales.t("GENERAL_DAY");
-                var nextDateServiceSub = this.props.userData.carReports[currentVehicle.id].maintainRemind.nextEstimatedDateForMaintain;
+                var nextDateServiceSub = theReport.maintainRemind.nextEstimatedDateForMaintain;
 
-                var passService = this.props.userData.carReports[currentVehicle.id].maintainRemind.passedKmFromPreviousMaintain;
-                var totalNeedService = this.props.userData.carReports[currentVehicle.id].maintainRemind.lastMaintainKmValidFor;
+                var passService = theReport.maintainRemind.passedKmFromPreviousMaintain;
+                var totalNeedService = theReport.maintainRemind.lastMaintainKmValidFor;
                 var unitService = "Km";
             }
             var isHaveRemindData = false;
-            if ((this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService) ||
-                    (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor) ||
-                    (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance) ||
-                    (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee)) {
+            if ((theReport.maintainRemind && totalNeedService) ||
+                    (theReport.authReport.lastAuthDaysValidFor) ||
+                    (theReport.authReport.lastAuthDaysValidForInsurance) ||
+                    (theReport.authReport.lastAuthDaysValidForRoadFee)) {
                 isHaveRemindData = true;
             }
         }
         AppUtils.CONSOLE_LOG("currentVehicle.brand")
         AppUtils.CONSOLE_LOG(":" + currentVehicle.brand + ":")
+        
         return (
             <Container>
             <Header hasTabs style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
@@ -130,7 +137,7 @@ class VehicleDetailReport extends React.Component {
             </Right>
             </Header>
 
-            {this.props.userData.carReports[currentVehicle.id] ? (
+            {theReport ? (
             // <Tabs locked={true} renderTabBar={()=> <ScrollableTab tabsContainerStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}/>}>
             <Tabs locked={true}>
                 <Tab heading={AppLocales.t("GENERAL_MONEYUSAGE")} tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
@@ -139,9 +146,9 @@ class VehicleDetailReport extends React.Component {
                         activeTextStyle={{fontSize: 14,color: "white"}}>
                     <Content>
                     <ScrollView>
-                    <MoneyUsageByTimeReport currentVehicle={currentVehicle}/>
-                    <MoneyUsageReport currentVehicle={currentVehicle}/>
-                    <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle}/>
+                    <MoneyUsageByTimeReport currentVehicle={currentVehicle} isTeamData={isTeamData}/>
+                    <MoneyUsageReport currentVehicle={currentVehicle} isTeamData={isTeamData}/>
+                    <MoneyUsageReportServiceMaintain currentVehicle={currentVehicle} isTeamData={isTeamData}/>
                     </ScrollView>
                     </Content>
                 </Tab>
@@ -150,7 +157,7 @@ class VehicleDetailReport extends React.Component {
                         textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
                         activeTextStyle={{fontSize: 14,color: "white"}}>
                     <Content>
-                    <GasUsageReport currentVehicle={currentVehicle}/>
+                    <GasUsageReport currentVehicle={currentVehicle} isTeamData={isTeamData}/>
                     </Content>
                 </Tab>
                 <Tab heading={AppLocales.t("CARDETAIL_REMINDER")}
@@ -168,17 +175,17 @@ class VehicleDetailReport extends React.Component {
                         </View>
                         
                         <View style={styles.statRow}>
-                            {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor ? 
+                            {theReport.authReport.lastAuthDaysValidFor ? 
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
-                                    colorScale={[AppUtils.getColorForProgress(this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor
-                                            -this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize, "Day"), 
+                                    colorScale={[AppUtils.getColorForProgress(theReport.authReport.lastAuthDaysValidFor
+                                            -theReport.authReport.diffDayFromLastAuthorize, "Day"), 
                                             AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG]}
                                     data={[
-                                        { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize },
-                                        { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor -
-                                            this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize) },
+                                        { x: "", y: theReport.authReport.diffDayFromLastAuthorize },
+                                        { x: "", y: (theReport.authReport.lastAuthDaysValidFor -
+                                            theReport.authReport.diffDayFromLastAuthorize) },
                                     ]}
                                     height={140}
                                     innerRadius={58}
@@ -188,28 +195,28 @@ class VehicleDetailReport extends React.Component {
                                 <View style={styles.labelProgress}>
                                     <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_AUTH")}</Text>
                                     <Text style={styles.labelProgressText}>
-                                        {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorize}/
-                                        {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidFor}
+                                        {theReport.authReport.diffDayFromLastAuthorize}/
+                                        {theReport.authReport.lastAuthDaysValidFor}
                                     </Text>
                                     <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                                 </View>
-                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate ? 
+                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{theReport.authReport.nextAuthorizeDate ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
-                                        this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDate): "NA"}</Text>
+                                        theReport.authReport.nextAuthorizeDate): "NA"}</Text>
                             </View>
                             </View> : null}
 
-                            {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance ?  (
+                            {theReport.authReport.lastAuthDaysValidForInsurance ?  (
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
-                                    colorScale={[AppUtils.getColorForProgress(this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance
-                                        -this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance, "Day"), 
+                                    colorScale={[AppUtils.getColorForProgress(theReport.authReport.lastAuthDaysValidForInsurance
+                                        -theReport.authReport.diffDayFromLastAuthorizeInsurance, "Day"), 
                                         AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG]}
                                     data={[
-                                        { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance },
-                                        { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance -
-                                            this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance) },
+                                        { x: "", y: theReport.authReport.diffDayFromLastAuthorizeInsurance },
+                                        { x: "", y: (theReport.authReport.lastAuthDaysValidForInsurance -
+                                            theReport.authReport.diffDayFromLastAuthorizeInsurance) },
                                     ]}
                                     height={140}
                                     innerRadius={58}
@@ -219,27 +226,27 @@ class VehicleDetailReport extends React.Component {
                                 <View style={styles.labelProgress}>
                                     <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_INSURANCE")}</Text>
                                     <Text style={styles.labelProgressText}>
-                                        {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeInsurance}/
-                                        {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForInsurance}
+                                        {theReport.authReport.diffDayFromLastAuthorizeInsurance}/
+                                        {theReport.authReport.lastAuthDaysValidForInsurance}
                                     </Text>
                                     <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                                 </View>
-                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance ? 
+                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{theReport.authReport.nextAuthorizeDateInsurance ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
-                                        this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateInsurance): "NA"}</Text>
+                                        theReport.authReport.nextAuthorizeDateInsurance): "NA"}</Text>
                             </View></View>) : null}
 
-                            {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee ? (
+                            {theReport.authReport.lastAuthDaysValidForRoadFee ? (
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                                 <VictoryPie
-                                    colorScale={[AppUtils.getColorForProgress(this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee
-                                        -this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee, "Day"), 
+                                    colorScale={[AppUtils.getColorForProgress(theReport.authReport.lastAuthDaysValidForRoadFee
+                                        -theReport.authReport.diffDayFromLastAuthorizeRoadFee, "Day"), 
                                         AppConstants.COLOR_GREY_MIDDLE_LIGHT_BG]}
                                     data={[
-                                        { x: "", y: this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee },
-                                        { x: "", y: (this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee -
-                                            this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee) },
+                                        { x: "", y: theReport.authReport.diffDayFromLastAuthorizeRoadFee },
+                                        { x: "", y: (theReport.authReport.lastAuthDaysValidForRoadFee -
+                                            theReport.authReport.diffDayFromLastAuthorizeRoadFee) },
                                     ]}
                                     height={140}
                                     innerRadius={58}
@@ -249,19 +256,19 @@ class VehicleDetailReport extends React.Component {
                                 <View style={styles.labelProgress}>
                                     <Text style={styles.progressTitle}>{AppLocales.t("GENERAL_AUTHROIZE_ROADFEE")}</Text>
                                     <Text style={styles.labelProgressText}>
-                                        {this.props.userData.carReports[currentVehicle.id].authReport.diffDayFromLastAuthorizeRoadFee}/
-                                        {this.props.userData.carReports[currentVehicle.id].authReport.lastAuthDaysValidForRoadFee}
+                                        {theReport.authReport.diffDayFromLastAuthorizeRoadFee}/
+                                        {theReport.authReport.lastAuthDaysValidForRoadFee}
                                     </Text>
                                     <Text>{AppLocales.t("GENERAL_DAY")}</Text>
                                 </View>
-                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee ? 
+                                <Text style={{fontSize: 14}}>{AppLocales.t("GENERAL_NEXT") + ": "}{theReport.authReport.nextAuthorizeDateRoadFee ? 
                                     AppUtils.formatDateMonthDayYearVNShort(
-                                        this.props.userData.carReports[currentVehicle.id].authReport.nextAuthorizeDateRoadFee): "NA"}
+                                        theReport.authReport.nextAuthorizeDateRoadFee): "NA"}
                                 </Text>
                             </View></View>
                             ) : null}
 
-                            {(this.props.userData.carReports[currentVehicle.id].maintainRemind && totalNeedService )? (
+                            {(theReport.maintainRemind && totalNeedService )? (
                             <View style={styles.remindItemContainer}>
                             <View style={styles.progressContainer}>
                             <VictoryPie
@@ -497,7 +504,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = (state) => ({
-    userData: state.userData
+    userData: state.userData,
+    teamData: state.teamData
 });
 const mapActionsToProps = {
     actTempCalculateCarReport

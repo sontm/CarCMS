@@ -114,18 +114,34 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                 var theTotal = totalPrivateServiceSpend;
             }
         } else {
-            if (this.props.userData.carReports[this.props.currentVehicle.id].serviceReport) {
-                var {arrServiceTypeSpend, totalServiceSpend2} = 
-                    this.props.userData.carReports[this.props.currentVehicle.id].serviceReport;
-                var legendLabels =[];
-                if (arrServiceTypeSpend && arrServiceTypeSpend.length > 0) {
-                    arrServiceTypeSpend.forEach(item => {
-                        legendLabels.push({name: item.x})
-                    })
+            if (this.props.isTeamData) {
+                if (this.props.teamData.teamCarReports[this.props.currentVehicle.id].serviceReport) {
+                    var {arrServiceTypeSpend, totalServiceSpend2} = 
+                        this.props.teamData.teamCarReports[this.props.currentVehicle.id].serviceReport;
+                    var legendLabels =[];
+                    if (arrServiceTypeSpend && arrServiceTypeSpend.length > 0) {
+                        arrServiceTypeSpend.forEach(item => {
+                            legendLabels.push({name: item.x})
+                        })
+                    }
+                    var theArr = arrServiceTypeSpend;
+                    var theTotal = totalServiceSpend2;
                 }
-                var theArr = arrServiceTypeSpend;
-                var theTotal = totalServiceSpend2;
+            } else {
+                if (this.props.userData.carReports[this.props.currentVehicle.id].serviceReport) {
+                    var {arrServiceTypeSpend, totalServiceSpend2} = 
+                        this.props.userData.carReports[this.props.currentVehicle.id].serviceReport;
+                    var legendLabels =[];
+                    if (arrServiceTypeSpend && arrServiceTypeSpend.length > 0) {
+                        arrServiceTypeSpend.forEach(item => {
+                            legendLabels.push({name: item.x})
+                        })
+                    }
+                    var theArr = arrServiceTypeSpend;
+                    var theTotal = totalServiceSpend2;
+                }
             }
+            
         }
         return (
             <View style={styles.container}>

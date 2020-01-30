@@ -23,7 +23,7 @@ const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROI
 const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTERESTIALID_ANDROID;
 
 export default {
-    DEFAULT_VERSION: "0.2.2",
+    DEFAULT_VERSION: "0.2.4",
     IS_DEBUG_MODE: true,
     // TODO Enable these values
     SETTING_KM_SHOWWARN: 100,
@@ -38,7 +38,7 @@ export default {
 
     ADS_BANNERID: BANNER_ID,
     ADS_INTERESTIALID: INTERESTIAL_ID,
-    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 16, // after every x click, show Interestial
+    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 12, // after every x click, show Interestial
     ADS_COUNT_CLICK_INTERACTIVE: 0,
 
     // Tempo data which
@@ -79,7 +79,7 @@ export default {
     //SERVER_API:  "http://192.168.0.108:3000/api",
     //SERVER_API:  "http://localhost:3000/api", // why localhost here (not OK when on LAN setting of Expo)
     //SERVER_API:  "http://172.20.10.2:3000/api",
-    COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#98df8a","#ffbb78","#e377c2","#ff7f0e","#e377c2"],
+    COLOR_SCALE_10: ["#1890FF","#ff7f0e","#98df8a","#9467bd","#17becf","#ffbb78","#aec7e8","#e377c2","#c49c94","#dbdb8d"],
     COLOR_PICKER_TEXT: "#1565c0",//"#1f77b4",
 
     COLOR_GREY_DARK: "rgb(80, 80, 80)",

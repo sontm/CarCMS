@@ -47,6 +47,7 @@ export default {
     GENERAL_STATUS:"Trạng Thái",
     GENERAL_YES: "Đồng Ý",
     GENERAL_NO: "Không",
+    GENERAL_SYNC:"Đồng Bộ",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",

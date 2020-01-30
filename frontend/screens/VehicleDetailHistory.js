@@ -122,7 +122,9 @@ class VehicleDetailHistory extends React.Component {
             orderedKeys.forEach(prop => {
                 historyView.push(<Tab heading={prop} key={prop} 
                     tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                    activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                    activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                    textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                    activeTextStyle={{fontSize: 14,color: "white"}}>
                 <Content>
                 {dataByYear[""+prop].map(item => {
                     return (

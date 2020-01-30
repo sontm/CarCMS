@@ -58,7 +58,7 @@ class MoneyUsageByTimeReport extends React.Component {
 
   
 
-  calculateOneVehicleTotalMoneyPrivate() {
+  calculateOneVehicleTotalMoneyPrivate(isTeamData) {
     let arrTotalGasOneCar = [];
     let arrTotalOilOneCar = [];
     let arrTotalAuthOneCar = [];
@@ -86,10 +86,17 @@ class MoneyUsageByTimeReport extends React.Component {
     //   if (this.props.teamData.teamCarReports && this.props.teamData.teamCarReports[element.id]) {
     //this.props.userData.vehicleList.forEach((element, carIdx) => {
     if (this.props.currentVehicle && this.props.currentVehicle.id &&  
-            this.props.userData.carReports[this.props.currentVehicle.id]) {
-        let {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend} 
-            //= this.props.teamData.teamCarReports[element.id].moneyReport;
-            = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
+            ((!isTeamData && this.props.userData.carReports[this.props.currentVehicle.id]) || 
+            (isTeamData && this.props.teamData.teamCarReports[this.props.currentVehicle.id]))) {
+        if(isTeamData) {
+            var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend} 
+                //= this.props.teamData.teamCarReports[element.id].moneyReport;
+             = this.props.teamData.teamCarReports[this.props.currentVehicle.id].moneyReport;
+        } else {
+            var {arrGasSpend, arrOilSpend, arrAuthSpend, arrExpenseSpend, arrServiceSpend} 
+                //= this.props.teamData.teamCarReports[element.id].moneyReport;
+                = this.props.userData.carReports[this.props.currentVehicle.id].moneyReport;
+        }
         //let xValue = carIdx + 1;
         let xValue = 1;
 
@@ -529,7 +536,7 @@ class MoneyUsageByTimeReport extends React.Component {
             // Detail Report each Car
             var {arrTotalGasOneCar,theBarWidth,arrTotalAuthOneCar,
                 arrTotalExpenseOneCar, arrTotalServiceOneCar, tickXLabels, legendLabels}
-                = this.calculateOneVehicleTotalMoneyPrivate();
+                = this.calculateOneVehicleTotalMoneyPrivate(this.props.isTeamData);
         }
         
         var tickXLabels = AppUtils.reviseTickLabelsToCount(tickXLabels, 9);

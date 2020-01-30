@@ -58,26 +58,32 @@ class DebugScreen extends React.Component {
             <Container>
             <Content>
             <View style={styles.formContainer}>
-                <View style={styles.textRow}>
-                    <Text style={styles.textSection}>
-                        User Notifications
-                    </Text>
-                </View>
+                <View style={styles.textRow}><Text>
+                  Count Open:{this.props.appData.countOpen}
+                </Text></View>
 
-                {notifyArr.map((item,idx) => (
-                    <ListItem icon key={idx} style={styles.listItemRow} >
-                        <Body style={{flex:30}}>
-                            <Text style={{fontSize: 14}}>
-                                {item.vehiclePlate+ "," + item.type + ": " + item.notificationId}
-                            </Text>
-                            <Text style={{fontSize: 12}}>
-                                {"remindOn:"+apputils.formatDateTimeFullVN(item.remindDate) + ",on:" + 
-                                    apputils.formatDateMonthDayYearVNShort(item.onDate)}
-                            </Text>
-                            
-                        </Body>
-                    </ListItem>
-                ))}
+                <View style={styles.textRow}><Text>
+                  App Latest On:{this.props.appData.appDataLatestOn}
+                </Text></View>
+
+                <View style={styles.textRow}><Text>
+                  User Profile:{JSON.stringify(this.props.userData.userProfile)}
+                </Text></View>
+
+                <View style={styles.textRow}><Text>
+                  Token:{(this.props.userData.token)}
+                </Text></View>
+
+                <View style={styles.textRow}><Text>
+                  Team Info:{JSON.stringify(this.props.userData.teamInfo)}
+                </Text></View>
+
+                <View style={styles.textRow}><Text>
+                  User IsNoAds:{(this.props.userData.isNoAds)}
+                </Text></View>
+                <View style={styles.textRow}><Text>
+                  User ModifiedInfo:{JSON.stringify(this.props.userData.modifiedInfo)}
+                </Text></View>
 
             </View>
             </Content>
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     marginRight: -5,
     paddingLeft: 5,
     paddingRight: 5,
-    backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
+    // backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
   rowContainer: {
     flexDirection: "row",

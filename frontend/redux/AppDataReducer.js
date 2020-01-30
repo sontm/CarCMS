@@ -3,6 +3,7 @@ import backend from '../constants/Backend';
 import apputils from '../constants/AppUtils';
 const APPDATA_OPEN_COUNT = 'APPDATA_OPEN_COUNT';
 const APPDATA_SYNC_LATEST = 'APPDATA_SYNC_LATEST';
+const APPDATA_TOGGLE_DEBUG = 'APPDATA_TOGGLE_DEBUG';
 
 // ### Toyota OK
 // Alphard Altis Avanza Camry Fortuner Hiace Hilux Innova LandPrado LandCruiser Prado Rush Vios Wigo Yaris
@@ -289,7 +290,15 @@ const initialState = {
 
     countOpen: 0,
     isNoAds: false,
+    isDebugMode: false
 };
+
+export const actAppToggleDebugMode = () => (dispatch) => {
+    apputils.CONSOLE_LOG("actAppToggleDebugMode:")
+    dispatch({
+        type: APPDATA_TOGGLE_DEBUG
+    })
+}
 
 export const actAppIncreaseOpenCount = () => (dispatch) => {
     apputils.CONSOLE_LOG("actAppIncreaseOpenCount:")
@@ -350,6 +359,11 @@ export default function(state = initialState, action) {
             typeExpense: action.payload.data.expenses,
             typeService: action.payload.data.services,
             typeServiceBike: action.payload.data.servicesBike,
+        };
+    case APPDATA_TOGGLE_DEBUG:
+        return {
+            ...state,
+            isDebugMode: !state.isDebugMode ? true: false
         };
     default:
         return state;

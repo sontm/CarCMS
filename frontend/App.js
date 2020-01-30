@@ -52,17 +52,17 @@ class App extends React.Component {
   // componentWillMount() {
   //   apputils.CONSOLE_LOG("App componentWillMount*********************")
   // }
-  componentDidMount() {
-    apputils.CONSOLE_LOG("App componentDidMount*********************")
-  }
-  async componentWillMount() {
-    apputils.CONSOLE_LOG("App componentWillMount*********************")
+  // componentDidMount() {
+  //   apputils.CONSOLE_LOG("App componentDidMount*********************")
+  // }
+  // async componentWillMount() {
+  //   apputils.CONSOLE_LOG("App componentWillMount*********************")
     // await Font.loadAsync({
     //   Roboto: require("native-base/Fonts/Roboto.ttf"),
     //   Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     // });
     // this.setState({ loading: false });
-  }
+  // }
 
   render() {
     //StatusBar.setBarStyle('light-content', true);
