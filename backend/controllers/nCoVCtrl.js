@@ -17,7 +17,7 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const NCOV_DATA = {
 vietnam_province: [
     {
-        date:"2020-02-01T08:00:00.007Z",
+        date:"2020-02-01T15:00:00.007Z",
         provinces:[
             {
                 name:"Vĩnh Phúc",
@@ -41,7 +41,7 @@ vietnam_province: [
 ],
 china_province: [
     {
-        date:"2020-02-01T12:00:00.007Z",
+        date:"2020-02-01T15:00:00.007Z",
         provinces:[
             {
                 name:"Hubei",
@@ -142,9 +142,9 @@ china_province: [
   ],
   data: [
       {
-        date:"2020-02-01T12:00:00.007Z",
+        date:"2020-02-01T15:00:00.007Z",
         world: {
-            case: 12024,
+            case: 11955,
             death: 259,
         },
         tranmission_rate_min: 3.0,
@@ -157,7 +157,7 @@ china_province: [
             name:"China",
             name_vn:"China",
             code:"cn",
-            case: 11860,
+            case: 11791,
             death: 259,
             suspect: null,
             isolate: null,
@@ -167,44 +167,43 @@ china_province: [
             name_vn:"Thailand",
             code:"thai",
             case: 19,
-            death: 3,
+            death: 0,
         },{
-          name:"Singapore",
-          name_vn:"Singapore",
-          code:"sg",
-          case: 18,
-          death: 2,
+            name:"Singapore",
+            name_vn:"Singapore",
+            code:"sg",
+            case: 18,
+            death: 0,
         },{
             name:"Japan",
             name_vn:"Japan",
             code:"jp",
             case: 17,
-            death: 2,
+            death: 0,
         },{
             name:"Hong Kong",
             name_vn:"Hong Kong",
             code:"hk",
             case: 13,
-            death: 3,
+            death: 0,
         },{
             name:"Australia",
             name_vn:"Australia",
             code:"aus",
             case: 12,
-            death: 5,
+            death: 0,
         },{
             name:"South Korea",
             name_vn:"South Korea",
             code:"kr",
             case: 12,
-            death: 5,
-
+            death: 0,
         },{
             name:"Taiwan",
             name_vn:"Taiwan",
             code:"tw",
             case: 10,
-            death: 6,
+            death: 0,
         },{
             name:"Malaysia",
             name_vn:"Malaysia",
@@ -235,7 +234,6 @@ china_province: [
             code:"fr",
             case: 6,
             death: 0,
-
         },{
             name:"Vietnam",
             name_vn:"Vietnam",
@@ -287,8 +285,7 @@ china_province: [
             name_vn:"Sri Lanka",
             code:"Sri Lanka",
             case: 1,
-            death: 0,
-
+            death: 0
         },{
             name:"Cambodia",
             name_vn:"Cambodia",
@@ -307,7 +304,6 @@ china_province: [
             code:"Nepal",
             case: 1,
             death: 0,
-
         },{
             name:"India",
             name_vn:"India",
@@ -1392,7 +1388,7 @@ module.exports = {
     apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-01T12:00:00.017Z",
+        updatedOn: "2020-02-01T15:00:00.007Z",
       }
       res.status(200).send(latestData)
     } else {

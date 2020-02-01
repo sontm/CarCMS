@@ -37,13 +37,14 @@ export default ({ children }) => (
                                 </ListLink>
                             </div>
                         </div>
-                        <div class="col-xl-6 col-lg-7">
+                        <div class="col-xl-4 col-lg-5">
                             
                         </div>
-                        <div class="col-xl-3 col-lg-3 d-none d-lg-block">
+                        <div class="col-xl-5 col-lg-5 d-none d-lg-block">
                             <div class="main-menu  d-none d-lg-block">
                                 <ul id="navigation">
-                                        <ListLink to="/quanlyxe/PrivacyPolicy">Quyền Riêng Tư/Privacy Policy</ListLink>
+                                    <li><ListLink to="/quanlyxe/PrivacyPolicy">QuảnLýXe</ListLink></li>
+                                    <li><ListLink to="/coronavirus/PrivacyPolicy">CoronaVirus</ListLink></li>
 
                                         {/* <li><a href="#">blog <i class="ti-angle-down"></i></a>
                                             <ul class="submenu">
