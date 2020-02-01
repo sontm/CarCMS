@@ -3,6 +3,7 @@ const passport = require('passport');
 import user from './UserCtrl'
 import team from './TeamCtrl';
 import appData from './AppDataCtrl';
+import nCoVCtrl from './nCoVCtrl';
 
 module.exports = (app) => {
 app.get('/api', (req, res) => res.status(200).send({
@@ -74,6 +75,12 @@ app.get('/api/app/notification/all', appData.getAllAppNotification);
 app.post('/api/app/recovermail', appData.sendEmailWithSES);
 
 app.post('/api/app/customervoice', appData.addNewCustomerVoice);
+
+
+app.get('/api/ncov/lateston', nCoVCtrl.getLatestCoronaDateOn);
+app.get('/api/ncov/data', nCoVCtrl.getLatestCoronaData);
+
+
 
 // app.post('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.create);
 // app.get('/api/vehicle', passport.authenticate('jwt', {session: false}), vehicle.getAllOfUser);
