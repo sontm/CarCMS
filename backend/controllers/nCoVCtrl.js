@@ -220,6 +220,11 @@ china_province: [
             name:"United States",
             case: 8,
             death: 0,
+            note:"+ 1 Case in Snohomish, Washington. Male, Age 30s from Jan.21.\n\n"
+                +"+ 2 Cases in Chicago, Illinois. 1 Female at Age 60s from Jan.24; 1 Male husband from Jan.30\n\n"
+                +"+ 3 Cases in California. 2 from Jan.26 in Orange C., L.A.; 1 Male adult from Jan.31 in Santa Clara C.\n\n"
+                +"+ 1 Case in Maricopa County, Arizona. 1 Student from Jan.26.\n\n"
+                +"+ 1 Case in Boston, Massachusetts. 1 Male at Age 20s From Feb.1."
         },{
             name:"Germany",
             case: 8,
@@ -425,7 +430,7 @@ china_province: [
         }
         ]
     },{
-        date:"2020-01-31",
+        date:"2020-01-31T15:00:00.007Z",
         world: {
             case: 9826,
             death: 213,
@@ -446,30 +451,30 @@ china_province: [
         },{
             name:"Thailand",
             case: 14,
-            death: 3,
+            death: 0,
         },{
             name:"Singapore",
             case: 13,
-            death: 2,
+            death: 0,
         },{
             name:"Japan",
             case: 14,
-            death: 2,
+            death: 0,
 
         },{
             name:"South Korea",
             case: 11,
-            death: 5,
+            death: 0,
 
         },{
             name:"Hong Kong",
             case: 12,
-            death: 3,
+            death: 0,
 
         },{
             name:"Taiwan",
             case: 9,
-            death: 6,
+            death: 0,
 
         },{
             name:"Macao",
@@ -479,7 +484,7 @@ china_province: [
         },{
             name:"Australia",
             case: 9,
-            death: 5,
+            death: 0,
 
         },{
             name:"Malaysia",
@@ -555,7 +560,7 @@ china_province: [
         }
         ]
     },{
-        date:"2020-01-30",
+        date:"2020-01-30T15:00:00.007Z",
         world: {
             case: 7818,
             death: 170,
@@ -654,7 +659,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-29",
+        date:"2020-01-29T15:00:00.007Z",
         world: {
             case: 6065,
             death: 132,
@@ -741,7 +746,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-28",
+        date:"2020-01-28T15:00:00.007Z",
         world: {
             case: 4593,
             death: 106,
@@ -824,7 +829,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-27",
+        date:"2020-01-27T15:00:00.007Z",
         world: {
             case: 2798,
             death: 80,
@@ -895,7 +900,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-26",
+        date:"2020-01-26T15:00:00.007Z",
         world: {
             case: 2014,
             death: 56,
@@ -962,7 +967,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-25",
+        date:"2020-01-25T15:00:00.007Z",
         world: {
             case: 1320,
             death: 41,
@@ -1025,7 +1030,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-24",
+        date:"2020-01-24T15:00:00.007Z",
         world: {
             case: 846,
             death: 25,
@@ -1076,7 +1081,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-23",
+        date:"2020-01-23T15:00:00.007Z",
         world: {
             case: 581,
             death: 17,
@@ -1119,7 +1124,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-22",
+        date:"2020-01-22T15:00:00.007Z",
         world: {
             case: 314,
             death: 6,
@@ -1150,7 +1155,7 @@ china_province: [
             death: 0
         }]
     },{
-        date:"2020-01-21",
+        date:"2020-01-21T15:00:00.007Z",
         world: {
             case: 282,
             death: 6,
