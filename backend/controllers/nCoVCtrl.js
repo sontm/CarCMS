@@ -17,6 +17,28 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const NCOV_DATA = {
 vietnam_province: [
     {
+        date:"2020-02-02T05:00:00.007Z",
+        provinces:[
+            {
+                name:"TP.HCM",
+                case: 3,
+                death: 0
+            },{
+                name:"Vĩnh Phúc",
+                case: 2,
+                death: 0
+            },{
+                name:"Thanh Hoá",
+                case: 1,
+                death: 0
+            },{
+                name:"Khánh Hoà",
+                case: 1,
+                death: 0
+            }
+        ]
+    },
+    {
         date:"2020-02-01T15:00:00.007Z",
         provinces:[
             {
@@ -142,10 +164,10 @@ china_province: [
   ],
   data: [
     {
-        date:"2020-02-02T00:05:00.007Z",
+        date:"2020-02-02T05:00:00.007Z",
         world: {
-            case: 14551,
-            death: 304,
+            case: 14560,
+            death: 305,
             risk:"High"
         },
         tranmission_rate_min: 3.0,
@@ -155,9 +177,7 @@ china_province: [
         incubation_period_max: 14,
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 14381,
             death: 304,
             suspect: null,
@@ -166,168 +186,114 @@ china_province: [
             risk:"Very High"
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 20,
             death: 0,
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"thai",
             case: 19,
             death: 0,
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"sg",
             case: 18,
             death: 0,
         },{
+            name:"South Korea",
+            case: 15,
+            death: 0,
+        },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
-            case: 13,
+            case: 14,
             death: 0,
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"aus",
-            case: 12,
-            death: 0,
-        },{
-            name:"South Korea",
-            name_vn:"South Korea",
-            code:"kr",
             case: 12,
             death: 0,
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 10,
             death: 0,
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"ma",
             case: 8,
             death: 0,
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 8,
             death: 0,
         },{
             name:"Germany",
-            name_vn:"Germany",
-            code:"ger",
             case: 8,
             death: 0,
         },{
             name:"Macao",
-            name_vn:"Macao",
-            code:"Macao",
             case: 7,
             death: 0
         },{
             name:"France",
-            name_vn:"France",
-            code:"fr",
             case: 6,
             death: 0,
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
-            case: 6,
+            case: 7,
             death: 0,
             suspect: 92,
             isolate: 27,
         },{
             name:"UAE",
-            name_vn:"UAE",
-            code:"uae",
             case: 5,
             death: 0,
         },{
             name:"Canada",
-            name_vn:"Canada",
-            code:"Canada",
             case: 4,
             death: 0,
         },{
             name:"United Kingdom",
-            name_vn:"United Kingdom",
-            code:"uk",
             case: 2,
             death: 0,
         },{
             name:"Russia",
-            name_vn:"Russia",
-            code:"ru",
             case: 2,
             death: 0,
         },{
             name:"Italy",
-            name_vn:"Italy",
-            code:"Italy",
+            case: 2,
+            death: 0,
+        },{
+            name:"Philippines",
+            case: 2,
+            death: 1,
+        },{
+            name:"India",
             case: 2,
             death: 0,
         },{
             name:"Cambodia",
-            name_vn:"Cambodia",
-            code:"Cambodia",
             case: 1,
             death: 0,
         },{
             name:"Finland",
-            name_vn:"Finland",
-            code:"Finland",
-            case: 1,
-            death: 0,
-        },{
-            name:"India",
-            name_vn:"India",
-            code:"India",
             case: 1,
             death: 0,
         },{
             name:"Sri Lanka",
-            name_vn:"Sri Lanka",
-            code:"Sri Lanka",
             case: 1,
             death: 0
         },{
-            name:"Philippines",
-            name_vn:"Philippines",
-            code:"Philippines",
-            case: 1,
-            death: 0,
-        },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0,
         },{
             name:"Spain",
-            name_vn:"Spain",
-            code:"Spain",
             case: 1,
             death: 0,
         },{
             name:"Sweden",
-            name_vn:"Sweden",
-            code:"Sweden",
             case: 1,
             death: 0,
         }
         ]
     },
-
-
-
+    
     {
         date:"2020-02-01T15:00:00.007Z",
         world: {
@@ -341,9 +307,7 @@ china_province: [
         incubation_period_max: 14,
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 11791,
             death: 259,
             suspect: null,
@@ -351,162 +315,110 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"thai",
             case: 19,
             death: 0,
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 17,
             death: 0,
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"sg",
             case: 16,
             death: 0,
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 13,
             death: 0,
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"aus",
             case: 12,
             death: 0,
         },{
             name:"South Korea",
-            name_vn:"South Korea",
-            code:"kr",
             case: 12,
             death: 0,
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 10,
             death: 0,
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"ma",
             case: 8,
             death: 0,
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 7,
             death: 0,
         },{
             name:"Germany",
-            name_vn:"Germany",
-            code:"ger",
             case: 7,
             death: 0,
         },{
             name:"Macao",
-            name_vn:"Macao",
-            code:"Macao",
             case: 7,
             death: 0
         },{
             name:"France",
-            name_vn:"France",
-            code:"fr",
             case: 6,
             death: 0,
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 6,
             death: 0,
             suspect: 153,
             isolate: 27,
         },{
             name:"UAE",
-            name_vn:"UAE",
-            code:"uae",
             case: 4,
             death: 0,
         },{
             name:"Canada",
-            name_vn:"Canada",
-            code:"Canada",
             case: 4,
             death: 0,
         },{
             name:"United Kingdom",
-            name_vn:"United Kingdom",
-            code:"uk",
             case: 2,
             death: 0,
 
         },{
             name:"Russia",
-            name_vn:"Russia",
-            code:"ru",
             case: 2,
             death: 0,
 
         },{
             name:"Italy",
-            name_vn:"Italy",
-            code:"Italy",
             case: 2,
             death: 0,
         },{
             name:"Finland",
-            name_vn:"Finland",
-            code:"Finland",
             case: 1,
             death: 0,
         },{
             name:"Sri Lanka",
-            name_vn:"Sri Lanka",
-            code:"Sri Lanka",
             case: 1,
             death: 0
         },{
             name:"Cambodia",
-            name_vn:"Cambodia",
-            code:"Cambodia",
             case: 1,
             death: 0,
         },{
             name:"Philippines",
-            name_vn:"Philippines",
-            code:"Philippines",
             case: 1,
             death: 0,
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0,
         },{
             name:"India",
-            name_vn:"India",
-            code:"India",
             case: 1,
             death: 0,
         },{
             name:"Spain",
-            name_vn:"Spain",
-            code:"Spain",
             case: 1,
             death: 0,
         },{
             name:"Sweden",
-            name_vn:"Sweden",
-            code:"Sweden",
             case: 1,
             death: 0,
         }
@@ -524,9 +436,7 @@ china_province: [
         incubation_period_max: 14,
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 9692,
             death: 213,
             suspect: 15238,
@@ -534,154 +444,110 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"thai",
             case: 14,
             death: 3,
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"sg",
             case: 13,
             death: 2,
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 14,
             death: 2,
 
         },{
             name:"South Korea",
-            name_vn:"South Korea",
-            code:"kr",
             case: 11,
             death: 5,
 
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 12,
             death: 3,
 
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 9,
             death: 6,
 
         },{
             name:"Macao",
-            name_vn:"Macao",
-            code:"Macao",
             case: 7,
             death: 0,
 
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"aus",
             case: 9,
             death: 5,
 
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"ma",
             case: 8,
             death: 0,
 
         },{
             name:"France",
-            name_vn:"France",
-            code:"fr",
             case: 6,
             death: 0,
 
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 6,
             death: 0,
 
         },{
             name:"Germany",
-            name_vn:"Germany",
-            code:"ger",
             case: 5,
             death: 0,
 
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 5,
             death: 0,
             suspect: 32,
             isolate: 97,
         },{
             name:"UAE",
-            name_vn:"UAE",
-            code:"uae",
             case: 4,
             death: 0,
 
         },{
             name:"Canada",
-            name_vn:"Canada",
-            code:"Canada",
             case: 3,
             death: 0,
 
         },{
             name:"Italy",
-            name_vn:"Italy",
-            code:"Italy",
             case: 2,
             death: 0,
 
         },{
             name:"Finland",
-            name_vn:"Finland",
-            code:"Finland",
             case: 1,
             death: 0,
 
         },{
             name:"Sri Lanka",
-            name_vn:"Sri Lanka",
-            code:"Sri Lanka",
             case: 1,
             death: 0,
 
         },{
             name:"Cambodia",
-            name_vn:"Cambodia",
-            code:"Cambodia",
             case: 1,
             death: 0,
 
         },{
             name:"Philippines",
-            name_vn:"Philippines",
-            code:"Philippines",
             case: 1,
             death: 0,
 
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0,
 
         },{
             name:"India",
-            name_vn:"India",
-            code:"India",
             case: 1,
             death: 0,
 
@@ -695,9 +561,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 7711,
             death: 170,
             suspect: 12167,
@@ -705,128 +569,86 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 14,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 11,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 8,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 4,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 10,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 7,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 5,
             death: 0
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"Singapore",
             case: 10,
             death: 0
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 2,
             death: 0
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"Australia",
             case: 7,
             death: 0
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0
         },{
             name:"French",
-            name_vn:"French",
-            code:"fr",
             case: 5,
             death: 0
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"Malaysia",
             case: 7,
             death: 0
         },{
             name:"Canada",
-            name_vn:"Canada",
-            code:"Canada",
             case: 3,
             death: 0
         },{
             name:"Cambodia",
-            name_vn:"Cambodia",
-            code:"Cambodia",
             case: 1,
             death: 0
         },{
             name:"Sri Lanka",
-            name_vn:"Sri Lanka",
-            code:"Sri Lanka",
             case: 1,
             death: 0
         },{
             name:"Germany",
-            name_vn:"Germany",
-            code:"Germany",
             case: 4,
             death: 0
         },{
             name:"UAE",
-            name_vn:"UAE",
-            code:"UAE",
             case: 4,
             death: 0
         },{
             name:"Philippines",
-            name_vn:"Philippines",
-            code:"Philippines",
             case: 1,
             death: 0
         },{
             name:"India",
-            name_vn:"India",
-            code:"India",
             case: 1,
             death: 0
         },{
             name:"Finland",
-            name_vn:"Finland",
-            code:"Finland",
             case: 1,
             death: 0
         }]
@@ -838,9 +660,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 5974,
             death: 132,
             suspect: 9239,
@@ -848,110 +668,74 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 14,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 7,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 8,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 4,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 8,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 7,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 5,
             death: 0
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"Singapore",
             case: 7,
             death: 0
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 2,
             death: 0
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"Australia",
             case: 7,
             death: 0
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0
         },{
             name:"French",
-            name_vn:"French",
-            code:"fr",
             case: 4,
             death: 0
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"Malaysia",
             case: 4,
             death: 0
         },{
             name:"Canada",
-            name_vn:"Canada",
-            code:"Canada",
             case: 3,
             death: 0
         },{
             name:"Cambodia",
-            name_vn:"Cambodia",
-            code:"Cambodia",
             case: 1,
             death: 0
         },{
             name:"Sri Lanka",
-            name_vn:"Sri Lanka",
-            code:"Sri Lanka",
             case: 1,
             death: 0
         },{
             name:"Germany",
-            name_vn:"Germany",
-            code:"Germany",
             case: 4,
             death: 0
         },{
             name:"UAE",
-            name_vn:"UAE",
-            code:"UAE",
             case: 4,
             death: 0
         }]
@@ -963,9 +747,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 4515,
             death: 106,
             suspect: 6973,
@@ -973,104 +755,70 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 14,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 6,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 7,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 4,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 8,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 7,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 5,
             death: 0
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"Singapore",
             case: 7,
             death: 0
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 2,
             death: 0
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"Australia",
             case: 5,
             death: 0
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0
         },{
             name:"French",
-            name_vn:"French",
-            code:"fr",
             case: 3,
             death: 0
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"Malaysia",
             case: 4,
             death: 0
         },{
             name:"Canada",
-            name_vn:"Canada",
-            code:"Canada",
             case: 2,
             death: 0
         },{
             name:"Cambodia",
-            name_vn:"Cambodia",
-            code:"Cambodia",
             case: 1,
             death: 0
         },{
             name:"Sri Lanka",
-            name_vn:"Sri Lanka",
-            code:"Sri Lanka",
             case: 1,
             death: 0
         },{
             name:"Germany",
-            name_vn:"Germany",
-            code:"Germany",
             case: 1,
             death: 0
         }]
@@ -1082,9 +830,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 2744,
             death: 80,
             suspect: 5794,
@@ -1092,86 +838,58 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 5,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 4,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 4,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 4,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 8,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 5,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 5,
             death: 0
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"Singapore",
             case: 4,
             death: 0
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 2,
             death: 0
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"Australia",
             case: 4,
             death: 0
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0
         },{
             name:"French",
-            name_vn:"French",
-            code:"fr",
             case: 3,
             death: 0
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"Malaysia",
             case: 4,
             death: 0
         },{
             name:"Canada",
-            name_vn:"Canada",
-            code:"Canada",
             case: 1,
             death: 0
         }]
@@ -1183,9 +901,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 1975,
             death: 56,
             suspect: null,
@@ -1193,80 +909,54 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 5,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 3,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 3,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 2,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 5,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 2,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 2,
             death: 0
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"Singapore",
             case: 4,
             death: 0
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 2,
             death: 0
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"Australia",
             case: 4,
             death: 0
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0
         },{
             name:"French",
-            name_vn:"French",
-            code:"fr",
             case: 3,
             death: 0
         },{
             name:"Malaysia",
-            name_vn:"Malaysia",
-            code:"Malaysia",
             case: 3,
             death: 0
         }]
@@ -1278,9 +968,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 1287,
             death: 41,
             suspect: null,
@@ -1288,74 +976,50 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 4,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 3,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 3,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 2,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 5,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 2,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 2,
             death: 0
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"Singapore",
             case: 3,
             death: 0
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 2,
             death: 0
         },{
             name:"Australia",
-            name_vn:"Australia",
-            code:"Australia",
             case: 3,
             death: 0
         },{
             name:"Nepal",
-            name_vn:"Nepal",
-            code:"Nepal",
             case: 1,
             death: 0
         },{
             name:"French",
-            name_vn:"French",
-            code:"fr",
             case: 3,
             death: 0
         }]
@@ -1367,9 +1031,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 830,
             death: 25,
             suspect: null,
@@ -1377,56 +1039,38 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 4,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 1,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 1,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 2,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 2,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 2,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 1,
             death: 0
         },{
             name:"Singapore",
-            name_vn:"Singapore",
-            code:"Singapore",
             case: 1,
             death: 0
         },{
             name:"Vietnam",
-            name_vn:"Vietnam",
-            code:"vn",
             case: 2,
             death: 0
         }]
@@ -1438,9 +1082,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 571,
             death: 17,
             suspect: null,
@@ -1448,44 +1090,30 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 4,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 1,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 1,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 1,
             death: 0
         },{
             name:"Hong Kong",
-            name_vn:"Hong Kong",
-            code:"hk",
             case: 1,
             death: 0
         },{
             name:"Macau",
-            name_vn:"Macau",
-            code:"Macau",
             case: 1,
             death: 0
         },{
             name:"United States",
-            name_vn:"United States",
-            code:"us",
             case: 1,
             death: 0
         }]
@@ -1497,9 +1125,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 309,
             death: 6,
             suspect: null,
@@ -1507,26 +1133,18 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 2,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 1,
             death: 0
         },{
             name:"Taiwan",
-            name_vn:"Taiwan",
-            code:"tw",
             case: 1,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"kr",
             case: 1,
             death: 0
         }]
@@ -1538,9 +1156,7 @@ china_province: [
         },
         countries: [
         {
-            name:"China",
-            name_vn:"China",
-            code:"cn",
+            name:"Mainland China",
             case: 278,
             death: 6,
             suspect: null,
@@ -1548,20 +1164,14 @@ china_province: [
             curve: null
         },{
             name:"Thailand",
-            name_vn:"Thailand",
-            code:"Thailand",
             case: 2,
             death: 0
         },{
             name:"Japan",
-            name_vn:"Japan",
-            code:"jp",
             case: 1,
             death: 0
         },{
             name:"Korea",
-            name_vn:"Korea",
-            code:"Korea",
             case: 1,
             death: 0
         }]
@@ -1575,7 +1185,7 @@ module.exports = {
     apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-02T00:05:00.017Z",
+        updatedOn: "2020-02-02T05:00:00.017Z",
       }
       res.status(200).send(latestData)
     } else {
