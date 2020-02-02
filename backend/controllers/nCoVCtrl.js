@@ -238,6 +238,7 @@ china_province: [
             death: 0,
             suspect: 92,
             isolate: 27,
+            note:"2 bệnh nhân người Trung Quốc.\n3 người Việt Nam, trong đó 2 trường hợp đang được cách ly điều trị tại BC Nhiệt đới cơ sở 2, 1 trường hợp tại BVDK tỉnh Thanh Hoá. Cả 3 đều trở về từ Vũ Hán.\n1 người Việt Nam là lễ tân tại khách sạn Khánh Hoà, tiếp xúc với 2 người Trung Quốc đang điều trị tại Việt Nam.\n1 bệnh nhân có quốc tịch Mỹ, bay về Việt Nam ngày 14/1, quá cảnh tại sân bay Vũ Hán."
         },{
             name:"UAE",
             case: 5,
@@ -1185,7 +1186,7 @@ module.exports = {
     apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-02T05:00:00.017Z",
+        updatedOn: "2020-02-02T05:00:00.027Z",
       }
       res.status(200).send(latestData)
     } else {
