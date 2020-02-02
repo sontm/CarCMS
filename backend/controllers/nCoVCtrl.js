@@ -15,9 +15,9 @@ const ExtractJWT = passportJWT.ExtractJwt;
 
 
 const NCOV_DATA = {
-vietnam_province: [
+    vietnam_province: [
     {
-        date:"2020-02-02T05:00:00.007Z",
+        date:"2020-02-02T15:00:00.007Z",
         provinces:[
             {
                 name:"TP.HCM",
@@ -62,6 +62,105 @@ vietnam_province: [
     }
 ],
 china_province: [
+    {
+        date:"2020-02-02T15:00:00.007Z",
+        provinces:[
+            {
+                name:"Hubei",
+                case: 9074
+            },{
+                name:"Zhejiang",
+                case: 661
+            },{
+                name:"Guangdong",
+                case: 604
+            },{
+                name:"Henan",
+                case: 493
+            },{
+                name:"Hunan",
+                case: 463
+            },{
+                name:"Anhui",
+                case: 340
+            },{
+                name:"Jiangxi",
+                case: 333
+            },{
+                name:"Chongqing",
+                case: 262
+            },{
+                name:"Sichuan",
+                case: 236
+            },{
+                name:"Jiangsu",
+                case: 231
+            },{
+                name:"Shandong",
+                case: 225
+            },{
+                name:"Beijing",
+                case: 183
+            },{
+                name:"Shanghai",
+                case: 177
+            },{
+                name:"Fujian",
+                case: 159
+            },{
+                name:"Shaanxi",
+                case: 116
+            },{
+                name:"Guangxi",
+                case: 111
+            },{
+                name:"Hebei",
+                case: 104
+            },{
+                name:"Yunnan",
+                case: 99
+            },{
+                name:"Heilongjiang",
+                case: 95
+            },{
+                name:"Liaoning",
+                case: 64
+            },{
+                name:"Hainan",
+                case: 63
+            },{
+                name:"Shanxi",
+                case: 56
+            },{
+                name:"Gansu",
+                case: 45
+            },{
+                name:"Tianjin",
+                case: 40
+            },{
+                name:"Guizhou",
+                case: 38
+            },{
+                name:"Ningxia",
+                case: 28
+            },{
+                name:"Inner Mongolia",
+                case: 26
+            },{
+                name:"Xinjia",
+                case: 23
+            },{
+                name:"Jilin",
+                case: 21
+            },{
+                name:"Qinghai",
+                case: 9
+            },{
+                name:"Xizang",
+                case: 1
+            }
+        ]
+    },
     {
         date:"2020-02-01T15:00:00.007Z",
         provinces:[
@@ -164,9 +263,9 @@ china_province: [
   ],
   data: [
     {
-        date:"2020-02-02T05:00:00.007Z",
+        date:"2020-02-02T15:00:00.007Z",
         world: {
-            case: 14560,
+            case: 14557,
             death: 305,
             risk:"High"
         },
@@ -178,7 +277,7 @@ china_province: [
         countries: [
         {
             name:"Mainland China",
-            case: 14381,
+            case: 14380,
             death: 304,
             suspect: null,
             isolate: null,
@@ -234,16 +333,16 @@ china_province: [
             case: 7,
             death: 0
         },{
-            name:"France",
-            case: 6,
-            death: 0,
-        },{
             name:"Vietnam",
             case: 7,
             death: 0,
             suspect: 92,
             isolate: 27,
             note:"+ 2 bệnh nhân người Trung Quốc.\n\n+ 3 người Việt Nam, trong đó 2 trường hợp đang được cách ly điều trị tại BC Nhiệt đới cơ sở 2, 1 trường hợp tại BVDK tỉnh Thanh Hoá. Cả 3 đều trở về từ Vũ Hán.\n\n+ 1 người Việt Nam là lễ tân tại khách sạn Khánh Hoà, tiếp xúc với 2 người Trung Quốc đang điều trị tại Việt Nam.\n\n+ 1 bệnh nhân có quốc tịch Mỹ, bay về Việt Nam ngày 14/1, quá cảnh tại sân bay Vũ Hán."
+        },{
+            name:"France",
+            case: 6,
+            death: 0,
         },{
             name:"UAE",
             case: 5,
@@ -1188,10 +1287,10 @@ china_province: [
 module.exports = {
   // Modify Date of this
   getLatestCoronaDateOn(req, res) {
-    apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
+    //apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-02T05:00:00.057Z",
+        updatedOn: "2020-02-02T15:00:00.007Z",
       }
       res.status(200).send(latestData)
     } else {
@@ -1200,7 +1299,7 @@ module.exports = {
   },
   // Modify Date of this
   getLatestCoronaData(req, res) {
-    apputil.CONSOLE_LOG("App getLatestAppData")
+    //apputil.CONSOLE_LOG("App getLatestAppData")
     if (true || req.user) {
       let appData = {
         nCoV: NCOV_DATA
