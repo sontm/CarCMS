@@ -146,6 +146,7 @@ china_province: [
         world: {
             case: 14551,
             death: 304,
+            risk:"High"
         },
         tranmission_rate_min: 3.0,
         tranmission_rate_max: 4.0,
@@ -161,7 +162,8 @@ china_province: [
             death: 304,
             suspect: null,
             isolate: null,
-            curve: null
+            curve: null,
+            risk:"Very High"
         },{
             name:"Japan",
             name_vn:"Japan",
@@ -1573,7 +1575,7 @@ module.exports = {
     apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-02T00:05:00.007Z",
+        updatedOn: "2020-02-02T00:05:00.017Z",
       }
       res.status(200).send(latestData)
     } else {
