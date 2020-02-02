@@ -141,10 +141,195 @@ china_province: [
       }
   ],
   data: [
-      {
+    {
+        date:"2020-02-02T00:05:00.007Z",
+        world: {
+            case: 14551,
+            death: 304,
+        },
+        tranmission_rate_min: 3.0,
+        tranmission_rate_max: 4.0,
+        fatality_rate: 2,
+        incubation_period_min: 2,
+        incubation_period_max: 14,
+        countries: [
+        {
+            name:"China",
+            name_vn:"China",
+            code:"cn",
+            case: 14381,
+            death: 304,
+            suspect: null,
+            isolate: null,
+            curve: null
+        },{
+            name:"Japan",
+            name_vn:"Japan",
+            code:"jp",
+            case: 20,
+            death: 0,
+        },{
+            name:"Thailand",
+            name_vn:"Thailand",
+            code:"thai",
+            case: 19,
+            death: 0,
+        },{
+            name:"Singapore",
+            name_vn:"Singapore",
+            code:"sg",
+            case: 18,
+            death: 0,
+        },{
+            name:"Hong Kong",
+            name_vn:"Hong Kong",
+            code:"hk",
+            case: 13,
+            death: 0,
+        },{
+            name:"Australia",
+            name_vn:"Australia",
+            code:"aus",
+            case: 12,
+            death: 0,
+        },{
+            name:"South Korea",
+            name_vn:"South Korea",
+            code:"kr",
+            case: 12,
+            death: 0,
+        },{
+            name:"Taiwan",
+            name_vn:"Taiwan",
+            code:"tw",
+            case: 10,
+            death: 0,
+        },{
+            name:"Malaysia",
+            name_vn:"Malaysia",
+            code:"ma",
+            case: 8,
+            death: 0,
+        },{
+            name:"United States",
+            name_vn:"United States",
+            code:"us",
+            case: 8,
+            death: 0,
+        },{
+            name:"Germany",
+            name_vn:"Germany",
+            code:"ger",
+            case: 8,
+            death: 0,
+        },{
+            name:"Macao",
+            name_vn:"Macao",
+            code:"Macao",
+            case: 7,
+            death: 0
+        },{
+            name:"France",
+            name_vn:"France",
+            code:"fr",
+            case: 6,
+            death: 0,
+        },{
+            name:"Vietnam",
+            name_vn:"Vietnam",
+            code:"vn",
+            case: 6,
+            death: 0,
+            suspect: 92,
+            isolate: 27,
+        },{
+            name:"UAE",
+            name_vn:"UAE",
+            code:"uae",
+            case: 5,
+            death: 0,
+        },{
+            name:"Canada",
+            name_vn:"Canada",
+            code:"Canada",
+            case: 4,
+            death: 0,
+        },{
+            name:"United Kingdom",
+            name_vn:"United Kingdom",
+            code:"uk",
+            case: 2,
+            death: 0,
+        },{
+            name:"Russia",
+            name_vn:"Russia",
+            code:"ru",
+            case: 2,
+            death: 0,
+        },{
+            name:"Italy",
+            name_vn:"Italy",
+            code:"Italy",
+            case: 2,
+            death: 0,
+        },{
+            name:"Cambodia",
+            name_vn:"Cambodia",
+            code:"Cambodia",
+            case: 1,
+            death: 0,
+        },{
+            name:"Finland",
+            name_vn:"Finland",
+            code:"Finland",
+            case: 1,
+            death: 0,
+        },{
+            name:"India",
+            name_vn:"India",
+            code:"India",
+            case: 1,
+            death: 0,
+        },{
+            name:"Sri Lanka",
+            name_vn:"Sri Lanka",
+            code:"Sri Lanka",
+            case: 1,
+            death: 0
+        },{
+            name:"Philippines",
+            name_vn:"Philippines",
+            code:"Philippines",
+            case: 1,
+            death: 0,
+        },{
+            name:"Nepal",
+            name_vn:"Nepal",
+            code:"Nepal",
+            case: 1,
+            death: 0,
+        },{
+            name:"Spain",
+            name_vn:"Spain",
+            code:"Spain",
+            case: 1,
+            death: 0,
+        },{
+            name:"Sweden",
+            name_vn:"Sweden",
+            code:"Sweden",
+            case: 1,
+            death: 0,
+        }
+        ]
+    },
+
+
+
+    {
         date:"2020-02-01T15:00:00.007Z",
         world: {
-            case: 11955,
+            case: 11953,
             death: 259,
         },
         tranmission_rate_min: 3.0,
@@ -169,16 +354,16 @@ china_province: [
             case: 19,
             death: 0,
         },{
-            name:"Singapore",
-            name_vn:"Singapore",
-            code:"sg",
-            case: 18,
-            death: 0,
-        },{
             name:"Japan",
             name_vn:"Japan",
             code:"jp",
             case: 17,
+            death: 0,
+        },{
+            name:"Singapore",
+            name_vn:"Singapore",
+            code:"sg",
+            case: 16,
             death: 0,
         },{
             name:"Hong Kong",
@@ -1388,7 +1573,7 @@ module.exports = {
     apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-01T15:00:00.007Z",
+        updatedOn: "2020-02-02T00:05:00.007Z",
       }
       res.status(200).send(latestData)
     } else {
