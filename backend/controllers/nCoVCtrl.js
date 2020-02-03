@@ -13,6 +13,7 @@ var mailer = require("nodemailer");
 var xoauth2 = require('xoauth2');
 const ExtractJWT = passportJWT.ExtractJwt;
 
+var testVar = 1;
 
 const NCOV_DATA = {
     vietnam_province: [
