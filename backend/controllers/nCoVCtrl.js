@@ -288,7 +288,7 @@ china_province: [
       {
         date:"2020-02-03T02:00:00.007Z",
         world: {
-            case: 17387,
+            case: 17388,
             death: 362,
             risk:"High"
         },
@@ -1455,7 +1455,7 @@ module.exports = {
     //apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-03T02:00:00.007Z",
+        updatedOn: "2020-02-03T02:00:00.017Z",
       }
       res.status(200).send(latestData)
     } else {
