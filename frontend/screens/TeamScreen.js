@@ -431,8 +431,8 @@ class TeamScreen extends React.Component {
         <Left style={{flex:1, marginRight: 0}}>
             <TouchableOpacity onPress={this.fetchTeamData} >
             <View style={{alignItems: "center"}}>
-              <Icon name="cloud-download" style={{color: "white", fontSize: 22}} />
-              <WhiteText style={{fontSize: 10, marginTop: -3}}>{AppLocales.t("GENERAL_SYNC")}</WhiteText>
+              <Icon name="refresh" style={{color: "white", fontSize: 22}} />
+              <WhiteText style={{fontSize: 10, marginTop: -3}}>{AppLocales.t("GENERAL_REFRESH")}</WhiteText>
             </View>
             </TouchableOpacity>
         </Left>

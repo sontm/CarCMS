@@ -54,6 +54,7 @@ class PayServiceScreen extends React.Component {
 
     componentWillMount() {
         apputils.CONSOLE_LOG("            PayService Screen WillMount")
+        AppConstants.IS_FILL_ITEM_PROCESSING = false;
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
@@ -100,6 +101,7 @@ class PayServiceScreen extends React.Component {
         if (maxMeter) {
             curMaxMeter = maxMeter+1;
         }
+        AppConstants.IS_FILL_ITEM_PROCESSING = true;
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             apputils.CONSOLE_LOG("WIll Edit Service:")
             let newData = {
@@ -154,7 +156,7 @@ class PayServiceScreen extends React.Component {
                 position: "top",
                 type: "danger"
             })
-        } else {
+        } else if (!AppConstants.IS_FILL_ITEM_PROCESSING){
             let currentVehicle = this.currentVehicle;
             
             apputils.CONSOLE_LOG("-----maxMeter")

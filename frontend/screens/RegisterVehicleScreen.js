@@ -37,6 +37,7 @@ class RegisterVehicleScreen extends React.Component {
 
     componentWillMount() {
         apputils.CONSOLE_LOG("CURRENTVEHICLE:" + AppConstants.CURRENT_VEHICLE_ID)
+        AppConstants.IS_FILL_ITEM_PROCESSING = false;
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             // Edit Information
             for (let i = 0; i < this.props.userData.vehicleList.length; i++) {
@@ -64,6 +65,7 @@ class RegisterVehicleScreen extends React.Component {
             // Set to the First Car in List
             if (this.props.appData.carModels && this.props.appData.carModels.length > 0) {
                 let firstBrand = this.props.appData.carModels[0].name;
+
                 let selectedModel = null;
                 if (this.props.userData.customVehicleModel && this.props.userData.customVehicleModel.length > 0) {
                     this.props.userData.customVehicleModel.forEach(item => {
@@ -79,7 +81,7 @@ class RegisterVehicleScreen extends React.Component {
                     for (let i = 0; i < this.props.appData.carModels.length; i++) {
                         if (this.props.appData.carModels[i].type == "car" && 
                                 (this.props.appData.carModels[i].id == firstBrand || this.props.appData.carModels[i].name == firstBrand)) {
-                            selectedModel = this.props.appData.carModels[i].name;
+                            selectedModel = this.props.appData.carModels[i].models[0].name;
                         }
                     }
                 }
@@ -107,7 +109,8 @@ class RegisterVehicleScreen extends React.Component {
                 position: "top",
                 type: "danger"
             })
-        } else {
+        } else if (!AppConstants.IS_FILL_ITEM_PROCESSING) {
+            AppConstants.IS_FILL_ITEM_PROCESSING = true;
             if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
                 apputils.CONSOLE_LOG("WIll Edit:")
                 // Only Set some Information. IFNOT, fillGasList will LOSt

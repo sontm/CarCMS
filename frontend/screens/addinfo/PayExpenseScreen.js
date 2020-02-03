@@ -30,6 +30,7 @@ class PayExpenseScreen extends React.Component {
     }
 
     componentWillMount() {
+        AppConstants.IS_FILL_ITEM_PROCESSING = false;
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
             const currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
@@ -78,8 +79,8 @@ class PayExpenseScreen extends React.Component {
                 position: "top",
                 type: "danger"
             })
-        } else {
-
+        } else if (!AppConstants.IS_FILL_ITEM_PROCESSING){
+            AppConstants.IS_FILL_ITEM_PROCESSING = true;
             if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
                 apputils.CONSOLE_LOG("WIll Edit Expense:")
                 let newData = {

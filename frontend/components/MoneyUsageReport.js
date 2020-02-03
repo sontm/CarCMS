@@ -285,10 +285,12 @@ class MoneyUsageReport extends React.Component {
             var totalServiceSpend = totalServiceSpendPrivate;
             var totalAlSpend = totalGasSpend+totalOilSpend+totalAuthSpend+totalExpenseSpend+totalServiceSpend;
 
-            if (this.props.isTeamData) {
+            if (this.props.isTeamData && this.props.teamData.teamCarReports[this.props.currentVehicle.id]) {
                 var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.teamData.teamCarReports[this.props.currentVehicle.id].expenseReport;
             } else {
-                var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
+                if (this.props.userData.carReports[this.props.currentVehicle.id]) {
+                    var {arrExpenseTypeSpend, arrExpenseTypeByTime} = this.props.userData.carReports[this.props.currentVehicle.id].expenseReport;
+                }
             }
             var {arrSubExpenseSpend, totalSubExpenseSpend, legendLabels} = this.calculateExpenseTypeFromArr(arrExpenseTypeByTime);
         }
@@ -386,7 +388,8 @@ class MoneyUsageReport extends React.Component {
                 <View>
                 <View style={{...styles.textRow, marginTop: 15, alignSelf:"center"}}>
                     <Text><TypoH5>
-                    {AppLocales.t("CARDETAIL_H1_EXPENSE_USAGE")+" ("+this.state.duration+" Tháng)"}
+                    {AppLocales.t("CARDETAIL_H1_EXPENSE_USAGE")+" ("+
+                    (this.state.duration > 24 ? "Tất Cả)" : (this.state.duration+" Tháng)"))}
                     </TypoH5></Text>
                 </View>
 

@@ -31,8 +31,9 @@ class CreateVehicleModel extends React.Component {
                 position: "top",
                 type: "danger"
             })
-        } else {
+        } else if (!AppConstants.IS_CUSTOM_DATA_PROCESSING){
             // Check if the New Name Exist
+            AppConstants.IS_CUSTOM_DATA_PROCESSING = true;
             let isExist = false;
             this.props.appData.carModels.forEach (item => {
                 if (this.state.type == item.type && this.state.brand == item.name) {
@@ -68,7 +69,7 @@ class CreateVehicleModel extends React.Component {
                     position: "top",
                     type: "danger"
                 })
-                
+                setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000) 
             } else {
                 //{type, brand, model}
                 this.props.actUserCreateNewVehicleModel({
@@ -77,6 +78,7 @@ class CreateVehicleModel extends React.Component {
                     model: this.state.model
                 });
                 this.props.navigation.goBack();
+                setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 5000) 
             }
         }
     }
@@ -91,6 +93,7 @@ class CreateVehicleModel extends React.Component {
         return result;
     }
     componentWillMount() {
+        AppConstants.IS_CUSTOM_DATA_PROCESSING = false;
         // Set to the First Car in List
         if (this.props.appData.carModels && this.props.appData.carModels.length > 0) {
             this.setState({

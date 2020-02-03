@@ -23,6 +23,7 @@ class ServiceModuleCreateScreen extends React.Component {
     }
 
     componentWillMount() {
+        AppConstants.IS_CUSTOM_DATA_PROCESSING = false;
         let countId = this.props.userData.customServiceModules ? 
             this.props.userData.customServiceModules.length + 1 : 0;
         if (AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE) {
@@ -34,8 +35,10 @@ class ServiceModuleCreateScreen extends React.Component {
         })
     }
     handleCreate() {
-        // TODO, check Existed
-        
+        if (AppConstants.IS_CUSTOM_DATA_PROCESSING) {
+            return;
+        }
+        AppConstants.IS_CUSTOM_DATA_PROCESSING = true;
         if (AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE) {
             var arrToCheck = [...this.props.userData.customServiceModulesBike, 
                 ...this.props.appData.typeServiceBike];
@@ -60,6 +63,7 @@ class ServiceModuleCreateScreen extends React.Component {
                 position: "top",
                 type: "danger"
             })
+            setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000)
         } else {
             if (AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE) {
                 this.props.actCustomAddServiceModuleBike(this.state)
@@ -68,6 +72,7 @@ class ServiceModuleCreateScreen extends React.Component {
             }
             AppConstants.TEMPDATA_CREATESERVICEMODULE_ISBIKE = false;
             this.props.navigation.goBack();
+            setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 5000)
         }
     }
     render() {

@@ -26,13 +26,15 @@ class FillGasScreen extends React.Component {
             subType: "",
             remark: "",
         };
-
+        // AppCOnstant IsProcess flag to clarify if Data is Being Saved or not, prevent multiple save
         this.save = this.save.bind(this)
         this.actualSave = this.actualSave.bind(this)
         this.onChooseVehicle = this.onChooseVehicle.bind(this)
         
     }
+
     componentWillMount() {
+        AppConstants.IS_FILL_ITEM_PROCESSING = false;
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
                 AppConstants.CURRENT_EDIT_FILL_ID) {
             // Load from Info
@@ -81,7 +83,6 @@ class FillGasScreen extends React.Component {
                 })
             }
         }
-        
     }
 
     actualSave(maxMeter) {
@@ -89,6 +90,7 @@ class FillGasScreen extends React.Component {
         if (maxMeter) {
             curMaxMeter = maxMeter+1;
         }
+        AppConstants.IS_FILL_ITEM_PROCESSING = true;
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && AppConstants.CURRENT_VEHICLE_ID) {
             apputils.CONSOLE_LOG("WIll Edit FillGas:")
             if (!this.isEditOverMaxMeter) {
@@ -133,6 +135,7 @@ class FillGasScreen extends React.Component {
 
             this.props.navigation.navigate('VehicleDetail', 
                 {vehicleId: this.state.vehicleId, isMyVehicle: true})
+
         }
     }
     save() {
@@ -144,7 +147,7 @@ class FillGasScreen extends React.Component {
                 position: "top",
                 type: "danger"
             })
-        } else {
+        } else if (!AppConstants.IS_FILL_ITEM_PROCESSING){
             // Found Previous KM 
             // const currentVehicle = this.props.userData.vehicleList.find(item => 
             //     item.id == this.state.vehicleId);

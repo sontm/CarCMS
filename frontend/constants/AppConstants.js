@@ -1,6 +1,6 @@
 import { Platform} from 'react-native';
 import Layout from './Layout';
-
+import Constants from 'expo-constants';
 // TODO
 
 // test app id "ca-app-pub-3940256099942544~3347511713"
@@ -18,7 +18,7 @@ const ADS_INTERESTIALID_ANDROID = "ca-app-pub-3071645117258809/6882542661"
 const ADS_BANNERID_IOS= "ca-app-pub-3940256099942544/6300978111"
 const ADS_INTERESTIALID_IOS = "ca-app-pub-3940256099942544/1033173712"
 
-const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? 20 : 0;
+const STATUSBAR_HEIGHT = Platform.OS == 'ios' ? Constants.statusBarHeight : 0;
 const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROID;
 const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTERESTIALID_ANDROID;
 
@@ -40,6 +40,9 @@ export default {
     ADS_INTERESTIALID: INTERESTIAL_ID,
     ADS_COUNT_CLICK_SHOW_INTERESTIAL: 12, // after every x click, show Interestial
     ADS_COUNT_CLICK_INTERACTIVE: 0,
+
+    IS_FILL_ITEM_PROCESSING: false,
+    IS_CUSTOM_DATA_PROCESSING: false, // for Car Models, Maintain Modules
 
     // Tempo data which
     BUFFER_NEED_RECALCULATE_VEHICLE_ID: [],

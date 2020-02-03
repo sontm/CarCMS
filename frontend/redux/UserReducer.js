@@ -168,6 +168,9 @@ export const reCalculateCarReports = (currentVehicle, prevUserData, theDispatch,
                     payload: {id: currentVehicle.id, data: result}
                 })
             }
+
+            // Set Flag after 5s to Prevent Multiple Add
+            setTimeout(function(){ AppConstants.IS_FILL_ITEM_PROCESSING = false;}, 5000);
         })
         .catch (error => {
             AppUtils.CONSOLE_LOG(error)
@@ -248,7 +251,8 @@ export const actVehicleAddVehicle = (vehicle, prevUserData) => (dispatch, getSta
         payload: vehicle
     })
     let {userData} = getState();
-    reCalculateCarReports(vehicle, userData, dispatch)
+    setTimeout(function(){ reCalculateCarReports(vehicle, userData, dispatch); }, 100);
+    //reCalculateCarReports(vehicle, userData, dispatch)
 }
 export const actVehicleEditVehicle = (vehicle, prevUserData) => (dispatch, getState) => {
     AppUtils.CONSOLE_LOG("actVehicleEditVehicle:")
@@ -257,7 +261,8 @@ export const actVehicleEditVehicle = (vehicle, prevUserData) => (dispatch, getSt
         payload: vehicle
     })
     let {userData} = getState();
-    reCalculateCarReports(vehicle, userData, dispatch)
+    setTimeout(function(){ reCalculateCarReports(vehicle, userData, dispatch); }, 100);
+    //reCalculateCarReports(vehicle, userData, dispatch)
 }
 export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) => {
     AppUtils.CONSOLE_LOG("actVehicleDeleteVehicle:"+vehicleId+",licensePlate:" + licensePlate)
@@ -298,7 +303,9 @@ export const actVehicleAddFillItem = (data, type, prevUserData) => (dispatch, ge
         })
     }
     let {userData} = getState();
-    reCalculateCarReports(null, userData, dispatch, data.vehicleId)
+    
+    setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, data.vehicleId); }, 100);
+    //reCalculateCarReports(null, userData, dispatch, data.vehicleId)
 }
 
 // type: gas, oil, auth, 
@@ -334,7 +341,8 @@ export const actVehicleDeleteFillItem = (vehicleId, itemId, type, prevUserData) 
     }
 
     let {userData} = getState();
-    reCalculateCarReports(null, userData, dispatch, vehicleId)
+    //reCalculateCarReports(null, userData, dispatch, vehicleId)
+    setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, vehicleId); }, 100);
 }
 
 // type: gas, oil, auth, 
@@ -376,7 +384,8 @@ export const actVehicleEditFillItem = (itemId, type, prevUserData) => (dispatch,
     // AppUtils.CONSOLE_LOG("  >>>>>>>>>>>> Start reCalculateCarReports")
     // AppUtils.CONSOLE_LOG(userData.vehicleList[0].authorizeCarList)
 
-    reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
+    setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, itemId.vehicleId); }, 100);
+    //reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
 }
 
 
@@ -1525,7 +1534,7 @@ export default function(state = initialState, action) {
         if ( !prevStateServiceDel.customServiceModules ) {
             prevStateServiceDel.customServiceModules = [];
         }
-        let idx = checkNameExistInServiceModule(prevStateService.customServiceModules, 
+        let idx = checkNameExistInServiceModule(prevStateServiceDel.customServiceModules, 
             action.payload.name);
         if ( idx >= 0) {
             prevStateServiceDel.customServiceModules.splice(idx, 1);

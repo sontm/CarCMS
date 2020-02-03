@@ -92,7 +92,7 @@ class App extends React.Component {
             <AppNavigator/>
             </Root>
             {/* <View style={{position: "absolute", bottom: AppConstants.DEFAULT_BOTTOM_NAV_HEIGHT, left: 0, right: 0}}> */}
-              <AdsManager />
+              {/* <AdsManager /> */}
             {/* </View> */}
             {/* <NotificationManager /> */}
             <CheckLatestAppDataManager />

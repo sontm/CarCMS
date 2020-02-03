@@ -79,8 +79,9 @@ class VehicleDetailReport extends React.Component {
             }
             var percentByDate = 1.0 * passedDay/totalDayForMaintain;
             var percentByKm = 1.0 * theReport.maintainRemind.passedKmFromPreviousMaintain/
-            theReport.maintainRemind.lastMaintainKmValidFor;
-            if (percentByDate > percentByKm) {
+             theReport.maintainRemind.lastMaintainKmValidFor;
+
+            if (isNaN(percentByKm) || percentByDate > percentByKm) {
                 // Will Show by Date
                 var passService = passedDay;
                 var totalNeedService = totalDayForMaintain;

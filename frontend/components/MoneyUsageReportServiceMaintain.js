@@ -115,7 +115,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
             }
         } else {
             if (this.props.isTeamData) {
-                if (this.props.teamData.teamCarReports[this.props.currentVehicle.id].serviceReport) {
+                if (this.props.teamData.teamCarReports[this.props.currentVehicle.id] && this.props.teamData.teamCarReports[this.props.currentVehicle.id].serviceReport) {
                     var {arrServiceTypeSpend, totalServiceSpend2} = 
                         this.props.teamData.teamCarReports[this.props.currentVehicle.id].serviceReport;
                     var legendLabels =[];
@@ -128,7 +128,7 @@ class MoneyUsageReportServiceMaintain extends React.Component {
                     var theTotal = totalServiceSpend2;
                 }
             } else {
-                if (this.props.userData.carReports[this.props.currentVehicle.id].serviceReport) {
+                if (this.props.userData.carReports[this.props.currentVehicle.id] && this.props.userData.carReports[this.props.currentVehicle.id].serviceReport) {
                     var {arrServiceTypeSpend, totalServiceSpend2} = 
                         this.props.userData.carReports[this.props.currentVehicle.id].serviceReport;
                     var legendLabels =[];

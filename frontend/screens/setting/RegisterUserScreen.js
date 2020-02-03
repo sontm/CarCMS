@@ -27,6 +27,9 @@ class RegisterUserScreen extends React.Component {
         this.handleSignup = this.handleSignup.bind(this)
     }
 
+    componentWillMount() {
+        AppConstants.IS_CUSTOM_DATA_PROCESSING = false;
+    }
     handleSignup() {
         // Validate 
         if (!this.state.fullName || !this.state.email || !this.state.password) {
@@ -53,29 +56,35 @@ class RegisterUserScreen extends React.Component {
         } else {
             NetInfo.fetch().then(state => {
                 if (state.isConnected) {
-                    Backend.registerUser({
-                        email: this.state.email,
-                        password: this.state.password,
-                        fullName: this.state.fullName,
-                        phone: this.state.phone,
-                        }, 
-                        response => {
-                            apputils.CONSOLE_LOG("REgister OK")
-                            apputils.CONSOLE_LOG(response.data)
-                            this.props.actUserRegisterOK()
-                            this.props.navigation.navigate("Settings")
-                        },
-                        error => {
-                            apputils.CONSOLE_LOG("Register ERROR")
-                            apputils.CONSOLE_LOG(error.response)
-                            Toast.show({
-                                text: error.response.data.msg,
-                                //buttonText: "Okay",
-                                position: "top",
-                                type: "danger"
-                              })
-                        }
-                    );
+                    if (!AppConstants.IS_CUSTOM_DATA_PROCESSING) {
+                        AppConstants.IS_CUSTOM_DATA_PROCESSING = true;
+                        Backend.registerUser({
+                            email: this.state.email,
+                            password: this.state.password,
+                            fullName: this.state.fullName,
+                            phone: this.state.phone,
+                            }, 
+                            response => {
+                                apputils.CONSOLE_LOG("REgister OK")
+                                apputils.CONSOLE_LOG(response.data)
+                                this.props.actUserRegisterOK()
+                                this.props.navigation.navigate("Settings")
+                                setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000)
+                            },
+                            error => {
+                                apputils.CONSOLE_LOG("Register ERROR")
+                                apputils.CONSOLE_LOG(error.response)
+                                Toast.show({
+                                    text: error.response.data.msg,
+                                    //buttonText: "Okay",
+                                    position: "top",
+                                    type: "danger"
+                                })
+                                setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000)
+                            }
+                        );
+                        setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 5000)
+                    }
                 } else {
                   Toast.show({
                     text: AppLocales.t("TOAST_NEED_INTERNET_CON"),

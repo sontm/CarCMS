@@ -81,18 +81,18 @@ class HomeScreen extends React.Component {
     if (this.props.userData.isLogined) {
       // Try to Sync with Any New Data
       if (this.props.userData.modifiedInfo && this.props.userData.modifiedInfo.changedItemCount > 0) {
-        if (this.props.appData.countOpen < 10) {
-          // SYnc every 3 time
-          if (this.props.userData.modifiedInfo.changedItemCount >= 3) {
-            // RUn method after 7s so that Newest Data is Re-Updated
-            setTimeout(() => AppUtils.syncDataPartlyToServer(this.props), 7000)
-            //AppUtils.syncDataPartlyToServer(this.props)
-          }
-        } else {
+        // if (this.props.appData.countOpen < 10) {
+        //   // SYnc every 3 time
+        //   if (this.props.userData.modifiedInfo.changedItemCount >= 3) {
+        //     // RUn method after 7s so that Newest Data is Re-Updated
+        //     setTimeout(() => AppUtils.syncDataPartlyToServer(this.props), 7000)
+        //     //AppUtils.syncDataPartlyToServer(this.props)
+        //   }
+        // } else {
           // sync every 1 time
-          setTimeout(() => AppUtils.syncDataPartlyToServer(this.props), 7000)
+          setTimeout(() => AppUtils.syncDataPartlyToServer(this.props), 4000)
           //AppUtils.syncDataPartlyToServer(this.props)
-        }
+       // }
       }
     }
   }
@@ -321,7 +321,7 @@ class HomeScreen extends React.Component {
             <ReminderReport/>
             <HomeMoneyUsageByTime isTotalReport={true} />
             <HomeMoneyUsageByTimeTeam isTotalReport={true} />
-            {this.props.appData.countOpen < 30 ?
+            {this.props.appData.countOpen < 12 ?
             <View style={{marginLeft: 5, marginRight: 5, marginBottom: 20, flexWrap:"wrap"}}>
               <Text style={{fontStyle: "italic", fontSize: 14, color: AppConstants.COLOR_TEXT_LIGHT_INFO}}>
                 'N' là viết tắt của Nghìn VND. 'Tr' là viết tắt của Triệu VND.</Text>

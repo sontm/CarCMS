@@ -717,7 +717,8 @@ class MoneyUsageByTimeReport extends React.Component {
                 <View>
                 <View style={{...styles.textRow, marginTop: 5}}>
                     <Text><TypoH5>
-                    {AppLocales.t("TEAM_REPORT_TOP_CAR_MONEYUSAGE")+" (" +this.state.durationTopCarTeam+" Tháng)"}
+                    {AppLocales.t("TEAM_REPORT_TOP_CAR_MONEYUSAGE")+" (" +
+                        (this.state.durationTopCarTeam > 24 ? "Tất Cả)" : (this.state.durationTopCarTeam+" Tháng)"))}
                     </TypoH5></Text>
                 </View>
 

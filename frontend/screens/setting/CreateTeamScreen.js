@@ -33,6 +33,7 @@ class CreateTeamScreen extends React.Component {
     }
 
     componentWillMount() {
+        AppConstants.IS_CUSTOM_DATA_PROCESSING = false;
         if (this.props.navigation.state.params.isEdit) {
             // Edit mode
             if (this.props.userData.teamInfo && this.props.userData.teamInfo.code) {
@@ -71,56 +72,66 @@ class CreateTeamScreen extends React.Component {
                         type: "danger"
                     })
                 } else {
-                    if (this.props.navigation.state.params.isEdit) {
-                        // Edit TEam NAme
-                        Backend.createTeam({
-                            id: this.state.id,
-                            name: this.state.name,
-                            code: this.state.code,
-                            canMemberViewReport: this.state.canMemberViewReport,
-                            excludeMyCar: this.state.excludeMyCar
-                            }, this.props.userData.token, 
-                            response => {
-                                apputils.CONSOLE_LOG("Edit Team OK")
-                                apputils.CONSOLE_LOG(response.data)
-                                this.props.actUserCreateTeamOK(response.data)
-                                this.props.navigation.navigate("Settings")
-                            },
-                            error => {
-                                apputils.CONSOLE_LOG("Edit Team ERROR")
-                                apputils.CONSOLE_LOG((error))
-                                // TODO: Toast
-                                
-                            }
-                        );
-                    } else {
-                        // Create new Team
-                        Backend.createTeam({
-                            name: this.state.name,
-                            code: this.state.code,
-                            canMemberViewReport: this.state.canMemberViewReport,
-                            excludeMyCar: this.state.excludeMyCar
-                            }, this.props.userData.token, 
-                            response => {
-                                apputils.CONSOLE_LOG("REgister Team OK")
-                                apputils.CONSOLE_LOG(response.data)
-                                this.props.actUserCreateTeamOK(response.data)
-                                //this.props.navigation.navigate("Settings")
-                                this.props.navigation.goBack()
-                            },
-                            error => {
-                                apputils.CONSOLE_LOG("Register Team ERROR")
-                                apputils.CONSOLE_LOG((error.response.data))
-                                // TODO: Toast
-                                Toast.show({
-                                    text: error.response.data.msg,
-                                    position: "top",
-                                    //buttonText: "Okay",
-                                    type: "danger"
-                                })
-                                this.props.navigation.goBack()
-                            }
-                        );
+                    if (!AppConstants.IS_CUSTOM_DATA_PROCESSING ) {
+                        AppConstants.IS_CUSTOM_DATA_PROCESSING = true;
+
+                        if (this.props.navigation.state.params.isEdit) {
+                            // Edit TEam NAme
+                            Backend.createTeam({
+                                id: this.state.id,
+                                name: this.state.name,
+                                code: this.state.code,
+                                canMemberViewReport: this.state.canMemberViewReport,
+                                excludeMyCar: this.state.excludeMyCar
+                                }, this.props.userData.token, 
+                                response => {
+                                    apputils.CONSOLE_LOG("Edit Team OK")
+                                    apputils.CONSOLE_LOG(response.data)
+                                    this.props.actUserCreateTeamOK(response.data)
+                                    this.props.navigation.navigate("Settings")
+                                    setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000)
+                                },
+                                error => {
+                                    apputils.CONSOLE_LOG("Edit Team ERROR")
+                                    apputils.CONSOLE_LOG((error))
+                                    setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000)
+                                    // TODO: Toast
+                                    
+                                }
+                            );
+                            setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 5000)
+                        } else {
+                            // Create new Team
+                            Backend.createTeam({
+                                name: this.state.name,
+                                code: this.state.code,
+                                canMemberViewReport: this.state.canMemberViewReport,
+                                excludeMyCar: this.state.excludeMyCar
+                                }, this.props.userData.token, 
+                                response => {
+                                    apputils.CONSOLE_LOG("REgister Team OK")
+                                    apputils.CONSOLE_LOG(response.data)
+                                    this.props.actUserCreateTeamOK(response.data)
+                                    //this.props.navigation.navigate("Settings")
+                                    this.props.navigation.goBack()
+                                    setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000)
+                                },
+                                error => {
+                                    apputils.CONSOLE_LOG("Register Team ERROR")
+                                    apputils.CONSOLE_LOG((error.response.data))
+                                    // TODO: Toast
+                                    Toast.show({
+                                        text: error.response.data.msg,
+                                        position: "top",
+                                        //buttonText: "Okay",
+                                        type: "danger"
+                                    })
+                                    this.props.navigation.goBack()
+                                    setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 2000)
+                                }
+                            );
+                            setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 5000)
+                        }
                     }
                 }
             } else {

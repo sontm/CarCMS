@@ -86,7 +86,7 @@ class GasUsageReport extends React.Component {
         if (isTeamData) {
             var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
                 = this.props.teamData.teamCarReports[this.props.currentVehicle.id].gasReport;    
-        } else {
+        } else if (this.props.userData.carReports[this.props.currentVehicle.id]){
             var {arrTotalKmMonthly, arrTotalMoneyMonthly, arrTotalMoneyPerKmMonthly}
                 = this.props.userData.carReports[this.props.currentVehicle.id].gasReport;    
         }

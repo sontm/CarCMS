@@ -204,11 +204,12 @@ class MyVehicleScreen extends React.Component {
         {(isNoFillItem && this.props.appData.countOpen <= 10) ? (
             <View style={styles.guideViewAddNewCar}>
               <View style={{flexDirection: "row",alignItems: "center",justifyContent: "center", flexWrap: "wrap"}}>
-                <Text>Hãy nhấn </Text>
+                <Text>{"         Hãy nhấn"} </Text>
                 <Icon type="AntDesign" name='pluscircle' style={{fontSize: 40, marginTop: 2, marginLeft: 3, marginRight: 3, 
                     color: AppConstants.COLOR_HEADER_BG_LIGHT}}/>
-                <Text> để thêm dữ liệu Xăng, Chi Tiêu, Bảo Dưỡng..,</Text>
+                <Text>để thêm dữ liệu</Text>
               </View>
+              <Text> Xăng, Chi Tiêu, Bảo Dưỡng...</Text>
 
               <Icon type="Entypo" name="arrow-down" 
                   style={{color: AppConstants.COLOR_GREY_MIDDLE, fontSize: 25, width: 25}} />
@@ -228,7 +229,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG,
-    minHeight: Layout.window.height - 50
+    minHeight: Layout.window.height - 60
   },
   contentContainer: {
   },

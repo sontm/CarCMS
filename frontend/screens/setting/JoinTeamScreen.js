@@ -33,7 +33,7 @@ class JoinTeamScreen extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
     async componentWillMount() {
-
+        AppConstants.IS_CUSTOM_DATA_PROCESSING = false;
         // Get all team created by this User
         // TODO, send teamCode here......
         Backend.getTeamsCreatedByMe(this.props.userData.token,
@@ -62,46 +62,51 @@ class JoinTeamScreen extends React.Component {
         if (item && item.code) {
             NetInfo.fetch().then(state => {
                 if (state.isConnected) {
-                    Backend.rejoinTeam({code: item.code}, this.props.userData.token,
-                        response => {
-                            apputils.CONSOLE_LOG("===============onReJoinTeamOfMe Data")
-                            apputils.CONSOLE_LOG(response.data)
-                            // Rejoin team can ReUse Create Team
-                            this.props.actUserCreateTeamOK(response.data)
-                            // Sync Team Data heare also
-                            // TODO Message of Syncing here
-                            Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token,
-                            response2 => {
-                                apputils.CONSOLE_LOG("GEt all Member in Team OK")
-    
-                                this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
-                            },
-                            error => {
-                                apputils.CONSOLE_LOG("GEt all Member in Team ERROR")
-                                apputils.CONSOLE_LOG(JSON.stringify(error))
-                                this.setState({
-                                    message: "Get Team Data Error!"
-                                })
-                            }
-                            );
-                    
-                            Backend.getAllJoinTeamRequest(this.props.userData.token, 
-                            response3 => {
-                                apputils.CONSOLE_LOG("GEt all JoinRequest OK")
-                                this.props.actTeamGetJoinRequestOK(response3.data)
-                            },
-                            error => {
-                                apputils.CONSOLE_LOG("GEt all JoinRequest JoinTeam ERROR")
-                                apputils.CONSOLE_LOG(JSON.stringify(error))
-                                this.setState({
-                                    message: "Login Error!"
-                                })
-                            })
+                    if (!AppConstants.IS_CUSTOM_DATA_PROCESSING) {
+                        AppConstants.IS_CUSTOM_DATA_PROCESSING = true;
 
-                            this.props.navigation.goBack()
-                        }, err => {
-                            apputils.CONSOLE_LOG("rejoinTeam ERROR")
-                    })
+                        Backend.rejoinTeam({code: item.code}, this.props.userData.token,
+                            response => {
+                                apputils.CONSOLE_LOG("===============onReJoinTeamOfMe Data")
+                                apputils.CONSOLE_LOG(response.data)
+                                // Rejoin team can ReUse Create Team
+                                this.props.actUserCreateTeamOK(response.data)
+                                // Sync Team Data heare also
+                                // TODO Message of Syncing here
+                                Backend.getAllUserOfTeam({teamId: this.props.userData.userProfile.teamId}, this.props.userData.token,
+                                response2 => {
+                                    apputils.CONSOLE_LOG("GEt all Member in Team OK")
+        
+                                    this.props.actTeamGetDataOK(response2.data, this.props.userData, this.props.teamData, this.props)
+                                },
+                                error => {
+                                    apputils.CONSOLE_LOG("GEt all Member in Team ERROR")
+                                    apputils.CONSOLE_LOG(JSON.stringify(error))
+                                    this.setState({
+                                        message: "Get Team Data Error!"
+                                    })
+                                }
+                                );
+                        
+                                Backend.getAllJoinTeamRequest(this.props.userData.token, 
+                                response3 => {
+                                    apputils.CONSOLE_LOG("GEt all JoinRequest OK")
+                                    this.props.actTeamGetJoinRequestOK(response3.data)
+                                },
+                                error => {
+                                    apputils.CONSOLE_LOG("GEt all JoinRequest JoinTeam ERROR")
+                                    apputils.CONSOLE_LOG(JSON.stringify(error))
+                                    this.setState({
+                                        message: "Login Error!"
+                                    })
+                                })
+
+                                this.props.navigation.goBack()
+                            }, err => {
+                                apputils.CONSOLE_LOG("rejoinTeam ERROR")
+                        })
+                        setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 5000)
+                    }
                 } else {
                   Toast.show({
                     text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
@@ -125,38 +130,43 @@ class JoinTeamScreen extends React.Component {
         } else {
             NetInfo.fetch().then(state => {
                 if (state.isConnected) {
-                    Backend.joinTeam({
-                        teamCode: this.state.code
-                        }, this.props.userData.token, 
-                        response => {
-                            apputils.CONSOLE_LOG("Join Team OK")
-                            apputils.CONSOLE_LOG(response.data)
-                            //this.props.actUserCreateTeamOK(response.data)
-                            //this.props.navigation.navigate("Settings")
-                            this.props.actUserGotMyJoinRequest(response.data)
-                            
+                    if (!AppConstants.IS_CUSTOM_DATA_PROCESSING) {
+                        AppConstants.IS_CUSTOM_DATA_PROCESSING = true;
+
+                        Backend.joinTeam({
+                            teamCode: this.state.code
+                            }, this.props.userData.token, 
+                            response => {
+                                apputils.CONSOLE_LOG("Join Team OK")
+                                apputils.CONSOLE_LOG(response.data)
+                                //this.props.actUserCreateTeamOK(response.data)
+                                //this.props.navigation.navigate("Settings")
+                                this.props.actUserGotMyJoinRequest(response.data)
+                                
 
 
-                            this.props.navigation.goBack()
-                            Toast.show({
-                                text: "Yêu cầu gia nhập nhóm đã được gửi đi, xin hãy đợi Quản Lý của nhóm thông qua.",
-                                //buttonText: "Okay",
-                                position: "top",
-                                type: "success",
-                                duration: 3000
-                            })
-                        },
-                        error => {
-                            apputils.CONSOLE_LOG("Join Team ERROR")
-                            apputils.CONSOLE_LOG((error.response.data))
-                            Toast.show({
-                                text: error.response.data.msg,
-                                //buttonText: "Okay",
-                                position: "top",
-                                type: "danger"
-                            })
-                        }
-                    );
+                                this.props.navigation.goBack()
+                                Toast.show({
+                                    text: "Yêu cầu gia nhập nhóm đã được gửi đi, xin hãy đợi Quản Lý của nhóm thông qua.",
+                                    //buttonText: "Okay",
+                                    position: "top",
+                                    type: "success",
+                                    duration: 3000
+                                })
+                            },
+                            error => {
+                                apputils.CONSOLE_LOG("Join Team ERROR")
+                                apputils.CONSOLE_LOG((error.response.data))
+                                Toast.show({
+                                    text: error.response.data.msg,
+                                    //buttonText: "Okay",
+                                    position: "top",
+                                    type: "danger"
+                                })
+                            }
+                        );
+                        setTimeout(function(){AppConstants.IS_CUSTOM_DATA_PROCESSING = false;}, 5000)
+                    }
                 } else {
                     Toast.show({
                       text: AppLocales.t("TOAST_NEED_INTERNET_CON"),

@@ -48,6 +48,7 @@ export default {
     GENERAL_YES: "Đồng Ý",
     GENERAL_NO: "Không",
     GENERAL_SYNC:"Đồng Bộ",
+    GENERAL_REFRESH: "Làm Mới",
 
     GENERAL_MAINTAIN_THAYTHE: "Thay Thế",
     GENERAL_MAINTAIN_BAODUONG: "Bảo Dưỡng",
@@ -192,7 +193,7 @@ export default {
     SETTING_LBL_CUSTOMERVOICE_CODE: "Xác Nhận Mã: ",
 
     SETTING_H1_SUPPORT: "Thông Tin/Liên Hệ",
-    SETTING_LBL_GUIDE: "Hướng Dẫn Sử Dụng",
+    SETTING_LBL_GUIDE: "Thông Tin/Hướng Dẫn",
     SETTING_LBL_REVIEW: "Đánh Giá Ứng Dụng",
     SETTING_LBL_APP_NOTI: "Thông Báo",
     SETTING_LBL_CONTACT: "Góp Ý Tới Nhà Sản Xuất",
