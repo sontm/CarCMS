@@ -1729,7 +1729,7 @@ module.exports = {
     //apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-01-04T00:30:00.007Z",
+        updatedOn: "2020-01-04T00:30:00.017Z",
       }
       res.status(200).send(latestData)
     } else {
