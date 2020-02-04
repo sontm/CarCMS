@@ -407,7 +407,7 @@ china_province: [
       {
         date:"2020-02-04T00:30:00.007Z",
         world: {
-            case: 20627
+            case: 20627,
             death: 426,
             curve: 653,
             risk:"Very High"
