@@ -310,7 +310,7 @@ class MoneyUsageReport extends React.Component {
                         selectedValue={this.state.duration}
                         onValueChange={this.onValueChangeDuration.bind(this)}
                         textStyle={{ color: "#1f77b4", fontSize: 16 }}
-                        style={{width: 75}}
+                        //style={{width: 75}}
                         >
                         <Picker.Item label="6 Tháng" value={6} />
                         <Picker.Item label="9 Tháng" value={9} />

@@ -178,7 +178,7 @@ class MyVehicleScreen extends React.Component {
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
           <Left style={{flex:0}}/>
           <Body style={{flex:5, flexDirection: "row", justifyContent:"center", alignItems:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
-            <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+            <Segment style={{alignSelf:"center",backgroundColor: AppConstants.COLOR_HEADER_BG, borderColor:"white",borderWidth: 1}}>
               <Button first style={this.state.activePage === 0 ? styles.activeSegment : styles.inActiveSegment}
                   onPress={() => {this.changeActivePage(0); checkAndShowInterestial()}}>
                 <Text style={this.state.activePage === 0 ? styles.activeSegmentText : styles.inActiveSegmentText}>
@@ -275,12 +275,14 @@ const styles = StyleSheet.create({
     //backgroundColor: AppConstants.COLOR_BUTTON_BG,
     backgroundColor: "white",
     color:AppConstants.COLOR_BUTTON_BG,
-    //borderColor: "white"
+    borderColor: "white",
+    borderWidth: 0.5
   },
   inActiveSegment: {
     backgroundColor: AppConstants.COLOR_HEADER_BG,
     color:AppConstants.COLOR_PICKER_TEXT,
-    //borderColor: "white"
+    borderColor: "white",
+    borderWidth: 0.5
   },
   activeSegmentText: {
       //color:"white",

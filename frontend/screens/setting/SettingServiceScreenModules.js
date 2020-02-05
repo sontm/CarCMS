@@ -131,7 +131,9 @@ class SettingServiceScreenModules extends React.Component {
             <Tabs style={{flex: 1}} onChangeTab={this.onChangeTab}>
             <Tab heading={AppLocales.t("GENERAL_CAR")}
                 tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                activeTextStyle={{fontSize: 14,color: "white"}}>
             <Content>
                 <View style={styles.formContainer}>
                 {customView}
@@ -154,7 +156,9 @@ class SettingServiceScreenModules extends React.Component {
 
             <Tab heading={AppLocales.t("GENERAL_BIKE")}
                 tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                activeTextStyle={{fontSize: 14,color: "white"}}>
             <Content>
                 <View style={styles.formContainer}>
                 {customViewBike}
@@ -194,7 +198,7 @@ SettingServiceScreenModules.navigationOptions = ({ navigation}) => ({
             <Button transparent vertical onPress={() => {
                 navigation.navigate("ServiceModuleCreate")
             }}>
-              <Icon type="AntDesign" name="plus" />
+              <Icon type="AntDesign" name="plus" style={{color:"white"}}/>
               <WhiteText style={styles.smallerText}>{AppLocales.t("GENERAL_ADD")}</WhiteText>
             </Button>
           </Right>

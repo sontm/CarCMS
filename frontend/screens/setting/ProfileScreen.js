@@ -123,7 +123,7 @@ class ProfileScreen extends React.Component {
         apputils.CONSOLE_LOG(this.props.userData.userProfile)
         return (
             <Container>
-            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={Platform.OS === "ios" ? 0 :100} 
                 behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>
@@ -262,15 +262,15 @@ class ProfileScreen extends React.Component {
 ProfileScreen.navigationOptions = ({navigation}) => ({
     header: (
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
+          <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" style={{color:"white"}}/>
             </Button>
           </Left>
-          <Body>
+          <Body style={{flex: 5}}>
             <Title><HeaderText>{AppLocales.t("SETTING_LBL_PROFILE")}</HeaderText></Title>
           </Body>
-          <Right style={{flex: 0}}/>
+          <Right style={{flex: 1}}/>
         </Header>
     )
 });
@@ -279,7 +279,7 @@ const styles = StyleSheet.create({
   formContainer: {
     flex: 1,
     paddingTop: 2,
-    paddingHorizontal: 15,
+    marginHorizontal: 5,
     backgroundColor: '#fff',
     flexDirection: "column"
   },
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   rowLabel: {
     //flex: 1,
     //textAlign: "right",
-    //paddingRight: 5,
+    paddingLeft: 3,
     color: "rgb(120, 120, 120)",
     fontSize:15
   },
@@ -325,6 +325,7 @@ const styles = StyleSheet.create({
     //flex: 2,
     //borderBottomColor: "rgb(230, 230, 230)",
     //borderBottomWidth: 0.5
+    width: AppConstants.DEFAULT_FORM_WIDTH,
   },
   rowButton: {
     marginTop: 20,

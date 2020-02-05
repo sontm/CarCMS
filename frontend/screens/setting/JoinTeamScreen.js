@@ -249,6 +249,7 @@ class JoinTeamScreen extends React.Component {
                             {AppLocales.t("SETTING_LBL_JOIN_TEAM_CODE")}
                         </Label>
                         <Input
+                            style={styles.rowForm}
                             onChangeText={(code) => this.setState({code})}
                             value={this.state.code}
                         />
@@ -333,7 +334,8 @@ const styles = StyleSheet.create({
     paddingRight: 5
   },
   rowForm: {
-    flex: 2
+    flex: 2,
+    width: AppConstants.DEFAULT_FORM_WIDTH,
   },
   rowButton: {
     marginTop: 10,

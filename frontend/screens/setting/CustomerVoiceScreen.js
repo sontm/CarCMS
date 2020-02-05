@@ -98,7 +98,7 @@ class CustomerVoiceScreen extends React.Component {
     render() {
         return (
             <Container>
-            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={Platform.OS === "ios" ? 0 :100} 
                 behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>

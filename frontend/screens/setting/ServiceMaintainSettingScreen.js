@@ -95,7 +95,9 @@ class ServiceMaintainSettingScreen extends React.Component {
             <Tabs style={{flex: 1}}>
             <Tab heading={AppLocales.t("GENERAL_CAR")}
                     tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                    activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                    activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                    textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                    activeTextStyle={{fontSize: 14,color: "white"}}>
                 <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={140} 
                 behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
                 <Content>
@@ -254,7 +256,9 @@ class ServiceMaintainSettingScreen extends React.Component {
 
                 <Tab heading={AppLocales.t("GENERAL_BIKE")}
                         tabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
-                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}>
+                        activeTabStyle={{backgroundColor: AppConstants.COLOR_HEADER_BG}}
+                        textStyle={{fontSize: 14, color: AppConstants.COLOR_TEXT_INACTIVE_TAB}} 
+                        activeTextStyle={{fontSize: 14,color: "white"}}>
                 <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={140} 
                     behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
                 <Content>

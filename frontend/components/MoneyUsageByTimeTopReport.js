@@ -325,7 +325,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
                         selectedValue={this.state.duration}
                         onValueChange={this.onValueChangeDuration.bind(this)}
                         textStyle={{ color: "#1f77b4", fontSize: 14 }}
-                        style={{width: 75}}
+                        //style={{width: 75}}
                         >
                         <Picker.Item label="6" value={6} />
                         <Picker.Item label="9" value={9} />
@@ -340,7 +340,7 @@ class MoneyUsageByTimeTopReport extends React.Component {
                         selectedValue={this.state.durationType}
                         onValueChange={this.onValueChangeDurationType.bind(this)}
                         textStyle={{ color: "#1f77b4", fontSize: 14 }}
-                        style={{width: 75}}
+                        //style={{width: 75}}
                         >
                         <Picker.Item label="Tháng" value="month" />
                         <Picker.Item label="Quý" value="quarter" />

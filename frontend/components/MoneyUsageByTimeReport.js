@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
-import { View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TextInput, AsyncStorage, TouchableOpacity, Platform } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, DatePicker, Picker } from 'native-base';
 import Layout from '../constants/Layout'
@@ -551,7 +551,7 @@ class MoneyUsageByTimeReport extends React.Component {
             !arrTotalExpenseEachCars.length && !arrTotalServiceEachCars.length) {
             isHasTeamData = false;
         }
-
+        
         return (
             <View style={styles.container}>
                 
@@ -570,7 +570,7 @@ class MoneyUsageByTimeReport extends React.Component {
                         selectedValue={this.state.duration}
                         onValueChange={this.onValueChangeDuration.bind(this)}
                         textStyle={{ color: "#1f77b4", fontSize: 14 }}
-                        style={{width: 75}}
+                        //style={{width: Platform.OS =="ios" ? 110 : 75}}
                         >
                         <Picker.Item label="6 Tháng" value={6} />
                         <Picker.Item label="9 Tháng" value={9} />
@@ -729,7 +729,7 @@ class MoneyUsageByTimeReport extends React.Component {
                         selectedValue={this.state.durationTopCarTeam}
                         onValueChange={this.onValueChangeDurationTopCarTeam.bind(this)}
                         textStyle={{ color: "#1f77b4", fontSize: 14 }}
-                        style={{width: 75}}
+                        //style={{width: 75}}
                         >
                         <Picker.Item label="6 Tháng" value={6} />
                         <Picker.Item label="9 Tháng" value={9} />

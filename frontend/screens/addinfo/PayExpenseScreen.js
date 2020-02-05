@@ -141,14 +141,13 @@ class PayExpenseScreen extends React.Component {
         apputils.CONSOLE_LOG(this.state)
         return (
             <Container>
-            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={100} 
+            <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} keyboardVerticalOffset={Platform.OS === "ios" ? 0 :100} 
                 behavior={Platform.OS === "ios" ? 'padding' : 'height'}>
             <Content>
                 <View style={styles.formContainer}>
                     <View style={styles.rowContainerCarSelect}>
                         <Picker
-                            style={{width: AppConstants.DEFAULT_FORM_WIDTH, color:AppConstants.COLOR_HEADER_BG, fontSize: 30,
-                                alignSelf:"center"}}
+                            style={{width: AppConstants.DEFAULT_FORM_WIDTH, alignSelf:"center"}}
                             mode="dropdown"
                             iosIcon={<Icon name="arrow-down" />}
                             placeholder={"--"+AppLocales.t("NEW_GAS_CAR")+"--"}

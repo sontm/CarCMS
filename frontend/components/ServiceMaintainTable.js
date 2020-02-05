@@ -212,7 +212,7 @@ class ServiceMaintainTable extends React.Component {
                     style={{width: AppConstants.DEFAULT_FORM_WIDTH,
                         alignSelf:"center"}}
                     mode="dropdown"
-                    iosIcon={<Icon name="arrow-down" />}
+                    iosIcon={<Icon name="arrow-down"/>}
                     placeholder={"--"+AppLocales.t("NEW_GAS_CAR")+"--"}
                     placeholderStyle={{ color: "#bfc6ea", alignSelf:"center" }}
                     placeholderIconColor="#007aff"
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center", // vertial align
         justifyContent: "center",
-        width: AppConstants.DEFAULT_FORM_WIDTH,
+        width: AppConstants.DEFAULT_FORM_WIDTH+10,
         marginTop: 15,
         alignSelf:"center",
         height: 60,

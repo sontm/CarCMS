@@ -215,7 +215,7 @@ ServiceScreenModules.navigationOptions = ({ navigation}) => ({
             <Button transparent vertical onPress={() => {
                 navigation.navigate("ServiceModuleCreate")
             }}>
-              <Icon type="AntDesign" name="plus" />
+              <Icon type="AntDesign" name="plus" style={{color:"white"}}/>
               <WhiteText style={styles.smallerText}>{AppLocales.t("GENERAL_ADD")}</WhiteText>
             </Button>
           </Right>
