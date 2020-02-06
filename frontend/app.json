@@ -22,11 +22,18 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "host.exp.exponent",
+      "buildNumber":"2",
+      "bundleIdentifier": "com.yamastack.VehicleCMS",
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-3940256099942544~1458002511"
+        "googleMobileAdsAppId": "ca-app-pub-3071645117258809~5261143690",
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.654590019389-lflpulr96bltgaaej418ofd3b6c271l3"
+        }
       }
     },
+    "facebookScheme":"fb704967129987939",
+    "facebookAppId":"704967129987939",
+    "facebookDisplayName":"QuanLyXe",
     "android": {
       "package": "com.sansan.VehicleCMS",
       "versionCode": 3,

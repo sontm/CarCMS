@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>654590019389-lflpulr96bltgaaej418ofd3b6c271l3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.654590019389-lflpulr96bltgaaej418ofd3b6c271l3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>654590019389-kpvccej3ahoin5tm0l62tmsj23q2bb48.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBNgDK3tuQqlxPKxeYLePDoPRZsW3ca3EM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>654590019389</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.yamastack.VehicleCMS</string>
+	<key>PROJECT_ID</key>
+	<string>vehiclecms-257413</string>
+	<key>STORAGE_BUCKET</key>
+	<string>vehiclecms-257413.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:654590019389:ios:e98b4a68efcdc24c21e754</string>
+	<key>DATABASE_URL</key>
+	<string>https://vehiclecms-257413.firebaseio.com</string>
+</dict>
+</plist>
