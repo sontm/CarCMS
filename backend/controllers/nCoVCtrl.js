@@ -21,7 +21,32 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const NCOV_DATA = { 
     vietnam_province:[ 
         { 
-            "date":"2020-02-0515:00:00.007Z",
+            "date":"2020-02-06T15:00:00.007Z",
+            "provinces":[ 
+                { 
+                    "name":"Vĩnh Phúc",
+                    "case":7,
+                    "death":0
+                },
+                { 
+                    "name":"TP.HCM",
+                    "case":3,
+                    "death":0
+                },
+                { 
+                    "name":"Thanh Hoá",
+                    "case":1,
+                    "death":0
+                },
+                { 
+                    "name":"Khánh Hoà",
+                    "case":1,
+                    "death":0
+                }
+            ]
+        },
+        { 
+            "date":"2020-02-05T15:00:00.007Z",
             "provinces":[ 
                 { 
                     "name":"TP.HCM",
@@ -46,7 +71,7 @@ const NCOV_DATA = {
             ]
         },
         { 
-            "date":"2020-02-0415:00:00.007Z",
+            "date":"2020-02-04T15:00:00.007Z",
             "provinces":[ 
                 { 
                     "name":"TP.HCM",
@@ -154,7 +179,7 @@ module.exports = {
     //apputil.CONSOLE_LOG("App getLatestCoronaDateOn")
     if (true || req.user) {
       let latestData = {
-        updatedOn: "2020-02-05T12:00:00.007Z",
+        updatedOn: "2020-02-06T15:00:00.007Z",
       }
       res.status(200).send(latestData)
     } else {
