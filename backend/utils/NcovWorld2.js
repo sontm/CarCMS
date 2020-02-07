@@ -1,10 +1,10 @@
 export default {
     data:[ 
         { 
-            "date":"2020-02-06T14:00:00.007Z",
+            "date":"2020-02-06T15:00:00.007Z",
             "world":{ 
-                "case":28365,
-                "death":566,
+                "case":28276,
+                "death":565,
                 "curve":1428,
                 "risk":"Very High"
             },
@@ -16,7 +16,7 @@ export default {
             "countries":[ 
                 { 
                     "name":"Mainland China",
-                    "case":28093,
+                    "case":28018,
                     "death":564,
                     "suspect":null,
                     "isolate":null,
@@ -25,15 +25,15 @@ export default {
                     "risk":"Very High"
                 },
                 { 
-                    "name":"Japan",
-                    "case":45,
-                    "death":0
-                },
-                { 
                     "name":"Singapore",
-                    "case":30,
+                    "case":28,
                     "death":0,
                     "curve":1,
+                },
+                { 
+                    "name":"Japan",
+                    "case":25,
+                    "death":0
                 },
                 { 
                     "name":"Thailand",
@@ -42,38 +42,32 @@ export default {
                     "curve":9
                 },
                 { 
-                    "name":"Hong Kong",
-                    "case":24,
-                    "death":1
-                },
-                { 
                     "name":"South Korea",
                     "case":23,
                     "death":0,
                     "curve":1
                 },
                 { 
+                    "name":"Hong Kong",
+                    "case":21,
+                    "death":1
+                },
+                { 
                     "name":"Australia",
-                    "case":15,
+                    "case":14,
                     "death":0,
                     "curve":3
                 },
                 { 
                     "name":"Malaysia",
-                    "case":14,
+                    "case":12,
                     "death":0,
                     "curve":1
                 },
                 { 
                     "name":"Germany",
-                    "case":13,
+                    "case":12,
                     "death":0
-                },
-                { 
-                    "name":"Taiwan",
-                    "case":13,
-                    "death":0,
-                    "curve":1
                 },
                 { 
                     "name":"United States",
@@ -103,6 +97,12 @@ export default {
                         +"+ Sáng 3/2, Bộ Y tế xác nhận nữ bệnh nhân 29 tuổi, là công nhân trở về từ Vũ Hán, dương tính với nCoV.\n\n"
                         +"+ Sáng 4/2 xác nhận nam bệnh nhân 30 tuổi ở Vĩnh Phúc là một trong 8 người trở về từ Vũ Hán trên cùng chuyến bay CZ8315 của hãng hàng không Southern China hôm 17/1.\n\n"
                         +"+ Chiều 4/2 xác nhận ca thứ 10 là nữ 42 tuổi sống ở Vĩnh Phúc, dịp Tết đến chơi nhà cô gái 23 tuổi (ã được xác định dương tính với nCoV) trong đoàn 8 người của công ty Nihon Plast vừa tập huấn ở Vũ Hán, Trung Quốc về.\n\n"
+                },
+                { 
+                    "name":"Taiwan",
+                    "case":11,
+                    "death":0,
+                    "curve":1
                 },
                 { 
                     "name":"Macao",
@@ -136,7 +136,7 @@ export default {
                 },
                 { 
                     "name":"United Kingdom",
-                    "case":3,
+                    "case":2,
                     "death":0
                 },
                 { 
