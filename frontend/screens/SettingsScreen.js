@@ -32,6 +32,7 @@ import NetInfo from "@react-native-community/netinfo";
 
 import AppLocales from '../constants/i18n'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import apputils from '../constants/AppUtils';
 
 class SettingsScreen extends React.Component {
   constructor(props) {
@@ -72,7 +73,7 @@ class SettingsScreen extends React.Component {
     }, 20000);
   }
   syncDataFromServer() {
-    NetInfo.fetch().then(state => {
+    apputils.checkInternet().then(state => {
       if (state.isConnected) {
         Alert.alert(
           AppLocales.t("GENERAL_CONFIRM"),
@@ -101,7 +102,7 @@ class SettingsScreen extends React.Component {
   }
 
   syncDataToServer() {
-    NetInfo.fetch().then(state => {
+    apputils.checkInternet().then(state => {
       if (state.isConnected) {
         Alert.alert(
           AppLocales.t("GENERAL_CONFIRM"),
@@ -156,7 +157,7 @@ class SettingsScreen extends React.Component {
           },
           {text: 'OK', style: 'destructive' , onPress: () => {
               AppUtils.CONSOLE_LOG('Delete Pressed')
-              NetInfo.fetch().then(state => {
+              apputils.checkInternet().then(state => {
                 if (state.isConnected) {
                   Backend.leaveTeam(this.props.userData.token,
                     response => {
@@ -198,7 +199,7 @@ class SettingsScreen extends React.Component {
   // },
   async doLoginGoogle() {
     AppUtils.CONSOLE_LOG("doLoginGoogle...")
-    const netState = await NetInfo.fetch();
+    const netState = await apputils.checkInternet();
     if (!netState.isConnected) {
       Toast.show({
         text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
@@ -215,7 +216,7 @@ class SettingsScreen extends React.Component {
     try {
       await GoogleSignIn.initAsync({
         // Android No Need this ID because got from google services
-        clientId: '<YOUR_IOS_CLIENT_ID>',
+        clientId: '654590019389-lflpulr96bltgaaej418ofd3b6c271l3.apps.googleusercontent.com',
       });
       AppUtils.CONSOLE_LOG("   Done initAsync")
       
@@ -283,7 +284,8 @@ class SettingsScreen extends React.Component {
       }
 
       Toast.show({
-        text: AppLocales.t("TOAST_LOGIN_FAILED"),
+        //text: AppLocales.t("TOAST_LOGIN_FAILED"),
+        text: JSON.stringify(e.message),
         //buttonText: "Okay",
         position: "top",
         type: "danger"
@@ -378,7 +380,7 @@ class SettingsScreen extends React.Component {
       })
     } else {
 
-      NetInfo.fetch().then(state => {
+      apputils.checkInternet().then(state => {
         if (state.isConnected) {
           Backend.login({email: this.state.email, password: this.state.password}, 
             response => {
@@ -446,7 +448,7 @@ class SettingsScreen extends React.Component {
       //   declinedPermissions,
       // } 
       AppUtils.CONSOLE_LOG("Start doLoginFacebook")
-      const netState = await NetInfo.fetch();
+      const netState = await apputils.checkInternet();
       if (!netState.isConnected) {
         Toast.show({
           text: AppLocales.t("TOAST_NEED_INTERNET_CON"),
@@ -562,22 +564,36 @@ class SettingsScreen extends React.Component {
   }
 
   onClickPrivacyPolicy() {
-    Linking.canOpenURL("https://yamastack.com/quanlyxe/PrivacyPolicy").then(supported => {
-      if (supported) {
-        Linking.openURL("https://yamastack.com/quanlyxe/PrivacyPolicy");
-      } else {
-        AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://yamastack.com/quanlyxe/PrivacyPolicy");
-      }
+    // Linking.canOpenURL("https://yamastack.com/quanlyxe/PrivacyPolicy").then(supported => {
+    //   if (supported) {
+    //     Linking.openURL("https://yamastack.com/quanlyxe/PrivacyPolicy");
+    //   } else {
+    //     AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://yamastack.com/quanlyxe/PrivacyPolicy");
+    //   }
+    // });
+    const unsubscribe = NetInfo.addEventListener(state => {
+      Toast.show({
+        text: "Connection type"+ state.type + ",Is connected?" + state.isConnected,
+        //buttonText: "Okay",
+        position: "bottom",
+        type: "success"
+      })
     });
   }
   onClickReview() {
-    Linking.canOpenURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS").then(supported => {
-      if (supported) {
-        Linking.openURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
-      } else {
-        AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
-      }
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
     });
+    // Unsubscribe
+    unsubscribe();
+    // Linking.canOpenURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS").then(supported => {
+    //   if (supported) {
+    //     Linking.openURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
+    //   } else {
+    //     AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
+    //   }
+    // });
   }
   onClickUserGuide() {
     Linking.canOpenURL("https://yamastack.com/").then(supported => {
@@ -1278,7 +1294,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => ({
     userData: state.userData,
     teamData: state.teamData,
-    appData: state.appData,
+    appData: state.appData
 });
 const mapActionsToProps = {
   actVehicleAddVehicle, actVehicleAddFillItem, actVehicleSyncAllFromServer,

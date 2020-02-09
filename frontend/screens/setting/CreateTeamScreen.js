@@ -62,7 +62,7 @@ class CreateTeamScreen extends React.Component {
         })
     }
     handleCreate() {
-        NetInfo.fetch().then(state => {
+        apputils.checkInternet().then(state => {
             if (state.isConnected) {
                 if (!this.state.name || !this.state.code) {
                     Toast.show({

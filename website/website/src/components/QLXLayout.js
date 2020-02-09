@@ -2,6 +2,11 @@ import React from "react"
 import { Link } from "gatsby"
 import imgLogo from "../../img/logo.png"
 import { Helmet } from "react-helmet"
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
+import NavDropdown from 'react-bootstrap/NavDropdown'
 
 const ListLink = props => (
   <li style={{ display: `inline-block`, marginRight: `1rem`}}>
@@ -25,47 +30,65 @@ export default ({ children }) => (
         <link rel="canonical" href="https://yamastack.com/" />
     </Helmet>
     <header>
-        <div class="header-area ">
+        <Navbar bg="primary" variant="dark" expand="md">
+        <Navbar.Brand>
+            <ListLink to="/">
+                <h3 style={{color: "white"}}>YamaStack</h3>
+            </ListLink>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+            <Nav.Link><ListLink to="/"><span style={{color:"rgba(255, 255, 255, .9)"}}>Home</span></ListLink></Nav.Link>
+            <Nav.Link>
+                <ListLink to="/quanlyxe/PrivacyPolicy"><span style={{color:"rgba(255, 255, 255, .9)"}}>QuảnLýXe</span></ListLink>
+            </Nav.Link>
+            <NavDropdown title="CoronaVirus" id="basic-nav-dropdown">
+                <NavDropdown.Item><ListLink to="/coronavirus">Live Stats</ListLink></NavDropdown.Item>
+                <NavDropdown.Item><ListLink to="/coronavirus/PrivacyPolicy">Privacy Policy</ListLink></NavDropdown.Item>
+            </NavDropdown>
+            </Nav>
+        </Navbar.Collapse>
+        </Navbar>
+
+        {/* <div class="header-area ">
             <div id="sticky-header" class="main-header-area">
                 <div class="container-fluid">
-                    <div class="row align-items-center">
-                        <div class="col-xl-3 col-lg-2">
+                    <Row className={"align-items-center"}>
+                        <Col xs={0} md={3} style={{textAlign: "center"}}>
                             <div class="logo">
                                 <ListLink to="/">
-                                    {/* <img src={imgLogo} alt="" /> */}
                                     <h3 style={{color: "white"}}>YamaStack</h3>
                                 </ListLink>
                             </div>
-                        </div>
-                        <div class="col-xl-4 col-lg-5">
-                            
-                        </div>
-                        <div class="col-xl-5 col-lg-5 d-none d-lg-block">
+                        </Col>
+
+                        <Col xs={0} md={6} style={{textAlign: "center"}}>
                             <div class="main-menu  d-none d-lg-block">
                                 <ul id="navigation">
                                     <li><ListLink to="/quanlyxe/PrivacyPolicy">QuảnLýXe</ListLink></li>
-                                    <li><ListLink to="/coronavirus/PrivacyPolicy">CoronaVirus</ListLink></li>
-
-                                        {/* <li><a href="#">blog <i class="ti-angle-down"></i></a>
-                                            <ul class="submenu">
-                                                <li><a href="blog.html">blog</a></li>
-                                                <li><a href="single-blog.html">single-blog</a></li>
-                                            </ul>
-                                        </li> */}
+                                    <li><ListLink to="/coronavirus">CoronaVirus</ListLink>
+                                        <ul class="submenu">
+                                            <li><ListLink to="/coronavirus">Live Stats</ListLink></li>
+                                            <li><ListLink to="/coronavirus/PrivacyPolicy">Privacy Policy</ListLink></li>
+                                        </ul>
+                                    </li>
                                     </ul>
                             </div>
-                        </div>
-                        <div class="col-12">
+                        </Col>
+                        <Col xs={12} md={0} style={{textAlign: "center"}}>
                             <div class="mobile_menu d-block d-lg-none"></div>
-                        </div>
-                    </div>
+                        </Col>
+                    </Row>
 
                 </div>
             </div>
-        </div>
+        </div>*/}
     </header>
 
+    <div style={{paddingBottom:"50px"}}>
     {children}
+    </div>
 
     <footer class="footer">
         <div class="footer_top">
@@ -144,18 +167,6 @@ export default ({ children }) => (
                                 </li>
                                 </ul>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="copy-right_text">
-            <div class="container">
-                <div class="footer_border"></div>
-                <div class="row">
-                    <div class="col-xl-12">
-                        <p class="copy_right text-center">
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                        </p>
                     </div>
                 </div>
             </div>

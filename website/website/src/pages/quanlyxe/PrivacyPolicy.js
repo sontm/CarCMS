@@ -5,7 +5,7 @@ import Tabs from 'react-bootstrap/Tabs'
 
 export default () => (
 <QLXLayout>
-<div style={{marginLeft: "5%", marginRight: "5%", textAlign: "justify", marginTop: "80px"}}>
+<div style={{marginLeft: "5%", marginRight: "5%", textAlign: "justify"}}>
 <Tabs defaultActiveKey="vn">
 <Tab eventKey="vn" title="Tiếng Việt">
 <h1 style={{marginTop: "10px"}}>Quyền Riêng Tư</h1>

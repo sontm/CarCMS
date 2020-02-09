@@ -59,7 +59,7 @@ class DebugScreen extends React.Component {
             <Content>
             <View style={styles.formContainer}>
                 <View style={styles.textRow}><Text>
-                  Count Open:{this.props.appData.countOpen}
+                  Count Open:{this.props.appData.countOpen + ":"+AppConstants.SERVER_API}
                 </Text></View>
 
                 <View style={styles.textRow}><Text>

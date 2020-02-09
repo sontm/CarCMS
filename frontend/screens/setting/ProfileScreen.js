@@ -76,7 +76,7 @@ class ProfileScreen extends React.Component {
                 type: "danger"
             })
         } else {
-            NetInfo.fetch().then(state => {
+            apputils.checkInternet().then(state => {
                 if (state.isConnected) {
                     let newData = {
                         fullName: this.state.fullName,
@@ -172,14 +172,14 @@ class ProfileScreen extends React.Component {
 
                     {this.props.userData.userProfile.type == "facebook" ? 
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
-                        marginLeft: -10, marginTop: 15, marginBottom: 10}}>
+                        marginLeft: 10, marginTop: 15, marginBottom: 10}}>
                         <Icon type="Ionicons" name="logo-facebook" style={{fontSize: 22, color: AppConstants.COLOR_FACEBOOK, marginRight: 10}} />
                         <Text style={{...styles.textNormal, color: AppConstants.COLOR_FACEBOOK}}>{"Tài Khoản liên kết Facebook"}</Text>
                     </View>: null}
 
                     {this.props.userData.userProfile.type == "google" ? 
                     <View style={{flexDirection: "row", justifyContent:"flex-start",
-                        marginLeft: -10, marginTop: 15, marginBottom: 10}}>
+                        marginLeft: 10, marginTop: 15, marginBottom: 10}}>
                         <Icon type="AntDesign" name="google" style={{fontSize: 22, color: AppConstants.COLOR_GOOGLE, marginRight: 10}} />
                         <Text style={{...styles.textNormal, color: AppConstants.COLOR_GOOGLE,}}>{"Tài Khoản liên kết Google"}</Text>
                     </View> : null}

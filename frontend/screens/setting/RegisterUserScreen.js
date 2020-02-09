@@ -54,7 +54,7 @@ class RegisterUserScreen extends React.Component {
                 type: "danger"
             })
         } else {
-            NetInfo.fetch().then(state => {
+            apputils.checkInternet().then(state => {
                 if (state.isConnected) {
                     if (!AppConstants.IS_CUSTOM_DATA_PROCESSING) {
                         AppConstants.IS_CUSTOM_DATA_PROCESSING = true;

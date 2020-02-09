@@ -190,6 +190,8 @@ module.exports = {
           "654590019389-ulnlrsteuoramtlk82l5h19fsr88o6o5.apps.googleusercontent.com",
           "654590019389-v756q9jmg4ueskmjgi4cj79ltp03r187.apps.googleusercontent.com",
           "654590019389-t78472q9u9ao4gcr2josc3r3gnki85if.apps.googleusercontent.com",
+	 // ios GoogleService-Info
+	  "654590019389-lflpulr96bltgaaej418ofd3b6c271l3.apps.googleusercontent.com",
         ]
         // Or, if multiple clients access the backend:
         //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]

@@ -116,7 +116,7 @@ class TeamScreen extends React.Component {
             }
       })
     } else {
-      NetInfo.fetch().then(state => {
+      AppUtils.checkInternet().then(state => {
         if (state.isConnected) {
           if (!silence) {
             this.props.actUserStartSyncTeam();

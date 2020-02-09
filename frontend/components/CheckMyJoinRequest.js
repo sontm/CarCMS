@@ -52,7 +52,7 @@ class CheckMyJoinRequest extends React.Component {
                   style: 'cancel',
                 },
                 {text: AppLocales.t("GENERAL_YES"), onPress: () => {
-                    NetInfo.fetch().then(state => {
+                    apputils.checkInternet().then(state => {
                         if (state.isConnected) {
                             Backend.cancelMyJoinRequest(this.props.userData.token,
                                 response => {
@@ -84,7 +84,7 @@ class CheckMyJoinRequest extends React.Component {
         apputils.CONSOLE_LOG("this.props.userData.myJoinRequest.id")
         apputils.CONSOLE_LOG(this.props.userData.myJoinRequest.id)
         if (this.props.userData.myJoinRequest && this.props.userData.myJoinRequest.id) {
-            NetInfo.fetch().then(state => {
+            apputils.checkInternet().then(state => {
             if (state.isConnected) {
                 Backend.getMyJoinRequest(this.props.userData.token, this.props.userData.myJoinRequest.id,
                 response => {

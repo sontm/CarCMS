@@ -23,7 +23,7 @@ class ForgotPasswordScreen extends React.Component {
     }
     handleSubmit() {
         if (this.state.email.length> 0 && this.state.email.indexOf("@") > 0) {
-            NetInfo.fetch().then(state => {
+            apputils.checkInternet().then(state => {
                 if (state.isConnected) {
                     Backend.requestResetPwd({
                         email: this.state.email

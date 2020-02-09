@@ -96,7 +96,7 @@ ul {
 /* line 56, ../../Arafath/CL/CL October/214. App Landing Page/HTML/scss/theme-default.scss */
 li {
   list-style: square;
-  margin-left: 20px;
+  /* margin-left: 20px; */
 }
 
 /* line 59, ../../Arafath/CL/CL October/214. App Landing Page/HTML/scss/theme-default.scss */
@@ -2661,24 +2661,24 @@ h3 {
 
 /* line 6, ../../Arafath/CL/CL October/214. App Landing Page/HTML/scss/_footer.scss */
 .footer .footer_top {
-  padding-top: 50px;
-  padding-bottom: 50px;
+  padding-top: 40px;
+  padding-bottom: 40px;
   background: #1F1F1F;
 }
 
 @media (max-width: 767px) {
   /* line 6, ../../Arafath/CL/CL October/214. App Landing Page/HTML/scss/_footer.scss */
   .footer .footer_top {
-    padding-top: 60px;
-    padding-bottom: 30px;
+    padding-top: 20px;
+    padding-bottom: 10px;
   }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
   /* line 6, ../../Arafath/CL/CL October/214. App Landing Page/HTML/scss/_footer.scss */
   .footer .footer_top {
-    padding-top: 90px;
-    padding-bottom: 60px;
+    padding-top: 40px;
+    padding-bottom: 40px;
   }
 }
 
@@ -6381,6 +6381,11 @@ h6 {
 .blog_part .single-home-blog .card ul li span {
   margin-right: 10px;
   font-size: 12px;
+}
+
+/* Override */
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, .9) !important
 }
 
 /*# sourceMappingURL=style.css.map */

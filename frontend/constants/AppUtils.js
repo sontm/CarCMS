@@ -7,6 +7,7 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import NetInfo from "@react-native-community/netinfo";
 import {Toast} from 'native-base';
+import { checkInternetConnection } from 'react-native-offline';
 
 const DEFAULT_SETTING_SERVICE = {
     Km: [5000, 10000, 20000, 40000, 80000],
@@ -78,6 +79,29 @@ class AppUtils {
         if (AppConstants.IS_DEBUG_MODE) {
             console.log(text)
         }
+    }
+    checkInternet() {
+        // if (Platform.OS == "ios") {
+        //     return new Promise((resolve, reject) => {
+        //         checkInternetConnection('https://www.google.com/',1000,true)
+        //         .then(isConnected => {
+        //             resolve({isConnected:isConnected})
+        //         })
+        //         .catch((error) => {
+        //             reject({isConnected:false})
+        //         });
+        //     })
+        // } else {
+            return new Promise((resolve, reject) => {
+                NetInfo.fetch()
+                .then(state => {
+                    resolve (state);
+                })
+                .catch((error) => {
+                    reject({isConnected:false})
+                });
+            })
+        //}
     }
     loadImageSourceOfBrand(brand, isMotorBike) {
         if (brand && brand.length > 0) {
@@ -1806,7 +1830,7 @@ class AppUtils {
     // Sync data based on information 
     async syncDataPartlyToServer(props) {
         //modifiedInfo: {vehicleIds:[], changedAllVehicles: false, changedCustom: false, changedSetting: false,changedItemCount: 0},
-        NetInfo.fetch().then(state => {
+        this.checkInternet().then(state => {
         if (state.isConnected) {
 
             if (props.userData.modifiedInfo.changedItemCount > 0) {

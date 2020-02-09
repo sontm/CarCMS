@@ -5,7 +5,7 @@ import Tabs from 'react-bootstrap/Tabs'
 
 export default () => (
 <QLXLayout>
-<div style={{marginLeft: "5%", marginRight: "5%", textAlign: "justify", marginTop: "80px"}}>
+<div style={{marginLeft: "5%", marginRight: "5%", textAlign: "justify"}}>
 <Tabs defaultActiveKey="en">
 <Tab eventKey="en" title="English">
 <h1 style={{marginTop: "10px"}}>Privacy Policy</h1>

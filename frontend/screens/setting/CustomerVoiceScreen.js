@@ -57,7 +57,7 @@ class CustomerVoiceScreen extends React.Component {
                 type: "danger"
             })
         } else {
-            NetInfo.fetch().then(state => {
+            apputils.checkInternet().then(state => {
                 if (state.isConnected) {
                     Backend.sendCustomerVoice({
                         email: this.state.email,
