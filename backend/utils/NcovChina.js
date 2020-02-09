@@ -1,6 +1,135 @@
 export default {
     china_province:[ 
         { 
+            "date":"2020-02-06T15:00:00.007Z",
+            "provinces":[ 
+                { 
+                    "name":"Hubei",
+                    "case":19665
+                },
+                { 
+                    "name":"Zhejiang",
+                    "case":954
+                },
+                { 
+                    "name":"Guangdong",
+                    "case":944
+                },
+                { 
+                    "name":"Henan",
+                    "case":851
+                },
+                { 
+                    "name":"Hunan",
+                    "case":711
+                },
+                { 
+                    "name":"Jiangxi",
+                    "case":600
+                },
+                { 
+                    "name":"Anhui",
+                    "case":591
+                },
+                { 
+                    "name":"Chongqing",
+                    "case":389
+                },
+                { 
+                    "name":"Jiangsu",
+                    "case":373
+                },
+                { 
+                    "name":"Sichuan",
+                    "case":321
+                },
+                { 
+                    "name":"Shandong",
+                    "case":343
+                },
+                { 
+                    "name":"Beijing",
+                    "case":274
+                },
+                { 
+                    "name":"Shanghai",
+                    "case":254
+                },
+                { 
+                    "name":"Fujian",
+                    "case":215
+                },
+                { 
+                    "name":"Heilongjiang",
+                    "case":227
+                },
+                { 
+                    "name":"Shaanxi",
+                    "case":173
+                },
+                { 
+                    "name":"Guangxi",
+                    "case":168
+                },
+                { 
+                    "name":"Hebei",
+                    "case":157
+                },
+                { 
+                    "name":"Yunnan",
+                    "case":128
+                },
+                { 
+                    "name":"Hainan",
+                    "case":100
+                },
+                { 
+                    "name":"Shanxi",
+                    "case":90
+                },
+                { 
+                    "name":"Liaoning",
+                    "case":89
+                },
+                { 
+                    "name":"Tianjin",
+                    "case":70
+                },
+                { 
+                    "name":"Guizhou",
+                    "case":69
+                },
+                { 
+                    "name":"Gansu",
+                    "case":62
+                },
+                { 
+                    "name":"Jilin",
+                    "case":59
+                },
+                { 
+                    "name":"Inner Mongolia",
+                    "case":46
+                },
+                { 
+                    "name":"Ningxia",
+                    "case":40
+                },
+                { 
+                    "name":"Xinjiang",
+                    "case":36
+                },
+                { 
+                    "name":"Qinghai",
+                    "case":18
+                },
+                { 
+                    "name":"Xizang",
+                    "case":1
+                }
+            ]
+        },
+        { 
             "date":"2020-02-05T15:00:00.007Z",
             "provinces":[ 
                 { 
@@ -245,7 +374,7 @@ export default {
                     "case":34
                 },
                 { 
-                    "name":"Xinjia",
+                    "name":"Xinjiang",
                     "case":29
                 },
                 { 
@@ -370,7 +499,7 @@ export default {
                     "case":31
                 },
                 { 
-                    "name":"Xinjia",
+                    "name":"Xinjiang",
                     "case":31
                 },
                 { 
@@ -499,7 +628,7 @@ export default {
                     "case":26
                 },
                 { 
-                    "name":"Xinjia",
+                    "name":"Xinjiang",
                     "case":23
                 },
                 { 
@@ -628,7 +757,7 @@ export default {
                     "case":23
                 },
                 { 
-                    "name":"Xinjia",
+                    "name":"Xinjiang",
                     "case":18
                 },
                 { 
