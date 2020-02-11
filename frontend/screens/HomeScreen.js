@@ -1,6 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { connect } from 'react-redux';
+import Constants from 'expo-constants';
 import {
   Image,
   Platform,
@@ -69,7 +70,7 @@ class HomeScreen extends React.Component {
     )
   }
   componentDidMount() {
-    AppUtils.CONSOLE_LOG("HOMESCreen DidMount, CountOpen:" + this.props.appData.countOpen)
+    AppUtils.CONSOLE_LOG("HOMESCreen DidMount, CountOpen:" + this.props.appData.countOpen + ":" + Constants.statusBarHeight)
     //this.loadFromStorage()
     // Load Notification messages
     this.props.actUserGetNotifications(this.props.userData)

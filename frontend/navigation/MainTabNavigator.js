@@ -1,4 +1,6 @@
 import React from 'react';
+import Constants from 'expo-constants';
+
 import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 import { withNavigation } from 'react-navigation';
@@ -168,7 +170,7 @@ const tabNavigator = createBottomTabNavigator({
     tabBarPosition: "bottom",
     tabBarComponent: props => {
       return (
-        <Footer style={{height: 56}}>
+        <Footer style={{height: (Platform.OS=="ios" && Constants.statusBarHeight > 41) ? 34 : 54}}>
           <FooterTab style={styles.footerContainer}>
             <Button
               vertical
@@ -204,6 +206,7 @@ const tabNavigator = createBottomTabNavigator({
             
             
             <TouchableOpacity 
+              style={{justifyContent:"center", alignItems:"center"}}
               onPress={() =>
                 ActionSheet.show(
                 {

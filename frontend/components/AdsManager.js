@@ -105,7 +105,7 @@ class AdsManager extends React.Component {
             return (
                 <AdMobBanner
                     style={styles.bottomBanner}
-                    bannerSize="banner"
+                    bannerSize="fullBanner"
                     adUnitID={AppConstants.ADS_BANNERID}
                     //testDeviceID="EMULATOR"
                     onDidFailToReceiveAdWithError={this.bannerError}
@@ -117,7 +117,7 @@ class AdsManager extends React.Component {
                 <View style={{position: "absolute", bottom: AppConstants.DEFAULT_BOTTOM_NAV_HEIGHT, left: 0, right: 0}}>
                     <AdMobBanner
                         style={styles.bottomBanner}
-                        bannerSize="banner"
+                        bannerSize="fullBanner"
                         adUnitID={AppConstants.ADS_BANNERID}
                         //testDeviceID="EMULATOR"
                         onDidFailToReceiveAdWithError={this.bannerError}

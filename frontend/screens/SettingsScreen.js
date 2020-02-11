@@ -761,7 +761,7 @@ class SettingsScreen extends React.Component {
               <View style={{alignSelf: "center"}}>
                 <H3>{AppLocales.t("SETTING_LBL_LOGIN")}</H3>
               </View>
-              <View style={{...styles.rowForm, width: Layout.window.width * 0.86}}>
+              <View style={{...styles.rowForm, width: AppConstants.DEFAULT_FORM_WIDTH}}>
                   <Item>
                     <Input
                         onChangeText={(email) => this.setState({email})}
@@ -771,7 +771,7 @@ class SettingsScreen extends React.Component {
                     />
                   </Item>
               </View>
-              <View style={{...styles.rowForm, width: Layout.window.width * 0.86}}>
+              <View style={{...styles.rowForm, width: AppConstants.DEFAULT_FORM_WIDTH}}>
                   <Item>
                     {/* <Label>{AppLocales.t("GENERAL_PWD")}</Label> */}
                     <Input
@@ -1176,7 +1176,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft: -5,
     marginRight: -5,
-    paddingLeft: 5,
+    paddingLeft: 10,
     paddingRight: 5,
     backgroundColor: AppConstants.COLOR_GREY_LIGHT_BG
   },
@@ -1192,6 +1192,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center", // vertial align
     margin: 5,
+    marginLeft: 7,
     paddingTop: 5,
     paddingBottom: 5,
     borderBottomColor: "rgb(230, 230, 230)",

@@ -251,8 +251,8 @@ export const actVehicleAddVehicle = (vehicle, prevUserData) => (dispatch, getSta
         payload: vehicle
     })
     let {userData} = getState();
-    setTimeout(function(){ reCalculateCarReports(vehicle, userData, dispatch); }, 100);
-    //reCalculateCarReports(vehicle, userData, dispatch)
+    //setTimeout(function(){ reCalculateCarReports(vehicle, userData, dispatch); }, 100);
+    reCalculateCarReports(vehicle, userData, dispatch)
 }
 export const actVehicleEditVehicle = (vehicle, prevUserData) => (dispatch, getState) => {
     AppUtils.CONSOLE_LOG("actVehicleEditVehicle:")
@@ -261,8 +261,8 @@ export const actVehicleEditVehicle = (vehicle, prevUserData) => (dispatch, getSt
         payload: vehicle
     })
     let {userData} = getState();
-    setTimeout(function(){ reCalculateCarReports(vehicle, userData, dispatch); }, 100);
-    //reCalculateCarReports(vehicle, userData, dispatch)
+    //setTimeout(function(){ reCalculateCarReports(vehicle, userData, dispatch); }, 100);
+    reCalculateCarReports(vehicle, userData, dispatch)
 }
 export const actVehicleDeleteVehicle = (vehicleId, licensePlate) => (dispatch) => {
     AppUtils.CONSOLE_LOG("actVehicleDeleteVehicle:"+vehicleId+",licensePlate:" + licensePlate)
@@ -304,8 +304,8 @@ export const actVehicleAddFillItem = (data, type, prevUserData) => (dispatch, ge
     }
     let {userData} = getState();
     
-    setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, data.vehicleId); }, 100);
-    //reCalculateCarReports(null, userData, dispatch, data.vehicleId)
+    //setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, data.vehicleId); }, 100);
+    reCalculateCarReports(null, userData, dispatch, data.vehicleId)
 }
 
 // type: gas, oil, auth, 
@@ -341,8 +341,8 @@ export const actVehicleDeleteFillItem = (vehicleId, itemId, type, prevUserData) 
     }
 
     let {userData} = getState();
-    //reCalculateCarReports(null, userData, dispatch, vehicleId)
-    setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, vehicleId); }, 100);
+    reCalculateCarReports(null, userData, dispatch, vehicleId)
+    //setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, vehicleId); }, 100);
 }
 
 // type: gas, oil, auth, 
@@ -384,8 +384,8 @@ export const actVehicleEditFillItem = (itemId, type, prevUserData) => (dispatch,
     // AppUtils.CONSOLE_LOG("  >>>>>>>>>>>> Start reCalculateCarReports")
     // AppUtils.CONSOLE_LOG(userData.vehicleList[0].authorizeCarList)
 
-    setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, itemId.vehicleId); }, 100);
-    //reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
+    //setTimeout(function(){ reCalculateCarReports(null, userData, dispatch, itemId.vehicleId); }, 100);
+    reCalculateCarReports(null, userData, dispatch, itemId.vehicleId)
 }
 
 

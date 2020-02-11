@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     headerFirst: { height: 30, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER },
     headerHighFirst: {height: 40, backgroundColor: AppConstants.COLOR_HEADER_BG_DARKER},
 
-    text: { textAlign: 'center', fontWeight: '100' },
+    text: { textAlign: 'center', fontWeight: '100', color: AppConstants.COLOR_TEXT_DARKEST_INFO},
     textSmall: { textAlign: 'center', fontSize: 12, },
     textSmallFirstCol: { textAlign: 'center', fontSize: 12, color: AppConstants.COLOR_HEADER_BG_DARKER},
     textHeader: {textAlign: 'center', fontSize: 13, color: "white"},

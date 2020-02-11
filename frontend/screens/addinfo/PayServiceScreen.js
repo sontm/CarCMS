@@ -82,18 +82,34 @@ class PayServiceScreen extends React.Component {
                     let currentVehicle = this.props.userData.vehicleList.find(item => item.id == this.props.userData.vehicleList[0].id);
                     this.currentVehicle = currentVehicle;
 
+                    let validForCur = this.props.userData.settingService.Km[0];
+                    if (currentVehicle.type == "bike") {
+                        validForCur= this.props.userData.settingService.KmBike[0];
+                    }
+
                     this.setState({
-                        vehicleId: this.props.userData.vehicleList[0].id
+                        vehicleId: this.props.userData.vehicleList[0].id,
+                        validFor: validForCur,
+                        validForIndex: 0
                     })
                 }
             } else {
                 let currentVehicle = this.props.userData.vehicleList.find(item => item.id == AppConstants.CURRENT_VEHICLE_ID);
                 this.currentVehicle = currentVehicle;
 
+                let validForCur = this.props.userData.settingService.Km[0];
+                if (currentVehicle.type == "bike") {
+                    validForCur= this.props.userData.settingService.KmBike[0];
+                }
+
+
                 this.setState({
-                    vehicleId: AppConstants.CURRENT_VEHICLE_ID
+                    vehicleId: AppConstants.CURRENT_VEHICLE_ID,
+                    validFor: validForCur,
+                        validForIndex: 0
                 })
             }
+            
         }
     }
     actualSave(maxMeter) {
@@ -323,8 +339,15 @@ class PayServiceScreen extends React.Component {
         apputils.CONSOLE_LOG("onChoose:" + veId)
         this.currentVehicle = this.props.userData.vehicleList.find(item => item.id == veId);
 
+        let validForCur = this.props.userData.settingService.Km[0];
+        if (this.currentVehicle.type == "bike") {
+            validForCur= this.props.userData.settingService.KmBike[0];
+        }
+
         this.setState({
-            vehicleId: veId
+            vehicleId: veId,
+            validFor: validForCur,
+            validForIndex: 0
         })
     }
     render() {
