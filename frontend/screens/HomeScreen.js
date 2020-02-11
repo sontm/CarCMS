@@ -405,8 +405,8 @@ const styles = StyleSheet.create({
   },
   equalStartRow: {
       flex: 1,
-      marginLeft: 5,
-      marginRight: 5,
+      marginLeft: 3,
+      marginRight: 3,
       marginTop: -100,
       paddingVertical: 7,
       // borderWidth: 0.5,

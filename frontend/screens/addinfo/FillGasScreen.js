@@ -32,7 +32,6 @@ class FillGasScreen extends React.Component {
         this.onChooseVehicle = this.onChooseVehicle.bind(this)
         
     }
-
     componentWillMount() {
         AppConstants.IS_FILL_ITEM_PROCESSING = false;
         if ((!this.props.navigation.state.params || !this.props.navigation.state.params.createNew) && 
@@ -132,7 +131,7 @@ class FillGasScreen extends React.Component {
             AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_GAS, this.props.userData)
-
+            this.props.navigation.goBack()
             this.props.navigation.navigate('VehicleDetail', 
                 {vehicleId: this.state.vehicleId, isMyVehicle: true})
 

@@ -9,7 +9,7 @@
       "android",
       "web"
     ],
-    "version": "0.2.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
@@ -22,7 +22,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber":"2",
+      "buildNumber":"1",
       "bundleIdentifier": "com.yamastack.VehicleCMS",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-3071645117258809~5261143690",
@@ -36,7 +36,7 @@
     "facebookDisplayName":"QuanLyXe",
     "android": {
       "package": "com.sansan.VehicleCMS",
-      "versionCode": 3,
+      "versionCode": 1,
       "googleServicesFile": "./google-services.json",
       "config": {
         "googleMobileAdsAppId": "ca-app-pub-3071645117258809~7519717354"

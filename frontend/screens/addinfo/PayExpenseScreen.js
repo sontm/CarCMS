@@ -114,7 +114,7 @@ class PayExpenseScreen extends React.Component {
                 // set Current VE ID so can ComeBack VehicleDetail
                 AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
                 this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_EXPENSE, this.props.userData)
-
+                this.props.navigation.goBack()
                 this.props.navigation.navigate('VehicleDetail', {vehicleId: this.state.vehicleId, isMyVehicle: true})
             }
         }

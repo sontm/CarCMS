@@ -144,7 +144,7 @@ class PayServiceScreen extends React.Component {
             AppConstants.CURRENT_VEHICLE_ID = this.state.vehicleId;
 
             this.props.actVehicleAddFillItem(newData, AppConstants.FILL_ITEM_SERVICE, this.props.userData)
-
+            this.props.navigation.goBack()
             this.props.navigation.navigate('VehicleDetail', {vehicleId: this.state.vehicleId, isMyVehicle: true})
         }
     }
