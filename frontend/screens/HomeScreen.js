@@ -493,7 +493,7 @@ const styles = StyleSheet.create({
     top: 0,
     // width: 20,
     //width: 20,
-    height: 17,
+    height: Platform.OS=="ios" ? 19 : 17,
     flexDirection:"column",
     justifyContent: "center"
   },

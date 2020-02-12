@@ -1668,7 +1668,7 @@ export default function(state = initialState, action) {
         AppUtils.CONSOLE_LOG("USER_GET_APPNOTIFICATION:" + receivedNotis.length)
         let newNotis = [...prevNotis];
         let isHaveNew = false;
-        let countNotSeenNoti = 0;
+        let countNotSeenNoti = state.countNotSeenNoti;
         receivedNotis.forEach (item => {
             let existedItem = prevNotis.find(noti => noti.id == item.id);
             if (!existedItem) {

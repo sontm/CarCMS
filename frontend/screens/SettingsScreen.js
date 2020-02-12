@@ -1,7 +1,7 @@
 import * as WebBrowser from 'expo-web-browser';
 import axios from 'axios';
 import React from 'react';
-import { ActivityIndicator, Linking, Clipboard, Modal} from 'react-native';
+import { ActivityIndicator, Linking, Clipboard, Modal, Platform} from 'react-native';
 import { View, StyleSheet, Image, TextInput, Picker, AsyncStorage, TouchableOpacity, Alert } from 'react-native';
 import {Container, Header, Title, Segment, Left, Right,Content, Button, Text, Icon, 
     Card, CardItem, Body, H1, H2, H3, ActionSheet, Tab, Tabs, Thumbnail, Toast, Item, Label, Input } from 'native-base';
@@ -581,19 +581,31 @@ class SettingsScreen extends React.Component {
     });
   }
   onClickReview() {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
-    });
-    // Unsubscribe
-    unsubscribe();
-    // Linking.canOpenURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS").then(supported => {
-    //   if (supported) {
-    //     Linking.openURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
-    //   } else {
-    //     AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
-    //   }
-    // });
+    if(Platform.OS=="ios") {
+      Linking.canOpenURL("itms-apps://itunes.apple.com/app/id1498085260").then(supported => {
+        if (supported) {
+          Linking.openURL("itms-apps://itunes.apple.com/app/id1498085260");
+        } else {
+          AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "itms-apps://itunes.apple.com/app/id1498085260");
+
+          Linking.canOpenURL("https://itunes.apple.com/app/id1498085260").then(supported => {
+          if (supported) {
+            Linking.openURL("https://itunes.apple.com/app/id1498085260");
+          } else {
+            AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://itunes.apple.com/app/id1498085260");
+          }
+        });
+        }
+      });
+    } else {
+      Linking.canOpenURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS").then(supported => {
+        if (supported) {
+          Linking.openURL("https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
+        } else {
+          AppUtils.CONSOLE_LOG("Don't know how to open URI: " + "https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS");
+        }
+      });
+    }
   }
   onClickUserGuide() {
     Linking.canOpenURL("https://yamastack.com/").then(supported => {
