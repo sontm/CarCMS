@@ -1,4 +1,7 @@
 import React from "react"
+import Button from 'react-bootstrap/Button'
+
+
 import QLXLayout from "../components/QLXLayout"
 import imgLogo from "../../img/logo.png"
 import imgPhone from "../../img/qlx/phone.png"
@@ -10,6 +13,9 @@ import imgPhone21 from "../../img/qlx/phone2.png"
 import imgPhone31 from "../../img/qlx/phone3.png"
 import imgDraw from "../../img/qlx/charts.png"
 import imgPhone2 from "../../img/qlx/phone4.png"
+
+import imgAndroid from "../../img/resource/android.png"
+import imgApple from "../../img/resource/apple.png"
 
 export default () => (
 <QLXLayout>
@@ -24,7 +30,19 @@ export default () => (
                             <p class="wow fadeInLeft" data-wow-duration="1s" data-wow-delay=".1s">
                                 Theo Dõi Chi Tiêu Theo Cá Nhân/Đội Nhóm</p>
                             <div class="video_service_btn wow fadeInLeft" data-wow-duration="1s" data-wow-delay=".1s">
-                                <a href="#" class="boxed-btn3">Tải Về cho Android</a>
+                                <Button variant="dark" href="https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS" target="_blank"
+                                    style={{padding: "3px 5px", width: "320px", backgroundColor:"black", textAlign:"left", fontSize:"18px"}}>
+                                    <img src={imgAndroid} alt="android" class="boxed-btn3-img"/>
+                                    Tải Về cho Google Android
+                                </Button>
+                            </div>
+                            < br/>
+                            <div class="video_service_btn wow fadeInLeft" data-wow-duration="1s" data-wow-delay=".1s">
+                                <Button variant="dark" href="https://apps.apple.com/app/id1498085260" target="_blank"
+                                    style={{padding: "3px 5px", width: "320px", backgroundColor:"black", textAlign:"left", fontSize:"18px"}}>
+                                    <img src={imgApple} alt="android" class="boxed-btn3-img"/>
+                                    Tải Về cho Apple iOS
+                                </Button>
                             </div>
                         </div>
                     </div>

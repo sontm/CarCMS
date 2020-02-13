@@ -8,6 +8,7 @@ import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 
+
 const ListLink = props => (
   <li style={{ display: `inline-block`, marginRight: `1rem`}}>
     <Link to={props.to}>{props.children}</Link>
@@ -105,20 +106,21 @@ export default ({ children }) => (
                             <p>
                                 Ứng Dụng cho Cuộc Sống!
                             </p>
-                            <div class="socail_links">
+                            {/* <div class="socail_links">
                                 <ul>
-                                    <li>
+                                    <li> */}
                                         <a href="#">
-                                            <i class="ti-facebook"></i>
+                                            {/* <i class="ti-facebook"></i> */}
+                                            <img src={imgLogo} alt="" style={{width:"36px", height: "36px"}}/>
                                         </a>
-                                    </li>
-                                    <li>
+                                    {/* </li> */}
+                                    {/* <li>
                                         <a href="#">
                                             <i class="ti-twitter-alt"></i>
                                         </a>
-                                    </li>
-                                </ul>
-                            </div>
+                                    </li> */}
+                                {/* </ul>
+                            </div> */}
 
                         </div>
                     </div>
@@ -156,12 +158,12 @@ export default ({ children }) => (
                             </h3>
                             <ul>
                                 <li>
-                                    <a href="#">
+                                    <a href="https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS" target="_blank">
                                     Tải Về từ Android Google Play
 
                                     </a>
                                 </li>
-                                <li><a href="#">
+                                <li><a href="https://apps.apple.com/app/id1498085260" target="_blank">
                                 Tải Về từ Apple App Store
                                     </a>
                                 </li>

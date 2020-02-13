@@ -418,18 +418,17 @@ h3 {
 /* line 29, ../../Arafath/CL/CL October/214. App Landing Page/HTML/scss/_btn.scss */
 .boxed-btn3 {
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#0181f5+0,5db2ff+100 */
-  background: #7929bf;
+  background: #1F1F1F;
+  width: 350px;
   color: #fff;
   display: inline-block;
-  padding: 14px 27px;
+  /* padding: 5px 5px 5px 10px; */
   font-family: "Segoe UI", sans-serif;
-  font-size: 16px;
-  font-weight: 500;
   border: 0;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  text-align: center;
+  text-align: left;
   color: #fff !important;
   text-transform: capitalize;
   -webkit-transition: 0.5s;
@@ -438,6 +437,27 @@ h3 {
   transition: 0.5s;
   cursor: pointer;
   letter-spacing: 2px;
+  text-align: "left";
+}
+
+.boxed-btn3-img {
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#0181f5+0,5db2ff+100 */
+  width: 64px;
+  height: 64px;
+}
+
+.boxed-btn3-text {
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#0181f5+0,5db2ff+100 */
+  color: #fff;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  border: 0;
+
+  width: 280px;
+  color: #fff;
+  display: inline-block;
+  padding: 5px 5px 5px 10px;
 }
 
 /* line 48, ../../Arafath/CL/CL October/214. App Landing Page/HTML/scss/_btn.scss */
