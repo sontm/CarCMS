@@ -47,6 +47,9 @@ class HomeScreen extends React.Component {
   }
   componentWillMount() {
     AppUtils.CONSOLE_LOG("HOME Mounting...")
+    //for Force Home render
+    AppConstants.IS_FIRST_RENDERSCREEN = false;
+
     if (!this.props.appData.isDebugMode) {
       AppConstants.IS_DEBUG_MODE = false;
     }

@@ -341,15 +341,15 @@ class CarAuthorizeScreen extends React.Component {
 CarAuthorizeScreen.navigationOptions = ({navigation}) => ({
     header: (
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
+          <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" style={{color:"white"}}/>
             </Button>
           </Left>
-          <Body>
+          <Body style={{flex: 5}}>
             <Title><HeaderText>{AppLocales.t("NEW_AUTH_HEADER")}</HeaderText></Title>
           </Body>
-          <Right />
+          <Right style={{flex: 1}}/>
         </Header>
     )
 });

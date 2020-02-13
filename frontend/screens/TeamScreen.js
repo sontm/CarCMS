@@ -241,11 +241,12 @@ class TeamScreen extends React.Component {
           </Picker>
           </View>
 
-          <TouchableOpacity
-            style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
+          
           <CheckBox checked={this.state.sortAscending==true} style={{marginLeft: -10}}
             onPress={() => this.setState({sortAscending: !this.state.sortAscending})} />
-          <Text style={{fontSize: 12, margin: 0, marginLeft: 11}} onPress={() => this.setState({sortAscending: !this.state.sortAscending})}>Giảm Dần</Text>
+          <TouchableOpacity
+            style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}} onPress={() => this.setState({sortAscending: !this.state.sortAscending})}>
+          <Text style={{fontSize: 12, margin: 0, marginLeft: 11}} >Giảm Dần</Text>
           </TouchableOpacity>
           {/* <Segment small>
               <Button small first onPress={() => this.setState({sortAscending: true})}

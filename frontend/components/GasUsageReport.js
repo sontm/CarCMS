@@ -95,7 +95,7 @@ class GasUsageReport extends React.Component {
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
-        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+        for (let d = new Date(CALCULATE_START_DATE); d < CALCULATE_END_DATE;) {
             tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
             d = new Date(d.setMonth(d.getMonth() + 1))
         }
@@ -159,7 +159,7 @@ class GasUsageReport extends React.Component {
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
-        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+        for (let d = new Date(CALCULATE_START_DATE); d < CALCULATE_END_DATE;) {
             tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
             d = new Date(d.setMonth(d.getMonth() + 1))
         }
@@ -250,7 +250,7 @@ class GasUsageReport extends React.Component {
         var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
             CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
-        for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+        for (let d = new Date(CALCULATE_START_DATE); d < CALCULATE_END_DATE;) {
             tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
             d = new Date(d.setMonth(d.getMonth() + 1))
         }

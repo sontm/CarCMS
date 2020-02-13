@@ -216,17 +216,17 @@ class RegisterVehicleScreen extends React.Component {
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
 
                             {(!this.isEditting||(this.isEditting && this.state.type == "car")) ? 
-                            <TouchableOpacity style={{flexDirection: "row"}}>
+                            <TouchableOpacity style={{flexDirection: "row"}} onPress={() =>!this.isEditting ? this.setState({type: "car"}) : {}}>
                                 <CheckBox checked={this.state.type == "car"} 
-                                    onPress={() =>!this.isEditting ? this.setState({type: "car"}) : {}}/>
-                                <Text onPress={() =>!this.isEditting ? this.setState({type: "car"}) : {}}>{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
+                                    />
+                                <Text >{"    " + AppLocales.t("GENERAL_CAR")+""}</Text>
                             </TouchableOpacity> : null}
 
                             {(!this.isEditting||(this.isEditting && this.state.type == "bike")) ? 
-                            <TouchableOpacity  style={{flexDirection: "row"}}>
+                            <TouchableOpacity style={{flexDirection: "row"}} onPress={() =>!this.isEditting ? this.setState({type: "bike"}) : {}}>
                                 <CheckBox style={{marginLeft: 30}} checked={this.state.type == "bike"} 
-                                    onPress={() =>!this.isEditting ? this.setState({type: "bike"}) : {}}/>
-                                <Text onPress={() =>!this.isEditting ? this.setState({type: "bike"}) : {}}>{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
+                                    />
+                                <Text >{"    " + AppLocales.t("GENERAL_BIKE")+""}</Text>
                             </TouchableOpacity> : null}
                             </View>
                         </Item>
@@ -356,15 +356,15 @@ class RegisterVehicleScreen extends React.Component {
 RegisterVehicleScreen.navigationOptions = ({ navigation }) => ({
     header: (
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
+          <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" style={{color:"white"}}/>
             </Button>
           </Left>
-          <Body>
+          <Body style={{flex: 5}}>
             <Title><HeaderText>Thông Tin Xe</HeaderText></Title>
           </Body>
-          <Right />
+          <Right style={{flex: 1}}/>
         </Header>
     )
 });

@@ -72,8 +72,8 @@ class MoneyUsageByTimeReport extends React.Component {
     var CALCULATE_END_DATE = AppUtils.normalizeFillDate(new Date(this.state.tillDate.getFullYear(),this.state.tillDate.getMonth()+1,0));
     var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
         CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
-    
-    for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+
+    for (let d = new Date(CALCULATE_START_DATE); d < CALCULATE_END_DATE;) {
         tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
         d = new Date(d.setMonth(d.getMonth() + 1))
     }
@@ -115,7 +115,7 @@ class MoneyUsageByTimeReport extends React.Component {
             legendLabels.push({name:AppLocales.t("GENERAL_GAS")})
            }
         }
-        
+
         if (arrExpenseSpend && arrExpenseSpend.length) {
             arrExpenseSpend.forEach(item => {
                 let xDate = new Date(item.x);
@@ -184,7 +184,7 @@ class MoneyUsageByTimeReport extends React.Component {
     var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
         CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
-    for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+    for (let d = new Date(CALCULATE_START_DATE); d < CALCULATE_END_DATE;) {
         tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
         d = new Date(d.setMonth(d.getMonth() + 1))
     }
@@ -325,7 +325,7 @@ class MoneyUsageByTimeReport extends React.Component {
     var CALCULATE_START_DATE = AppUtils.normalizeDateBegin(new Date(CALCULATE_END_DATE.getFullYear(), 
         CALCULATE_END_DATE.getMonth() - this.state.duration + 1, 1));
 
-    for (let d = CALCULATE_START_DATE; d < CALCULATE_END_DATE;) {
+    for (let d = new Date(CALCULATE_START_DATE); d < CALCULATE_END_DATE;) {
         tickXLabels.push(AppUtils.normalizeDateMiddleOfMonth(d))
         d = new Date(d.setMonth(d.getMonth() + 1))
     }
@@ -606,7 +606,7 @@ class MoneyUsageByTimeReport extends React.Component {
                             width={Layout.window.width}
                             height={250}
                             padding={{top:10,bottom:30,left:3,right:10}}
-                            domainPadding={{y: [0, 10], x: [40, 20]}}
+                            domainPadding={{y: [0, 10], x: [50, 20]}}
                         >
                         {this.props.isTotalReport ? (
                             <VictoryStack

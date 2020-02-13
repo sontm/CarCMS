@@ -126,19 +126,19 @@ const SettingsStack = createStackNavigator(
   config
 );
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'User',
-  tabBarIcon: ({ focused }) => (
-    <Ionicons
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
-      size={26}
-      style={{ marginBottom: -3 }}
-      color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
-    />
-  ),
-};
+// SettingsStack.navigationOptions = {
+//   tabBarLabel: 'User',
+//   tabBarIcon: ({ focused }) => (
+//     <Ionicons
+//       name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+//       size={26}
+//       style={{ marginBottom: -3 }}
+//       color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+//     />
+//   ),
+// };
 
-SettingsStack.path = '';
+// SettingsStack.path = '';
 
 
 const TeamStack = createStackNavigator(
@@ -153,7 +153,8 @@ const TeamStack = createStackNavigator(
   config
 );
 
-const tabNavigator = createBottomTabNavigator({
+const tabNavigator = createBottomTabNavigator(
+  {
     HomeStack,
     MyVehicleStack,
     //DetailStack,
@@ -166,6 +167,7 @@ const tabNavigator = createBottomTabNavigator({
     // FillOil: { screen: FillOilScreen },
     // CarAuthorize: { screen: CarAuthorizeScreen },
   },
+
   {
     tabBarPosition: "bottom",
     tabBarComponent: props => {

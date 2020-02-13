@@ -23,8 +23,12 @@ const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROI
 const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTERESTIALID_ANDROID;
 
 export default {
-    DEFAULT_VERSION: "1.0.0",
+    DEFAULT_VERSION: "1.0.1",
     IS_DEBUG_MODE: true,
+
+    // to Force set Default Tab navigation
+    IS_FIRST_RENDERSCREEN: true,
+
     // TODO Enable these values
     SETTING_KM_SHOWWARN: 100,
     SETTING_DAY_SHOW_WARN: 30,

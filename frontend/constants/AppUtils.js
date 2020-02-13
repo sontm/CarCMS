@@ -965,10 +965,17 @@ class AppUtils {
                     lastMaintainKmValidFor = + item.validFor;
                     
                     // Plus Month of Bao DUong Nho
-                    nextEstimatedDateForMaintain = this.normalizeFillDate(
-                        new Date(lastDateMaintain.getFullYear(),
-                            lastDateMaintain.getMonth()+settingService.Month[item.validForIndex],
-                            lastDateMaintain.getDate()))
+                    if (item.subType == "bike") {
+                        nextEstimatedDateForMaintain = this.normalizeFillDate(
+                            new Date(lastDateMaintain.getFullYear(),
+                                lastDateMaintain.getMonth()+settingService.MonthBike[item.validForIndex],
+                                lastDateMaintain.getDate()))
+                    } else {
+                        nextEstimatedDateForMaintain = this.normalizeFillDate(
+                            new Date(lastDateMaintain.getFullYear(),
+                                lastDateMaintain.getMonth()+settingService.Month[item.validForIndex],
+                                lastDateMaintain.getDate()))
+                    }
 
                     passedKmFromPreviousMaintain = lastKm - lastKmMaintain;
                 }

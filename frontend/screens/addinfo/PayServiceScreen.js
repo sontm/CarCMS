@@ -69,6 +69,8 @@ class PayServiceScreen extends React.Component {
                         vehicleId: AppConstants.CURRENT_VEHICLE_ID,
                         id: AppConstants.CURRENT_EDIT_FILL_ID,
                         fillDate:currentVehicle.serviceList[i].fillDate.toLocaleString(),
+
+                        subType: currentVehicle.type
                     })
                 }
             }
@@ -86,11 +88,11 @@ class PayServiceScreen extends React.Component {
                     if (currentVehicle.type == "bike") {
                         validForCur= this.props.userData.settingService.KmBike[0];
                     }
-
                     this.setState({
                         vehicleId: this.props.userData.vehicleList[0].id,
                         validFor: validForCur,
-                        validForIndex: 0
+                        validForIndex: 0,
+                        subType: currentVehicle.type
                     })
                 }
             } else {
@@ -102,11 +104,11 @@ class PayServiceScreen extends React.Component {
                     validForCur= this.props.userData.settingService.KmBike[0];
                 }
 
-
                 this.setState({
                     vehicleId: AppConstants.CURRENT_VEHICLE_ID,
                     validFor: validForCur,
-                        validForIndex: 0
+                    validForIndex: 0,
+                    subType: currentVehicle.type
                 })
             }
             
@@ -347,7 +349,8 @@ class PayServiceScreen extends React.Component {
         this.setState({
             vehicleId: veId,
             validFor: validForCur,
-            validForIndex: 0
+            validForIndex: 0,
+            subType: this.currentVehicle.type
         })
     }
     render() {
@@ -452,19 +455,21 @@ class PayServiceScreen extends React.Component {
                             <Label>{AppLocales.t("NEW_SERVICE_TYPE")}</Label>
                             <View style={{...styles.rowFormNoBorder, marginTop: 10}}>
 
-                            <TouchableOpacity
-                                style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
+                            
                             <CheckBox checked={this.state.isConstantFix != true} 
                                 onPress={() =>this.setState({isConstantFix: false})}/>
-                            <Text style={{...styles.smallerText, marginLeft: 12}}  onPress={() =>this.setState({isConstantFix: false})}>
+                            <TouchableOpacity
+                                style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}} onPress={() =>this.setState({isConstantFix: false})}>
+                            <Text style={{...styles.smallerText, marginLeft: 12}}  >
                                 {AppLocales.t("NEW_SERVICE_MAINTAIN")+""}</Text>
                             </TouchableOpacity>
 
-                            <TouchableOpacity
-                                style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}}>
+                            
                             <CheckBox style={{marginLeft: 10}}checked={this.state.isConstantFix == true} 
                                 onPress={() =>this.setState({isConstantFix: true})}/>
-                            <Text style={{...styles.smallerText, marginLeft: 12}} onPress={() =>this.setState({isConstantFix: true})}>
+                            <TouchableOpacity
+                                style={{flexDirection: "row", justifyContent:"flex-start", alignItems:"center"}} onPress={() =>this.setState({isConstantFix: true})}>
+                            <Text style={{...styles.smallerText, marginLeft: 12}}>
                                 {AppLocales.t("NEW_SERVICE_CONSANTFIX")+""}</Text>
                             </TouchableOpacity>
                             </View>
@@ -596,15 +601,15 @@ class PayServiceScreen extends React.Component {
 PayServiceScreen.navigationOptions = ({navigation}) => ({
     header: (
         <Header style={{backgroundColor: AppConstants.COLOR_HEADER_BG, marginTop:-AppConstants.DEFAULT_IOS_STATUSBAR_HEIGHT}}>
-          <Left>
+          <Left style={{flex: 1}}>
             <Button transparent onPress={() => navigation.goBack()}>
               <Icon name="arrow-back" style={{color:"white"}}/>
             </Button>
           </Left>
-          <Body>
+          <Body style={{flex: 5}}>
             <Title><HeaderText>{AppLocales.t("NEW_SERVICE_HEADER")}</HeaderText></Title>
           </Body>
-          <Right />
+          <Right style={{flex: 1}}/>
         </Header>
     )
 });

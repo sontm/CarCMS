@@ -60,6 +60,12 @@ class SettingsScreen extends React.Component {
     this.onShowModalDialog = this.onShowModalDialog.bind(this)
     this.onForceCloseModalByPressBack = this.onForceCloseModalByPressBack.bind(this)
   }
+  componentWillMount() {
+    AppUtils.CONSOLE_LOG("SEtting Screen Mounted...")
+    if (AppConstants.IS_FIRST_RENDERSCREEN) {
+      this.props.navigation.navigate("Home");
+    }
+  }
   onForceCloseModalByPressBack() {
     AppUtils.CONSOLE_LOG("Calling onForceCloseModalByPressBack..........")
     this.props.actUserForCloseModal()
@@ -694,25 +700,26 @@ class SettingsScreen extends React.Component {
             {(this.props.userData.isLogined) ? (
             <View>
             <View style={styles.userInfoContainer}>
-            <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate("Profile")}>
-              <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
-                <View style={{width: "100%",flexDirection: "column",justifyContent: "center",alignItems: "center",}}>
-                  {this.props.userData.userProfile.pictureUrl ? (
-                    <Thumbnail source={{uri: this.props.userData.userProfile.pictureUrl }} style={styles.avatarContainerImage}/>
-                  ): (
-                    <Icon type="FontAwesome" name="user-circle-o" style={styles.avatarContainer}/>
-                  )}
-                  <View style={{flexDirection: "row", marginTop: 5}}>
-                    <Text><H3 style={{color: "white"}}>{this.props.userData.userProfile.fullName}</H3></Text>
+              <TouchableOpacity 
+                  onPress={() => this.props.navigation.navigate("Profile")}>
+                <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
+                  <View style={{width: "100%",flexDirection: "column",justifyContent: "center",alignItems: "center",}}>
+                    {this.props.userData.userProfile.pictureUrl ? (
+                      <Thumbnail source={{uri: this.props.userData.userProfile.pictureUrl }} style={styles.avatarContainerImage}/>
+                    ): (
+                      <Icon type="FontAwesome" name="user-circle-o" style={styles.avatarContainer}/>
+                    )}
+                    <View style={{flexDirection: "row", marginTop: 5}}>
+                      <Text><H3 style={{color: "white"}}>{this.props.userData.userProfile.fullName}</H3></Text>
+                    </View>
+                    <Text  style={{color: "white", fontStyle: "italic"}}>{this.props.userData.userProfile.email}</Text>
                   </View>
-                  <Text  style={{color: "white", fontStyle: "italic"}}>{this.props.userData.userProfile.email}</Text>
+                  <View style={{position:"absolute",  justifyContent:"center", alignItems:"center", right: 5}}>
+                    <Icon name="arrow-forward" style={{...styles.iconRight, fontSize: 30 ,color: "rgb(220,220,220)"}}/>
+                    <Text style={{color:"white", fontSize: 11}}>Chi Tiết</Text>
+                  </View>
                 </View>
-                <View style={{position:"absolute", left: Layout.window.width*0.9}}>
-                  <Icon name="arrow-forward" style={{...styles.iconRight, color: "rgb(220,220,220)"}}/>
-                </View>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
 
               {(this.props.userData.teamInfo && this.props.userData.teamInfo.code) ? (
                 <View>
@@ -758,12 +765,12 @@ class SettingsScreen extends React.Component {
                 <Text style={{fontSize: 13, fontStyle: "italic",marginTop: 5, color: "white"}}>{AppLocales.t("SETTING_LBL_NOTJOINT_TEAM")}
                   </Text>
               }
-            {(this.props.userData.isLogined) ? (
-            <View style={styles.rowContainerNoMargin}>
-                <Button small rounded danger onPress={() => this.handleLogout()} style={{width: 150, flexDirection:"row", justifyContent:"center"}}>
-                  <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
-                </Button>
-            </View>
+              {(this.props.userData.isLogined) ? (
+              <View style={styles.rowContainerNoMargin}>
+                  <Button small rounded danger onPress={() => this.handleLogout()} style={{width: 150, flexDirection:"row", justifyContent:"center"}}>
+                    <Text>{AppLocales.t("SETTING_LBL_LOGOUT")}</Text>
+                  </Button>
+              </View>
             ) : null}
             </View>
             
