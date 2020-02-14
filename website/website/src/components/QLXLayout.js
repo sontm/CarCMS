@@ -44,10 +44,18 @@ export default ({ children }) => (
             <Nav.Link>
                 <ListLink to="/quanlyxe/PrivacyPolicy"><span style={{color:"rgba(255, 255, 255, .9)"}}>QuảnLýXe</span></ListLink>
             </Nav.Link>
-            <NavDropdown title="CoronaVirus" id="basic-nav-dropdown">
+            {/* <NavDropdown title="CoronaVirus" id="basic-nav-dropdown">
                 <NavDropdown.Item><ListLink to="/coronavirus">Live Stats</ListLink></NavDropdown.Item>
                 <NavDropdown.Item><ListLink to="/coronavirus/PrivacyPolicy">Privacy Policy</ListLink></NavDropdown.Item>
-            </NavDropdown>
+            </NavDropdown> */}
+
+            <Nav.Link>
+                <ListLink to="/geoleaper/PrivacyPolicy"><span style={{color:"rgba(255, 255, 255, .9)"}}>GeoLeaper</span></ListLink>
+            </Nav.Link>
+
+            <Nav.Link>
+                <ListLink to="/coronavirus"><span style={{color:"rgba(255, 255, 255, .9)"}}>CoronaVirus Stats</span></ListLink>
+            </Nav.Link>
             </Nav>
         </Navbar.Collapse>
         </Navbar>

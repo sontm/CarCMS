@@ -11,9 +11,9 @@ export default () => (
 <h1 style={{marginTop: "10px"}}>Privacy Policy</h1>
 <p>Effective date: February 1, 2020</p>
 
-<p>Son Tran ("us", "we", or "our") operates the "Corona Virus Live Stats-nCoV" mobile application (the "Service").</p>
+<p>Son Tran ("us", "we", or "our") operates the "Geometry Leaper" mobile game application (the "Service").</p>
 
-<p>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data. Our Privacy Policy for CoronaVirusLiveStats is created with the help of the <a href="https://www.freeprivacypolicy.com/free-privacy-policy-generator.php">Free Privacy Policy Generator</a>.</p>
+<p>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data. Our Privacy Policy for Geometry Leaper is created with the help of the <a href="https://www.freeprivacypolicy.com/free-privacy-policy-generator.php">Free Privacy Policy Generator</a>.</p>
 
 <p>We use your data to provide and improve the Service. By using the Service, you agree to the collection and use of information in accordance with this policy. Unless otherwise defined in this Privacy Policy, terms used in this Privacy Policy have the same meanings as in our Terms and Conditions.</p>
 
@@ -49,7 +49,7 @@ export default () => (
 
 <h2>Use of Data</h2>
     
-<p>Corona Virus Live Stats-nCoV uses the collected data for various purposes:</p>    
+<p>Geometry Leaper uses the collected data for various purposes:</p>    
 <ul>
     <li>To provide and maintain the Service</li>
     <li>To notify you about changes to our Service</li>
@@ -64,15 +64,15 @@ export default () => (
 <p>Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction.</p>
 <p>If you are located outside Viet Nam and choose to provide information to us, please note that we transfer the data, including Personal Data, to Viet Nam and process it there.</p>
 <p>Your consent to this Privacy Policy followed by your submission of such information represents your agreement to that transfer.</p>
-<p>Corona Virus Live Stats-nCoV will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy and no transfer of your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of your data and other personal information.</p>
+<p>Geometry Leaper will take all steps reasonably necessary to ensure that your data is treated securely and in accordance with this Privacy Policy and no transfer of your Personal Data will take place to an organization or a country unless there are adequate controls in place including the security of your data and other personal information.</p>
 
 <h2>Disclosure Of Data</h2>
 <br />
 <h3>Legal Requirements</h3>
-<p>Corona Virus Live Stats-nCoV may disclose your Personal Data in the good faith belief that such action is necessary to:</p>
+<p>Geometry Leaper may disclose your Personal Data in the good faith belief that such action is necessary to:</p>
 <ul>
     <li>To comply with a legal obligation</li>
-    <li>To protect and defend the rights or property of Corona Virus Live Stats-nCoV</li>
+    <li>To protect and defend the rights or property of Geometry Leaper</li>
     <li>To prevent or investigate possible wrongdoing in connection with the Service</li>
     <li>To protect the personal safety of users of the Service or the public</li>
     <li>To protect against legal liability</li>
@@ -106,7 +106,7 @@ export default () => (
 <h2>Contact Us</h2>
 <p>If you have any questions about this Privacy Policy, please contact us:</p>
 <ul>
-        <li>By email: sontm.uet.vnu@gmail.com</li>
+        <li>By email: yamastack@gmail.com</li>
           
 </ul>
 <br />
@@ -117,11 +117,11 @@ export default () => (
 <h1 style={{marginTop: "10px"}}>Quyền Riêng Tư</h1>
 <p>Ngày hiệu lực: 01 tháng 02 năm 2020</p>
 
-<p>Son Tran (Chúng Tôi) vận hành ứng dụng "Corona Virus Live Stats-nCoV Live Stats" ("Dịch Vụ").</p>
+<p>Son Tran (Chúng Tôi) vận hành ứng dụng Game "Geometry Leaper" ("Dịch Vụ").</p>
 <p>Cảm ơn Quý khách đã sử dụng dịch vụ và truy cập vào website https://yamastack.com. Chúng tôi tôn trọng và cam kết sẽ bảo mật những thông tin mang tính riêng tư của Quý khách. 
     Xin vui lòng đọc bản Chính sách bảo mật dưới đây để hiểu hơn những cam kết mà chúng tôi thực hiện nhằm tôn trọng và bảo vệ quyền lợi của người truy cập.</p>
 <p>Trang này sẽ thông báo tới Quý khách về chính sách của chúng tôi liên quan đến thu thập, sử dụng và tiết lộ dữ liệu cá nhân khi Quý khách sử dụng Dịch Vụ, và lựa chọn Quý khách liên quan đến dữ liệu này.
-   Chính Sách Quyền Riêng Tư cho Corona Virus Live Stats-nCoV được dịch sang Tiếng Việt bởi chúng tôi sau khi tạo từ <a href="https://www.freeprivacypolicy.com/free-privacy-policy-generator.php">(Trình Tạo Bảo Mật Miễn Phí).</a>.</p>
+   Chính Sách Quyền Riêng Tư cho Geometry Leaper được dịch sang Tiếng Việt bởi chúng tôi sau khi tạo từ <a href="https://www.freeprivacypolicy.com/free-privacy-policy-generator.php">(Trình Tạo Bảo Mật Miễn Phí).</a>.</p>
 
    <p>Chúng tôi sử dụng dữ liệu của Quý khách để cung cấp và cải tiến Dịch Vụ. Bằng việc sử dụng Dịch Vụ, Quý khách đồng ý về việc thu thập và sử dụng thông tin liên quan đến chính sách này.
     Trừ khi được quy định khác trong chính sách bảo mật này, các điều khoản được sử dụng trong Chính Sách Quyền Riêng Tư này có cùng ý nghĩa như trong Điều khoản và điều kiện của chúng tôi
@@ -163,7 +163,7 @@ Các công nghệ theo dõi cũng được sử dụng là đèn hiệu, thẻ v
 
 <h2>Sử dụng dữ liệu</h2>
     
-<p>Corona Virus Live Stats-nCoV sử dụng dữ liệu được thu thập cho các mục đích khác nhau:</p>    
+<p>Geometry Leaper sử dụng dữ liệu được thu thập cho các mục đích khác nhau:</p>    
 <ul>
     <li>Cung cấp và duy trì Dịch vụ</li>
     <li>Để thông báo cho Quý khách về những thay đổi dịch vụ của chúng tôi</li>
@@ -179,16 +179,16 @@ Các công nghệ theo dõi cũng được sử dụng là đèn hiệu, thẻ v
 nơi luật bảo vệ dữ liệu có thể khác với các quyền từ thẩm quyền của Quý khách.</p>
 <p>Nếu Quý khách ở bên ngoài Việt Nam và chọn cung cấp thông tin cho chúng tôi, xin lưu ý rằng chúng tôi chuyển dữ liệu, bao gồm Dữ liệu cá nhân sang Việt Nam và xử lý thông tin đó tại đó.</p>
 <p>Sự đồng ý của Quý khách với Chính sách quyền riêng tư này kèm theo việc Quý khách gửi thông tin đó thể hiện sự đồng ý của Quý khách đối với chuyển khoản đó.</p>
-<p>Corona Virus Live Stats-nCoV sẽ thực hiện tất cả các bước cần thiết một cách hợp lý để đảm bảo dữ liệu của Quý khách được xử lý an toàn và tuân thủ Chính sách bảo mật này và việc chuyển dữ liệu cá nhân của Quý khách sẽ diễn ra 
+<p>Geometry Leaper sẽ thực hiện tất cả các bước cần thiết một cách hợp lý để đảm bảo dữ liệu của Quý khách được xử lý an toàn và tuân thủ Chính sách bảo mật này và việc chuyển dữ liệu cá nhân của Quý khách sẽ diễn ra 
 cho một tổ chức hoặc quốc gia trừ khi có kiểm soát thích hợp bao gồm cả bảo mật dữ liệu của Quý khách và thông tin cá nhân khác.</p>
 
 <h2>Tiết lộ dữ liệu</h2>
 <br />
 <h3>Yêu cầu pháp lý</h3>
-<p>Corona Virus Live Stats-nCoV có thể tiết lộ Dữ liệu Cá nhân của Quý khách với niềm tin tốt rằng hành động đó là cần thiết để:</p>
+<p>Geometry Leaper có thể tiết lộ Dữ liệu Cá nhân của Quý khách với niềm tin tốt rằng hành động đó là cần thiết để:</p>
 <ul>
     <li>Tuân thủ nghĩa vụ pháp lý</li>
-    <li>Để bảo vệ quyền hoặc tài sản của Corona Virus Live Stats-nCoV</li>
+    <li>Để bảo vệ quyền hoặc tài sản của Geometry Leaper</li>
     <li>Để ngăn chặn hoặc điều tra các hành vi sai trái có thể liên quan đến Dịch vụ</li>
     <li>Để bảo vệ sự an toàn cá nhân của người dùng Dịch vụ hoặc cộng đồng</li>
     <li>Để bảo vệ chống lại trách nhiệm pháp lý</li>
@@ -222,7 +222,7 @@ cho một tổ chức hoặc quốc gia trừ khi có kiểm soát thích hợp 
 <h2>Liên hệ chúng tôi</h2>
 <p>Nếu Quý khách có bất kỳ câu hỏi nào về Chính sách quyền riêng tư này, vui lòng liên hệ với chúng tôi:</p>
 <ul>
-        <li>By email: sontm.uet.vnu@gmail.com</li>
+        <li>By email: yamastack@gmail.com</li>
           
 </ul>
 <br />

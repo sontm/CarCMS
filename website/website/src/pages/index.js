@@ -31,7 +31,7 @@ export default () => (
                                 Theo Dõi Chi Tiêu Theo Cá Nhân/Đội Nhóm</p>
                             <div class="video_service_btn wow fadeInLeft" data-wow-duration="1s" data-wow-delay=".1s">
                                 <Button variant="dark" href="https://play.google.com/store/apps/details?id=com.sansan.VehicleCMS" target="_blank"
-                                    style={{padding: "3px 5px", width: "320px", backgroundColor:"black", textAlign:"left", fontSize:"18px"}}>
+                                    style={{padding: "3px 0px 3px 5px", width: "280px", backgroundColor:"black", textAlign:"left", fontSize:"17px"}}>
                                     <img src={imgAndroid} alt="android" class="boxed-btn3-img"/>
                                     Tải Về cho Google Android
                                 </Button>
@@ -39,7 +39,7 @@ export default () => (
                             < br/>
                             <div class="video_service_btn wow fadeInLeft" data-wow-duration="1s" data-wow-delay=".1s">
                                 <Button variant="dark" href="https://apps.apple.com/app/id1498085260" target="_blank"
-                                    style={{padding: "3px 5px", width: "320px", backgroundColor:"black", textAlign:"left", fontSize:"18px"}}>
+                                    style={{padding: "3px 0px 3px 5px", width: "280px", backgroundColor:"black", textAlign:"left", fontSize:"17px"}}>
                                     <img src={imgApple} alt="android" class="boxed-btn3-img"/>
                                     Tải Về cho Apple iOS
                                 </Button>
