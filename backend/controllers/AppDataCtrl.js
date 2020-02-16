@@ -314,6 +314,12 @@ module.exports = {
   async addAppNotification(req, res) {
     apputil.CONSOLE_LOG("App addAppNotification")
     apputil.CONSOLE_LOG(req.body)
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
+
     //if (req.user) {
     try {
       var item = new dbnotification({
@@ -402,6 +408,12 @@ module.exports = {
   },
   getAllAppNotification(req, res) {
     apputil.CONSOLE_LOG("App getAllAppNotification")
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
+
     dbnotification.find({}, function(err, result) {
       if (err) {
           apputil.CONSOLE_LOG("    Get All Notification Error")
@@ -458,9 +470,23 @@ module.exports = {
       res.status(500).send({msg: "Internal Error"})
     }
   },
+
+  // status: all, new,run,done,skip
   getAllCustomerVoice(req, res) {
     apputil.CONSOLE_LOG("App getAllCustomerVoice")
-    dbcustomervoice.find({}, function(err, result) {
+    apputil.CONSOLE_LOG(req)
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
+
+    let objectQuery = {}
+    if (req.params.status == "new"||req.params.status == "run"||req.params.status == "done"||req.params.status == "skip") {
+      objectQuery = {status: req.params.status}
+    }
+
+    dbcustomervoice.find(objectQuery, function(err, result) {
       if (err) {
           apputil.CONSOLE_LOG("    getAllCustomerVoice Error")
           apputil.CONSOLE_LOG(err);

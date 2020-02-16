@@ -3,6 +3,9 @@ require('dotenv').config()
 import bodyParser from 'body-parser'
 import mongoose from "mongoose";
 import Joi from "joi"
+var fs = require('fs')
+var path = require('path')
+
 const cors = require('cors');
 
 const passport = require('passport');
@@ -39,7 +42,7 @@ const startServer = async () => {
   });
 
   // CORS check for specific ORIGIN because we use Cookie
-  var allowedOrigins = ['http://localhost:8000','https://yamastack.com'];
+  var allowedOrigins = ['https://yamastack.com','http://localhost:8000','http://localhost:8080', 'https://yamastack.outsystemscloud.com/'];
   app.use(cors({
     origin: function(origin, callback){
     // allow requests with no origin 
@@ -91,8 +94,29 @@ const startServer = async () => {
   app.use(bodyParser.json())
   //app.use(cookieParser());
 
+  logger.token('AppUser', function (req, res) { 
+    if (req['user']) {
+      return JSON.stringify({id: req['user'].id, email: req['user'].email, fullName: req['user'].fullName})
+    } else {
+      return "Guest";
+    }
+  })
+  logger.token('AppBody', function (req, res) { 
+      return JSON.stringify(req.body)
+  })
+
+  // log only 4xx and 5xx responses
+  app.use(logger(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :response-time ms - :AppUser - :AppBody', {
+    skip: function (req, res) { return res.statusCode < 400 },
+    stream: fs.createWriteStream(path.join(__dirname, 'error.log'), { flags: 'a' })
+  }))
+
   // Log requests to the console.
-  app.use(logger('dev'));
+  app.use(logger(':remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent" :response-time ms - :AppUser - :AppBody',
+    {
+      stream: fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+    }
+  ));
 
   app.use(passport.initialize());
   require('./components/AppPassPort');

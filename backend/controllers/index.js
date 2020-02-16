@@ -15,13 +15,25 @@ app.post('/api/login/google', user.loginGoogle);
 app.post('/api/login/facebook', user.loginFacebook);
 
 app.post('/api/users', user.registerLocalUser);
-//app.get('/api/users', user.getAll);
-//app.get('/api/usersById/:id', user.getByEmailOrObjectId);
+
+// ADMIN API
+app.get('/api/users', passport.authenticate('jwt', {session: false}), user.getAll);
+// ADMIN API
+app.get('/api/usersById/:id', passport.authenticate('jwt', {session: false}), user.getByEmailOrObjectId);
+
+
+
 // this request is Protected by JWT Authentication
 app.get('/api/users/profile', passport.authenticate('jwt', {session: false}), user.getUserProfile);
 app.post('/api/users/update', passport.authenticate('jwt', {session: false}), 
   user.updateUserProfile);
 app.post('/api/resetpwd', user.resetPassword);  // Reset PWD, no need Authen
+
+//ADMIN API
+app.post('/api/adminresetpwd', passport.authenticate('jwt', {session: false}),user.resetPasswordByAdmin);  // Reset PWD, no need Authen
+//ADMIN API
+app.post('/api/users/toggleAds', passport.authenticate('jwt', {session: false}),user.toggleAdsByAdmin);  // Reset PWD, no need Authen
+
 
 // Sync To Server from App
 app.post('/api/users/sync', passport.authenticate('jwt', {session: false}), user.syncToServer);
@@ -33,6 +45,9 @@ app.post('/api/users/sync/some', passport.authenticate('jwt', {session: false}),
 
 // upsert
 app.post('/api/team', passport.authenticate('jwt', {session: false}), team.createTeamOfUser);
+// ADMIN API
+app.get('/api/team', passport.authenticate('jwt', {session: false}), team.getAll);
+
 app.post('/api/team/join', passport.authenticate('jwt', {session: false}), team.joinTeam);
 app.get('/api/team/join', passport.authenticate('jwt', {session: false}), team.getAllJoinRequestWhichUserIsManager);
 app.get('/api/team/leave', passport.authenticate('jwt', {session: false}), team.leaveTeam);
@@ -64,18 +79,21 @@ app.get('/api/app/lateston', appData.getLatestDataDateOn);
 app.get('/api/app/appdata', appData.getLatestAppData);
 app.get('/api/app/prourl', appData.getFirstModal);
 
-app.post('/api/app/notification', appData.addAppNotification);
+// ADMIN API
+app.post('/api/app/notification', passport.authenticate('jwt', {session: false}), appData.addAppNotification);
 app.post('/api/app/notification/me', passport.authenticate('jwt', {session: false}),
   appData.getMyNotification);
 app.post('/api/app/notification/guest', appData.getMyNotification);
 
-app.get('/api/app/notification/all', appData.getAllAppNotification);
+// ADMIN API
+app.get('/api/app/notification', passport.authenticate('jwt', {session: false}), appData.getAllAppNotification);
 
 //app.post('/api/app/recovermail', appData.requestEmailPasswordRecovery);
 app.post('/api/app/recovermail', appData.sendEmailWithSES);
 
 app.post('/api/app/customervoice', appData.addNewCustomerVoice);
-
+//ADMIN API
+app.get('/api/app/customervoice/:status', passport.authenticate('jwt', {session: false}), appData.getAllCustomerVoice);
 
 app.get('/api/ncov/lateston', nCoVCtrl.getLatestCoronaDateOn);
 app.get('/api/ncov/data', nCoVCtrl.getLatestCoronaData);

@@ -463,9 +463,15 @@ module.exports = {
   },
 
 
-  // TODO for Edit Team. Only User of that Team can Edit
+  // AdminAPI
   getAll(req, res) {
     apputil.CONSOLE_LOG("Team Get All")
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
+    
     dbteam.find({}, function(err, result) {
       if (err) {
           apputil.CONSOLE_LOG("    Team Get All Error")

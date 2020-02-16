@@ -1,0 +1,21 @@
+2020-02-16T04:34:35.848Z ::ffff:127.0.0.1 - - [16/Feb/2020:04:34:35 +0000] "GET /api/app/customervoice/run HTTP/1.1" 200 2 "-" "insomnia/7.0.6" 25.327 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+2020-02-16T04:34:41.640Z ::ffff:127.0.0.1 - - [16/Feb/2020:04:34:41 +0000] "GET /api/app/customervoice/run HTTP/1.1" 200 2 "-" "insomnia/7.0.6" 17.227 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:04:35:15 +0000] "GET /api/app/customervoice/run HTTP/1.1" 200 2 "-" "insomnia/7.0.6" 22.249 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:04:35:17 +0000] "GET /api/app/customervoice/run HTTP/1.1" 200 2 "-" "insomnia/7.0.6" 3.129 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:04:36:00 +0000] "GET /api/app/customervoice/run HTTP/1.1" 500 2391 "-" "insomnia/7.0.6" 44.270 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:04:36:26 +0000] "GET /api/app/customervoice/run HTTP/1.1" 401 - "-" "insomnia/7.0.6" 4.491 ms - Guest
+::ffff:127.0.0.1 - - [16/Feb/2020:04:36:52 +0000] "GET /api/app/customervoice/run HTTP/1.1" 401 - "-" "insomnia/7.0.6" 3.961 ms - Guest
+::ffff:127.0.0.1 - - [16/Feb/2020:04:37:25 +0000] "GET /api/app/customervoice/run HTTP/1.1" 401 - "-" "insomnia/7.0.6" 3.167 ms - Guest
+::ffff:127.0.0.1 - - [16/Feb/2020:04:37:29 +0000] "GET /api/app/customervoice/run HTTP/1.1" 500 2391 "-" "insomnia/7.0.6" 41.937 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:04:37:45 +0000] "GET /api/app/customervoice/run HTTP/1.1" 500 2391 "-" "insomnia/7.0.6" 2.742 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:04:38:33 +0000] "GET /api/app/customervoice/run HTTP/1.1" 200 2 "-" "insomnia/7.0.6" 22.673 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:04:39:30 +0000] "GET /api/app/customervoice/run HTTP/1.1" 401 - "-" "insomnia/7.0.6" 4.427 ms - Guest
+::ffff:127.0.0.1 - - [16/Feb/2020:04:39:43 +0000] "GET /api/app/customervoice/run HTTP/1.1" 401 - "-" "insomnia/7.0.6" 0.416 ms - Guest
+::ffff:127.0.0.1 - - [16/Feb/2020:04:40:15 +0000] "GET /api/app/customervoice/run HTTP/1.1" 401 - "-" "insomnia/7.0.6" 4.176 ms - Guest
+::ffff:127.0.0.1 - - [16/Feb/2020:05:16:39 +0000] "POST /api/adminresetpwd HTTP/1.1" 200 21 "-" "insomnia/7.0.6" 118.127 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:05:17:10 +0000] "POST /api/adminresetpwd HTTP/1.1" 200 26 "-" "insomnia/7.0.6" 84.073 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:05:24:50 +0000] "POST /api/users/toggleAds HTTP/1.1" 200 17 "-" "insomnia/7.0.6" 39.731 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:05:24:57 +0000] "POST /api/users/toggleAds HTTP/1.1" 200 17 "-" "insomnia/7.0.6" 4.949 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:05:25:03 +0000] "POST /api/users/toggleAds HTTP/1.1" 200 16 "-" "insomnia/7.0.6" 3.552 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:05:25:12 +0000] "POST /api/users/toggleAds HTTP/1.1" 200 17 "-" "insomnia/7.0.6" 7.339 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"}
+::ffff:127.0.0.1 - - [16/Feb/2020:05:26:57 +0000] "POST /api/users/toggleAds HTTP/1.1" 200 17 "-" "insomnia/7.0.6" 48.519 ms - {"id":"5e48b51a63488903ac77e07a","email":"admin@yamastack.com","fullName":"Admin"} - {"userId":"5e48b51a63488903ac77e07a","enable":true}

@@ -1,7 +1,7 @@
 
 class AppUtils {
     CONSOLE_LOG(s) {
-        if (true) {
+        if (false && true) {
             console.log(s)
         }
     }
@@ -46,6 +46,15 @@ class AppUtils {
     makeRandomAlphaNumeric(length) {
         var result           = '';
         var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for ( var i = 0; i < length; i++ ) {
+           result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
+    makeRandomNumeric(length) {
+        var result           = '';
+        var characters       = '0123456789';
         var charactersLength = characters.length;
         for ( var i = 0; i < length; i++ ) {
            result += characters.charAt(Math.floor(Math.random() * charactersLength));

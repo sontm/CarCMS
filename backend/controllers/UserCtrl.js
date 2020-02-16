@@ -174,6 +174,59 @@ module.exports = {
       return;
     }
   },
+  
+  //{userId}
+  async resetPasswordByAdmin(req, res) {
+    apputil.CONSOLE_LOG("resetPassword of By Admin USERID:"+req.body)
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
+
+    const currentUser = await dbuser.findById(req.body.userId);
+    if (currentUser) {
+      if (req.body.newPwd) {
+        var randompwd = req.body.newPwd;
+      } else {
+        var randompwd = apputil.makeRandomNumeric(8);
+      }
+
+      const newHashed = await bcrypt.hash(randompwd, 10)
+      currentUser.passwordR = randompwd;
+      currentUser.password = newHashed;
+      await currentUser.save();
+
+      res.status(200).send({newpwd: randompwd})
+    } else {
+      res.status(400).send({msg: "User Not Found!"})
+    }
+  },
+
+  //{userId, enable: true}
+  // if enable not have, disable Ads
+  async toggleAdsByAdmin(req, res) {
+    apputil.CONSOLE_LOG("toggleAdsByAdmin of By Admin USERID:"+req.body)
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
+
+    const currentUser = await dbuser.findById(req.body.userId);
+    if (currentUser) {
+      if (req.body.enable) {
+        currentUser.isNoAds = false;
+      } else {
+        currentUser.isNoAds = true;
+      }
+      await currentUser.save();
+
+      res.status(200).send({isNoAds: currentUser.isNoAds})
+    } else {
+      res.status(400).send({msg: "User Not Found!"})
+    }
+  },
 
   async loginGoogle(req, res, next) {
     try {
@@ -384,9 +437,15 @@ module.exports = {
     }
   },
 
-
+  //Admin API
   getAll(req, res) {
     apputil.CONSOLE_LOG("[UserCtrl] Get All")
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
+
     dbuser.find({}, function(err, result) {
       if (err) {
           apputil.CONSOLE_LOG("    UserCtrl Get All Error")
@@ -408,6 +467,11 @@ module.exports = {
     apputil.CONSOLE_LOG(req.params.id)
     var ObjectId = require('mongoose').Types.ObjectId;
     var objId = new ObjectId( (req.params.id.length < 12) ? "123456789012" : req.params.id );
+
+    if (req.user.email != "admin@yamastack.com") {
+      res.status(500).send({msg: "No Permission!"})
+      return
+    }
     
     dbuser.find({ $or:
       [ {'_id':objId},
