@@ -23,7 +23,7 @@ const BANNER_ID = Platform.OS === 'ios' ? ADS_BANNERID_IOS : ADS_BANNERID_ANDROI
 const INTERESTIAL_ID = Platform.OS === 'ios' ? ADS_INTERESTIALID_IOS : ADS_INTERESTIALID_ANDROID;
 
 export default {
-    DEFAULT_VERSION: "1.0.1",
+    DEFAULT_VERSION: "1.0.2",
     IS_DEBUG_MODE: true,
 
     // to Force set Default Tab navigation
@@ -42,7 +42,7 @@ export default {
 
     ADS_BANNERID: BANNER_ID,
     ADS_INTERESTIALID: INTERESTIAL_ID,
-    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 12, // after every x click, show Interestial
+    ADS_COUNT_CLICK_SHOW_INTERESTIAL: 40, // after every x click, show Interestial
     ADS_COUNT_CLICK_INTERACTIVE: 0,
 
     IS_FILL_ITEM_PROCESSING: false,
@@ -79,7 +79,8 @@ export default {
         {name:"Xăng"},{name:"Phụ Chi"},{name:"Pháp Lý"},{name:"Bảo Dưỡng"}
     ],
 
-    SERVER_API:"https://yamastack.com/api/",
+    //SERVER_API:"https://yamastack.com/api/",
+    SERVER_API:"https://api.yamastack.com/car/api/",
 
     //SERVER_API:"http://18.140.121.240:3000/api",
     //SERVER_API:  "http://192.168.1.51:3000/api",
